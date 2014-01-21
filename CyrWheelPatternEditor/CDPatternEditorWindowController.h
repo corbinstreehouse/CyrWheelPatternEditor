@@ -1,5 +1,5 @@
 //
-//  CDDocument.h
+//  CDPatternEditorWindowController.h
 //  CyrWheelPatternEditor
 //
 //  Created by Corbin Dunn on 1/16/14 .
@@ -7,10 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "CDPatternItem.h"
 
-@interface CDDocument : NSPersistentDocument
+@class CDDocument;
 
-@property(retain, readonly) CDPatternItem *patternItem;
+@interface CDPatternEditorWindowController : NSWindowController
+
+- (CDDocument *)document;
 
 @end
