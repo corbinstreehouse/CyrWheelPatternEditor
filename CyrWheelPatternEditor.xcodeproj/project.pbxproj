@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9D3A0DB2188A3D89001AD553 /* CDExportedImage_Template.h in Resources */ = {isa = PBXBuildFile; fileRef = 9D3A0DB1188A3D70001AD553 /* CDExportedImage_Template.h */; };
+		9DBD8040189B525300A6A067 /* CDPatternItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DBD803E189B525300A6A067 /* CDPatternItemViewController.m */; };
+		9DBD8041189B525300A6A067 /* CDPatternItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9DBD803F189B525300A6A067 /* CDPatternItemViewController.xib */; };
+		9DBD8047189B66FA00A6A067 /* CDPatternSequence.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DBD8046189B66FA00A6A067 /* CDPatternSequence.m */; };
+		9DBD804A189C9FB200A6A067 /* CDPatternDataToImageTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DBD8049189C9FB200A6A067 /* CDPatternDataToImageTransformer.m */; };
+		9DBD804D189D792100A6A067 /* CDPatternEditTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DBD804C189D792100A6A067 /* CDPatternEditTableView.m */; };
 		9DFBAC111888EDFC00737C2F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DFBAC101888EDFC00737C2F /* Cocoa.framework */; };
 		9DFBAC1B1888EDFC00737C2F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DFBAC191888EDFC00737C2F /* InfoPlist.strings */; };
 		9DFBAC1D1888EDFC00737C2F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DFBAC1C1888EDFC00737C2F /* main.m */; };
@@ -37,7 +41,15 @@
 
 /* Begin PBXFileReference section */
 		9D3A0DB0188A3D26001AD553 /* CDPatternData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternData.h; path = ../../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternData.h; sourceTree = "<group>"; };
-		9D3A0DB1188A3D70001AD553 /* CDExportedImage_Template.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDExportedImage_Template.h; path = ../../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDExportedImage_Template.h; sourceTree = "<group>"; };
+		9DBD803D189B525300A6A067 /* CDPatternItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPatternItemViewController.h; sourceTree = "<group>"; };
+		9DBD803E189B525300A6A067 /* CDPatternItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDPatternItemViewController.m; sourceTree = "<group>"; };
+		9DBD803F189B525300A6A067 /* CDPatternItemViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDPatternItemViewController.xib; sourceTree = "<group>"; };
+		9DBD8045189B66FA00A6A067 /* CDPatternSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternSequence.h; path = ../CDPatternSequence.h; sourceTree = "<group>"; };
+		9DBD8046189B66FA00A6A067 /* CDPatternSequence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDPatternSequence.m; path = ../CDPatternSequence.m; sourceTree = "<group>"; };
+		9DBD8048189C9FB200A6A067 /* CDPatternDataToImageTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPatternDataToImageTransformer.h; sourceTree = "<group>"; };
+		9DBD8049189C9FB200A6A067 /* CDPatternDataToImageTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDPatternDataToImageTransformer.m; sourceTree = "<group>"; };
+		9DBD804B189D792100A6A067 /* CDPatternEditTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternEditTableView.h; path = ../CDPatternEditTableView.h; sourceTree = "<group>"; };
+		9DBD804C189D792100A6A067 /* CDPatternEditTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDPatternEditTableView.m; path = ../CDPatternEditTableView.m; sourceTree = "<group>"; };
 		9DFBAC0D1888EDFC00737C2F /* CyrWheelPatternEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyrWheelPatternEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DFBAC101888EDFC00737C2F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		9DFBAC131888EDFC00737C2F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -128,15 +140,23 @@
 		9DFBAC161888EDFC00737C2F /* CyrWheelPatternEditor */ = {
 			isa = PBXGroup;
 			children = (
-				9D3A0DB1188A3D70001AD553 /* CDExportedImage_Template.h */,
+				9DBD804B189D792100A6A067 /* CDPatternEditTableView.h */,
+				9DBD804C189D792100A6A067 /* CDPatternEditTableView.m */,
 				9D3A0DB0188A3D26001AD553 /* CDPatternData.h */,
 				9DFBAC531888F0F600737C2F /* CDPatternEditorWindowController.h */,
 				9DFBAC541888F0F600737C2F /* CDPatternEditorWindowController.m */,
 				9DFBAC551888F0F600737C2F /* CDPatternEditorWindowController.xib */,
+				9DBD803D189B525300A6A067 /* CDPatternItemViewController.h */,
+				9DBD803E189B525300A6A067 /* CDPatternItemViewController.m */,
+				9DBD803F189B525300A6A067 /* CDPatternItemViewController.xib */,
+				9DBD8048189C9FB200A6A067 /* CDPatternDataToImageTransformer.h */,
+				9DBD8049189C9FB200A6A067 /* CDPatternDataToImageTransformer.m */,
 				9DFBAC221888EDFC00737C2F /* CDDocument.h */,
 				9DFBAC231888EDFC00737C2F /* CDDocument.m */,
 				9DFBAC501888F03C00737C2F /* CDPatternItem.h */,
 				9DFBAC511888F03C00737C2F /* CDPatternItem.m */,
+				9DBD8045189B66FA00A6A067 /* CDPatternSequence.h */,
+				9DBD8046189B66FA00A6A067 /* CDPatternSequence.m */,
 				9DFBAC281888EDFC00737C2F /* MainMenu.xib */,
 				9DFBAC2E1888EDFC00737C2F /* Images.xcassets */,
 				9DFBAC2B1888EDFC00737C2F /* CDDocument.xcdatamodeld */,
@@ -252,8 +272,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D3A0DB2188A3D89001AD553 /* CDExportedImage_Template.h in Resources */,
 				9DFBAC571888F0F600737C2F /* CDPatternEditorWindowController.xib in Resources */,
+				9DBD8041189B525300A6A067 /* CDPatternItemViewController.xib in Resources */,
 				9DFBAC2F1888EDFC00737C2F /* Images.xcassets in Resources */,
 				9DFBAC1B1888EDFC00737C2F /* InfoPlist.strings in Resources */,
 				9DFBAC211888EDFC00737C2F /* Credits.rtf in Resources */,
@@ -276,9 +296,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DBD804D189D792100A6A067 /* CDPatternEditTableView.m in Sources */,
 				9DFBAC1D1888EDFC00737C2F /* main.m in Sources */,
 				9DFBAC2D1888EDFC00737C2F /* CDDocument.xcdatamodeld in Sources */,
 				9DFBAC561888F0F600737C2F /* CDPatternEditorWindowController.m in Sources */,
+				9DBD8047189B66FA00A6A067 /* CDPatternSequence.m in Sources */,
+				9DBD804A189C9FB200A6A067 /* CDPatternDataToImageTransformer.m in Sources */,
+				9DBD8040189B525300A6A067 /* CDPatternItemViewController.m in Sources */,
 				9DFBAC521888F03C00737C2F /* CDPatternItem.m in Sources */,
 				9DFBAC241888EDFC00737C2F /* CDDocument.m in Sources */,
 			);

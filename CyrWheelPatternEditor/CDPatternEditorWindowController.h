@@ -10,7 +10,7 @@
 
 @class CDDocument;
 
-@interface CDPatternEditorWindowController : NSWindowController
+@interface CDPatternEditorWindowController : NSWindowController<NSTableViewDataSource, NSTableViewDelegate>
 
 - (CDDocument *)document;
 

@@ -15,11 +15,11 @@
 
 @implementation CDDocument
 
-@synthesize patternItem = _patternItem;
+@synthesize patternSequence = _patternSequence;
 
-- (CDPatternItem *)_loadPatternItem {
-    CDPatternItem *result = nil;
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"PatternItem" inManagedObjectContext:self.managedObjectContext];
+- (CDPatternSequence *)_loadPatternItem {
+    CDPatternSequence *result = nil;
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:[CDPatternSequence className] inManagedObjectContext:self.managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     fetchRequest.entity = entityDesc;
     NSError *error = nil;
@@ -31,14 +31,22 @@
     return result;
 }
 
-//- (NSString *)fileNameExtensionForType:(NSString *)typeName saveOperation:(NSSaveOperationType)saveOperation {
-//    return @"cyrwheel";
-//}
+- (CDPatternItem *)_makeDefaultItem {
+    return [CDPatternItem newItemInContext:self.managedObjectContext];
+}
 
-- (CDPatternItem *)_makePatternItem {
+- (CDPatternSequence *)_makePatternItem {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     [[managedObjectContext undoManager] disableUndoRegistration];
-    CDPatternItem *result = [NSEntityDescription insertNewObjectForEntityForName:@"PatternItem" inManagedObjectContext:self.managedObjectContext];
+    CDPatternSequence *result = [NSEntityDescription insertNewObjectForEntityForName:[CDPatternSequence className] inManagedObjectContext:self.managedObjectContext];
+    // default values
+    result.pixelCount = 330; // For my wheel...
+    
+    // create one child
+    CDPatternItem *patternItem = [self _makeDefaultItem];
+    [result addChildrenObject:patternItem];
+    
+    
     [managedObjectContext processPendingChanges];
     [[managedObjectContext undoManager] enableUndoRegistration];
     return result;
@@ -49,14 +57,14 @@
     return self;
 }
 
-- (CDPatternItem *)patternItem {
-    if (_patternItem  == nil) {
-        _patternItem = [self _loadPatternItem];
-        if (_patternItem == nil) {
-            _patternItem = [self _makePatternItem];
+- (CDPatternSequence *)patternSequence {
+    if (_patternSequence  == nil) {
+        _patternSequence = [self _loadPatternItem];
+        if (_patternSequence == nil) {
+            _patternSequence = [self _makePatternItem];
         }
     }
-    return _patternItem;
+    return _patternSequence;
 }
 
 - (void)makeWindowControllers {

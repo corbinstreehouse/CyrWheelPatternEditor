@@ -10,13 +10,19 @@
 #import "CDPatternItem.h"
 #import "CDDocument.h"
 #import "CDPatternData.h"
+#import "CDPatternSequence.h"
+#import "CDPatternItemViewController.h"
+
 
 @interface CDPatternEditorWindowController () {
-    
+@private
+    NSMutableArray *_patternViewControllers;
+    __weak NSTableView *_tableView;
+    BOOL _observingChildren;
 }
     
 @property (weak) IBOutlet NSImageView *imgViewPreview;
-
+@property (weak) IBOutlet NSTableView *tableView;
 
 @end
 
@@ -37,176 +43,253 @@
     return self;
 }
 
+//- (void)dealloc {
+//    if (_observingChildren) {
+//        [self._patternSequence removeObserver:self forKeyPath:CDPatternChildrenKey];
+//    }
+////    [super dealloc]; // ARC silly
+//}
+
 - (CDDocument *)document {
     return (CDDocument *)super.document;
 }
 
-- (void)windowDidLoad
-{
-    [super windowDidLoad];
-    
-    NSAssert(self.document.patternItem != nil, @"pattern item");
-    NSData *imageData = self.document.patternItem.image;
-    if (imageData) {
-        NSImage *image = [[NSImage alloc] initWithData:imageData];
-        [self _setPatternImage:image];
+- (void)setDocument:(NSDocument *)document {
+    if (document != self.document) {
+        if (_observingChildren) {
+            [self._patternSequence removeObserver:self forKeyPath:CDPatternChildrenKey];
+        }
+        [super setDocument:document];
     }
 }
 
-- (void)_setPatternImage:(NSImage *)image {
-    self.imgViewPreview.image = image;
-}
-
-- (void)_setImageWithURL:(NSURL *)url {
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    self.document.patternItem.image = data; // save the original data
-    NSImage *image = [[NSImage alloc] initWithData:data];
-    // TODO: maybe save a reference to the image so it can be edited externally too??
-    [self _setPatternImage:image];
-}
-    
-- (IBAction)btnLoadImageClicked:(id)sender {
-    NSOpenPanel *op = [NSOpenPanel openPanel];
-    op.allowedFileTypes = @[@"public.image"]; // [NSImage imageFileTypes] ?
-    op.allowsMultipleSelection = NO;
-    op.allowsOtherFileTypes = NO;
-    [op beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
-        if (result == NSOKButton) {
-            [self _setImageWithURL:op.URL];
-        }
-    }];
-}
-
-- (NSMutableData *)_encodeRepAsRGB:(NSBitmapImageRep *)imageRep {
-    NSMutableData *result = [NSMutableData new];
-    // pre-allocate cuz we know the size
-    NSInteger length = sizeof(uint8) * 3 * imageRep.pixelsWide * imageRep.pixelsHigh;
-    [result setLength:length];
-    uint8 *bytes = (uint8 *)result.mutableBytes;
-    // Go from top to bottom, and scan horizontal lines. That is the easiest thing to do for all images. How we interpret the data is up to the kind (although, that might affect encoding..)
-    for (NSInteger y = 0; y < imageRep.pixelsHigh; y++) {
-        for (NSInteger x = 0; x < imageRep.pixelsWide; x++) {
-            NSColor *color = [imageRep colorAtX:x y:y]; // convert to NSDeviceRGB?? or calibrated RBG? Otherwise, this will throw...
-            // Write out the pixels.. RGB..ignore alpha
-            CGFloat r, g, b, a;
-            [color getRed:&r green:&g blue:&b alpha:&a];
-            *bytes = r*255;
-            bytes++;
-            *bytes = g*255;
-            bytes++;
-            *bytes = b*255;
-            bytes++;
-        }
+- (CDPatternItemViewController *)_patternViewControllerAtIndex:(NSInteger)index {
+    id currentObject = [_patternViewControllers objectAtIndex:index];
+    CDPatternItemViewController *result;
+    if (currentObject == [NSNull null]) {
+        CDPatternItem *item = [self._patternSequence.children objectAtIndex:index];
+        result = [CDPatternItemViewController new];
+        result.patternItem = item;
+        [_patternViewControllers replaceObjectAtIndex:index withObject:result];
+    } else {
+        result = (CDPatternItemViewController *)currentObject;
     }
     return result;
 }
 
-static inline uint16_t _NSTimeIntervalToMS(NSTimeInterval duration) {
-    return ceil(duration * 1000);
+- (void)_resetPatternViewControllers {
+    _patternViewControllers = NSMutableArray.new;
+    for (NSInteger i = 0; i < self._patternSequence.children.count; i++) {
+        [_patternViewControllers addObject:[NSNull null]]; // placeholder
+    }
+    [_tableView reloadData];
 }
 
-- (void)_encodDataForPatternItem:(CDPatternItem *)item handler:(void (^)(NSMutableData *encodedImageData, CDPatternDataHeader *header, NSError *error))handler {
-    // Probably not fast...but it doesn't matter...
-    // Convert to a bitmap image rep to walk over the pixels..
-    NSData *tiffData = item.image;
-    NSBitmapImageRep *imageRep = [[NSBitmapImageRep alloc] initWithData:tiffData];
-    NSMutableData *data = [self _encodeRepAsRGB:imageRep];
-    // TODO: encode in other ways...find the smallest, use that.
+- (void)windowDidLoad {
+    [super windowDidLoad];
+
+    [self _resetPatternViewControllers];
+
+    // Watch for changes
+    _observingChildren = YES;
+    [self._patternSequence addObserver:self forKeyPath:CDPatternChildrenKey options:0 context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    NSAssert([keyPath isEqualToString:CDPatternChildrenKey], @"children only");
+    NSKeyValueChange changeKind = [[change objectForKey:NSKeyValueChangeKindKey] integerValue];
+    switch (changeKind) {
+        case NSKeyValueChangeSetting: {
+            [self _resetPatternViewControllers];
+            break;
+        }
+        case NSKeyValueChangeInsertion: {
+            NSIndexSet *indexes = [change objectForKey:NSKeyValueChangeIndexesKey];
+            if (indexes) {
+                NSMutableArray *emptyObjects = NSMutableArray.new;
+                for (NSInteger i = 0; i < indexes.count; i++) {
+                    [emptyObjects addObject:[NSNull null]];
+                }
+                [_patternViewControllers insertObjects:emptyObjects atIndexes:indexes];
+                [NSAnimationContext beginGrouping];
+                [NSAnimationContext.currentContext setDuration:5];
+                [_tableView insertRowsAtIndexes:indexes withAnimation:NSTableViewAnimationEffectFade];
+                [NSAnimationContext endGrouping];
+            } else {
+                [self _resetPatternViewControllers];
+            }
+            break;
+        }
+        case NSKeyValueChangeRemoval: {
+            NSIndexSet *indexes = [change objectForKey:NSKeyValueChangeIndexesKey];
+            if (indexes) {
+                [_patternViewControllers removeObjectsAtIndexes:indexes];
+                
+                [_tableView removeRowsAtIndexes:indexes withAnimation:NSTableViewAnimationEffectFade];
+            } else {
+                [self _resetPatternViewControllers];
+            }
+            break;
+        }
+        case NSKeyValueChangeReplacement: {
+            NSIndexSet *indexes = [change objectForKey:NSKeyValueChangeIndexesKey];
+            if (indexes) {
+                [_patternViewControllers removeObjectsAtIndexes:indexes];
+                // replace w/null
+                NSMutableArray *emptyObjects = NSMutableArray.new;
+                for (NSInteger i = 0; i < indexes.count; i++) {
+                    [emptyObjects addObject:[NSNull null]];
+                }
+                [_patternViewControllers insertObjects:emptyObjects atIndexes:indexes];
+                [_tableView reloadDataForRowIndexes:indexes columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            } else {
+                [self _resetPatternViewControllers];
+            }
+            break;
+        }
+        default: {
+            NSAssert(NO, @"internal error: change not known");
+            break;
+        }
+    }
+
+    [_tableView reloadData];
+}
+
+- (NSManagedObjectContext *)managedObjectContext {
+    return self.document.managedObjectContext;
+}
+
+- (CDPatternSequence *)_patternSequence {
+    return self.document.patternSequence;
+}
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+    return _patternViewControllers.count;
+}
+
+- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+    CDPatternItemViewController *vc = [self _patternViewControllerAtIndex:row];
+    // don't set the identifier so it isn't reused...
+    return vc.view;
+}
+
+- (void)_addItem {
+    CDPatternItem *patternItem = [CDPatternItem newItemInContext:self.managedObjectContext];
+//    [self._patternSequence addChildrenObject:patternItem];
+    [self._patternSequence insertObject:patternItem inChildrenAtIndex:self._patternSequence.children.count];
     
-    CDPatternDataHeader pd;
-    // hardcoded maxes based on what i used in the structre
-    if (data.length > UINT32_MAX/* || imageRep.pixelsHigh > UINT16_MAX || imageRep.pixelsWide > UINT16_MAX*/) {
-        NSError *error = [NSError errorWithDomain:@"image or data size exceeds 16-bit size. time for me to up data sizes..." code:0 userInfo:nil];
-        handler(nil, nil, error);
-    } else {
-        // Append the rest the stuff we care about
-        // The format is CDPatternData.....but backwards
-        pd.patternType = item.patternType;
-        pd.dataLength = (uint32_t)data.length;
-        // pixels are what size the app designed it in; it may not be applicable..
-        pd.pixels = (uint32_t)item.pixelCount;
-        pd.duration = _NSTimeIntervalToMS(item.duration);
-        handler(data, &pd, nil);
-        //[data appendBytes:&pd length:sizeof(pd)];
+}
+
+- (void)_removeSelectedItem {
+    NSInteger selectedRow = _tableView.selectedRow;
+    if (selectedRow != -1) {
+        [_tableView beginUpdates];
+        CDPatternSequence *patternSequence = [self _patternSequence];
+        NSIndexSet *indexesToDelete = [_tableView selectedRowIndexes];
+        // grab the children first
+        NSArray *selectedChildren = [patternSequence.children objectsAtIndexes:indexesToDelete];
+
+        // remove them from the relationship
+        [patternSequence removeChildrenAtIndexes:indexesToDelete];
+        [_tableView endUpdates];
+        selectedRow--;
+        if (selectedRow >= 0 && selectedRow < _tableView.numberOfRows) {
+            [_tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
+        }
+
+        // delete them
+        for (CDPatternItem *childToDelete in selectedChildren) {
+            [self.managedObjectContext deleteObject:childToDelete];
+        }
+
+//        [self.managedObjectContext processPendingChanges];
+        
+//        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:[CDPatternItem className] inManagedObjectContext:self.managedObjectContext];
+//        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+//        fetchRequest.entity = entityDesc;
+//        NSError *error = nil;
+//        NSArray *resultArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+//        NSLog(@"%ld", resultArray.count);
+
     }
 }
 
-static inline NSString *intToStr(long integer) {
-    return [NSString stringWithFormat:@"%ld", integer];
+- (IBAction)sgmntControlClick:(NSSegmentedControl *)sender {
+    if ([sender selectedSegment] == 0) {
+        [self _addItem];
+    } else {
+        [self _removeSelectedItem];
+    }
 }
 
-// Sort of ugly...
-- (NSString *)_headerStringForData:(NSData *)data patternHeader:(CDPatternDataHeader *)header {
-    NSMutableString *bytesAsString = [[NSMutableString alloc] init];
-    /* // 10.9
-     __block NSInteger col = 0;
-     __block NSInteger count = 0;
-    [data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
-        for (NSInteger i = byteRange.location; i < NSMaxRange(byteRange); i++) {
-            col++;
-            count++;
-            uint8 *iPtr = (uint8 *)bytes;
-            if (col >= 50*3) {
-                col = 0;
-                [bytesAsString appendFormat:@"%d,\n", iPtr[i]];
-            } else if (col % 3 == 0) {
-                [bytesAsString appendFormat:@"\t%d, ", iPtr[i]];
-            } else {
-                [bytesAsString appendFormat:@"%d, ", iPtr[i]];
+- (void)_writeHeaderToData:(NSMutableData *)data {
+    CDPatternSequenceHeader header;
+    header.marker[0] = 'S';
+    header.marker[1] = 'Q';
+    header.marker[2] = 'C';
+    header.version = 0; // version 0
+    header.pixelCount = self._patternSequence.pixelCount;
+    header.patternCount = self._patternSequence.children.count;
+    [data appendBytes:&header length:sizeof(header)];
+}
+
+- (BOOL)_writePatternItem:(CDPatternItem *)item toData:(NSMutableData *)data {
+    CDPatternItemHeader itemHeader;
+    itemHeader.patternType = item.patternType;
+    itemHeader.duration = item.duration;
+
+    BOOL result = YES;
+    if (item.patternTypeRequiresImageData) {
+        // item.imageData is the raw image format. We have to convert it to something easier to deal with....
+        NSData *encodedData = [item getImageDataWithEncoding:CDPatternEncodingTypeRGB24]; // TODO: we could figure out which is smallest and use that encoded type
+        
+        NSUInteger dataLength = encodedData.length;
+        if (dataLength > UINT32_MAX) {
+            // sort of ugly way to show errors
+            NSError *error = [NSError errorWithDomain:@"image or data size exceeds 16-bit size. time for me to up data sizes..." code:0 userInfo:nil];
+            [self.window presentError:error modalForWindow:self.window delegate:nil didPresentSelector:nil contextInfo:nil];
+            result = NO;
+        } else {
+            itemHeader.dataLength = (uint32_t)dataLength;
+            [data appendBytes:&itemHeader length:sizeof(itemHeader)];
+            // Write the data
+            if (dataLength > 0) {
+                [data appendData:encodedData];
             }
         }
-    }];
-     NSAssert(header->dataLength == count, @"count check");
-     */
-    
-    NSInteger col = 0;
-    uint8 *iPtr = (uint8 *)data.bytes;
-    for (NSInteger i = 0; i < data.length; i++) {
-        if (col >= 10*3) {
-            col = 0;
-            [bytesAsString appendFormat:@"\n%d,", iPtr[i]];
-        } else if (col % 3 == 0) {
-            [bytesAsString appendFormat:@"\t%d,", iPtr[i]];
-        } else {
-            [bytesAsString appendFormat:@"%d,", iPtr[i]];
-        }
-        col++;
+    } else {
+        itemHeader.dataLength = 0;
+        [data appendBytes:&itemHeader length:sizeof(itemHeader)];
     }
-    
-    
-    // TODO: URL from resources: /corbin/Projects/Ardu  ino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDExportedImage_Template.h
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"CDExportedImage_Template" withExtension:@".h"];
-    NSMutableString *template = [NSMutableString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
-    
-    /*    {
-     %DATA%
-     },
-     // CDPatternDataHeader
-     {
-     %PATTERN_TYPE%,
-     %DURATION%,
-     %PIXELS%,
-     %LENGTH%
-     }
-     };
-
-     */
-    
-    [template replaceOccurrencesOfString:@"%PATTERN_TYPE%" withString:intToStr(header->patternType) options:0 range:NSMakeRange(0, template.length)];
-    [template replaceOccurrencesOfString:@"%DURATION%" withString:intToStr(header->duration) options:0 range:NSMakeRange(0, template.length)];
-    [template replaceOccurrencesOfString:@"%PIXELS%" withString:intToStr(header->pixels) options:0 range:NSMakeRange(0, template.length)];
-    [template replaceOccurrencesOfString:@"%LENGTH%" withString:intToStr(header->dataLength) options:0 range:NSMakeRange(0, template.length)];
-    [template replaceOccurrencesOfString:@"%DATA%" withString:bytesAsString options:0 range:NSMakeRange(0, template.length)];
-    return template;
+    return result;
 }
 
-- (IBAction)_btnSaveDataClicked:(id)sender {
-    [self _encodDataForPatternItem:self.document.patternItem handler:^(NSMutableData *encodedImageData, CDPatternDataHeader *header, NSError *error) {
-        if (error) {
-            [self presentError:error modalForWindow:self.window delegate:nil didPresentSelector:nil contextInfo:nil];
-        } else {
-            NSString *str = [self _headerStringForData:encodedImageData patternHeader:header];
-            NSLog(@"%@", str);
+- (void)_writeDataToURL:(NSURL *)url {
+    NSMutableData *data = [NSMutableData new];
+    [self _writeHeaderToData:data];
+    for (NSInteger i = 0; i < self._patternSequence.children.count; i++) {
+        CDPatternItem *item = self._patternSequence.children[i];
+        if (![self _writePatternItem:item toData:data]) {
+            break;
+        }
+    }
+    
+    NSError *error = nil;
+    if (![data writeToURL:url options:0 error:&error]) {
+        NSAssert(error != nil, @"failures should generate an error");
+        [self.window presentError:error modalForWindow:self.window delegate:nil didPresentSelector:nil contextInfo:nil];
+    }
+}
+
+- (IBAction)btnExportClick:(id)sender {
+    NSSavePanel *sp = [NSSavePanel savePanel];
+    sp.allowedFileTypes = @[@"pat"];
+    sp.allowsOtherFileTypes = NO;
+    sp.title = @"Export pattern to an SD card";
+    [sp beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
+        if (result == NSOKButton) {
+            [self _writeDataToURL:sp.URL];
         }
     }];
 }

@@ -8,9 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 #import "CDPatternItem.h"
+#import "CDPatternSequence.h"
 
 @interface CDDocument : NSPersistentDocument
 
-@property(retain, readonly) CDPatternItem *patternItem;
+@property(retain, readonly) CDPatternSequence *patternSequence;
 
 @end

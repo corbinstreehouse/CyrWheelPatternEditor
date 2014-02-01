@@ -8,15 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-
 #import "CDPatternData.h"
 
 
 @interface CDPatternItem : NSManagedObject
 
-@property (nonatomic, retain) NSData *image;
+@property (nonatomic, retain) NSData *imageData;
 @property (nonatomic) CDPatternType patternType;
-@property (nonatomic) int64_t pixelCount;
-@property (nonatomic) NSTimeInterval duration; // seconds
+@property (nonatomic) int32_t duration;
+@property (nonatomic) CDDurationType durationType;
+@property (nonatomic, readonly) BOOL patternTypeRequiresImageData;
+
++ (instancetype)newItemInContext:(NSManagedObjectContext *)context;
+
+- (NSData *)getImageDataWithEncoding:(CDPatternEncodingType)encodingType;
+
 
 @end 
