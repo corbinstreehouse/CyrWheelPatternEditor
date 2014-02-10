@@ -69,8 +69,6 @@ static const NSString *g_patternTypeNames[CDPatternTypeMax] =  {
 //    NSAssert(NO, @"no no no");// not alllwee
 //}
 
-
-
 // TODO: use appkit viewDidLoad when available
 - (void)__viewDidLoad {
     [_popupPatternType removeAllItems];

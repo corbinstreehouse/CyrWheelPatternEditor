@@ -8,6 +8,9 @@
 
 #import "CDDocument.h"
 #import "CDPatternEditorWindowController.h"
+#import "CDPatternSimulatorWindowController.h"
+
+static NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
 
 @interface NSArray(Hack)
 - (id)firstObject; // in 10.9, retropublisehd
@@ -16,6 +19,11 @@
 @implementation CDDocument
 
 @synthesize patternSequence = _patternSequence;
+
+- (id)init {
+    self = [super init];
+    return self;
+}
 
 - (CDPatternSequence *)_loadPatternItem {
     CDPatternSequence *result = nil;
@@ -52,11 +60,6 @@
     return result;
 }
 
-- (id)initWithType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
-    self = [super initWithType:typeName error:outError];
-    return self;
-}
-
 - (CDPatternSequence *)patternSequence {
     if (_patternSequence  == nil) {
         _patternSequence = [self _loadPatternItem];
@@ -68,7 +71,13 @@
 }
 
 - (void)makeWindowControllers {
-    CDPatternEditorWindowController *wc = [CDPatternEditorWindowController new];
+    NSWindowController *wc;
+    // switch on the sim vs real thing on what we initially opened
+    if ([[self fileType] isEqualToString:CDCompiledSequenceTypeName]) {
+        wc = [CDPatternSimulatorWindowController new];
+    } else {
+        wc = [CDPatternEditorWindowController new];
+    }
     [self addWindowController:wc];
 }
     
@@ -82,12 +91,49 @@
     return YES;
 }
 
-
-
-//- (void)reopenDocumentForURL:(NSURL *)urlOrNil withContentsOfURL:(NSURL *)contentsURL display:(BOOL)displayDocument completionHandler:(void (^)(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error))completionHandler {
-//    
-//    
+// experimental Bi support
+//- (void)_loadCompiledSequenceFromData:(NSData *)data  error:(NSError *__autoreleasing *)error {
+//
 //}
+//
+//- (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError *__autoreleasing *)error {
+//    // If it is our compiled type, we are a readonly document and translate it to our item..
+//    if ([typeName isEqualToString:CDCompiledSequenceTypeName]) {
+//        NSData *data = [NSData dataWithContentsOfURL:absoluteURL options:0 error:error];
+//        if (data) {
+//            // Load stuff..
+//            [self _loadCompiledSequenceFromData:data error:error];
+//            return YES;
+//        } else {
+//            return NO;
+//        }
+//    } else {
+//        // let coredata load
+//        return [super readFromURL:absoluteURL ofType:typeName error:error];
+//    }
+//}
+//
+//- (id)initWithContentsOfURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError {
+//    if ([typeName isEqualToString:CDCompiledSequenceTypeName]) {
+//        self = [self init];
+//        [self setFileType:CDCompiledSequenceTypeName];
+//        [self setFileURL:url];
+//        [self readFromURL:url ofType:typeName error:outError];
+//    } else {
+//        self = [super initWithContentsOfURL:url ofType:typeName error:outError];
+//    }
+//    return self;
+//}
+//
+//- (id)initForURL:(NSURL *)urlOrNil withContentsOfURL:(NSURL *)contentsURL ofType:(NSString *)typeName error:(NSError **)outError {
+//    if ([typeName isEqualToString:CDCompiledSequenceTypeName]) {
+//        self = [self initWithContentsOfURL:contentsURL ofType:typeName error:outError];
+//    } else {
+//        self = [super initForURL:urlOrNil withContentsOfURL:contentsURL ofType:typeName error:outError];
+//    }
+//    return self;
+//}
+//
 
 
 @end
