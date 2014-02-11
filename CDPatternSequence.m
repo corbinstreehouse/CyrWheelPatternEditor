@@ -16,6 +16,10 @@ NSString *CDPatternChildrenKey = @"children";
 @dynamic pixelCount;
 @dynamic children;
 
++ (instancetype)newPatternSequenceInContext:(NSManagedObjectContext *)context {
+    CDPatternSequence *result = [NSEntityDescription insertNewObjectForEntityForName:[self className] inManagedObjectContext:context];
+    return result;
+}
 
 // apparently not implemented in core data.
 // http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors

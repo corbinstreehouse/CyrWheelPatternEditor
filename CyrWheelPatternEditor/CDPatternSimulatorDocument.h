@@ -7,7 +7,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "CDPatternSequence.h"
 
-@interface CDPatternSimulatorDocument : NSDocument
+@interface CDPatternSimulatorDocument : NSPersistentDocument
+
+@property(retain, readonly) CDPatternSequence *patternSequence;
+@property(retain, readonly) NSString *sequenceName;
+
+- (void)loadNextSequence;
 
 @end

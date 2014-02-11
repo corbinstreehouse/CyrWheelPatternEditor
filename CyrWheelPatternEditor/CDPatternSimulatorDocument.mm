@@ -8,13 +8,14 @@
 
 #import "CDPatternSimulatorDocument.h"
 #import "CDPatternSimulatorWindowController.h"
+#import "CDPatternItem.h"
+
 #import "CWPatternSequenceManager.h"
 #import "SD.h"
 
 @interface CDPatternSimulatorDocument() {
 @private
-   CWPatternSequenceManager _sequenceManager;
-    
+    CWPatternSequenceManager _sequenceManager;
 }
 @end
 
@@ -63,22 +64,64 @@
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
-    // drop the filename, and use the CWPatternSequenceManager
+    
+    // drop the filename, and use the CWPatternSequenceManager to test loading
     NSURL *baseDirectory = [url URLByDeletingLastPathComponent];
     SDSetBaseDirectoryURL(baseDirectory);
+
+    // Mainly use the same code as the hardware so I can test it
     _sequenceManager.init();
     _sequenceManager.loadFirstSequence();
-    
-    
-        
-    
-    
-    
+    [self _loadPatternSequence];
+
     return YES;
 }
 
-+ (BOOL)autosavesInPlace
-{
+- (void)_loadPatternSequence {
+    [self willChangeValueForKey:@"patternSequence"];
+    NSManagedObjectContext *context = self.managedObjectContext;
+    [[context undoManager] disableUndoRegistration];
+    // Convert the sequenceManager to the pattern sequence
+    if (_patternSequence) {
+        [context deleteObject:_patternSequence];
+    }
+    _patternSequence = [CDPatternSequence newPatternSequenceInContext:context];
+    _patternSequence.pixelCount = _sequenceManager.getPixelCount();
+    NSMutableOrderedSet *newChildren = [NSMutableOrderedSet new];
+    for (uint32_t i = 0; i < _sequenceManager.getNumberOfPatternItems(); i++) {
+        CDPatternItemHeader *header = _sequenceManager.getPatternItemHeaderAtIndex(i);
+        CDPatternItem *item = [CDPatternItem newItemInContext:context];
+        item.patternType = header->patternType;
+        item.duration = header->duration;
+        if (header->data) {
+            NSData *data = [[NSData alloc] initWithBytes:(const void *)header->data length:header->dataLength];
+            item.imageData = data;
+        }
+        [newChildren addObject:item];
+    }
+    _patternSequence.children = newChildren;
+    [[context undoManager] enableUndoRegistration];
+    [self didChangeValueForKey:@"patternSequence"];
+}
+
++ (NSSet *)keyPathsForValuesAffectingSequenceName {
+    return [NSSet setWithObject:@"patternSequence"];
+}
+
+- (void)loadNextSequence {
+    _sequenceManager.loadNextSequence();
+    [self _loadPatternSequence];
+}
+
+- (NSString *)sequenceName {
+    if (_sequenceManager.getNumberOfSequenceNames() > 0) {
+        char *cstr = _sequenceManager.getSequenceNameAtIndex(_sequenceManager.getCurrentSequenceIndex());
+        return [NSString stringWithCString:cstr encoding:NSASCIIStringEncoding];
+    }
+    return nil;
+}
+
++ (BOOL)autosavesInPlace {
     return YES;
 }
 

@@ -24,10 +24,17 @@ private:
     NSArray *_urls;
     NSURL *_url;
     NSInteger _index;
+    NSData *_data;
     char *_filepath;
+    NSInteger _offset;
+    
+    NSURL *getURL();
 public:
     File(const char *filepath);
     ~File();
+    
+    size_t readBytes(char *buffer, size_t length);
+
 //    virtual size_t write(uint8_t);
 //    virtual size_t write(const uint8_t *buf, size_t size);
 //    virtual int read();

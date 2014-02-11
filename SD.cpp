@@ -35,12 +35,16 @@ File::~File() {
     }
 }
 
+NSURL *File::getURL() {
+    NSCAssert(_filepath != NULL, @"need a filepath");
+    NSString *pathToAppend = [NSString stringWithCString:_filepath encoding:NSASCIIStringEncoding];
+    NSURL *directoryURL = [g_baseDirectoryURL URLByAppendingPathComponent:pathToAppend];
+    return directoryURL;
+}
+
 bool File::getNextFilename(char *buffer) {
     if  (_urls == nil) {
-        NSCAssert(_filepath != NULL, @"need a filepath");
-        NSString *pathToAppend = [NSString stringWithCString:_filepath encoding:NSASCIIStringEncoding];
-        NSURL *directoryURL = [g_baseDirectoryURL URLByAppendingPathComponent:pathToAppend];
-        
+        NSURL *directoryURL = getURL();
         _urls = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:directoryURL includingPropertiesForKeys:nil options:0 error:NULL];
         _index = 0;
     }
@@ -65,18 +69,21 @@ void File::moveToStartOfDirectory() {
 SDClass SD;
 
 
-
-
-
-
-//
-//File::File(const char *n) {
-//    
-//}
-//
-//File::File(void) {
-//}
-
+size_t File::readBytes(char *buffer, size_t length)
+{
+    if (_data == nil) {
+        _data = [[NSData alloc] initWithContentsOfURL:getURL()];
+        _offset = 0;
+    }
+    // basic hack checks
+    if ((_offset + length) < _data.length) {
+        memcpy(buffer, &((char*)_data.bytes)[_offset], length);
+        return length;
+    } else {
+        return 0;
+    }
+}
 
 void File::close() {
+    _data = nil;
 }

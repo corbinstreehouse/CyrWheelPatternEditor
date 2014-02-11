@@ -19,7 +19,7 @@ public:
     void print(const char *s) { NSLog(@"%s", s); };
     void println(const char *s) { NSLog(@"%s", s); };
 	void printf(const char *format, ...) {
-        NSString *s = [NSString stringWithFormat:@"%s", format];
+       // NSString *s = [NSString stringWithFormat:@"%s", format];
 //        va_start(ap, param);
 //        NSLog(s, va_list);
 //        va_end(ap);

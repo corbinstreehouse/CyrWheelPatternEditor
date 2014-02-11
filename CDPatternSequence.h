@@ -22,6 +22,8 @@ extern NSString *CDPatternChildrenKey;
 
 @interface CDPatternSequence (CoreDataGeneratedAccessors)
 
++ (instancetype)newPatternSequenceInContext:(NSManagedObjectContext *)context;
+
 - (void)insertObject:(CDPatternItem *)value inChildrenAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromChildrenAtIndex:(NSUInteger)idx;
 - (void)insertChildren:(NSArray *)value atIndexes:(NSIndexSet *)indexes;

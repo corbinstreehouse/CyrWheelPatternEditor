@@ -7,7 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "CDPatternSimulatorDocument.h"
+
 
 @interface CDPatternSimulatorWindowController : NSWindowController
+
+- (CDPatternSimulatorDocument *)document;
 
 @end

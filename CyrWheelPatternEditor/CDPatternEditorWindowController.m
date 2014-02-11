@@ -236,6 +236,7 @@
 
 - (BOOL)_writePatternItem:(CDPatternItem *)item toData:(NSMutableData *)data {
     CDPatternItemHeader itemHeader;
+    bzero(&itemHeader, sizeof(CDPatternItemHeader));
     itemHeader.patternType = item.patternType;
     itemHeader.duration = item.duration;
 

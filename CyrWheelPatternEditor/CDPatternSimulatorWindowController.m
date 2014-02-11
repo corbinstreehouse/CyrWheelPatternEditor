@@ -7,11 +7,11 @@
 //
 
 #import "CDPatternSimulatorWindowController.h"
-#import "CDPatternSimulatorViewController.h"
+#import "CDPatternSimSequenceViewController.h"
 
 @interface CDPatternSimulatorWindowController () {
-    CDPatternSimulatorViewController *_simViewController;
-    
+@private
+    CDPatternSimSequenceViewController *_simViewController;
 }
 
 @end
@@ -23,12 +23,26 @@
     return self;
 }
 
+- (CDPatternSimulatorDocument *)document {
+    return (CDPatternSimulatorDocument *)super.document;
+}
+
+- (void)_update {
+    _simViewController.patternSequence = self.document.patternSequence;
+    _simViewController.sequenceName = self.document.sequenceName;
+}
+
 - (void)windowDidLoad
 {
     [super windowDidLoad];
-    _simViewController = [CDPatternSimulatorViewController new];
+    _simViewController = [CDPatternSimSequenceViewController new];
     self.window.contentView = _simViewController.view;
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    [self _update];
+    __weak CDPatternSimulatorWindowController *weakSelf = self;
+    _simViewController.nextSequenceHandler = ^() {
+        [weakSelf.document loadNextSequence];
+        [weakSelf _update];
+    };
 }
 
 @end
