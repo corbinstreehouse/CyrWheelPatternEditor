@@ -65,8 +65,16 @@
     return self.patternType == CDPatternTypeImageFade; // only type so far..
 }
 
+- (BOOL)durationTypeRequiresDuration {
+    return self.durationType != CDDurationTypeUntilButtonClick;
+}
+
 + (NSSet *)keyPathsForValuesAffectingPatternTypeRequiresImageData {
     return [NSSet setWithObject:@"patternType"];
+}
+
++ (NSSet *)keyPathsForValuesAffectingDurationTypeRequiresDuration {
+    return [NSSet setWithObjects:@"durationType", nil];
 }
 
 - (NSMutableData *)_encodeRepAsRGB:(NSBitmapImageRep *)imageRep {

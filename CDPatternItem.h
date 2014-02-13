@@ -18,6 +18,7 @@
 @property (nonatomic) int32_t duration;
 @property (nonatomic) CDDurationType durationType;
 @property (nonatomic, readonly) BOOL patternTypeRequiresImageData;
+@property (nonatomic, readonly) BOOL durationTypeRequiresDuration;
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context;
 
