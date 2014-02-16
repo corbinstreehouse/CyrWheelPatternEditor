@@ -16,6 +16,7 @@
 @interface CDPatternSimulatorDocument() {
 @private
     CWPatternSequenceManager _sequenceManager;
+    NSTimer *_timer;
 }
 @end
 
@@ -124,5 +125,27 @@
 + (BOOL)autosavesInPlace {
     return YES;
 }
+
+- (void)start {
+    if (_timer == nil) {
+        // Speed of the teensy...96000000 == 96Mhz 14 loops per usec.. according to source
+        NSTimeInterval time = 14.0/1000000.0;
+        _timer = [NSTimer scheduledTimerWithTimeInterval:time target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)stop {
+    [_timer invalidate];
+    _timer = nil;
+}
+
+- (BOOL)isRunning {
+    return _timer != nil;
+}
+
+- (void)_tick:(NSTimer *)sender {
+
+}
+
 
 @end

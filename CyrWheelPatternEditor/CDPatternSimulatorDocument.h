@@ -15,5 +15,8 @@
 @property(retain, readonly) NSString *sequenceName;
 
 - (void)loadNextSequence;
+- (void)start;
+- (void)stop;
+- (BOOL)isRunning;
 
 @end

@@ -25,11 +25,15 @@
 #define NEO_KHZ400  0x00 // 400 KHz datastream
 #endif
 
+@class CDCyrWheelView;
+
 class Adafruit_NeoPixel {
-    
+private:
+    CDCyrWheelView *_cyrWheelView;
+    const uint16_t _numberOfLEDs;
 public:
     // Constructor: number of LEDs, pin number, LED type
-    Adafruit_NeoPixel(uint16_t n, uint8_t p=6, uint8_t t=NEO_GRB + NEO_KHZ800);
+    Adafruit_NeoPixel(uint16_t numberOfLEDs, uint8_t pinNumber=6, uint8_t t=NEO_GRB + NEO_KHZ800);
     ~Adafruit_NeoPixel();
     
     void begin();
@@ -42,6 +46,7 @@ public:
     uint16_t numPixels(void) const;
     static uint32_t Color(uint8_t r, uint8_t g, uint8_t b);
     uint32_t getPixelColor(uint16_t n) const;
+    void setCyrWheelView(CDCyrWheelView *view);
     
 private:
     
