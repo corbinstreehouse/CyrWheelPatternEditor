@@ -83,8 +83,7 @@
                         <menu key="menu" title="OtherViews" id="Uk3-Z6-hPc">
                             <items>
                                 <menuItem title="Seconds" id="eNA-Jz-wxf"/>
-                                <menuItem title="Milliseconds" tag="1" id="7Sz-JS-EOt"/>
-                                <menuItem title="Intervals" tag="2" id="OxT-yx-Vtp"/>
+                                <menuItem title="Intervals &lt;not done>" tag="2" id="OxT-yx-Vtp"/>
                                 <menuItem title="Until Button Click" tag="2" id="zb2-o4-LcF"/>
                             </items>
                         </menu>
@@ -128,8 +127,8 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="enabled" keyPath="self.patternItem.durationTypeRequiresDuration" id="WaZ-5K-kDH"/>
                         <binding destination="-2" name="value" keyPath="self.patternItem.duration" id="MaK-PP-aAN"/>
+                        <binding destination="-2" name="enabled" keyPath="self.patternItem.durationTypeRequiresDuration" id="WaZ-5K-kDH"/>
                     </connections>
                 </textField>
             </subviews>
