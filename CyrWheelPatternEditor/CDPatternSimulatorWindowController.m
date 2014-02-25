@@ -43,6 +43,13 @@
         [weakSelf.document loadNextSequence];
         [weakSelf _update];
     };
+    _simViewController.startStopHandler = ^() {
+        if (weakSelf.document.isRunning) {
+            [weakSelf.document stop];
+        } else {
+            [weakSelf.document start];
+        }
+    };
 }
 
 @end

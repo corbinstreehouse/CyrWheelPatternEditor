@@ -72,7 +72,6 @@
 
     // Mainly use the same code as the hardware so I can test it
     _sequenceManager.init();
-    _sequenceManager.loadFirstSequence();
     [self _loadPatternSequence];
 
     return YES;
@@ -130,7 +129,8 @@
     if (_timer == nil) {
         // Speed of the teensy...96000000 == 96Mhz 14 loops per usec.. according to source
         NSTimeInterval time = 14.0/1000000.0;
-        _timer = [NSTimer scheduledTimerWithTimeInterval:time target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
+        _timer = [NSTimer timerWithTimeInterval:time target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
     }
 }
 
@@ -144,7 +144,7 @@
 }
 
 - (void)_tick:(NSTimer *)sender {
-
+    _sequenceManager.process();
 }
 
 

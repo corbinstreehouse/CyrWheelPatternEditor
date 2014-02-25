@@ -14,19 +14,27 @@ Print Serial;
 volatile uint32_t systick_millis_count;
 
 uint32_t millis() {
-    CFTimeInterval now = CFAbsoluteTimeGetCurrent(); // in seconds..
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     now *= 1000; // milliseconds
-    return trunc(now);
+    uint32_t resAsInt = now; // trunc(now);
+    return resAsInt;
 }
 
 uint32_t micros() {
-    CFTimeInterval now = CFAbsoluteTimeGetCurrent(); // in seconds..
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     now *= (1000000); // milliseconds
-    return trunc(now);
+    uint32_t resAsInt = now; // trunc(now);
+    return resAsInt;
 }
 
 void yield() {
-    
+    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
+
+    NSEvent *e = [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:[NSDate date] inMode:(NSString *)kCFRunLoopDefaultMode dequeue:YES];
+    if (e) {
+        [NSApp sendEvent:e];
+    }
+
 }
 
 int analogRead(uint8_t pin) {
@@ -82,5 +90,6 @@ long map(long x, long in_min, long in_max, long out_min, long out_max)
 
 
 bool mainProcess() {
+    yield(); // process events..
     return false;
 }

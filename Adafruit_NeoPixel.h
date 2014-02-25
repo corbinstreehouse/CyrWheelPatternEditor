@@ -31,6 +31,9 @@ class Adafruit_NeoPixel {
 private:
     CDCyrWheelView *_cyrWheelView;
     const uint16_t _numberOfLEDs;
+    uint8_t *_pixels; // GRB
+    const uint16_t _numBytes;      // Size of 'pixels' buffer below; this is numLEDs*3, but storing it
+    int _brightness;
 public:
     // Constructor: number of LEDs, pin number, LED type
     Adafruit_NeoPixel(uint16_t numberOfLEDs, uint8_t pinNumber=6, uint8_t t=NEO_GRB + NEO_KHZ800);

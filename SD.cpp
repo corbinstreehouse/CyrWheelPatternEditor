@@ -64,6 +64,8 @@ bool File::getNextFilename(char *buffer) {
 
 void File::moveToStartOfDirectory() {
     _index = 0;
+    _offset = 0;
+    _data = nil;
 }
 
 SDClass SD;
@@ -76,10 +78,12 @@ size_t File::readBytes(char *buffer, size_t length)
         _offset = 0;
     }
     // basic hack checks
-    if ((_offset + length) < _data.length) {
+    if ((_offset + length) <= _data.length) {
         memcpy(buffer, &((char*)_data.bytes)[_offset], length);
+        _offset += length;
         return length;
     } else {
+        NSCAssert(NO, @"reading error");
         return 0;
     }
 }

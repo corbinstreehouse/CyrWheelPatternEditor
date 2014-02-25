@@ -15,5 +15,6 @@
 @property NSString *sequenceName;
 
 @property(copy) void (^nextSequenceHandler)();
+@property(copy) void (^startStopHandler)();
 
 @end

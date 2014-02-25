@@ -29,7 +29,9 @@
 }
 
 - (IBAction)btnNextSequenceClicked:(id)sender {
-    if (self.nextSequenceHandler) self.nextSequenceHandler();
+    if (self.nextSequenceHandler) {
+        self.nextSequenceHandler();
+    }
 }
 
 - (void)loadView {
@@ -42,11 +44,9 @@
 }
 
 - (IBAction)btnStartStopClicked:(id)sender {
-    sdf
-}
-
-- (void)_tick:(NSTimer *)sender {
-
+    if (self.startStopHandler) {
+        self.startStopHandler();
+    }
 }
 
 @end
