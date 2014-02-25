@@ -29,6 +29,10 @@
     return self;
 }
 
+- (BOOL)isOpaque {
+    return YES;
+}
+
 - (void)setPixelColor:(NSColor *)color atIndex:(NSInteger)index {
     NSAssert(index >= 0 && index < _numberOfLEDs, @"count check");
     if (_colors == nil || _colors.count != _numberOfLEDs) {
@@ -49,18 +53,44 @@
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-	if (_colors) {
-        NSRect bounds = self.bounds;
+    NSRect bounds = self.bounds;
+    [NSColor.blackColor set];
+    NSRectFill(self.bounds);
+
+    NSInteger numberOfPixels = _colors.count;
+	if (numberOfPixels > 0) {
+        
+        CGFloat halfWidth = floor(NSWidth(bounds) / 2.0);
+        CGFloat halfHeight = floor(NSHeight(bounds) / 2.0);
         // translate our origin to the center
         NSAffineTransform *t = [NSAffineTransform transform];
-        [t translateXBy:floor(NSWidth(bounds) / 2.0) yBy:floor(NSHeight(bounds) / 2.0)];
+        [t translateXBy:halfWidth yBy:halfHeight];
+        [t concat];
+
+        // Figure out the angle increment per pixel for 2*pi circumfrance
+        double incPerPixel = 2.0*M_PI / numberOfPixels;
+
+        // Radius is smaller of the widht or height
+        CGFloat radius = MIN(halfWidth, halfHeight) - LED_SIZE;
         
-        NSInteger x = self.bounds.origin.x;
-        for (NSInteger i = 0; i < _colors.count; i++) {
+        for (NSInteger i = 0; i < numberOfPixels; i++) {
+            // Go clockwise from pi/2 (top); but normally, incrementing along a circle is counter-clockwise, so we subtract the increment per pixel to go backwards from the top origin
+            CGFloat currentAngle = M_PI_2 - (incPerPixel*i);
+            
+            // cos(angle) = x/radius
+            // sin(angle) = y/radius
+            CGFloat x = cos(currentAngle) * radius;
+            CGFloat y = sin(currentAngle) * radius;
+            // x,y is the center; back off by half the led size
+            x -= LED_SIZE/2.0;
+            y -= LED_SIZE/2.0;
+            // should hidpi align..but bah
+            x = round(x);
+            y = round(y);
+            
             NSColor *color = [self getPixelColorAtIndex:i];
             [color set];
-            NSRectFill(NSMakeRect(x, 0, LED_SIZE, LED_SIZE));
-            x += LED_SIZE + LED_SPACING;
+            NSRectFill(NSMakeRect(x, y, LED_SIZE, LED_SIZE));
         }
     } else {
         [NSColor.redColor set];

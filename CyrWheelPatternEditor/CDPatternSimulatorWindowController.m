@@ -27,29 +27,13 @@
     return (CDPatternSimulatorDocument *)super.document;
 }
 
-- (void)_update {
-    _simViewController.patternSequence = self.document.patternSequence;
-    _simViewController.sequenceName = self.document.sequenceName;
-}
-
 - (void)windowDidLoad
 {
     [super windowDidLoad];
     _simViewController = [CDPatternSimSequenceViewController new];
+    _simViewController.document = self.document;
     self.window.contentView = _simViewController.view;
-    [self _update];
-    __weak CDPatternSimulatorWindowController *weakSelf = self;
-    _simViewController.nextSequenceHandler = ^() {
-        [weakSelf.document loadNextSequence];
-        [weakSelf _update];
-    };
-    _simViewController.startStopHandler = ^() {
-        if (weakSelf.document.isRunning) {
-            [weakSelf.document stop];
-        } else {
-            [weakSelf.document start];
-        }
-    };
+    [self.document start]; // Start running...
 }
 
 @end

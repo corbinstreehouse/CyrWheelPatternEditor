@@ -13,6 +13,28 @@
 #import "CWPatternSequenceManager.h"
 #import "SD.h"
 
+static NSString *g_patternTypeNames[CDPatternTypeMax + 1] = {
+    @"CDPatternTypeRainbow",
+    @"CDPatternTypeRainbow2",
+    @"CDPatternTypeColorWipe",
+    @"CDPatternTypeImageLEDGradient",
+    @"CDPatternTypePluseGradientEffect",
+    
+    // Patterns defined by an image
+    @"CDPatternTypeImageFade",
+    
+    // the next set is ordered specifically
+    @"CDPatternTypeWarmWhiteShimmer",
+    @"CDPatternTypeRandomColorWalk",
+    @"CDPatternTypeTraditionalColors",
+    @"CDPatternTypeColorExplosion",
+    @"CDPatternTypeGradient",
+    @"CDPatternTypeBrightTwinkle",
+    @"CDPatternTypeCollision",
+    @"CDPatternTypeAllOn"
+    
+};
+
 @interface CDPatternSimulatorDocument() {
 @private
     CWPatternSequenceManager _sequenceManager;
@@ -108,6 +130,15 @@
     return [NSSet setWithObject:@"patternSequence"];
 }
 
++ (NSSet *)keyPathsForValuesAffectingPatternDuration {
+    return [NSSet setWithObjects:@"patternTypeName", nil];
+}
+
++ (NSSet *)keyPathsForValuesAffectingPatternTypeName {
+    return [NSSet setWithObjects:@"patternSequence", nil];
+}
+
+
 - (void)loadNextSequence {
     _sequenceManager.loadNextSequence();
     [self _loadPatternSequence];
@@ -119,6 +150,23 @@
         return [NSString stringWithCString:cstr encoding:NSASCIIStringEncoding];
     }
     return nil;
+}
+
+- (NSString *)patternTypeName {
+    CDPatternItemHeader *itemHeader = _sequenceManager.getCurrentPatternItemHeader();
+    if (itemHeader) {
+        return g_patternTypeNames[itemHeader->patternType];
+    }
+    return @"<None>";
+}
+
+- (NSTimeInterval)patternDuration {
+    CDPatternItemHeader *itemHeader = _sequenceManager.getCurrentPatternItemHeader();
+    if (itemHeader) {
+        return itemHeader->duration;
+    } else {
+        return 0;
+    }
 }
 
 + (BOOL)autosavesInPlace {
@@ -144,7 +192,19 @@
 }
 
 - (void)_tick:(NSTimer *)sender {
+    CDPatternItemHeader *oldHeader = _sequenceManager.getCurrentPatternItemHeader();
     _sequenceManager.process();
+    CDPatternItemHeader *newHeader = _sequenceManager.getCurrentPatternItemHeader();
+    if (oldHeader != newHeader) {
+        [self willChangeValueForKey:@"patternTypeName"];
+        [self didChangeValueForKey:@"patternTypeName"];
+    }
+}
+
+- (void)performButtonClick {
+    [self willChangeValueForKey:@"patternTypeName"];
+    _sequenceManager.nextPatternItem();
+    [self didChangeValueForKey:@"patternTypeName"];
 }
 
 

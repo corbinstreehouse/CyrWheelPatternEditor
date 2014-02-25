@@ -12,6 +12,8 @@
 @class CDPatternItem;
 
 // Each document represents one pattern sequence to be played back.. each can be stored as a file.
+
+// TODO: rename to "CDSequenceGroup"??
 @interface CDPatternSequence : NSManagedObject
 
 @property (nonatomic) int32_t pixelCount;

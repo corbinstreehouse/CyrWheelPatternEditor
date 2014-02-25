@@ -13,8 +13,12 @@
 
 @property(retain, readonly) CDPatternSequence *patternSequence;
 @property(retain, readonly) NSString *sequenceName;
+@property(retain, readonly) NSString *patternTypeName;
+@property(readonly) NSTimeInterval patternDuration;
+
 
 - (void)loadNextSequence;
+- (void)performButtonClick;
 - (void)start;
 - (void)stop;
 - (BOOL)isRunning;

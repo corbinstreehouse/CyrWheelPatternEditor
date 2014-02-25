@@ -37,6 +37,8 @@ void Adafruit_NeoPixel::show() {
         [_cyrWheelView setPixelColor:color atIndex:i];
     }
     [_cyrWheelView setNeedsDisplay:YES];
+//#warning corbin force display not so great... slows stuff down considerably..
+//    [_cyrWheelView displayIfNeeded];
 }
 
 void Adafruit_NeoPixel::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {

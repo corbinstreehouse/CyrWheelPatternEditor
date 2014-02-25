@@ -14,7 +14,6 @@
 @interface CDPatternSimSequenceViewController () {
 @private
     BOOL _running;
-    CDPatternSimulatorDocument *_document;
 }
 
 @property (weak) IBOutlet CDCyrWheelView *cyrWheelView;
@@ -29,9 +28,7 @@
 }
 
 - (IBAction)btnNextSequenceClicked:(id)sender {
-    if (self.nextSequenceHandler) {
-        self.nextSequenceHandler();
-    }
+    [self.document loadNextSequence];
 }
 
 - (void)loadView {
@@ -44,9 +41,15 @@
 }
 
 - (IBAction)btnStartStopClicked:(id)sender {
-    if (self.startStopHandler) {
-        self.startStopHandler();
+    if (self.document.isRunning) {
+        [self.document stop];
+    } else {
+        [self.document start];
     }
+}
+
+- (IBAction)btnClickSimClicked:(id)sender {
+    [self.document performButtonClick];
 }
 
 @end
