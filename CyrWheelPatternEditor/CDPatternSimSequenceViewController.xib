@@ -30,7 +30,7 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cP1-Y8-St2">
-                    <rect key="frame" x="449" y="550" width="110" height="17"/>
+                    <rect key="frame" x="18" y="531" width="110" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;Pattern Name>" id="Jxm-OU-46J">
                         <font key="font" metaFont="system"/>
@@ -46,7 +46,7 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jwl-31-ycs">
-                    <rect key="frame" x="593" y="550" width="80" height="17"/>
+                    <rect key="frame" x="141" y="531" width="80" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;Duration>" id="Xor-u9-ypN">
                         <font key="font" metaFont="system"/>
@@ -57,6 +57,22 @@
                         <binding destination="-2" name="displayPatternValue1" keyPath="self.document.patternDuration" id="e8i-P7-jTa">
                             <dictionary key="options">
                                 <string key="NSDisplayPattern">Duration: %{value1}@</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6ru-un-SHy">
+                    <rect key="frame" x="234" y="531" width="114" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;Interval Count>" id="alR-hN-cxZ">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="displayPatternValue1" keyPath="self.document.patternRepeatCount" id="065-RI-JIN">
+                            <dictionary key="options">
+                                <string key="NSDisplayPattern">Interval count: %{value1}@</string>
                             </dictionary>
                         </binding>
                     </connections>
@@ -120,34 +136,36 @@
                     </connections>
                 </button>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="oZu-8a-0px" customClass="CDCyrWheelView">
-                    <rect key="frame" x="20" y="42" width="651" height="500"/>
+                    <rect key="frame" x="20" y="42" width="651" height="481"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="500" id="TuR-4q-0Vt"/>
-                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="500" id="zPf-Ct-VIr"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="400" id="TuR-4q-0Vt"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="400" id="zPf-Ct-VIr"/>
                     </constraints>
                 </customView>
             </subviews>
             <constraints>
-                <constraint firstItem="oZu-8a-0px" firstAttribute="top" secondItem="TBd-Gh-Q3Z" secondAttribute="bottom" constant="8" id="0VD-9E-ncM"/>
                 <constraint firstAttribute="trailing" secondItem="oZu-8a-0px" secondAttribute="trailing" constant="20" id="1iB-nL-bHd"/>
                 <constraint firstItem="058-Lz-Rpz" firstAttribute="baseline" secondItem="vAM-Jp-4bi" secondAttribute="baseline" id="5Qg-IP-dbt"/>
-                <constraint firstItem="Jwl-31-ycs" firstAttribute="leading" secondItem="cP1-Y8-St2" secondAttribute="trailing" constant="38" id="5XD-1o-cAJ"/>
                 <constraint firstItem="Oqr-gk-iHE" firstAttribute="top" secondItem="oZu-8a-0px" secondAttribute="bottom" constant="6" id="7Na-cl-UQM"/>
                 <constraint firstItem="v1y-GU-LV6" firstAttribute="leading" secondItem="OgF-hs-oYL" secondAttribute="trailing" constant="12" id="9Kx-b3-Qqx"/>
                 <constraint firstItem="vAM-Jp-4bi" firstAttribute="top" secondItem="1" secondAttribute="top" constant="7" id="A2i-9h-zqC"/>
                 <constraint firstItem="Oqr-gk-iHE" firstAttribute="top" secondItem="OgF-hs-oYL" secondAttribute="top" id="C4b-uA-bqE"/>
-                <constraint firstItem="cP1-Y8-St2" firstAttribute="top" secondItem="vAM-Jp-4bi" secondAttribute="top" id="FeF-ez-gBs"/>
-                <constraint firstItem="cP1-Y8-St2" firstAttribute="leading" secondItem="TBd-Gh-Q3Z" secondAttribute="trailing" constant="35" id="K4I-CK-JEY"/>
+                <constraint firstItem="6ru-un-SHy" firstAttribute="leading" secondItem="Jwl-31-ycs" secondAttribute="trailing" constant="17" id="JvJ-hc-xmg"/>
                 <constraint firstAttribute="bottom" secondItem="Oqr-gk-iHE" secondAttribute="bottom" constant="15" id="KeF-xt-VMH"/>
+                <constraint firstItem="cP1-Y8-St2" firstAttribute="baseline" secondItem="Jwl-31-ycs" secondAttribute="baseline" id="Lbb-dO-vOS"/>
                 <constraint firstItem="vAM-Jp-4bi" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" id="O7O-Fy-xxl"/>
                 <constraint firstItem="TBd-Gh-Q3Z" firstAttribute="baseline" secondItem="vAM-Jp-4bi" secondAttribute="baseline" id="PjT-IW-vVM"/>
                 <constraint firstItem="058-Lz-Rpz" firstAttribute="leading" secondItem="vAM-Jp-4bi" secondAttribute="trailing" constant="8" id="QK7-KQ-HtU"/>
-                <constraint firstItem="Jwl-31-ycs" firstAttribute="baseline" secondItem="cP1-Y8-St2" secondAttribute="baseline" id="Qqo-Tg-r7e"/>
+                <constraint firstItem="cP1-Y8-St2" firstAttribute="leading" secondItem="vAM-Jp-4bi" secondAttribute="leading" id="SLZ-mB-vPj"/>
+                <constraint firstItem="cP1-Y8-St2" firstAttribute="top" secondItem="vAM-Jp-4bi" secondAttribute="bottom" constant="2" id="UBB-PK-xRS"/>
                 <constraint firstItem="v1y-GU-LV6" firstAttribute="baseline" secondItem="OgF-hs-oYL" secondAttribute="baseline" id="VSh-kM-4qe"/>
                 <constraint firstItem="TBd-Gh-Q3Z" firstAttribute="leading" secondItem="058-Lz-Rpz" secondAttribute="trailing" constant="37" id="c8t-T1-3J3"/>
                 <constraint firstItem="OgF-hs-oYL" firstAttribute="leading" secondItem="Oqr-gk-iHE" secondAttribute="trailing" constant="12" id="cbj-XI-1Lu"/>
+                <constraint firstItem="Jwl-31-ycs" firstAttribute="leading" secondItem="cP1-Y8-St2" secondAttribute="trailing" constant="17" id="dnD-6n-av4"/>
+                <constraint firstItem="cP1-Y8-St2" firstAttribute="baseline" secondItem="6ru-un-SHy" secondAttribute="baseline" id="k19-Ru-UBA"/>
                 <constraint firstItem="Oqr-gk-iHE" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="11" id="lD1-xh-Pro"/>
+                <constraint firstItem="oZu-8a-0px" firstAttribute="top" secondItem="6ru-un-SHy" secondAttribute="bottom" constant="8" id="tDJ-u5-pcY"/>
                 <constraint firstItem="oZu-8a-0px" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" id="wXe-el-Mfa"/>
             </constraints>
         </customView>

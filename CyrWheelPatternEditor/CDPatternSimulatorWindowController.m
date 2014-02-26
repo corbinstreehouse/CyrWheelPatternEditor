@@ -36,4 +36,8 @@
     [self.document start]; // Start running...
 }
 
+- (void)windowDidBecomeKey:(NSNotification *)notification {
+    [self.document start];
+}
+
 @end

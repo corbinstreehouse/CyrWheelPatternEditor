@@ -46,6 +46,7 @@ public:
     void setPixelColor(uint16_t n, uint32_t c);
     void setBrightness(uint8_t brightness);
     uint8_t getBrightness() { return _brightness; };
+    const uint16_t getNumberOfBytes() { return _numBytes; };
     
     uint8_t *getPixels() const;
     uint16_t numPixels(void) const;

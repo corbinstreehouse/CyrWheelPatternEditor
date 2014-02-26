@@ -9,31 +9,11 @@
 #import "CDPatternSimulatorDocument.h"
 #import "CDPatternSimulatorWindowController.h"
 #import "CDPatternItem.h"
+#import "CDPatternItemViewController.h"
 
 #import "CWPatternSequenceManager.h"
 #import "SD.h"
 
-static NSString *g_patternTypeNames[CDPatternTypeMax + 1] = {
-    @"CDPatternTypeRainbow",
-    @"CDPatternTypeRainbow2",
-    @"CDPatternTypeColorWipe",
-    @"CDPatternTypeImageLEDGradient",
-    @"CDPatternTypePluseGradientEffect",
-    
-    // Patterns defined by an image
-    @"CDPatternTypeImageFade",
-    
-    // the next set is ordered specifically
-    @"CDPatternTypeWarmWhiteShimmer",
-    @"CDPatternTypeRandomColorWalk",
-    @"CDPatternTypeTraditionalColors",
-    @"CDPatternTypeColorExplosion",
-    @"CDPatternTypeGradient",
-    @"CDPatternTypeBrightTwinkle",
-    @"CDPatternTypeCollision",
-    @"CDPatternTypeAllOn"
-    
-};
 
 @interface CDPatternSimulatorDocument() {
 @private
@@ -114,7 +94,10 @@ static NSString *g_patternTypeNames[CDPatternTypeMax + 1] = {
         CDPatternItemHeader *header = _sequenceManager.getPatternItemHeaderAtIndex(i);
         CDPatternItem *item = [CDPatternItem newItemInContext:context];
         item.patternType = header->patternType;
-        item.duration = header->duration;
+        item.duration = header->duration / 1000; // Header stores it in MS
+        item.patternEndCondition = header->patternEndCondition;
+        item.repeatCount = header->intervalCount;
+        item.encodedColor = header->color;
         if (header->data) {
             NSData *data = [[NSData alloc] initWithBytes:(const void *)header->data length:header->dataLength];
             item.imageData = data;
@@ -138,6 +121,17 @@ static NSString *g_patternTypeNames[CDPatternTypeMax + 1] = {
     return [NSSet setWithObjects:@"patternSequence", nil];
 }
 
++ (NSSet *)keyPathsForValuesAffectingRepeatCount {
+    return [NSSet setWithObjects:@"patternTypeName", nil];
+}
+
+- (NSInteger)patternRepeatCount {
+    CDPatternItemHeader *itemHeader = _sequenceManager.getCurrentPatternItemHeader();
+    if (itemHeader) {
+        return itemHeader->intervalCount;
+    }
+    return 0;
+}
 
 - (void)loadNextSequence {
     _sequenceManager.loadNextSequence();
@@ -163,7 +157,8 @@ static NSString *g_patternTypeNames[CDPatternTypeMax + 1] = {
 - (NSTimeInterval)patternDuration {
     CDPatternItemHeader *itemHeader = _sequenceManager.getCurrentPatternItemHeader();
     if (itemHeader) {
-        return itemHeader->duration;
+        // Header stores duration in MS
+        return itemHeader->duration / 1000.0;
     } else {
         return 0;
     }
@@ -173,7 +168,13 @@ static NSString *g_patternTypeNames[CDPatternTypeMax + 1] = {
     return YES;
 }
 
+static CDPatternSimulatorDocument *g_activeDoc = nil;
+
 - (void)start {
+    if (g_activeDoc != self) {
+        [g_activeDoc stop];
+        g_activeDoc = self;
+    }
     if (_timer == nil) {
         // Speed of the teensy...96000000 == 96Mhz 14 loops per usec.. according to source
         NSTimeInterval time = 14.0/1000000.0;
@@ -185,6 +186,7 @@ static NSString *g_patternTypeNames[CDPatternTypeMax + 1] = {
 - (void)stop {
     [_timer invalidate];
     _timer = nil;
+    g_activeDoc = nil;
 }
 
 - (BOOL)isRunning {
@@ -193,7 +195,7 @@ static NSString *g_patternTypeNames[CDPatternTypeMax + 1] = {
 
 - (void)_tick:(NSTimer *)sender {
     CDPatternItemHeader *oldHeader = _sequenceManager.getCurrentPatternItemHeader();
-    _sequenceManager.process();
+    _sequenceManager.process(false);
     CDPatternItemHeader *newHeader = _sequenceManager.getCurrentPatternItemHeader();
     if (oldHeader != newHeader) {
         [self willChangeValueForKey:@"patternTypeName"];

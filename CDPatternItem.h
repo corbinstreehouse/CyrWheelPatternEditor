@@ -15,10 +15,14 @@
 
 @property (nonatomic, retain) NSData *imageData;
 @property (nonatomic) CDPatternType patternType;
-@property (nonatomic) int32_t duration;
-@property (nonatomic) CDDurationType durationType;
-@property (nonatomic, readonly) BOOL patternTypeRequiresImageData;
-@property (nonatomic, readonly) BOOL durationTypeRequiresDuration;
+@property (nonatomic) double duration; // in seconds
+@property (nonatomic) int32_t repeatCount;
+@property (nonatomic) int32_t encodedColor;
+@property (nonatomic) CDPatternEndCondition patternEndCondition;
+
+@property (nonatomic, readonly) BOOL patternTypeRequiresImageData; // synthesized for bindings
+@property (nonatomic, readonly) BOOL durationEnabled; // synthesized for bindings
+@property (nonatomic, readonly) BOOL repeatCountEnabled; // synthesized for bindings
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context;
 

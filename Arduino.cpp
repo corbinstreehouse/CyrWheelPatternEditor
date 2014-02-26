@@ -28,7 +28,7 @@ uint32_t micros() {
 }
 
 void yield() {
-    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
+   // [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
 
     NSEvent *e = [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:[NSDate date] inMode:(NSString *)kCFRunLoopDefaultMode dequeue:YES];
     if (e) {

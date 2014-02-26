@@ -42,15 +42,11 @@ void Adafruit_NeoPixel::show() {
 }
 
 void Adafruit_NeoPixel::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
-    NSCAssert(n < _numberOfLEDs, @"bounds check");
-    NSCAssert(_cyrWheelView != nil, @"cyr wheel view needs to be around");
-    NSColor *color = [NSColor colorWithSRGBRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1.0];
-    [_cyrWheelView setPixelColor:color atIndex:n];
-    
+    this->setPixelColor(n, Color(r, g, b));
 }
 
 void Adafruit_NeoPixel::setPixelColor(uint16_t n, uint32_t c) {
-    assert(n < _numberOfLEDs);
+    NSCAssert(n < _numberOfLEDs, @"bounds check");
     uint8_t r = (uint8_t)(c >> 16);
     uint8_t g = (uint8_t)(c >>  8);
     uint8_t b = (uint8_t)c;

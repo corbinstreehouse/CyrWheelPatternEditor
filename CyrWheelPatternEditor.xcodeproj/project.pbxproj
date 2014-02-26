@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D500A2518BD88E8003BD8C2 /* CDEncodedColorTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.m */; };
 		9DBB2A7518A2F21A00C44C7C /* CDPatternSimulatorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7318A2F21A00C44C7C /* CDPatternSimulatorWindowController.m */; };
 		9DBB2A7618A2F21A00C44C7C /* CDPatternSimulatorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7418A2F21A00C44C7C /* CDPatternSimulatorWindowController.xib */; };
 		9DBB2A7918A2F34600C44C7C /* CDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7818A2F34600C44C7C /* CDAppDelegate.m */; };
@@ -53,6 +54,8 @@
 
 /* Begin PBXFileReference section */
 		9D3A0DB0188A3D26001AD553 /* CDPatternData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternData.h; path = ../../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternData.h; sourceTree = "<group>"; };
+		9D500A2318BD88E8003BD8C2 /* CDEncodedColorTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDEncodedColorTransformer.h; sourceTree = "<group>"; };
+		9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDEncodedColorTransformer.m; sourceTree = "<group>"; };
 		9DBB2A7218A2F21A00C44C7C /* CDPatternSimulatorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternSimulatorWindowController.h; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.h; sourceTree = "<group>"; };
 		9DBB2A7318A2F21A00C44C7C /* CDPatternSimulatorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDPatternSimulatorWindowController.m; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.m; sourceTree = "<group>"; };
 		9DBB2A7418A2F21A00C44C7C /* CDPatternSimulatorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CDPatternSimulatorWindowController.xib; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.xib; sourceTree = "<group>"; };
@@ -229,6 +232,8 @@
 				9DBD803F189B525300A6A067 /* CDPatternItemViewController.xib */,
 				9DBD8048189C9FB200A6A067 /* CDPatternDataToImageTransformer.h */,
 				9DBD8049189C9FB200A6A067 /* CDPatternDataToImageTransformer.m */,
+				9D500A2318BD88E8003BD8C2 /* CDEncodedColorTransformer.h */,
+				9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.m */,
 				9DFBAC221888EDFC00737C2F /* CDDocument.h */,
 				9DFBAC231888EDFC00737C2F /* CDDocument.m */,
 				9DFBAC501888F03C00737C2F /* CDPatternItem.h */,
@@ -387,6 +392,7 @@
 				9DBD8047189B66FA00A6A067 /* CDPatternSequence.m in Sources */,
 				9DBB2A7918A2F34600C44C7C /* CDAppDelegate.m in Sources */,
 				9DBE92D518ACE19900154550 /* CDCyrWheelView.m in Sources */,
+				9D500A2518BD88E8003BD8C2 /* CDEncodedColorTransformer.m in Sources */,
 				9DBD804A189C9FB200A6A067 /* CDPatternDataToImageTransformer.m in Sources */,
 				9DBD8040189B525300A6A067 /* CDPatternItemViewController.m in Sources */,
 				9DBE92CF18AB374A00154550 /* CDLEDStripPatterns.cpp in Sources */,

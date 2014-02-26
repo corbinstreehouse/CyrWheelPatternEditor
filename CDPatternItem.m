@@ -7,17 +7,20 @@
 //
 
 #import "CDPatternItem.h"
+#import "CDEncodedColorTransformer.h"
 
 
 @implementation CDPatternItem
 
-@dynamic imageData, patternType, duration, durationType;
+@dynamic imageData, patternType, duration, patternEndCondition, repeatCount, durationEnabled, repeatCountEnabled, encodedColor;
 
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context {
     CDPatternItem *result = [NSEntityDescription insertNewObjectForEntityForName:[self className] inManagedObjectContext:context];
     result.duration = 3;
-    result.durationType = CDDurationTypeSeconds;
+    result.repeatCount = 1;
+    result.patternEndCondition = CDPatternEndConditionAfterRepeatCount;
+    result.encodedColor = [CDEncodedColorTransformer intFromColor:NSColor.blueColor];
     return result;
 }
 
@@ -65,17 +68,26 @@
     return self.patternType == CDPatternTypeImageFade; // only type so far..
 }
 
-- (BOOL)durationTypeRequiresDuration {
-    return self.durationType != CDDurationTypeUntilButtonClick;
+- (BOOL)repeatCountEnabled {
+    return self.patternEndCondition == CDPatternEndConditionAfterRepeatCount;
+}
+
+- (BOOL)durationEnabled {
+    return YES; // self.patternType != CDDurationTypeUntilButtonClick;
 }
 
 + (NSSet *)keyPathsForValuesAffectingPatternTypeRequiresImageData {
     return [NSSet setWithObject:@"patternType"];
 }
 
-+ (NSSet *)keyPathsForValuesAffectingDurationTypeRequiresDuration {
-    return [NSSet setWithObjects:@"durationType", nil];
++ (NSSet *)keyPathsForValuesAffectingDurationEnabled {
+    return [NSSet setWithObjects:@"patternType", nil];
 }
+
++ (NSSet *)keyPathsForValuesAffectingRepeatCountEnabled {
+    return [NSSet setWithObjects:@"patternEndCondition", nil];
+}
+
 
 - (NSMutableData *)_encodeRepAsRGB:(NSBitmapImageRep *)imageRep {
     NSMutableData *result = [NSMutableData new];

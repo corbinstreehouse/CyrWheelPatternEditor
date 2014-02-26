@@ -11,11 +11,12 @@
 
 
 // Mapping from the type to the string we display. Yeah, not localized
-static const NSString *g_patternTypeNames[CDPatternTypeMax] =  {
+NSString *g_patternTypeNames[CDPatternTypeMax+1] =  {
     
-    @"Rainbow",
-    @"Rainbow 2",
+    @"Smooth Rainbow",
+    @"Lots of Rainbows",
     @"Color Wipe",
+    @"Fade out",
     @"Gradient",
     @"Pulse Gradient",
 
@@ -28,6 +29,8 @@ static const NSString *g_patternTypeNames[CDPatternTypeMax] =  {
     @"Gradient 2",
     @"Bright Twinkle",
     @"Collission",
+    
+    @"All Off"
 };
 
 

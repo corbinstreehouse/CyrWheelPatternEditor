@@ -15,6 +15,7 @@
 @property(retain, readonly) NSString *sequenceName;
 @property(retain, readonly) NSString *patternTypeName;
 @property(readonly) NSTimeInterval patternDuration;
+@property(readonly) NSInteger patternRepeatCount;
 
 
 - (void)loadNextSequence;
@@ -22,5 +23,4 @@
 - (void)start;
 - (void)stop;
 - (BOOL)isRunning;
-
 @end

@@ -15,3 +15,5 @@
 @property(weak) CDPatternItem *patternItem;
 
 @end
+
+extern NSString *g_patternTypeNames[CDPatternTypeMax+1];

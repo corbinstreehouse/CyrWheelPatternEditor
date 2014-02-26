@@ -238,7 +238,11 @@
     CDPatternItemHeader itemHeader;
     bzero(&itemHeader, sizeof(CDPatternItemHeader));
     itemHeader.patternType = item.patternType;
-    itemHeader.duration = item.duration;
+    // Duration is stored in seconds but the header uses ms, and we round.
+    itemHeader.duration = round(item.duration * 1000);
+    itemHeader.patternEndCondition = item.patternEndCondition;
+    itemHeader.intervalCount = item.repeatCount;
+    itemHeader.color = item.encodedColor;
 
     BOOL result = YES;
     if (item.patternTypeRequiresImageData) {
