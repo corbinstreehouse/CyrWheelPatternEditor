@@ -40,4 +40,8 @@
     [self.document start];
 }
 
+- (void)windowWillClose:(NSNotification *)notification {
+    [self.document stop];
+}
+
 @end

@@ -93,3 +93,6 @@ bool mainProcess() {
     yield(); // process events..
     return false;
 }
+void delay(int i) {
+    
+}

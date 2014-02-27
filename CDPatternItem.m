@@ -12,14 +12,14 @@
 
 @implementation CDPatternItem
 
-@dynamic imageData, patternType, duration, patternEndCondition, repeatCount, durationEnabled, repeatCountEnabled, encodedColor;
+@dynamic imageData, patternType, duration, patternEndCondition, repeatCount, durationEnabled, repeatCountEnabled, encodedColor, needsColor;
 
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context {
     CDPatternItem *result = [NSEntityDescription insertNewObjectForEntityForName:[self className] inManagedObjectContext:context];
     result.duration = 3;
     result.repeatCount = 1;
-    result.patternEndCondition = CDPatternEndConditionAfterRepeatCount;
+    result.patternEndCondition = CDPatternEndConditionOnButtonClick;
     result.encodedColor = [CDEncodedColorTransformer intFromColor:NSColor.blueColor];
     return result;
 }
@@ -88,6 +88,21 @@
     return [NSSet setWithObjects:@"patternEndCondition", nil];
 }
 
++ (NSSet *)keyPathsForValuesAffectingNeedsColor {
+    return [NSSet setWithObject:@"patternType"];
+}
+
+- (BOOL)needsColor {
+    switch (self.patternType) {
+        case CDPatternTypeColorWipe:
+        case CDPatternTypeFadeIn:
+        case CDPatternTypeTheaterChase:
+        case CDPatternTypeImageLEDGradient:
+            return YES;
+        default:
+            return NO;
+    }
+}
 
 - (NSMutableData *)_encodeRepAsRGB:(NSBitmapImageRep *)imageRep {
     NSMutableData *result = [NSMutableData new];

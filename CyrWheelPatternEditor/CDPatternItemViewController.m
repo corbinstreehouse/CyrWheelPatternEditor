@@ -16,7 +16,12 @@ NSString *g_patternTypeNames[CDPatternTypeMax+1] =  {
     @"Smooth Rainbow",
     @"Lots of Rainbows",
     @"Color Wipe",
-    @"Fade out",
+    @"Fade Out",
+    @"Fade In",
+    @"Do nothing",
+
+    @"Theater Chase",
+
     @"Gradient",
     @"Pulse Gradient",
 
@@ -27,7 +32,11 @@ NSString *g_patternTypeNames[CDPatternTypeMax+1] =  {
     @"Traditional colors",
     @"Color explosion",
     @"Gradient 2",
-    @"Bright Twinkle",
+    @"White Bright Twinkle",
+    @"White and Red Twinkle",
+    @"Red and Green Twinkle",
+    @"Multi-color Twinkle",
+    
     @"Collission",
     
     @"All Off"

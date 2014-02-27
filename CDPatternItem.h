@@ -11,7 +11,7 @@
 #import "CDPatternData.h"
 
 
-@interface CDPatternItem : NSManagedObject
+@interface CDPatternItem : NSManagedObject<NSPasteboardWriting/*, NSPasteboardReading*/>
 
 @property (nonatomic, retain) NSData *imageData;
 @property (nonatomic) CDPatternType patternType;
@@ -23,6 +23,7 @@
 @property (nonatomic, readonly) BOOL patternTypeRequiresImageData; // synthesized for bindings
 @property (nonatomic, readonly) BOOL durationEnabled; // synthesized for bindings
 @property (nonatomic, readonly) BOOL repeatCountEnabled; // synthesized for bindings
+@property (nonatomic, readonly) BOOL needsColor; // synthesized for bindings
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context;
 

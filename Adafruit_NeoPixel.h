@@ -25,6 +25,11 @@
 #define NEO_KHZ400  0x00 // 400 KHz datastream
 #endif
 
+typedef struct {
+    // TODO: maybe add #define support for GRB vs RGB
+    uint8_t green, red, blue; // grb format
+} rgb_color;
+
 @class CDCyrWheelView;
 
 class Adafruit_NeoPixel {
@@ -51,6 +56,13 @@ public:
     uint8_t *getPixels() const;
     uint16_t numPixels(void) const;
     static uint32_t Color(uint8_t r, uint8_t g, uint8_t b);
+    static rgb_color ConvertColorToRGBColor(uint32_t color) {
+        rgb_color c;
+        c.red = color >> 16;
+        c.green = color >> 8;
+        c.blue = color;
+        return c;
+    }
     uint32_t getPixelColor(uint16_t n) const;
     void setCyrWheelView(CDCyrWheelView *view);
     

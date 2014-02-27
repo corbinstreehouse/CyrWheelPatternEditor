@@ -34,6 +34,11 @@
     return self;
 }
 
+//- (void)dealloc
+//{
+//    NSLog(@"...");
+//}
+
 - (void)makeWindowControllers {
     CDPatternSimulatorWindowController *wc = [CDPatternSimulatorWindowController new];
     [self addWindowController:wc];

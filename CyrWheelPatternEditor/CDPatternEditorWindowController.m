@@ -13,11 +13,13 @@
 #import "CDPatternSequence.h"
 #import "CDPatternItemViewController.h"
 
+static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 
 @interface CDPatternEditorWindowController () {
 @private
     NSMutableArray *_patternViewControllers;
     __weak NSTableView *_tableView;
+    NSIndexSet *_draggedRowIndexes;
     BOOL _observingChildren;
 }
     
@@ -93,6 +95,9 @@
     // Watch for changes
     _observingChildren = YES;
     [self._patternSequence addObserver:self forKeyPath:CDPatternChildrenKey options:0 context:nil];
+    
+    [_tableView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:YES];
+    [_tableView registerForDraggedTypes:[NSArray arrayWithObjects:CDPatternTableViewPBoardType, nil]];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -104,6 +109,7 @@
             break;
         }
         case NSKeyValueChangeInsertion: {
+//            if (_draggedRowIndexes != nil) break; // Done manually in the drag operation
             NSIndexSet *indexes = [change objectForKey:NSKeyValueChangeIndexesKey];
             if (indexes) {
                 NSMutableArray *emptyObjects = NSMutableArray.new;
@@ -121,6 +127,7 @@
             break;
         }
         case NSKeyValueChangeRemoval: {
+//            if (_draggedRowIndexes != nil) break; // Done manually in the drag operation
             NSIndexSet *indexes = [change objectForKey:NSKeyValueChangeIndexesKey];
             if (indexes) {
                 [_patternViewControllers removeObjectsAtIndexes:indexes];
@@ -178,6 +185,7 @@
     CDPatternItem *patternItem = [CDPatternItem newItemInContext:self.managedObjectContext];
 //    [self._patternSequence addChildrenObject:patternItem];
     [self._patternSequence insertObject:patternItem inChildrenAtIndex:self._patternSequence.children.count];
+    [_tableView scrollRowToVisible:_tableView.numberOfRows - 1];
     
 }
 
@@ -297,6 +305,62 @@
             [self _writeDataToURL:sp.URL];
         }
     }];
+}
+
+- (id<NSPasteboardWriting>)tableView:(NSTableView *)tableView pasteboardWriterForRow:(NSInteger)row {
+    // Just a placeholder of what row is being dragged
+    NSPasteboardItem *result = [NSPasteboardItem new];
+
+    return result;
+}
+
+- (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation {
+    _draggedRowIndexes = nil;
+}
+
+- (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes {
+    _draggedRowIndexes = rowIndexes;
+    [session.draggingPasteboard declareTypes:@[CDPatternTableViewPBoardType] owner:self];
+}
+
+- (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation {
+    if (dropOperation == NSTableViewDropOn) {
+        return NSDragOperationNone; // Can'd drop on
+    }
+    if (_draggedRowIndexes) {
+        if (info.draggingSourceOperationMask == NSDragOperationCopy) {
+            return NSDragOperationCopy;
+        } else {
+            return NSDragOperationMove;
+        }
+    } else {
+        return NSDragOperationNone;
+    }
+}
+
+- (BOOL)tableView:(NSTableView *)tableView acceptDrop:(id<NSDraggingInfo>)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)dropOperation {
+    if (info.draggingSourceOperationMask == NSDragOperationCopy) {
+#warning implement copy..
+        return YES;
+    } else {
+        [_tableView beginUpdates];
+        
+        
+        CDPatternSequence *patternSequence = [self _patternSequence];
+        NSArray *childrenToMove = [patternSequence.children objectsAtIndexes:_draggedRowIndexes];
+        [patternSequence removeChildrenAtIndexes:_draggedRowIndexes];
+        NSMutableIndexSet *targetIndexes = [NSMutableIndexSet new];
+        NSInteger modifiedStartingRow = row - [_draggedRowIndexes countOfIndexesInRange:NSMakeRange(0, row)];
+        for (NSInteger r = modifiedStartingRow; r < modifiedStartingRow + childrenToMove.count; r++) {
+            [targetIndexes addIndex:r];
+        }
+        [patternSequence insertChildren:childrenToMove atIndexes:targetIndexes];
+
+        
+        [_tableView endUpdates];
+        return YES;
+    }
+    
 }
 
 @end

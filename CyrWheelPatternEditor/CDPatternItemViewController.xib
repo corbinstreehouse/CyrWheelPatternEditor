@@ -142,6 +142,13 @@
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="hidden" keyPath="self.patternItem.needsColor" id="FFw-L3-kzq">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="So7-CZ-Ic7">
                     <rect key="frame" x="453" y="40" width="55" height="17"/>
@@ -202,6 +209,11 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
+                        <binding destination="-2" name="hidden" keyPath="self.patternItem.needsColor" id="Spw-PU-4nV">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
+                            </dictionary>
+                        </binding>
                         <binding destination="-2" name="value" keyPath="self.patternItem.encodedColor" id="yCQ-0T-qOl">
                             <dictionary key="options">
                                 <string key="NSValueTransformerName">CDEncodedColorTransformer</string>
