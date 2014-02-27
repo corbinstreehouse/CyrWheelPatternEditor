@@ -79,7 +79,20 @@
 
     // Mainly use the same code as the hardware so I can test it
     _sequenceManager.init();
+    
+    // Go through and find the sequence with the given name
+    NSString *fileToFind = [url lastPathComponent];
+    for (int i = 0; i < _sequenceManager.getNumberOfSequenceNames(); i++) {
+        char *currentName = _sequenceManager.getCurrentSequenceName();
+        NSString *currentNameStr = [[NSString alloc] initWithBytes:currentName length:strlen(currentName) encoding:NSASCIIStringEncoding];
+        if ([[currentNameStr lastPathComponent] isEqualToString:fileToFind]) {
+            break;
+        }
+        _sequenceManager.loadNextSequence();
+    }
+    
     [self _loadPatternSequence];
+
 
     return YES;
 }
