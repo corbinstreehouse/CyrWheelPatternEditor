@@ -97,7 +97,7 @@
         case CDPatternTypeColorWipe:
         case CDPatternTypeFadeIn:
         case CDPatternTypeTheaterChase:
-        case CDPatternTypeImageLEDGradient:
+        case CDPatternTypeGradient:
             return YES;
         default:
             return NO;
