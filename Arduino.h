@@ -20,11 +20,13 @@ public:
     void println(const char *s) { NSLog(@"%s", s); };
     void println() { NSLog(@""); }
 	void printf(const char *format, ...) {
-       // NSString *s = [NSString stringWithFormat:@"%s", format];
-//        va_start(ap, param);
-//        NSLog(s, va_list);
-//        va_end(ap);
-//        NSLog(s);
+        va_list ap;
+        va_start(ap, format);
+        NSString *f = [[NSString alloc] initWithBytes:format length:strlen(format) encoding:NSASCIIStringEncoding];
+        NSString *s = [[NSString alloc] initWithFormat:f arguments:ap];
+        NSLog(s);
+        va_end(ap);
+
     }
 };
 
