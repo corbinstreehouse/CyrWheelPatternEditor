@@ -84,9 +84,11 @@
     NSString *fileToFind = [url lastPathComponent];
     for (int i = 0; i < _sequenceManager.getNumberOfSequenceNames(); i++) {
         char *currentName = _sequenceManager.getCurrentSequenceName();
-        NSString *currentNameStr = [[NSString alloc] initWithBytes:currentName length:strlen(currentName) encoding:NSASCIIStringEncoding];
-        if ([[currentNameStr lastPathComponent] isEqualToString:fileToFind]) {
-            break;
+        if (currentName) {
+            NSString *currentNameStr = [[NSString alloc] initWithBytes:currentName length:strlen(currentName) encoding:NSASCIIStringEncoding];
+            if ([[currentNameStr lastPathComponent] isEqualToString:fileToFind]) {
+                break;
+            }
         }
         _sequenceManager.loadNextSequence();
     }
@@ -158,8 +160,12 @@
 
 - (NSString *)sequenceName {
     if (_sequenceManager.getNumberOfSequenceNames() > 0) {
-        char *cstr = _sequenceManager.getSequenceNameAtIndex(_sequenceManager.getCurrentSequenceIndex());
-        return [NSString stringWithCString:cstr encoding:NSASCIIStringEncoding];
+        char *cstr = _sequenceManager.getCurrentSequenceName();
+        if (cstr) {
+            return [NSString stringWithCString:cstr encoding:NSASCIIStringEncoding];
+        } else {
+            return @"Default Sequence";
+        }
     }
     return nil;
 }
