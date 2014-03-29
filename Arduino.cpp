@@ -96,3 +96,7 @@ bool mainProcess() {
 void delay(int i) {
     
 }
+
+void busyDelay(unsigned int i) {
+
+}

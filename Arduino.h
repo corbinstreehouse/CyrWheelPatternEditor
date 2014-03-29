@@ -36,6 +36,11 @@ extern Print Serial;
 #define OUTPUT 0
 typedef bool boolean;
 
+#define LED_BUILTIN 0
+#define A6 6
+#define A5 5
+#define A3 3
+#define A7 7
 
 extern volatile uint32_t systick_millis_count;
 extern uint32_t millis();
@@ -53,5 +58,6 @@ long map(long x, long in_min, long in_max, long out_min, long out_max);
 
 bool mainProcess();
 void delay(int i);
+void busyDelay(int i);
 #endif
 
