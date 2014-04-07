@@ -17,7 +17,7 @@
 @property (nonatomic) CDPatternType patternType;
 @property (nonatomic) double duration; // in seconds
 @property (nonatomic) int32_t repeatCount;
-@property (nonatomic) int32_t encodedColor;
+@property (nonatomic) uint32_t encodedColor;
 @property (nonatomic) CDPatternEndCondition patternEndCondition;
 
 @property (nonatomic, readonly) BOOL patternTypeRequiresImageData; // synthesized for bindings

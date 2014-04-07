@@ -98,6 +98,10 @@
         case CDPatternTypeFadeIn:
         case CDPatternTypeTheaterChase:
         case CDPatternTypeGradient:
+        case CDPatternTypeBottomGlow:
+        case CDPatternTypeWave:
+        case CDPatternTypeRotatingBottomGlow:
+        case CDPatternTypeSolidColor:
             return YES;
         default:
             return NO;

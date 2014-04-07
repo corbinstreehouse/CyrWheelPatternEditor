@@ -183,13 +183,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CWPatternSequenceManager.cpp"
-            timestampString = "417765053.914145"
+            filePath = "CyrWheelPatternEditor/CDPatternEditorWindowController.m"
+            timestampString = "417929722.663893"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "382"
-            endingLineNumber = "382"
-            landmarkName = "CWPatternSequenceManager::process(bool initialProcess)"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
+            landmarkName = "-_writePatternItem:toData:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -199,13 +199,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CWPatternSequenceManager.cpp"
-            timestampString = "417765200.422463"
+            filePath = "CyrWheelPatternEditor/CDEncodedColorTransformer.m"
+            timestampString = "417929958.6218"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "383"
-            endingLineNumber = "383"
-            landmarkName = "CWPatternSequenceManager::process(bool initialProcess)"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "-reverseTransformedValue:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
