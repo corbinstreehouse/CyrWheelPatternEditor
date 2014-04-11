@@ -25,7 +25,7 @@ NSString *g_patternTypeNames[CDPatternTypeMax+1] =  {
 
     @"Gradient",
     @"Pulse Gradient",
-    @"Random Gradients"
+    @"Random Gradients",
 
     @"Image Fade",
 
