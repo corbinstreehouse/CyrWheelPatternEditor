@@ -18,6 +18,8 @@ uint8_t const O_WRITE = 0X02;
 
 #define MAX_COMPONENT_LEN 128 // Cuz that's what old-school DOS likes. We should make this work with FAT32 long file names..
 #define PATH_COMPONENT_BUFFER_LEN MAX_COMPONENT_LEN+1
+#define SPI_FULL_SPEED 2
+#define SPI_HALF_SPEED 3 // not right..
 
 class File/* : public Stream*/ {
 private:
@@ -62,7 +64,7 @@ class SDClass {
 public:
     // This needs to be called to set up the connection to the SD card
     // before other methods are used.
-    boolean begin(uint8_t csPin);
+    boolean begin(uint8_t speed, uint8_t csPin);
     
     // Open the specified file/directory with the supplied mode (e.g. read or
     // write, etc). Returns a File object for interacting with the file.

@@ -2,7 +2,7 @@
 #include "SD.h"
 
 
-boolean SDClass::begin(uint8_t csPin) {
+boolean SDClass::begin(uint8_t speed, uint8_t csPin) {
     return true;
 }
 
