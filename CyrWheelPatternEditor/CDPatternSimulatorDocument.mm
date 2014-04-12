@@ -118,10 +118,12 @@
         item.patternEndCondition = header->patternEndCondition;
         item.repeatCount = header->intervalCount;
         item.encodedColor = header->color;
-        if (header->data) {
-            NSData *data = [[NSData alloc] initWithBytes:(const void *)header->data length:header->dataLength];
-            item.imageData = data;
-        }
+        // TODO: data???
+#warning data fill in..
+//        if (header->data) {
+//            NSData *data = [[NSData alloc] initWithBytes:(const void *)header->data length:header->dataLength];
+//            item.imageData = data;
+//        }
         [newChildren addObject:item];
     }
     _patternSequence.children = newChildren;

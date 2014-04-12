@@ -65,7 +65,7 @@
 //}
 
 - (BOOL)patternTypeRequiresImageData {
-    return self.patternType == CDPatternTypeImageLinearFade; // only type so far..
+    return self.patternType == CDPatternTypeImageLinearFade || self.patternType == CDPatternTypeImageEntireStrip;
 }
 
 - (BOOL)repeatCountEnabled {

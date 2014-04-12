@@ -70,13 +70,21 @@ void File::moveToStartOfDirectory() {
 
 SDClass SD;
 
-
-size_t File::readBytes(char *buffer, size_t length)
-{
+int File::available() {
     if (_data == nil) {
         _data = [[NSData alloc] initWithContentsOfURL:getURL()];
         _offset = 0;
     }
+    return (int)(_data.length - _offset);
+}
+
+char *File::name() {
+    return _filepath;
+}
+
+size_t File::readBytes(char *buffer, size_t length)
+{
+    available();
     // basic hack checks
     if ((_offset + length) <= _data.length) {
         memcpy(buffer, &((char*)_data.bytes)[_offset], length);
@@ -87,6 +95,18 @@ size_t File::readBytes(char *buffer, size_t length)
         return 0;
     }
 }
+
+boolean File::seek(uint32_t pos) {
+    available();
+    _offset = pos;
+    NSCAssert(_offset >= 0 && _offset <= _data.length, @"seek error");
+    return true;
+}
+
+uint32_t File::position() {
+    return (uint32_t)_offset;
+}
+
 
 void File::close() {
     _data = nil;

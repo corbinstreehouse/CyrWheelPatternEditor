@@ -236,7 +236,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     header.marker[0] = 'S';
     header.marker[1] = 'Q';
     header.marker[2] = 'C';
-    header.version = 0; // version 0
+    header.version = SEQUENCE_VERSION;
     header.pixelCount = self._patternSequence.pixelCount;
     header.patternCount = self._patternSequence.children.count;
     [data appendBytes:&header length:sizeof(header)];
@@ -260,7 +260,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
         NSUInteger dataLength = encodedData.length;
         if (dataLength > UINT32_MAX) {
             // sort of ugly way to show errors
-            NSError *error = [NSError errorWithDomain:@"image or data size exceeds 16-bit size. time for me to up data sizes..." code:0 userInfo:nil];
+            NSError *error = [NSError errorWithDomain:@"image or data size exceeds 32 bits in size. time for me to up data sizes..." code:0 userInfo:nil];
             [self.window presentError:error modalForWindow:self.window delegate:nil didPresentSelector:nil contextInfo:nil];
             result = NO;
         } else {
