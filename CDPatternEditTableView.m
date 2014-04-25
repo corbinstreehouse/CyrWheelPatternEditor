@@ -14,5 +14,14 @@
     return YES; // no delay
 }
 
+- (void)keyDown:(NSEvent *)theEvent {
+    // handle delete
+    unichar key = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
+    if (key == NSDeleteCharacter && self.selectedRow != -1) {
+        [NSApp sendAction:@selector(delete:) to:nil from:self];
+    }
+    
+    [super keyDown:theEvent];
+}
 
 @end

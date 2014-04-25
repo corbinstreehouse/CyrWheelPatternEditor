@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1080" defaultVersion="1080" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
@@ -71,6 +71,7 @@
                         <menu key="menu" title="OtherViews" id="Le5-f6-uHq"/>
                     </popUpButtonCell>
                     <connections>
+                        <action selector="didChangePatternItemProperty:" target="-2" id="kJ4-xa-hr9"/>
                         <binding destination="-2" name="selectedIndex" keyPath="self.patternItem.patternType" id="IfY-gb-rQC"/>
                     </connections>
                 </popUpButton>
@@ -196,12 +197,12 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
+                        <binding destination="-2" name="value" keyPath="self.patternItem.repeatCount" id="YR6-BO-6Fm"/>
                         <binding destination="-2" name="hidden" keyPath="self.patternItem.repeatCountEnabled" id="toe-mi-qTN">
                             <dictionary key="options">
                                 <string key="NSValueTransformerName">NSNegateBoolean</string>
                             </dictionary>
                         </binding>
-                        <binding destination="-2" name="value" keyPath="self.patternItem.repeatCount" id="YR6-BO-6Fm"/>
                     </connections>
                 </textField>
                 <colorWell id="7er-Bc-k2O">
@@ -209,14 +210,14 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
-                        <binding destination="-2" name="hidden" keyPath="self.patternItem.needsColor" id="Spw-PU-4nV">
-                            <dictionary key="options">
-                                <string key="NSValueTransformerName">NSNegateBoolean</string>
-                            </dictionary>
-                        </binding>
                         <binding destination="-2" name="value" keyPath="self.patternItem.encodedColor" id="yCQ-0T-qOl">
                             <dictionary key="options">
                                 <string key="NSValueTransformerName">CDEncodedColorTransformer</string>
+                            </dictionary>
+                        </binding>
+                        <binding destination="-2" name="hidden" keyPath="self.patternItem.needsColor" id="Spw-PU-4nV">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">NSNegateBoolean</string>
                             </dictionary>
                         </binding>
                     </connections>

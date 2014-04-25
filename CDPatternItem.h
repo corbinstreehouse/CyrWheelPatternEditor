@@ -11,7 +11,7 @@
 #import "CDPatternData.h"
 
 
-@interface CDPatternItem : NSManagedObject<NSPasteboardWriting/*, NSPasteboardReading*/>
+@interface CDPatternItem : NSManagedObject<NSPasteboardWriting, NSPasteboardReading, NSCoding>
 
 @property (nonatomic, retain) NSData *imageData;
 @property (nonatomic) CDPatternType patternType;
@@ -27,7 +27,10 @@
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context;
 
++ (void)setCurrentContext:(NSManagedObjectContext *)context;
+
 - (NSData *)getImageDataWithEncoding:(CDPatternEncodingType)encodingType;
+- (void)copyTo:(CDPatternItem *)item;
 
 
 @end 

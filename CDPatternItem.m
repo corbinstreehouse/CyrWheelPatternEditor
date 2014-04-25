@@ -12,6 +12,8 @@
 
 @implementation CDPatternItem
 
+#define PATTERN_ITEM_PASTEBOARD_TYPE @"com.corbinstreehouse.patternitem"
+
 @dynamic imageData, patternType, duration, patternEndCondition, repeatCount, durationEnabled, repeatCountEnabled, encodedColor, needsColor;
 
 
@@ -23,6 +25,65 @@
     result.encodedColor = [CDEncodedColorTransformer intFromColor:NSColor.blueColor];
     return result;
 }
+
+- (void)copyTo:(CDPatternItem *)item {
+    NSArray *attributeNameArray = [[NSArray alloc] initWithArray:self.entity.attributesByName.allKeys];
+    for (NSString *attributeName in attributeNameArray) {
+        [item setValue:[self valueForKey:attributeName] forKey:attributeName];
+    }
+
+//    item.duration = self.duration;
+//    item.imageData = self.imageData;
+//    item.repeatCount = self.repeatCount;
+//    item.patternEndCondition = self.patternEndCondition;
+//    item.encodedColor = self.encodedColor;
+//    item.patternType = self.patternType;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    NSArray *attributeNameArray = [[NSArray alloc] initWithArray:self.entity.attributesByName.allKeys];
+    for (NSString *attributeName in attributeNameArray) {
+        [aCoder encodeObject:[self valueForKey:attributeName] forKey:attributeName];
+    }
+}
+
+static NSManagedObjectContext *g_currentContext = nil;
+
++ (void)setCurrentContext:(NSManagedObjectContext *)context {
+    g_currentContext = context;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    NSAssert(g_currentContext != nil, @"g_currentContext should be set");
+    NSManagedObjectContext *context = g_currentContext;
+    NSEntityDescription *description = [NSEntityDescription entityForName:[self className] inManagedObjectContext:context];
+    
+    self = [self initWithEntity:description insertIntoManagedObjectContext:context];
+
+    NSArray *attributeNameArray = [[NSArray alloc] initWithArray:self.entity.attributesByName.allKeys];
+    for (NSString * attributeName in attributeNameArray) {
+        [self setValue:[aDecoder decodeObjectForKey:attributeName] forKey:attributeName];
+    }
+    
+    return self;
+}
+
+- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
+    return @[PATTERN_ITEM_PASTEBOARD_TYPE];
+}
+
+-(id)pasteboardPropertyListForType:(NSString *)type {
+    return [NSKeyedArchiver archivedDataWithRootObject:self];
+}
+
++ (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
+    return @[PATTERN_ITEM_PASTEBOARD_TYPE];
+}
+
+- (id)initWithPasteboardPropertyList:(id)propertyList ofType:(NSString *)type {
+    return [NSKeyedUnarchiver unarchiveObjectWithData:propertyList];
+}
+
 
 //- (CDPatternItem *)copyInContext:(NSManagedObjectContext *)context{
 //    NSString *entityName = [[source entity] name];

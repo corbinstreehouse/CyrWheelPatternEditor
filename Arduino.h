@@ -24,7 +24,7 @@ public:
         va_start(ap, format);
         NSString *f = [[NSString alloc] initWithBytes:format length:strlen(format) encoding:NSASCIIStringEncoding];
         NSString *s = [[NSString alloc] initWithFormat:f arguments:ap];
-        NSLog(s);
+        NSLog(@"%@", s);
         va_end(ap);
 
     }

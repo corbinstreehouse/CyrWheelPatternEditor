@@ -94,6 +94,10 @@ NSString *g_patternTypeNames[CDPatternTypeMax+1] =  {
 //    NSAssert(NO, @"no no no");// not alllwee
 //}
 
+- (IBAction)didChangePatternItemProperty:(id)sender {
+    [NSApp sendAction:@selector(_patternItemChanged:) to:nil from:self.view];
+}
+
 // TODO: use appkit viewDidLoad when available
 - (void)__viewDidLoad {
     [_popupPatternType removeAllItems];

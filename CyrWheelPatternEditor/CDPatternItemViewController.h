@@ -16,4 +16,8 @@
 
 @end
 
+@interface NSObject(ResponderStuff)
+- (void)_patternItemChanged:(id)sender;
+@end
+
 extern NSString *g_patternTypeNames[CDPatternTypeMax+1];
