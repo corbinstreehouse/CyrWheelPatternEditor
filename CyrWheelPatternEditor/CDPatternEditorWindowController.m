@@ -104,16 +104,18 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     NSInteger row = [self.tableView rowForView:(NSView *)sender];
     if (row != -1) {
         NSMutableIndexSet *indexes = [[self.tableView selectedRowIndexes] mutableCopy];
-        [indexes removeIndex:row];
-        if (indexes.count > 0) {
-            // Mimic the property change in everyhting
-            /// TODO: use a notification so I can watch it and do the right thing for all selected rows
-            CDPatternSequence *patternSequence = [self _patternSequence];
-            CDPatternItem *mainItem = [[patternSequence children] objectAtIndex:row];
-            
-            NSArray *children = [[patternSequence children] objectsAtIndexes:indexes];
-            for (CDPatternItem *item in children) {
-                item.patternType = mainItem.patternType;
+        if ([indexes containsIndex:row]) {
+            [indexes removeIndex:row];
+            if (indexes.count > 0) {
+                // Mimic the property change in everyhting
+                /// TODO: use a notification so I can watch it and do the right thing for all selected rows
+                CDPatternSequence *patternSequence = [self _patternSequence];
+                CDPatternItem *mainItem = [[patternSequence children] objectAtIndex:row];
+                
+                NSArray *children = [[patternSequence children] objectsAtIndexes:indexes];
+                for (CDPatternItem *item in children) {
+                    item.patternType = mainItem.patternType;
+                }
             }
         }
     }
@@ -127,7 +129,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
             break;
         }
         case NSKeyValueChangeInsertion: {
-            //            if (_draggedRowIndexes != nil) break; // Done manually in the drag operation
+//            if (_draggedRowIndexes != nil) break; // Done manually in the drag operation
             NSIndexSet *indexes = [change objectForKey:NSKeyValueChangeIndexesKey];
             if (indexes) {
                 NSMutableArray *emptyObjects = NSMutableArray.new;
@@ -135,17 +137,17 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
                     [emptyObjects addObject:[NSNull null]];
                 }
                 [_patternViewControllers insertObjects:emptyObjects atIndexes:indexes];
-                //                [NSAnimationContext beginGrouping];
-                //                [NSAnimationContext.currentContext setDuration:.3];
+//                [NSAnimationContext beginGrouping];
+//                [NSAnimationContext.currentContext setDuration:.3];
                 [_tableView insertRowsAtIndexes:indexes withAnimation:NSTableViewAnimationEffectFade];
-                //                [NSAnimationContext endGrouping];
+//                [NSAnimationContext endGrouping];
             } else {
                 [self _resetPatternViewControllers];
             }
             break;
         }
         case NSKeyValueChangeRemoval: {
-            //            if (_draggedRowIndexes != nil) break; // Done manually in the drag operation
+//            if (_draggedRowIndexes != nil) break; // Done manually in the drag operation
             NSIndexSet *indexes = [change objectForKey:NSKeyValueChangeIndexesKey];
             if (indexes) {
                 [_patternViewControllers removeObjectsAtIndexes:indexes];
@@ -217,7 +219,6 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
         [lastPatternItem copyTo:patternItem];
     }
     
-//    [self._patternSequence addChildrenObject:patternItem];
     [self._patternSequence insertObject:patternItem inChildrenAtIndex:self._patternSequence.children.count];
     [_tableView scrollRowToVisible:_tableView.numberOfRows - 1];
     

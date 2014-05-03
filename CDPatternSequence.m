@@ -32,7 +32,6 @@ NSString *CDPatternChildrenKey = @"children";
     [self didChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:CDPatternChildrenKey];
 }
 
-
 - (void)insertObject:(CDPatternItem *)value inChildrenAtIndex:(NSUInteger)idx {
     NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:idx];
     [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:CDPatternChildrenKey];
