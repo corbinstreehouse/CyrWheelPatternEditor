@@ -14,7 +14,7 @@
 
 #define PATTERN_ITEM_PASTEBOARD_TYPE @"com.corbinstreehouse.patternitem"
 
-@dynamic imageData, patternType, duration, patternEndCondition, repeatCount, durationEnabled, repeatCountEnabled, encodedColor, needsColor;
+@dynamic imageData, patternType, duration, patternEndCondition, repeatCount, durationEnabled, repeatCountEnabled, encodedColor, needsColor, shouldSetBrightnessByRotationalVelocity;
 
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context {

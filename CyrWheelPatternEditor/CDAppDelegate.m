@@ -12,7 +12,6 @@
 @implementation CDAppDelegate
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
-    
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CDAppDelegate : NSObject<NSApplicationDelegate> 
+@interface CDAppDelegate : NSObject<NSApplicationDelegate>  {
+    @private
+}
 
 @end

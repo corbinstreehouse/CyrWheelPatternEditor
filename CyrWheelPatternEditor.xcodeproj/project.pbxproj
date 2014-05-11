@@ -25,6 +25,7 @@
 		9DBEC63618A2FF0D00A05FB7 /* CWPatternSequenceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DBEC63518A2FF0D00A05FB7 /* CWPatternSequenceManager.cpp */; };
 		9DBEC64118A303DA00A05FB7 /* SD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DBEC63F18A303DA00A05FB7 /* SD.cpp */; };
 		9DBEC64318A3071C00A05FB7 /* Arduino.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DBEC64218A3071C00A05FB7 /* Arduino.cpp */; };
+		9DD394D6191EB2FD00B77A4F /* CDOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DD394D5191EB2FD00B77A4F /* CDOrientation.cpp */; };
 		9DFBAC111888EDFC00737C2F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DFBAC101888EDFC00737C2F /* Cocoa.framework */; };
 		9DFBAC1B1888EDFC00737C2F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DFBAC191888EDFC00737C2F /* InfoPlist.strings */; };
 		9DFBAC1D1888EDFC00737C2F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DFBAC1C1888EDFC00737C2F /* main.m */; };
@@ -87,6 +88,9 @@
 		9DBEC63F18A303DA00A05FB7 /* SD.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = SD.cpp; sourceTree = "<group>"; };
 		9DBEC64018A303DA00A05FB7 /* SD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SD.h; sourceTree = "<group>"; };
 		9DBEC64218A3071C00A05FB7 /* Arduino.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Arduino.cpp; sourceTree = "<group>"; };
+		9DD394D5191EB2FD00B77A4F /* CDOrientation.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = CDOrientation.cpp; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDOrientation.cpp; sourceTree = "<group>"; };
+		9DD394D7191EB30400B77A4F /* CDOrientation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDOrientation.h; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDOrientation.h; sourceTree = "<group>"; };
+		9DD394D8191EDE3000B77A4F /* CDDocument2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CDDocument2.xcdatamodel; sourceTree = "<group>"; };
 		9DFBAC0D1888EDFC00737C2F /* CyrWheelPatternEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyrWheelPatternEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DFBAC101888EDFC00737C2F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		9DFBAC131888EDFC00737C2F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -174,6 +178,8 @@
 				9DBE92CD18AB374A00154550 /* CDLEDStripPatterns.cpp */,
 				9DBEC63418A2FF0D00A05FB7 /* CWPatternSequenceManager.h */,
 				9DBEC63518A2FF0D00A05FB7 /* CWPatternSequenceManager.cpp */,
+				9DD394D7191EB30400B77A4F /* CDOrientation.h */,
+				9DD394D5191EB2FD00B77A4F /* CDOrientation.cpp */,
 			);
 			name = "Shared with firmware";
 			sourceTree = "<group>";
@@ -396,6 +402,7 @@
 				9DBD804A189C9FB200A6A067 /* CDPatternDataToImageTransformer.m in Sources */,
 				9DBD8040189B525300A6A067 /* CDPatternItemViewController.m in Sources */,
 				9DBE92CF18AB374A00154550 /* CDLEDStripPatterns.cpp in Sources */,
+				9DD394D6191EB2FD00B77A4F /* CDOrientation.cpp in Sources */,
 				9DBB2A7518A2F21A00C44C7C /* CDPatternSimulatorWindowController.m in Sources */,
 				9DBEC64118A303DA00A05FB7 /* SD.cpp in Sources */,
 				9DFBAC521888F03C00737C2F /* CDPatternItem.m in Sources */,
@@ -632,9 +639,10 @@
 		9DFBAC2B1888EDFC00737C2F /* CDDocument.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				9DD394D8191EDE3000B77A4F /* CDDocument2.xcdatamodel */,
 				9DFBAC2C1888EDFC00737C2F /* CDDocument.xcdatamodel */,
 			);
-			currentVersion = 9DFBAC2C1888EDFC00737C2F /* CDDocument.xcdatamodel */;
+			currentVersion = 9DD394D8191EDE3000B77A4F /* CDDocument2.xcdatamodel */;
 			path = CDDocument.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

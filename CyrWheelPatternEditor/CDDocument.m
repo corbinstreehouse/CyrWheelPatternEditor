@@ -22,6 +22,9 @@ static NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence"
 
 - (id)init {
     self = [super init];
+    
+//    self.managedObjectContext.persistentStoreCoordinator
+    
     return self;
 }
 
@@ -39,9 +42,45 @@ static NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence"
     return result;
 }
 
+-(BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url ofType:(NSString *)fileType modelConfiguration:(NSString *)configuration storeOptions:(NSDictionary *)storeOptions error:(NSError *__autoreleasing *)error {
+    
+    NSMutableDictionary *options = nil;
+    if (storeOptions != nil) {
+        options = [storeOptions mutableCopy];
+    } else {
+        options = [NSMutableDictionary new];
+    }
+    
+    [options setObject:[NSNumber numberWithBool:YES] forKey:NSMigratePersistentStoresAutomaticallyOption];
+    [options setObject:[NSNumber numberWithBool:YES] forKey:NSInferMappingModelAutomaticallyOption];
+    
+    
+    BOOL result = [super configurePersistentStoreCoordinatorForURL:url
+                                                            ofType:fileType
+                                                modelConfiguration:configuration
+                                                      storeOptions:options
+                                                             error:error];
+    return result;
+}
+
+
 - (CDPatternItem *)_makeDefaultItem {
     return [CDPatternItem newItemInContext:self.managedObjectContext];
 }
+//
+//- (id)managedObjectModel
+//{
+//    static id sharedManagedObjectModel = nil;
+//    
+//    if (sharedManagedObjectModel == nil) {
+////        NSBundle *bundle = [NSBundle mainBundle];
+////        NSURL *url = [bundle URLForResource:@"CDDocument" withExtension:@"momd"];
+////        sharedManagedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:url];
+//        sharedManagedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
+//    }
+//    
+//    return sharedManagedObjectModel;
+//}
 
 - (CDPatternSequence *)_makePatternItem {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;

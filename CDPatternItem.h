@@ -19,6 +19,7 @@
 @property (nonatomic) int32_t repeatCount;
 @property (nonatomic) uint32_t encodedColor;
 @property (nonatomic) CDPatternEndCondition patternEndCondition;
+@property (nonatomic) int16_t shouldSetBrightnessByRotationalVelocity;
 
 @property (nonatomic, readonly) BOOL patternTypeRequiresImageData; // synthesized for bindings
 @property (nonatomic, readonly) BOOL durationEnabled; // synthesized for bindings

@@ -9,7 +9,10 @@
 #import <Cocoa/Cocoa.h>
 #import "CDPatternSequence.h"
 
-@interface CDPatternSimulatorDocument : NSPersistentDocument
+@interface CDPatternSimulatorDocument : NSPersistentDocument {
+@private
+    NSPersistentStoreCoordinator *_persistentStoreCoordinator;
+}
 
 @property(retain, readonly) CDPatternSequence *patternSequence;
 @property(retain, readonly) NSString *sequenceName;

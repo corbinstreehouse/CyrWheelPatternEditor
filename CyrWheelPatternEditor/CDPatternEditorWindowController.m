@@ -285,6 +285,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     itemHeader.duration = round(item.duration * 1000);
     itemHeader.patternEndCondition = item.patternEndCondition;
     itemHeader.intervalCount = item.repeatCount;
+    itemHeader.shouldSetBrightnessByRotationalVelocity = item.shouldSetBrightnessByRotationalVelocity ? 1 : 0;
     itemHeader.color = item.encodedColor;
 
     BOOL result = YES;

@@ -78,7 +78,7 @@
     SDSetBaseDirectoryURL(baseDirectory);
 
     // Mainly use the same code as the hardware so I can test it
-    _sequenceManager.init();
+    _sequenceManager.init(false);
     
     // Go through and find the sequence with the given name
     NSString *fileToFind = [url lastPathComponent];
@@ -97,6 +97,25 @@
 
 
     return YES;
+}
+
+-(BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url ofType:(NSString *)fileType modelConfiguration:(NSString *)configuration storeOptions:(NSDictionary *)storeOptions error:(NSError *__autoreleasing *)error {
+    
+    NSMutableDictionary *options = nil;
+    if (storeOptions != nil) {
+        options = [storeOptions mutableCopy];
+    } else {
+        options = [NSMutableDictionary alloc];
+    }
+    
+    [options setObject:[NSNumber numberWithBool:YES] forKey:NSMigratePersistentStoresAutomaticallyOption];
+    
+    BOOL result = [super configurePersistentStoreCoordinatorForURL:url
+                                                            ofType:fileType
+                                                modelConfiguration:configuration
+                                                      storeOptions:options
+                                                             error:error];
+    return result;
 }
 
 - (void)_loadPatternSequence {
