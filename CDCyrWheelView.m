@@ -33,6 +33,8 @@
     return YES;
 }
 
+@synthesize numberOfLEDs = _numberOfLEDs;
+
 - (void)setPixelColor:(NSColor *)color atIndex:(NSInteger)index {
     NSAssert(index >= 0 && index < _numberOfLEDs, @"count check");
     if (_colors == nil || _colors.count != _numberOfLEDs) {

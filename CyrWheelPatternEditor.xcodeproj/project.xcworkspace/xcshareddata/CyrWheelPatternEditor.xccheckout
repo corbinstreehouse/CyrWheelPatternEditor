@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4ECFAE30-011A-48C8-8E8B-4E07925BC115</string>
+	<key>IDESourceControlProjectName</key>
+	<string>CyrWheelPatternEditor</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>8ECFA61F-BC60-4509-BD08-379B3652C9E2</key>
+		<string>ssh://github.com/corbinstreehouse/LEDDigitalCyrWheel.git</string>
+		<key>8EF94102-AE1E-456D-B3DA-5848655E320A</key>
+		<string>ssh://github.com/corbinstreehouse/CyrWheelPatternEditor.git</string>
+		<key>B998CEF2-BA3A-4B9A-861D-23AB57E81EA4</key>
+		<string>https://github.com/FastLED/FastLED.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>CyrWheelPatternEditor.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>8ECFA61F-BC60-4509-BD08-379B3652C9E2</key>
+		<string>../../../Arduino/LEDDigitalCyrWheel</string>
+		<key>8EF94102-AE1E-456D-B3DA-5848655E320A</key>
+		<string>../..</string>
+		<key>B998CEF2-BA3A-4B9A-861D-23AB57E81EA4</key>
+		<string>../../../Arduino/LEDDigitalCyrWheel/Libraries/FastLED</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/corbinstreehouse/CyrWheelPatternEditor.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>8EF94102-AE1E-456D-B3DA-5848655E320A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>8EF94102-AE1E-456D-B3DA-5848655E320A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>CyrWheelPatternEditor</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B998CEF2-BA3A-4B9A-861D-23AB57E81EA4</string>
+			<key>IDESourceControlWCCName</key>
+			<string>FastLED</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>8ECFA61F-BC60-4509-BD08-379B3652C9E2</string>
+			<key>IDESourceControlWCCName</key>
+			<string>LEDDigitalCyrWheel</string>
+		</dict>
+	</array>
+</dict>
+</plist>

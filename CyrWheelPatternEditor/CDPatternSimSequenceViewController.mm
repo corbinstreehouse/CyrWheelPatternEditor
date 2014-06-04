@@ -8,7 +8,6 @@
 
 #import "CDPatternSimSequenceViewController.h"
 #import "CDCyrWheelView.h"
-#import "CDLEDStripPatterns.h"
 #import "CDPatternSimulatorDocument.h"
 
 @interface CDPatternSimSequenceViewController () {
@@ -37,7 +36,8 @@
     
     // TODO: corbin - some better way of hooking up a non-singleton NeoPixel class to the cyr wheel view it is controlling. If I had it operating not on globals I could easily abstract it..
     // I also have to figure out how to make it operate on the currently active view.
-    g_strip.setCyrWheelView(_cyrWheelView);
+    /// is the doc set at this point?
+    [self.document setCyrWheelView:_cyrWheelView];
 }
 
 - (IBAction)btnStartStopClicked:(id)sender {

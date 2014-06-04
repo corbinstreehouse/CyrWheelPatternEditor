@@ -9,6 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import "CDPatternSequence.h"
 
+@class CDCyrWheelView;
+
 @interface CDPatternSimulatorDocument : NSPersistentDocument {
 @private
     NSPersistentStoreCoordinator *_persistentStoreCoordinator;
@@ -26,4 +28,5 @@
 - (void)start;
 - (void)stop;
 - (BOOL)isRunning;
+- (void)setCyrWheelView:(CDCyrWheelView *)view;
 @end

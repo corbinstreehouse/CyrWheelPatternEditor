@@ -71,6 +71,10 @@
     return YES;
 }
 
+- (void)setCyrWheelView:(CDCyrWheelView *)view {
+    _sequenceManager.setCyrWheelView(view);
+}
+
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
     
     // drop the filename, and use the CWPatternSequenceManager to test loading
@@ -240,7 +244,7 @@ static CDPatternSimulatorDocument *g_activeDoc = nil;
 
 - (void)_tick:(NSTimer *)sender {
     CDPatternItemHeader *oldHeader = _sequenceManager.getCurrentPatternItemHeader();
-    _sequenceManager.process(false);
+    _sequenceManager.process();
     CDPatternItemHeader *newHeader = _sequenceManager.getCurrentPatternItemHeader();
     if (oldHeader != newHeader) {
         [self willChangeValueForKey:@"patternTypeName"];
