@@ -80,7 +80,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 }
 
 - (void)_resetPatternViewControllers {
-    _patternViewControllers = NSMutableArray.new;
+    _patternViewControllers = [NSMutableArray new];
     for (NSInteger i = 0; i < self._patternSequence.children.count; i++) {
         [_patternViewControllers addObject:[NSNull null]]; // placeholder
     }
@@ -132,7 +132,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 //            if (_draggedRowIndexes != nil) break; // Done manually in the drag operation
             NSIndexSet *indexes = [change objectForKey:NSKeyValueChangeIndexesKey];
             if (indexes) {
-                NSMutableArray *emptyObjects = NSMutableArray.new;
+                NSMutableArray *emptyObjects = [NSMutableArray new];
                 for (NSInteger i = 0; i < indexes.count; i++) {
                     [emptyObjects addObject:[NSNull null]];
                 }
@@ -163,7 +163,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
             if (indexes) {
                 [_patternViewControllers removeObjectsAtIndexes:indexes];
                 // replace w/null
-                NSMutableArray *emptyObjects = NSMutableArray.new;
+                NSMutableArray *emptyObjects = [NSMutableArray new];
                 for (NSInteger i = 0; i < indexes.count; i++) {
                     [emptyObjects addObject:[NSNull null]];
                 }

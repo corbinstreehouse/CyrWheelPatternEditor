@@ -11,7 +11,7 @@
 
 
 // Mapping from the type to the string we display. Yeah, not localized
-NSString *g_patternTypeNames[CDPatternTypeMax+1] =  {
+NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     
     @"Rotating Rainbow",
     @"Mini Rotating Rainbows",
@@ -51,6 +51,8 @@ NSString *g_patternTypeNames[CDPatternTypeMax+1] =  {
     
     @"Solid Rainbow",
     @"Rainbow with spaces",
+    
+    @"Blink",
     
     @"All Off"
 };
@@ -101,7 +103,7 @@ NSString *g_patternTypeNames[CDPatternTypeMax+1] =  {
 // TODO: use appkit viewDidLoad when available
 - (void)__viewDidLoad {
     [_popupPatternType removeAllItems];
-    for (NSInteger i = 0; i <= CDPatternTypeMax; i++) {
+    for (NSInteger i = 0; i <= LEDPatternTypeMax; i++) {
         [_popupPatternType addItemWithTitle:(NSString *)g_patternTypeNames[i]];
         NSMenuItem *item = [_popupPatternType lastItem];
         item.tag = i;

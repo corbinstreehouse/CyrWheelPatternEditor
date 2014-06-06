@@ -126,7 +126,7 @@ static NSManagedObjectContext *g_currentContext = nil;
 //}
 
 - (BOOL)patternTypeRequiresImageData {
-    return self.patternType == CDPatternTypeImageLinearFade || self.patternType == CDPatternTypeImageEntireStrip;
+    return self.patternType == LEDPatternTypeImageLinearFade || self.patternType == LEDPatternTypeImageEntireStrip;
 }
 
 - (BOOL)repeatCountEnabled {
@@ -155,14 +155,14 @@ static NSManagedObjectContext *g_currentContext = nil;
 
 - (BOOL)needsColor {
     switch (self.patternType) {
-        case CDPatternTypeColorWipe:
-        case CDPatternTypeFadeIn:
-        case CDPatternTypeTheaterChase:
-        case CDPatternTypeGradient:
-        case CDPatternTypeBottomGlow:
-        case CDPatternTypeWave:
-        case CDPatternTypeRotatingBottomGlow:
-        case CDPatternTypeSolidColor:
+        case LEDPatternTypeColorWipe:
+        case LEDPatternTypeFadeIn:
+        case LEDPatternTypeTheaterChase:
+        case LEDPatternTypeGradient:
+        case LEDPatternTypeBottomGlow:
+        case LEDPatternTypeWave:
+        case LEDPatternTypeRotatingBottomGlow:
+        case LEDPatternTypeSolidColor:
             return YES;
         default:
             return NO;

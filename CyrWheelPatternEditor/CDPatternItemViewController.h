@@ -20,4 +20,4 @@
 - (void)_patternItemChanged:(id)sender;
 @end
 
-extern NSString *g_patternTypeNames[CDPatternTypeMax+1];
+extern NSString *g_patternTypeNames[LEDPatternTypeMax+1];

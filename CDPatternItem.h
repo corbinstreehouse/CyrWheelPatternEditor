@@ -14,7 +14,7 @@
 @interface CDPatternItem : NSManagedObject<NSPasteboardWriting, NSPasteboardReading, NSCoding>
 
 @property (nonatomic, retain) NSData *imageData;
-@property (nonatomic) CDPatternType patternType;
+@property (nonatomic) LEDPatternType patternType;
 @property (nonatomic) double duration; // in seconds
 @property (nonatomic) int32_t repeatCount;
 @property (nonatomic) uint32_t encodedColor;

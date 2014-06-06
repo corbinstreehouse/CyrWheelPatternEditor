@@ -14,6 +14,8 @@
 		<string>ssh://github.com/corbinstreehouse/LEDDigitalCyrWheel.git</string>
 		<key>8EF94102-AE1E-456D-B3DA-5848655E320A</key>
 		<string>ssh://github.com/corbinstreehouse/CyrWheelPatternEditor.git</string>
+		<key>973F485E-03FA-448B-B204-FC5CEF49126C</key>
+		<string>ssh://github.com/corbinstreehouse/LEDPatterns.git</string>
 		<key>B998CEF2-BA3A-4B9A-861D-23AB57E81EA4</key>
 		<string>https://github.com/FastLED/FastLED.git</string>
 	</dict>
@@ -25,6 +27,8 @@
 		<string>../../../Arduino/LEDDigitalCyrWheel</string>
 		<key>8EF94102-AE1E-456D-B3DA-5848655E320A</key>
 		<string>../..</string>
+		<key>973F485E-03FA-448B-B204-FC5CEF49126C</key>
+		<string>../../../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns</string>
 		<key>B998CEF2-BA3A-4B9A-861D-23AB57E81EA4</key>
 		<string>../../../Arduino/LEDDigitalCyrWheel/Libraries/FastLED</string>
 	</dict>
@@ -59,6 +63,14 @@
 			<string>8ECFA61F-BC60-4509-BD08-379B3652C9E2</string>
 			<key>IDESourceControlWCCName</key>
 			<string>LEDDigitalCyrWheel</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>973F485E-03FA-448B-B204-FC5CEF49126C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>LEDPatterns</string>
 		</dict>
 	</array>
 </dict>

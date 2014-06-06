@@ -13,6 +13,8 @@
 
 #define SS 0
 
+#ifdef __cplusplus
+
 class Print {
 public:
     void print(int i) { NSLog(@"%ld", (long)i); };
@@ -59,5 +61,11 @@ long map(long x, long in_min, long in_max, long out_min, long out_max);
 bool mainProcess();
 void delay(int i);
 void busyDelay(int i);
+
 #endif
+
+
+#endif
+
+
 
