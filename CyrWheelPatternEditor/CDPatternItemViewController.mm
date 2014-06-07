@@ -54,6 +54,8 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     
     @"Blink",
     
+    @"Fire",
+    
     @"All Off"
 };
 

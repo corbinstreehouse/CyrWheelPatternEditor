@@ -12,6 +12,7 @@
 		9D4FCB36193C2E100000DE28 /* hsv2rgb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D4FCB34193C2E100000DE28 /* hsv2rgb.cpp */; };
 		9D500A2518BD88E8003BD8C2 /* CDEncodedColorTransformer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */; };
 		9DA685B219417089003631F6 /* LEDPatterns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DA685B119417089003631F6 /* LEDPatterns.cpp */; };
+		9DA685B4194176B6003631F6 /* lib8tion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DA685B3194176B6003631F6 /* lib8tion.cpp */; };
 		9DBB2A7518A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7318A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm */; };
 		9DBB2A7618A2F21A00C44C7C /* CDPatternSimulatorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7418A2F21A00C44C7C /* CDPatternSimulatorWindowController.xib */; };
 		9DBB2A7918A2F34600C44C7C /* CDAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7818A2F34600C44C7C /* CDAppDelegate.mm */; };
@@ -70,6 +71,7 @@
 		9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDEncodedColorTransformer.mm; sourceTree = "<group>"; };
 		9DA685B019417089003631F6 /* LEDPatterns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LEDPatterns.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatterns.h; sourceTree = "<group>"; };
 		9DA685B119417089003631F6 /* LEDPatterns.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = LEDPatterns.cpp; path = ../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatterns.cpp; sourceTree = "<group>"; };
+		9DA685B3194176B6003631F6 /* lib8tion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lib8tion.cpp; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/lib8tion.cpp; sourceTree = "<group>"; };
 		9DBB2A7218A2F21A00C44C7C /* CDPatternSimulatorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternSimulatorWindowController.h; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.h; sourceTree = "<group>"; };
 		9DBB2A7318A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CDPatternSimulatorWindowController.mm; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.mm; sourceTree = "<group>"; };
 		9DBB2A7418A2F21A00C44C7C /* CDPatternSimulatorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CDPatternSimulatorWindowController.xib; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.xib; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 			children = (
 				9D4FCB2A193C278E0000DE28 /* pixeltypes.h */,
 				9D4FCB37193C333C0000DE28 /* lib8tion.h */,
+				9DA685B3194176B6003631F6 /* lib8tion.cpp */,
 				9D4FCB31193C2E090000DE28 /* colorutils.cpp */,
 				9D4FCB32193C2E090000DE28 /* colorutils.h */,
 				9D4FCB34193C2E100000DE28 /* hsv2rgb.cpp */,
@@ -416,6 +419,7 @@
 				9DFBAC2D1888EDFC00737C2F /* CDDocument.xcdatamodeld in Sources */,
 				9DA685B219417089003631F6 /* LEDPatterns.cpp in Sources */,
 				9DFBAC561888F0F600737C2F /* CDPatternEditorWindowController.mm in Sources */,
+				9DA685B4194176B6003631F6 /* lib8tion.cpp in Sources */,
 				9DBD8047189B66FA00A6A067 /* CDPatternSequence.mm in Sources */,
 				9DBB2A7918A2F34600C44C7C /* CDAppDelegate.mm in Sources */,
 				9DBE92D518ACE19900154550 /* CDCyrWheelView.mm in Sources */,
