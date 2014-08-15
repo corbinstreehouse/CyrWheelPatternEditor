@@ -177,6 +177,7 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
+                        <action selector="didChangeDuration:" target="-2" id="lzA-AF-G9B"/>
                         <binding destination="-2" name="value" keyPath="self.patternItem.duration" id="MaK-PP-aAN"/>
                     </connections>
                 </textField>
@@ -230,6 +231,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
+                        <action selector="didChangeVelocityBasedBrightness:" target="-2" id="TFh-KS-Jc6"/>
                         <binding destination="-2" name="value" keyPath="self.patternItem.shouldSetBrightnessByRotationalVelocity" id="ntZ-ky-S2i"/>
                     </connections>
                 </button>

@@ -61,6 +61,10 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     
     @"Crossfade",
     
+    @"SinWave Effect",
+    
+    @"Funky Clouds",
+    
     @"All Off"
 };
 
@@ -105,6 +109,14 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
 
 - (IBAction)didChangePatternItemProperty:(id)sender {
     [NSApp sendAction:@selector(_patternItemChanged:) to:nil from:self.view];
+}
+
+- (IBAction)didChangeDuration:(id)sender {
+    
+}
+
+- (IBAction)didChangeVelocityBasedBrightness:(id)sender {
+    
 }
 
 // TODO: use appkit viewDidLoad when available
