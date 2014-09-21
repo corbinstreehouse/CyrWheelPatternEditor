@@ -65,6 +65,8 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     
     @"Funky Clouds",
     
+    @"Life",
+    
     @"All Off"
 };
 
