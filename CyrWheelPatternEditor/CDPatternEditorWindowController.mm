@@ -52,6 +52,10 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 
 - (NSURL *)_makeTempURLForExport {
     NSString *tempDir = NSTemporaryDirectory();
+    tempDir = [tempDir stringByAppendingPathComponent:@"CyrPatternEditor"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:tempDir]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:tempDir withIntermediateDirectories:NO attributes:nil error:NULL];
+    }
     NSInteger count = 0;
     NSString *filename = nil;
     do {
@@ -327,6 +331,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     header.pixelCount = self._patternSequence.pixelCount;
     header.patternCount = self._patternSequence.children.count;
     header.ignoreSingleClickButtonForTimedPatterns = self._patternSequence.ignoreSingleClickButtonForTimedPatterns;
+    NSAssert(sizeof(header) == 14, @"did I change the size of the header and forget to recompile this file?");
     [data appendBytes:&header length:sizeof(header)];
 }
 
