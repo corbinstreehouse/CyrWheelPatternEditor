@@ -10,7 +10,7 @@
 #import "CDPatternEditorWindowController.h"
 #import "CDPatternSimulatorWindowController.h"
 
-static NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
+NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
 
 @interface NSArray(Hack)
 - (id)firstObject; // in 10.9, retropublisehd
@@ -42,7 +42,7 @@ static NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence"
     return result;
 }
 
--(BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url ofType:(NSString *)fileType modelConfiguration:(NSString *)configuration storeOptions:(NSDictionary *)storeOptions error:(NSError *__autoreleasing *)error {
+- (BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url ofType:(NSString *)fileType modelConfiguration:(NSString *)configuration storeOptions:(NSDictionary *)storeOptions error:(NSError *__autoreleasing *)error {
     
     NSMutableDictionary *options = nil;
     if (storeOptions != nil) {
@@ -53,7 +53,7 @@ static NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence"
     
     [options setObject:[NSNumber numberWithBool:YES] forKey:NSMigratePersistentStoresAutomaticallyOption];
     [options setObject:[NSNumber numberWithBool:YES] forKey:NSInferMappingModelAutomaticallyOption];
-    
+    // map explict stuff??
     
     BOOL result = [super configurePersistentStoreCoordinatorForURL:url
                                                             ofType:fileType
@@ -88,7 +88,7 @@ static NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence"
     CDPatternSequence *result = [NSEntityDescription insertNewObjectForEntityForName:[CDPatternSequence className] inManagedObjectContext:self.managedObjectContext];
     // default values
     result.pixelCount = 331; // For my wheel...
-    
+
     // create one child
     CDPatternItem *patternItem = [self _makeDefaultItem];
     [result addChildrenObject:patternItem];

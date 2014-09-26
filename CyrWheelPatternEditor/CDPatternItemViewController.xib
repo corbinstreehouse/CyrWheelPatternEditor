@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="12F45" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment version="1080" defaultVersion="1080" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CDPatternItemViewController">
@@ -22,7 +22,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button verticalHuggingPriority="750" id="wfi-IY-9br">
-                    <rect key="frame" x="661" y="33" width="42" height="19"/>
+                    <rect key="frame" x="570" y="33" width="42" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="roundRect" title="Load" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8hn-Qd-P48">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -34,7 +34,7 @@
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" id="HTC-4b-JIv">
-                    <rect key="frame" x="659" y="10" width="44" height="19"/>
+                    <rect key="frame" x="568" y="10" width="44" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="roundRect" title="Clear" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="auX-ks-cZB">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -50,7 +50,7 @@
                     </connections>
                 </button>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="eJL-43-cah">
-                    <rect key="frame" x="708" y="7" width="68" height="47"/>
+                    <rect key="frame" x="617" y="7" width="68" height="47"/>
                     <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
                     <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="proportionallyUpOrDown" imageFrameStyle="grayBezel" id="Aig-c5-Mnc"/>
                     <connections>
@@ -63,7 +63,7 @@
                     </connections>
                 </imageView>
                 <popUpButton verticalHuggingPriority="750" id="C1b-2n-0Sp">
-                    <rect key="frame" x="75" y="30" width="183" height="26"/>
+                    <rect key="frame" x="18" y="30" width="183" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="E2d-8q-vkv">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -76,14 +76,14 @@
                     </connections>
                 </popUpButton>
                 <popUpButton verticalHuggingPriority="750" id="uOF-qb-gV0">
-                    <rect key="frame" x="75" y="5" width="183" height="26"/>
+                    <rect key="frame" x="18" y="5" width="183" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="t9i-z6-bSj">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
                         <menu key="menu" title="OtherViews" id="Uk3-Z6-hPc">
                             <items>
-                                <menuItem title="Interval count" tag="2" id="OxT-yx-Vtp"/>
+                                <menuItem title="Timed duration" tag="2" id="OxT-yx-Vtp"/>
                                 <menuItem title="Button click" tag="2" id="zb2-o4-LcF"/>
                             </items>
                         </menu>
@@ -92,42 +92,20 @@
                         <binding destination="-2" name="selectedIndex" keyPath="self.patternItem.patternEndCondition" id="B8j-sU-JJl"/>
                     </connections>
                 </popUpButton>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="LeI-Um-tHT">
-                    <rect key="frame" x="18" y="37" width="53" height="17"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Pattern:" id="Bns-jS-qiW">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="aMc-gb-8Pf">
-                    <rect key="frame" x="261" y="12" width="47" height="17"/>
+                    <rect key="frame" x="341" y="37" width="152" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Count:" id="Ozh-u6-1dB">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Pattern speed duration:" id="Ozh-u6-1dB">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="hidden" keyPath="self.patternItem.repeatCountEnabled" id="TBh-36-dKY">
-                            <dictionary key="options">
-                                <string key="NSValueTransformerName">NSNegateBoolean</string>
-                            </dictionary>
-                        </binding>
+                        <binding destination="-2" name="enabled" keyPath="self.patternItem.patternTypeNeedsPatternDuration" id="imb-St-pba"/>
                     </connections>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="GNg-cp-5p8">
-                    <rect key="frame" x="6" y="11" width="65" height="17"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="End after:" id="dXv-Kn-heu">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="mGP-dd-WPI">
-                    <rect key="frame" x="261" y="35" width="64" height="17"/>
+                    <rect key="frame" x="204" y="35" width="64" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Duration:" id="TH6-AR-hy6">
                         <font key="font" metaFont="system"/>
@@ -136,7 +114,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="1Oo-fS-yHU">
-                    <rect key="frame" x="386" y="10" width="43" height="17"/>
+                    <rect key="frame" x="408" y="10" width="43" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Color:" id="xwh-UQ-K4I">
                         <font key="font" metaFont="system"/>
@@ -152,25 +130,21 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="So7-CZ-Ic7">
-                    <rect key="frame" x="373" y="36" width="56" height="17"/>
+                    <rect key="frame" x="315" y="38" width="11" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="seconds" id="CIL-DN-phF">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="s" id="CIL-DN-phF">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" id="TQ1-g9-CAK">
-                    <rect key="frame" x="327" y="33" width="41" height="22"/>
+                    <rect key="frame" x="270" y="33" width="41" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="8Cb-dB-4my">
-                        <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="bhg-o6-zkz">
-                            <real key="roundingIncrement" value="0.0"/>
+                        <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="bhg-o6-zkz">
                             <real key="minimum" value="0.0"/>
                             <real key="maximum" value="1024"/>
-                            <metadata>
-                                <bool key="localizesFormat" value="YES"/>
-                            </metadata>
                         </numberFormatter>
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -182,32 +156,24 @@
                     </connections>
                 </textField>
                 <textField verticalHuggingPriority="750" id="HcW-0V-lZo">
-                    <rect key="frame" x="314" y="7" width="67" height="22"/>
+                    <rect key="frame" x="498" y="32" width="41" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="7eW-xh-VxU">
-                        <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="MwY-Su-QPS">
-                            <real key="roundingIncrement" value="0.0"/>
-                            <real key="minimum" value="1"/>
+                        <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="shS-Q6-VzD">
+                            <real key="minimum" value="0.0"/>
                             <real key="maximum" value="1024"/>
-                            <metadata>
-                                <bool key="localizesFormat" value="YES"/>
-                            </metadata>
                         </numberFormatter>
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="self.patternItem.repeatCount" id="YR6-BO-6Fm"/>
-                        <binding destination="-2" name="hidden" keyPath="self.patternItem.repeatCountEnabled" id="toe-mi-qTN">
-                            <dictionary key="options">
-                                <string key="NSValueTransformerName">NSNegateBoolean</string>
-                            </dictionary>
-                        </binding>
+                        <binding destination="-2" name="enabled" keyPath="self.patternItem.patternTypeNeedsPatternDuration" id="9bz-Vt-Bxt"/>
+                        <binding destination="-2" name="value" keyPath="self.patternItem.patternDuration" id="cbR-bf-YIi"/>
                     </connections>
                 </textField>
                 <colorWell id="7er-Bc-k2O">
-                    <rect key="frame" x="435" y="6" width="44" height="23"/>
+                    <rect key="frame" x="457" y="6" width="44" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
@@ -224,7 +190,7 @@
                     </connections>
                 </colorWell>
                 <button id="zYI-19-626">
-                    <rect key="frame" x="449" y="36" width="184" height="18"/>
+                    <rect key="frame" x="205" y="8" width="184" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Velocity based brightness" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="wtE-mb-Wep">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -235,6 +201,18 @@
                         <binding destination="-2" name="value" keyPath="self.patternItem.shouldSetBrightnessByRotationalVelocity" id="ntZ-ky-S2i"/>
                     </connections>
                 </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="40g-xV-mxc">
+                    <rect key="frame" x="543" y="36" width="11" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="s" id="C33-Er-gXu">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="enabled" keyPath="self.patternItem.patternTypeNeedsPatternDuration" id="I31-WV-KYq"/>
+                    </connections>
+                </textField>
             </subviews>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="ppZ-Jl-TT7"/>

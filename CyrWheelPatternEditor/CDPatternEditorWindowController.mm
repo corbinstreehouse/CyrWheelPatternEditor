@@ -12,6 +12,8 @@
 #import "CDPatternData.h"
 #import "CDPatternSequence.h"
 #import "CDPatternItemViewController.h"
+#import "CDPatternSimulatorDocument.h"
+#import "CDPatternSimSequenceViewController.h"
 
 static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 
@@ -21,10 +23,13 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     __weak NSTableView *_tableView;
     NSIndexSet *_draggedRowIndexes;
     BOOL _observingChildren;
+    CDPatternSimulatorDocument *_simulatorDocument;
+    CDPatternSimSequenceViewController *_simViewController;
 }
     
 @property (weak) IBOutlet NSImageView *imgViewPreview;
 @property (weak) IBOutlet NSTableView *tableView;
+@property (weak) IBOutlet NSView *topView;
 
 @end
 
@@ -43,6 +48,51 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     
     
     return self;
+}
+
+- (NSURL *)_makeTempURLForExport {
+    NSString *tempDir = NSTemporaryDirectory();
+    NSInteger count = 0;
+    NSString *filename = nil;
+    do {
+        filename = [tempDir stringByAppendingPathComponent:[NSString stringWithFormat:@"preview%ld.pat", count]];
+        count++;
+    } while ([[NSFileManager defaultManager] fileExistsAtPath:filename isDirectory:NULL]);
+    NSURL *result = [NSURL fileURLWithPath:filename];
+    return result;
+}
+
+- (void)_refreshPreview {
+    if (_simulatorDocument == nil) {
+        // Create a temp file name that we constantly export to and reload
+        NSURL *tempFile = [self _makeTempURLForExport];
+        [self _exportDataToURL:tempFile];
+        // wrap it int he sim document
+        _simulatorDocument = [[CDPatternSimulatorDocument alloc] init];
+        _simulatorDocument.fileURL = tempFile;
+        NSError *error = nil;
+        [_simulatorDocument readFromURL:tempFile ofType:CDCompiledSequenceTypeName error:&error];
+        _simViewController.document = _simulatorDocument; // this binds them..
+        // handle errors??
+        if (error) {
+            NSLog(@"error: %@", error);
+        }
+        
+    } else {
+        [self _exportDataToURL:_simulatorDocument.fileURL];
+        [_simulatorDocument reload];
+    }
+    if (!_simulatorDocument.isRunning) {
+        [_simulatorDocument start];
+    }
+}
+
+- (void)_setupSimView {
+    _simViewController = [CDPatternSimSequenceViewController new];
+    NSView *view = _simViewController.view;
+    view.frame = self.topView.bounds;
+    view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    [self.topView addSubview:view];
 }
 
 //- (void)dealloc {
@@ -98,6 +148,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     
     [_tableView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:YES];
     [_tableView registerForDraggedTypes:[NSArray arrayWithObjects:CDPatternTableViewPBoardType, nil]];
+    [self _setupSimView];
 }
 
 - (void)_patternItemChanged:(id)sender {
@@ -268,12 +319,14 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 
 - (void)_writeHeaderToData:(NSMutableData *)data {
     CDPatternSequenceHeader header;
+    bzero(&header, sizeof(CDPatternSequenceHeader));
     header.marker[0] = 'S';
     header.marker[1] = 'Q';
     header.marker[2] = 'C';
     header.version = SEQUENCE_VERSION;
     header.pixelCount = self._patternSequence.pixelCount;
     header.patternCount = self._patternSequence.children.count;
+    header.ignoreSingleClickButtonForTimedPatterns = self._patternSequence.ignoreSingleClickButtonForTimedPatterns;
     [data appendBytes:&header length:sizeof(header)];
 }
 
@@ -283,8 +336,10 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     itemHeader.patternType = item.patternType;
     // Duration is stored in seconds but the header uses ms, and we round.
     itemHeader.duration = round(item.duration * 1000);
+    itemHeader.patternDuration = round(item.patternDuration * 1000);
+    itemHeader.patternOptions = item.patternOptions;
     itemHeader.patternEndCondition = item.patternEndCondition;
-    itemHeader.intervalCount = item.repeatCount;
+//    itemHeader.intervalCount = item.repeatCount;
     itemHeader.shouldSetBrightnessByRotationalVelocity = item.shouldSetBrightnessByRotationalVelocity ? 1 : 0;
     itemHeader.color = item.encodedColor;
 
@@ -314,7 +369,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     return result;
 }
 
-- (void)_writeDataToURL:(NSURL *)url {
+- (void)_exportDataToURL:(NSURL *)url {
     NSMutableData *data = [NSMutableData new];
     [self _writeHeaderToData:data];
     for (NSInteger i = 0; i < self._patternSequence.children.count; i++) {
@@ -331,6 +386,11 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     }
 }
 
+- (IBAction)btnRefreshPreviewClick:(id)sender {
+    [self _refreshPreview];
+}
+
+
 - (IBAction)btnExportClick:(id)sender {
     NSSavePanel *sp = [NSSavePanel savePanel];
     sp.allowedFileTypes = @[@"pat"];
@@ -338,7 +398,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     sp.title = @"Export pattern to an SD card";
     [sp beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
         if (result == NSOKButton) {
-            [self _writeDataToURL:sp.URL];
+            [self _exportDataToURL:sp.URL];
         }
     }];
 }

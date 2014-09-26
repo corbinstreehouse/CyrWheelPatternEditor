@@ -16,15 +16,20 @@
 @property (nonatomic, retain) NSData *imageData;
 @property (nonatomic) LEDPatternType patternType;
 @property (nonatomic) double duration; // in seconds
-@property (nonatomic) int32_t repeatCount;
+//@property (nonatomic) int32_t repeatCount; // no longer used
 @property (nonatomic) uint32_t encodedColor;
 @property (nonatomic) CDPatternEndCondition patternEndCondition;
 @property (nonatomic) int16_t shouldSetBrightnessByRotationalVelocity;
 
+@property (nonatomic) double patternDuration; // in seconds; only needs to be set if patternTypeNeedsPatternDuration = YES
+@property (nonatomic) int32_t patternOptions; // used however the pattern needs this; could be a bit set or something else
+
+
 @property (nonatomic, readonly) BOOL patternTypeRequiresImageData; // synthesized for bindings
 @property (nonatomic, readonly) BOOL durationEnabled; // synthesized for bindings
-@property (nonatomic, readonly) BOOL repeatCountEnabled; // synthesized for bindings
 @property (nonatomic, readonly) BOOL needsColor; // synthesized for bindings
+@property (nonatomic, readonly) BOOL patternTypeNeedsPatternDuration;
+
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context;
 

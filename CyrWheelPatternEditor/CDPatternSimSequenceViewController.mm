@@ -11,8 +11,8 @@
 #import "CDPatternSimulatorDocument.h"
 
 @interface CDPatternSimSequenceViewController () {
-@private
-    BOOL _running;
+    BOOL _loaded;
+    CDPatternSimulatorDocument *_document;
 }
 
 @property (weak) IBOutlet CDCyrWheelView *cyrWheelView;
@@ -20,6 +20,8 @@
 @end
 
 @implementation CDPatternSimSequenceViewController
+
+@synthesize document = _document;
 
 - (id)init {
     self = [super initWithNibName:[self className] bundle:nil];
@@ -33,11 +35,19 @@
 - (void)loadView {
     [super loadView];
     // view did load
+    _loaded = YES;
     
     // TODO: corbin - some better way of hooking up a non-singleton NeoPixel class to the cyr wheel view it is controlling. If I had it operating not on globals I could easily abstract it..
     // I also have to figure out how to make it operate on the currently active view.
     /// is the doc set at this point?
     [self.document setCyrWheelView:_cyrWheelView];
+}
+
+- (void)setDocument:(CDPatternSimulatorDocument *)document {
+    _document = document;
+    if (_loaded) {
+        [self.document setCyrWheelView:_cyrWheelView];
+    }
 }
 
 - (IBAction)btnStartStopClicked:(id)sender {

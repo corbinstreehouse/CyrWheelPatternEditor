@@ -65,7 +65,12 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     
     @"Funky Clouds",
     
-    @"Life",
+    @"Life (Full)",
+    @"Life (Dynamic)",
+
+    @"Bounce",
+    @"Rainbow Fire",
+    @"Lava Fire",
     
     @"All Off"
 };

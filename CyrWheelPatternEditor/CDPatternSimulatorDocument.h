@@ -14,14 +14,20 @@
 @interface CDPatternSimulatorDocument : NSPersistentDocument {
 @private
     NSPersistentStoreCoordinator *_persistentStoreCoordinator;
+    NSURL *_baseURL;
 }
 
 @property(retain, readonly) CDPatternSequence *patternSequence;
 @property(retain, readonly) NSString *sequenceName;
 @property(retain, readonly) NSString *patternTypeName;
 @property(readonly) NSTimeInterval patternDuration;
-@property(readonly) NSInteger patternRepeatCount;
+@property(readonly) NSTimeInterval patternRepeatDuration;
+//@property(readonly) NSTimeInterval patternRepeatCount;
 
+- (NSTimeInterval)patternTimePassedFromFirstTimedPattern;
+@property(readonly) NSTimeInterval patternTimePassed;
+
+- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError;
 
 - (void)loadNextSequence;
 - (void)performButtonClick;
@@ -29,4 +35,6 @@
 - (void)stop;
 - (BOOL)isRunning;
 - (void)setCyrWheelView:(CDCyrWheelView *)view;
+
+- (void)reload;
 @end

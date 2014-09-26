@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="12F45" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment version="1070" defaultVersion="1080" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CDPatternSimSequenceViewController">
@@ -62,23 +62,64 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6ru-un-SHy">
-                    <rect key="frame" x="234" y="531" width="114" height="17"/>
+                    <rect key="frame" x="223" y="531" width="127" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;Interval Count>" id="alR-hN-cxZ">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;Repeat Duration>" id="alR-hN-cxZ">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="displayPatternValue1" keyPath="self.document.patternRepeatCount" id="065-RI-JIN">
+                        <binding destination="-2" name="displayPatternValue1" keyPath="self.document.patternRepeatDuration" id="Ok8-Lo-Eyv">
                             <dictionary key="options">
-                                <string key="NSDisplayPattern">Interval count: %{value1}@</string>
+                                <string key="NSDisplayPattern">Repeat duration: %{value1}@</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0CL-fJ-OP6">
+                    <rect key="frame" x="363" y="531" width="88" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Time passed:" id="nkV-RZ-ACz">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MZz-N0-Tyt">
+                    <rect key="frame" x="448" y="531" width="108" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;Time Passed> " id="0Xm-ne-hlb">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="self.document.patternTimePassed" id="Tbg-Xa-ASv">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">CDTimeValueTransformer</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XBN-Lg-3zE">
+                    <rect key="frame" x="606" y="531" width="108" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;Time Passed> " id="ljP-Qy-lyJ">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="self.document.patternTimePassedFromFirstTimedPattern" id="2vg-Kl-17R">
+                            <dictionary key="options">
+                                <string key="NSValueTransformerName">CDTimeValueTransformer</string>
                             </dictionary>
                         </binding>
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vAM-Jp-4bi">
-                    <rect key="frame" x="18" y="550" width="131" height="17"/>
+                    <rect key="frame" x="17" y="550" width="131" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Sequence file name:" id="YdB-2D-d8k">
                         <font key="font" metaFont="system"/>
@@ -87,8 +128,11 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TBd-Gh-Q3Z">
-                    <rect key="frame" x="322" y="550" width="96" height="17"/>
+                    <rect key="frame" x="297" y="550" width="96" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="90" id="kg2-I6-yrl"/>
+                    </constraints>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;Pixel Count>" id="J4R-7X-lOL">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -102,8 +146,24 @@
                         </binding>
                     </connections>
                 </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rI8-Fp-QAT">
+                    <rect key="frame" x="395" y="550" width="140" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;ignore single click>" id="4Nn-ga-bE7">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="-2" name="displayPatternValue1" keyPath="self.document.patternSequence.ignoreSingleClickButtonForTimedPatterns" id="JgT-Th-gKo">
+                            <dictionary key="options">
+                                <string key="NSDisplayPattern">Ignore single click: %{value1}@</string>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Oqr-gk-iHE">
-                    <rect key="frame" x="5" y="8" width="133" height="32"/>
+                    <rect key="frame" x="5" y="8" width="134" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="push" title="Next Sequence" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wd7-hS-hXA">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -114,7 +174,7 @@
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OgF-hs-oYL">
-                    <rect key="frame" x="138" y="8" width="145" height="32"/>
+                    <rect key="frame" x="139" y="8" width="145" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="push" title="Start/Stop Timer" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="M27-lK-X5Z">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -139,34 +199,53 @@
                     <rect key="frame" x="20" y="42" width="651" height="481"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <constraints>
-                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="400" id="TuR-4q-0Vt"/>
-                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="400" id="zPf-Ct-VIr"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="TuR-4q-0Vt"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="zPf-Ct-VIr"/>
                     </constraints>
                 </customView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lUi-r0-Ijd">
+                    <rect key="frame" x="563" y="531" width="41" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Total:" id="HRc-D2-8Gg">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <constraints>
+                <constraint firstItem="XBN-Lg-3zE" firstAttribute="leading" secondItem="lUi-r0-Ijd" secondAttribute="trailing" constant="8" id="0Wu-0W-cLz"/>
                 <constraint firstAttribute="trailing" secondItem="oZu-8a-0px" secondAttribute="trailing" constant="20" id="1iB-nL-bHd"/>
                 <constraint firstItem="058-Lz-Rpz" firstAttribute="baseline" secondItem="vAM-Jp-4bi" secondAttribute="baseline" id="5Qg-IP-dbt"/>
+                <constraint firstItem="TBd-Gh-Q3Z" firstAttribute="baseline" secondItem="rI8-Fp-QAT" secondAttribute="baseline" id="6MJ-cv-pO2"/>
                 <constraint firstItem="Oqr-gk-iHE" firstAttribute="top" secondItem="oZu-8a-0px" secondAttribute="bottom" constant="6" id="7Na-cl-UQM"/>
-                <constraint firstItem="v1y-GU-LV6" firstAttribute="leading" secondItem="OgF-hs-oYL" secondAttribute="trailing" constant="12" id="9Kx-b3-Qqx"/>
                 <constraint firstItem="vAM-Jp-4bi" firstAttribute="top" secondItem="1" secondAttribute="top" constant="7" id="A2i-9h-zqC"/>
                 <constraint firstItem="Oqr-gk-iHE" firstAttribute="top" secondItem="OgF-hs-oYL" secondAttribute="top" id="C4b-uA-bqE"/>
-                <constraint firstItem="6ru-un-SHy" firstAttribute="leading" secondItem="Jwl-31-ycs" secondAttribute="trailing" constant="17" id="JvJ-hc-xmg"/>
+                <constraint firstItem="TBd-Gh-Q3Z" firstAttribute="leading" secondItem="058-Lz-Rpz" secondAttribute="trailing" constant="14" id="DZ9-Y1-jyh"/>
                 <constraint firstAttribute="bottom" secondItem="Oqr-gk-iHE" secondAttribute="bottom" constant="15" id="KeF-xt-VMH"/>
-                <constraint firstItem="cP1-Y8-St2" firstAttribute="baseline" secondItem="Jwl-31-ycs" secondAttribute="baseline" id="Lbb-dO-vOS"/>
+                <constraint firstItem="v1y-GU-LV6" firstAttribute="baseline" secondItem="OgF-hs-oYL" secondAttribute="baseline" id="L1n-bh-E6R"/>
                 <constraint firstItem="vAM-Jp-4bi" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" id="O7O-Fy-xxl"/>
-                <constraint firstItem="TBd-Gh-Q3Z" firstAttribute="baseline" secondItem="vAM-Jp-4bi" secondAttribute="baseline" id="PjT-IW-vVM"/>
-                <constraint firstItem="058-Lz-Rpz" firstAttribute="leading" secondItem="vAM-Jp-4bi" secondAttribute="trailing" constant="8" id="QK7-KQ-HtU"/>
-                <constraint firstItem="cP1-Y8-St2" firstAttribute="leading" secondItem="vAM-Jp-4bi" secondAttribute="leading" id="SLZ-mB-vPj"/>
+                <constraint firstItem="058-Lz-Rpz" firstAttribute="leading" secondItem="vAM-Jp-4bi" secondAttribute="trailing" constant="11" id="QK7-KQ-HtU"/>
+                <constraint firstItem="cP1-Y8-St2" firstAttribute="leading" secondItem="vAM-Jp-4bi" secondAttribute="leading" constant="1" id="SLZ-mB-vPj"/>
                 <constraint firstItem="cP1-Y8-St2" firstAttribute="top" secondItem="vAM-Jp-4bi" secondAttribute="bottom" constant="2" id="UBB-PK-xRS"/>
-                <constraint firstItem="v1y-GU-LV6" firstAttribute="baseline" secondItem="OgF-hs-oYL" secondAttribute="baseline" id="VSh-kM-4qe"/>
-                <constraint firstItem="TBd-Gh-Q3Z" firstAttribute="leading" secondItem="058-Lz-Rpz" secondAttribute="trailing" constant="37" id="c8t-T1-3J3"/>
+                <constraint firstItem="MZz-N0-Tyt" firstAttribute="baseline" secondItem="lUi-r0-Ijd" secondAttribute="baseline" id="Va8-Ml-MBO"/>
+                <constraint firstItem="v1y-GU-LV6" firstAttribute="leading" secondItem="OgF-hs-oYL" secondAttribute="trailing" constant="11" id="Xa3-5s-giy"/>
                 <constraint firstItem="OgF-hs-oYL" firstAttribute="leading" secondItem="Oqr-gk-iHE" secondAttribute="trailing" constant="12" id="cbj-XI-1Lu"/>
-                <constraint firstItem="Jwl-31-ycs" firstAttribute="leading" secondItem="cP1-Y8-St2" secondAttribute="trailing" constant="17" id="dnD-6n-av4"/>
+                <constraint firstItem="MZz-N0-Tyt" firstAttribute="baseline" secondItem="0CL-fJ-OP6" secondAttribute="baseline" id="dg9-jD-E9l"/>
+                <constraint firstItem="6ru-un-SHy" firstAttribute="leading" secondItem="Jwl-31-ycs" secondAttribute="trailing" constant="8" id="i7q-A0-cS0"/>
+                <constraint firstItem="0CL-fJ-OP6" firstAttribute="leading" secondItem="6ru-un-SHy" secondAttribute="trailing" constant="19" id="iFT-SS-zZp"/>
                 <constraint firstItem="cP1-Y8-St2" firstAttribute="baseline" secondItem="6ru-un-SHy" secondAttribute="baseline" id="k19-Ru-UBA"/>
+                <constraint firstItem="Jwl-31-ycs" firstAttribute="leading" secondItem="cP1-Y8-St2" secondAttribute="trailing" constant="19" id="kBX-6u-6YH"/>
                 <constraint firstItem="Oqr-gk-iHE" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="11" id="lD1-xh-Pro"/>
+                <constraint firstItem="XBN-Lg-3zE" firstAttribute="baseline" secondItem="lUi-r0-Ijd" secondAttribute="baseline" id="s59-1I-FdR"/>
                 <constraint firstItem="oZu-8a-0px" firstAttribute="top" secondItem="6ru-un-SHy" secondAttribute="bottom" constant="8" id="tDJ-u5-pcY"/>
+                <constraint firstItem="lUi-r0-Ijd" firstAttribute="leading" secondItem="MZz-N0-Tyt" secondAttribute="trailing" constant="13" id="tTe-Ja-wEf"/>
+                <constraint firstItem="0CL-fJ-OP6" firstAttribute="baseline" secondItem="6ru-un-SHy" secondAttribute="baseline" id="uyj-DB-gZS"/>
+                <constraint firstItem="Jwl-31-ycs" firstAttribute="baseline" secondItem="cP1-Y8-St2" secondAttribute="baseline" id="wKF-bt-iqb"/>
+                <constraint firstItem="MZz-N0-Tyt" firstAttribute="leading" secondItem="0CL-fJ-OP6" secondAttribute="trailing" constant="3" id="wV6-w7-8za"/>
                 <constraint firstItem="oZu-8a-0px" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" id="wXe-el-Mfa"/>
+                <constraint firstItem="0CL-fJ-OP6" firstAttribute="top" secondItem="rI8-Fp-QAT" secondAttribute="bottom" constant="2" id="wvm-fb-KzO"/>
+                <constraint firstItem="rI8-Fp-QAT" firstAttribute="leading" secondItem="TBd-Gh-Q3Z" secondAttribute="trailing" constant="8" id="zzw-wb-qjI"/>
             </constraints>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="ZhV-2c-0RF"/>

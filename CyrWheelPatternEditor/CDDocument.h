@@ -15,3 +15,5 @@
 @property(retain, readonly) CDPatternSequence *patternSequence;
 
 @end
+
+extern NSString *CDCompiledSequenceTypeName;

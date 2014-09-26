@@ -38,6 +38,7 @@ File::~File() {
 NSURL *File::getURL() {
     NSCAssert(_filepath != NULL, @"need a filepath");
     NSString *pathToAppend = [NSString stringWithCString:_filepath encoding:NSASCIIStringEncoding];
+    pathToAppend = [pathToAppend lastPathComponent];
     NSURL *directoryURL = [g_baseDirectoryURL URLByAppendingPathComponent:pathToAppend];
     return directoryURL;
 }
@@ -73,6 +74,7 @@ SDClass SD;
 int File::available() {
     if (_data == nil) {
         _data = [[NSData alloc] initWithContentsOfURL:getURL()];
+        NSCAssert(_data != nil, @"should have created data");
         _offset = 0;
     }
     return (int)(_data.length - _offset);

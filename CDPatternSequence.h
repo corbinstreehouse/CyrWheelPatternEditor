@@ -18,6 +18,7 @@
 
 @property (nonatomic) int32_t pixelCount;
 @property (nonatomic, retain) NSOrderedSet *children;
+@property (nonatomic) BOOL ignoreSingleClickButtonForTimedPatterns;
 @end
 
 extern NSString *CDPatternChildrenKey;

@@ -76,10 +76,10 @@
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
-    
     // drop the filename, and use the CWPatternSequenceManager to test loading
-    NSURL *baseDirectory = [url URLByDeletingLastPathComponent];
-    SDSetBaseDirectoryURL(baseDirectory);
+    _baseURL = [url URLByDeletingLastPathComponent];
+    SDSetBaseDirectoryURL(_baseURL);
+//    corbin..jeeze this doesn't working '
 
     // Mainly use the same code as the hardware so I can test it
     _sequenceManager.init(false);
@@ -101,6 +101,10 @@
 
 
     return YES;
+}
+
+- (void)reload {
+    _sequenceManager.loadCurrentSequence();
 }
 
 -(BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url ofType:(NSString *)fileType modelConfiguration:(NSString *)configuration storeOptions:(NSDictionary *)storeOptions error:(NSError *__autoreleasing *)error {
@@ -139,7 +143,8 @@
         item.patternType = header->patternType;
         item.duration = header->duration / 1000; // Header stores it in MS
         item.patternEndCondition = header->patternEndCondition;
-        item.repeatCount = header->intervalCount;
+        item.patternDuration = header->patternDuration;
+        item.patternOptions = header->patternOptions;
         item.encodedColor = header->color;
         // TODO: data???
 #warning data fill in..
@@ -166,16 +171,8 @@
     return [NSSet setWithObjects:@"patternSequence", nil];
 }
 
-+ (NSSet *)keyPathsForValuesAffectingRepeatCount {
++ (NSSet *)keyPathsForValuesAffectingPatternRepeatDuration {
     return [NSSet setWithObjects:@"patternTypeName", nil];
-}
-
-- (NSInteger)patternRepeatCount {
-    CDPatternItemHeader *itemHeader = _sequenceManager.getCurrentPatternItemHeader();
-    if (itemHeader) {
-        return itemHeader->intervalCount;
-    }
-    return 0;
 }
 
 - (void)loadNextSequence {
@@ -213,6 +210,26 @@
     }
 }
 
+- (NSTimeInterval)patternRepeatDuration {
+    CDPatternItemHeader *itemHeader = _sequenceManager.getCurrentPatternItemHeader();
+    if (itemHeader) {
+        // Header stores duration in MS
+        return itemHeader->patternDuration / 1000.0;
+    } else {
+        return 0;
+    }
+}
+
+- (NSTimeInterval)patternTimePassed {
+// ms -> s
+    return _sequenceManager.getPatternTimePassed() / 1000.0;
+}
+
+- (NSTimeInterval)patternTimePassedFromFirstTimedPattern {
+    // ms -> s
+    return _sequenceManager.getPatternTimePassedFromFirstTimedPattern() / 1000.0;
+}
+
 + (BOOL)autosavesInPlace {
     return YES;
 }
@@ -224,6 +241,8 @@ static CDPatternSimulatorDocument *g_activeDoc = nil;
         [g_activeDoc stop];
         g_activeDoc = self;
     }
+    // should make this not a singlton
+    SDSetBaseDirectoryURL(_baseURL);
     if (_timer == nil) {
         // Speed of the teensy...96000000 == 96Mhz 14 loops per usec.. according to source
         NSTimeInterval time = 14.0/1000000.0;
@@ -250,6 +269,11 @@ static CDPatternSimulatorDocument *g_activeDoc = nil;
         [self willChangeValueForKey:@"patternTypeName"];
         [self didChangeValueForKey:@"patternTypeName"];
     }
+    // will this be too expensive to do?
+    [self willChangeValueForKey:@"patternTimePassed"];
+    [self didChangeValueForKey:@"patternTimePassed"];
+    [self willChangeValueForKey:@"patternTimePassedFromFirstTimedPattern"];
+    [self didChangeValueForKey:@"patternTimePassedFromFirstTimedPattern"];
 }
 
 - (void)performButtonClick {

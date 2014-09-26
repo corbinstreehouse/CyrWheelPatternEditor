@@ -14,13 +14,14 @@
 
 #define PATTERN_ITEM_PASTEBOARD_TYPE @"com.corbinstreehouse.patternitem"
 
-@dynamic imageData, patternType, duration, patternEndCondition, repeatCount, durationEnabled, repeatCountEnabled, encodedColor, needsColor, shouldSetBrightnessByRotationalVelocity;
+@dynamic imageData, patternType, duration, patternEndCondition, /*repeatCount,*/ durationEnabled, encodedColor, needsColor, shouldSetBrightnessByRotationalVelocity, patternOptions, patternDuration, patternTypeNeedsPatternDuration;
 
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context {
     CDPatternItem *result = [NSEntityDescription insertNewObjectForEntityForName:[self className] inManagedObjectContext:context];
     result.duration = 3;
-    result.repeatCount = 1;
+    result.patternDuration = 3; // 3; // matches the default duration
+//    result.repeatCount = 1;
     result.patternEndCondition = CDPatternEndConditionOnButtonClick;
     result.encodedColor = [CDEncodedColorTransformer intFromColor:NSColor.blueColor];
     return result;
@@ -129,10 +130,6 @@ static NSManagedObjectContext *g_currentContext = nil;
     return self.patternType == LEDPatternTypeImageLinearFade || self.patternType == LEDPatternTypeImageEntireStrip;
 }
 
-- (BOOL)repeatCountEnabled {
-    return self.patternEndCondition == CDPatternEndConditionAfterRepeatCount;
-}
-
 - (BOOL)durationEnabled {
     return YES; // self.patternType != CDDurationTypeUntilButtonClick;
 }
@@ -145,11 +142,11 @@ static NSManagedObjectContext *g_currentContext = nil;
     return [NSSet setWithObjects:@"patternType", nil];
 }
 
-+ (NSSet *)keyPathsForValuesAffectingRepeatCountEnabled {
-    return [NSSet setWithObjects:@"patternEndCondition", nil];
++ (NSSet *)keyPathsForValuesAffectingNeedsColor {
+    return [NSSet setWithObject:@"patternType"];
 }
 
-+ (NSSet *)keyPathsForValuesAffectingNeedsColor {
++ (NSSet *)keyPathsForValuesAffectingPatternTypeNeedsPatternDuration {
     return [NSSet setWithObject:@"patternType"];
 }
 
@@ -200,6 +197,10 @@ static NSManagedObjectContext *g_currentContext = nil;
     NSBitmapImageRep *imageRep = [[NSBitmapImageRep alloc] initWithData:rawData];
     NSMutableData *rgbData = [self _encodeRepAsRGB:imageRep];
     return rgbData;
+}
+
+- (BOOL)patternTypeNeedsPatternDuration {
+    return LEDPatterns::PatternNeedsDuration(self.patternType);
 }
 
 
