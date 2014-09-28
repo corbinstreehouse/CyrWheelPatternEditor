@@ -330,7 +330,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     header.version = SEQUENCE_VERSION;
     header.pixelCount = self._patternSequence.pixelCount;
     header.patternCount = self._patternSequence.children.count;
-    header.ignoreSingleClickButtonForTimedPatterns = self._patternSequence.ignoreSingleClickButtonForTimedPatterns;
+    header.ignoreButtonForTimedPatterns = self._patternSequence.ignoreSingleClickButtonForTimedPatterns;
     NSAssert(sizeof(header) == 14, @"did I change the size of the header and forget to recompile this file?");
     [data appendBytes:&header length:sizeof(header)];
 }

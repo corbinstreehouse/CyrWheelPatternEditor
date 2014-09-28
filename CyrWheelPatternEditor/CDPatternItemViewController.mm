@@ -83,6 +83,8 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     
 }
 
+@property BOOL durationEnabled;
+
 @property (weak) IBOutlet NSPopUpButton *popupPatternType;
 
 @property (weak) IBOutlet NSTextField *txtfldDuration;
@@ -99,7 +101,7 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     return self;
 }
 
-@dynamic patternItem;
+@dynamic patternItem, durationEnabled;
 
 - (void)loadView {
     [super loadView];
@@ -150,6 +152,14 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
             [self _setImageWithURL:op.URL];
         }
     }];
+}
+
+- (BOOL)durationEnabled {
+    return self.patternItem.patternEndCondition == CDPatternEndConditionAfterDuration;
+}
+
++ (NSSet *)keyPathsForValuesAffectingDurationEnabled {
+    return [NSSet setWithObject:@"patternItem.patternEndCondition"];
 }
 
 - (IBAction)btnClearImageClicked:(id)sender {

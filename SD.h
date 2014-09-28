@@ -19,6 +19,7 @@ uint8_t const O_WRITE = 0X02;
 #define PATH_COMPONENT_BUFFER_LEN MAX_COMPONENT_LEN+1
 #define SPI_FULL_SPEED 2
 #define SPI_HALF_SPEED 3 // not right..
+#define SPI_DIV6_SPEED 6
 
 class File/* : public Stream*/ {
 private:

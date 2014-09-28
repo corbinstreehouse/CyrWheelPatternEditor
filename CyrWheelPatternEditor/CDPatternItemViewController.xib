@@ -152,6 +152,7 @@
                     </textFieldCell>
                     <connections>
                         <action selector="didChangeDuration:" target="-2" id="lzA-AF-G9B"/>
+                        <binding destination="-2" name="enabled" keyPath="durationEnabled" id="sBu-0c-G9h"/>
                         <binding destination="-2" name="value" keyPath="self.patternItem.duration" id="MaK-PP-aAN"/>
                     </connections>
                 </textField>
