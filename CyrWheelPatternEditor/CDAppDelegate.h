@@ -8,6 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+@class CDWheelManagerWindowController;
+
+
+
+/// to pull: git submodule update --init --recursive
+
+
+
 @interface CDAppDelegate : NSObject<NSApplicationDelegate>  {
     @private
 }

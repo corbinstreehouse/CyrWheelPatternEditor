@@ -6,6 +6,10 @@ boolean SDClass::begin(uint8_t speed, uint8_t csPin) {
     return true;
 }
 
+boolean SDClass::remove(char *filepath) {
+    return true;
+}
+
 
 File SDClass::open(const char *filepath, uint8_t mode) {
     File result = File(filepath);

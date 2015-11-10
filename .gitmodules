@@ -1,0 +1,6 @@
+[submodule "Libraries/AFNetworking"]
+	path = Libraries/AFNetworking
+	url = git@github.com:AFNetworking/AFNetworking.git
+[submodule "Libraries/RestKit"]
+	path = Libraries/RestKit
+	url = git@github.com:RestKit/RestKit.git

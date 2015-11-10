@@ -79,7 +79,7 @@ public:
 //    boolean mkdir(char *filepath);
 //    
 //    // Delete the file.
-//    boolean remove(char *filepath);
+    boolean remove(char *filepath);
 //    
 //    boolean rmdir(char *filepath);
 };
