@@ -177,7 +177,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 }
 
 - (void)_observeValueForChildrenChangeOfObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    NSKeyValueChange changeKind = [[change objectForKey:NSKeyValueChangeKindKey] integerValue];
+    NSKeyValueChange changeKind = (NSKeyValueChange)[[change objectForKey:NSKeyValueChangeKindKey] unsignedIntegerValue];
     switch (changeKind) {
         case NSKeyValueChangeSetting: {
             [self _resetPatternViewControllers];

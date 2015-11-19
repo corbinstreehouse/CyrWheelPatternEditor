@@ -21,6 +21,8 @@
             continueAfterRunningActions = "No"
             symbolName = "NSLog"
             moduleName = "">
+            <Locations>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -44,6 +46,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "-[CDPatternSimulatorDocument _loadPatternSequence]"
                   moduleName = "CyrWheelPatternEditor"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/corbin/Projects/CyrWheelPatternEditor/CyrWheelPatternEditor/CDPatternSimulatorDocument.mm"
                   timestampString = "413746112.575767"
                   startingColumnNumber = "9223372036854775807"
@@ -58,6 +61,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "-[CDPatternSimulatorDocument _loadPatternSequence]"
                   moduleName = "CyrWheelPatternEditor"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/corbin/Projects/CyrWheelPatternEditor/CyrWheelPatternEditor/CDPatternSimulatorDocument.mm"
                   timestampString = "413746112.576043"
                   startingColumnNumber = "9223372036854775807"
@@ -72,6 +76,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "-[CDPatternSimulatorDocument _loadPatternSequence]"
                   moduleName = "CyrWheelPatternEditor"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/corbin/Projects/CyrWheelPatternEditor/CyrWheelPatternEditor/CDPatternSimulatorDocument.mm"
                   timestampString = "413746112.576441"
                   startingColumnNumber = "9223372036854775807"
@@ -184,6 +189,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "randomGradients(CDPatternItemHeader*, unsigned int, unsigned int, bool)"
                   moduleName = "CyrWheelPatternEditor"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file://localhost/corbin/Projects/Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDLEDStripPatterns.cpp"
                   timestampString = "418546490.862203"
                   startingColumnNumber = "9223372036854775807"
@@ -198,6 +204,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "randomGradients(CDPatternItemHeader*, unsigned int, unsigned int, bool)"
                   moduleName = "CyrWheelPatternEditor"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file://localhost/corbin/Projects/Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDLEDStripPatterns.cpp"
                   timestampString = "418546490.862516"
                   startingColumnNumber = "9223372036854775807"
