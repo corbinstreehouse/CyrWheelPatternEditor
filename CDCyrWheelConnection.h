@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <RestKit/RestKit.h>
 #import "CDCyrWheelSequence.h"
 #import "CDCyrWheelPattern.h"
 
@@ -21,7 +20,7 @@ typedef enum {
     CDCyrWheelCommandEndCalibrating,
     CDCyrWheelCommandCancelCalibrating,
     CDCyrWheelCommandStartSavingGyroData,
-    CDCyrWheelCommandEndSavingGyroData,
+    CDCyrWheelCommandEndSavingGyroData, 
     
 } CDCyrWheelCommand;
 
@@ -29,18 +28,18 @@ typedef enum {
 
 @property(copy) NSString *name; // The wheel name/server name we connect to. Can only be set once (currently)
 
-@property(readonly, getter=isAlive) BOOL alive;
 
-- (void)sendCommand:(CDCyrWheelCommand)command success:(void (^)(RKObjectRequestOperation *operation, RKMappingResult *mappingResult))success failure:(void (^)(RKObjectRequestOperation *operation, NSError *error))failure;
+- (void)sendCommand:(CDCyrWheelCommand)command;
 
-- (void)uploadNewSequence:(CDCyrWheelSequence *)sequence atURL:(NSURL *)url success:(void (^)(RKObjectRequestOperation *operation, RKMappingResult *mappingResult))success failure:(void (^)(RKObjectRequestOperation *operation, NSError *error))failure;
+- (void)uploadNewSequence:(CDCyrWheelSequence *)sequence;
 
-- (void)getSequencesWithSuccess:(void (^)(RKObjectRequestOperation *operation, RKMappingResult *mappingResult))success failure:(void (^)(RKObjectRequestOperation *operation, NSError *error))failure;
+//- (void)getSequencesWithSuccess:(void (^)(RKObjectRequestOperation *operation, RKMappingResult *mappingResult))success failure:(void (^)(RKObjectRequestOperation *operation, NSError *error))failure;
 
 - (void)playSequence:(CDCyrWheelSequence *)sequence;
+- (void)addSequence:(CDCyrWheelSequence *)sequence;
 - (void)deleteSequence:(CDCyrWheelSequence *)sequence;
 
-- (void)cancelAllObjectRequests;
-- (void)setDynamicPatternItem:(CDCyrWheelPattern *)pattern;
+// Changes to a "dynamic" sequence and starts playing this pattern that was picked until another pattern is chosen
+- (void)setPatternItem:(CDCyrWheelPattern *)pattern;
 
 @end

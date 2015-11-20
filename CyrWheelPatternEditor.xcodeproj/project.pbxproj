@@ -16,12 +16,10 @@
 		9D4FCB33193C2E090000DE28 /* colorutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D4FCB31193C2E090000DE28 /* colorutils.cpp */; };
 		9D4FCB36193C2E100000DE28 /* hsv2rgb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D4FCB34193C2E100000DE28 /* hsv2rgb.cpp */; };
 		9D500A2518BD88E8003BD8C2 /* CDEncodedColorTransformer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */; };
-		9D662D541AA4C5D20022BFD5 /* RestKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9D117A3F1A05739C0045C12B /* RestKit.framework */; };
 		9D7F8C461A11AE86009785C0 /* CDCyrWheelPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D7F8C451A11AE86009785C0 /* CDCyrWheelPattern.m */; };
 		9D7F8C4C1A11B4DB009785C0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D7F8C4B1A11B4DB009785C0 /* SystemConfiguration.framework */; };
 		9DA685B219417089003631F6 /* LEDPatterns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DA685B119417089003631F6 /* LEDPatterns.cpp */; };
 		9DA685B4194176B6003631F6 /* lib8tion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DA685B3194176B6003631F6 /* lib8tion.cpp */; };
-		9DB6F0301A0579BB005CFD95 /* RestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D117A3F1A05739C0045C12B /* RestKit.framework */; };
 		9DB6F0331A057AA8005CFD95 /* CDCyrWheelConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB6F0321A057AA8005CFD95 /* CDCyrWheelConnection.m */; };
 		9DB6F0361A068832005CFD95 /* CDCyrWheelSequence.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB6F0351A068832005CFD95 /* CDCyrWheelSequence.m */; };
 		9DBB2A7518A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7318A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm */; };
@@ -51,7 +49,6 @@
 		9DFBAC2A1888EDFC00737C2F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9DFBAC281888EDFC00737C2F /* MainMenu.xib */; };
 		9DFBAC2D1888EDFC00737C2F /* CDDocument.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9DFBAC2B1888EDFC00737C2F /* CDDocument.xcdatamodeld */; };
 		9DFBAC2F1888EDFC00737C2F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DFBAC2E1888EDFC00737C2F /* Images.xcassets */; };
-		9DFBAC361888EDFC00737C2F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DFBAC351888EDFC00737C2F /* XCTest.framework */; };
 		9DFBAC371888EDFC00737C2F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DFBAC101888EDFC00737C2F /* Cocoa.framework */; };
 		9DFBAC3F1888EDFC00737C2F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DFBAC3D1888EDFC00737C2F /* InfoPlist.strings */; };
 		9DFBAC411888EDFC00737C2F /* CyrWheelPatternEditorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DFBAC401888EDFC00737C2F /* CyrWheelPatternEditorTests.m */; };
@@ -61,34 +58,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		9D117A3A1A05739C0045C12B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9D117A331A05739C0045C12B /* RestKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 25160D1614564E810060A5C5;
-			remoteInfo = RestKit;
-		};
-		9D117A3C1A05739C0045C12B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9D117A331A05739C0045C12B /* RestKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 25160D2614564E820060A5C5;
-			remoteInfo = RestKitTests;
-		};
-		9D117A3E1A05739C0045C12B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9D117A331A05739C0045C12B /* RestKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 25160E62145651060060A5C5;
-			remoteInfo = RestKitFramework;
-		};
-		9D117A401A05739C0045C12B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9D117A331A05739C0045C12B /* RestKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 25160E78145651060060A5C5;
-			remoteInfo = RestKitFrameworkTests;
-		};
 		9DFBAC381888EDFC00737C2F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9DFBAC051888EDFC00737C2F /* Project object */;
@@ -105,7 +74,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9D662D541AA4C5D20022BFD5 /* RestKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,7 +87,6 @@
 		9D117A251A05637D0045C12B /* CDWheelManagerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDWheelManagerWindowController.h; sourceTree = "<group>"; };
 		9D117A261A05637D0045C12B /* CDWheelManagerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDWheelManagerWindowController.m; sourceTree = "<group>"; };
 		9D117A271A05637D0045C12B /* CDWheelManagerWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDWheelManagerWindowController.xib; sourceTree = "<group>"; };
-		9D117A331A05739C0045C12B /* RestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RestKit.xcodeproj; path = Libraries/RestKit/RestKit.xcodeproj; sourceTree = "<group>"; };
 		9D3A0DB0188A3D26001AD553 /* CDPatternData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternData.h; path = ../../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternData.h; sourceTree = "<group>"; };
 		9D4FCB2A193C278E0000DE28 /* pixeltypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pixeltypes.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/pixeltypes.h; sourceTree = "<group>"; };
 		9D4FCB2E193C29DB0000DE28 /* CDSimulatorLEDPatterns.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = CDSimulatorLEDPatterns.cpp; sourceTree = "<group>"; };
@@ -196,7 +163,6 @@
 		9DFBAC2C1888EDFC00737C2F /* CDDocument.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CDDocument.xcdatamodel; sourceTree = "<group>"; };
 		9DFBAC2E1888EDFC00737C2F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9DFBAC341888EDFC00737C2F /* CyrWheelPatternEditorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CyrWheelPatternEditorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9DFBAC351888EDFC00737C2F /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		9DFBAC3C1888EDFC00737C2F /* CyrWheelPatternEditorTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CyrWheelPatternEditorTests-Info.plist"; sourceTree = "<group>"; };
 		9DFBAC3E1888EDFC00737C2F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9DFBAC401888EDFC00737C2F /* CyrWheelPatternEditorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CyrWheelPatternEditorTests.m; sourceTree = "<group>"; };
@@ -213,7 +179,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D7F8C4C1A11B4DB009785C0 /* SystemConfiguration.framework in Frameworks */,
-				9DB6F0301A0579BB005CFD95 /* RestKit.framework in Frameworks */,
 				9DFBAC111888EDFC00737C2F /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,24 +188,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DFBAC371888EDFC00737C2F /* Cocoa.framework in Frameworks */,
-				9DFBAC361888EDFC00737C2F /* XCTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9D117A341A05739C0045C12B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9D117A3B1A05739C0045C12B /* libRestKit.a */,
-				9D117A3D1A05739C0045C12B /* RestKitTests.xctest */,
-				9D117A3F1A05739C0045C12B /* RestKit.framework */,
-				9D117A411A05739C0045C12B /* RestKitFrameworkTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		9DBB2A7118A2F18300C44C7C /* Simulator */ = {
 			isa = PBXGroup;
 			children = (
@@ -307,7 +260,6 @@
 				9DFBAC3A1888EDFC00737C2F /* CyrWheelPatternEditorTests */,
 				9DFBAC0F1888EDFC00737C2F /* Frameworks */,
 				9DFBAC0E1888EDFC00737C2F /* Products */,
-				9D117A331A05739C0045C12B /* RestKit.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -325,7 +277,6 @@
 			children = (
 				9D7F8C4B1A11B4DB009785C0 /* SystemConfiguration.framework */,
 				9DFBAC101888EDFC00737C2F /* Cocoa.framework */,
-				9DFBAC351888EDFC00737C2F /* XCTest.framework */,
 				9DFBAC121888EDFC00737C2F /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -483,12 +434,6 @@
 			mainGroup = 9DFBAC041888EDFC00737C2F;
 			productRefGroup = 9DFBAC0E1888EDFC00737C2F /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 9D117A341A05739C0045C12B /* Products */;
-					ProjectRef = 9D117A331A05739C0045C12B /* RestKit.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				9DFBAC0C1888EDFC00737C2F /* CyrWheelPatternEditor */,
@@ -496,37 +441,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		9D117A3B1A05739C0045C12B /* libRestKit.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRestKit.a;
-			remoteRef = 9D117A3A1A05739C0045C12B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9D117A3D1A05739C0045C12B /* RestKitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = RestKitTests.xctest;
-			remoteRef = 9D117A3C1A05739C0045C12B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9D117A3F1A05739C0045C12B /* RestKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = RestKit.framework;
-			remoteRef = 9D117A3E1A05739C0045C12B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9D117A411A05739C0045C12B /* RestKitFrameworkTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = RestKitFrameworkTests.xctest;
-			remoteRef = 9D117A401A05739C0045C12B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9DFBAC0B1888EDFC00737C2F /* Resources */ = {

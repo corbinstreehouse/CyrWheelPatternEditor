@@ -13,7 +13,6 @@
 
 // It might be nice to have other properties too..but having them here would involve opening all the files and reading the data on startup. I'm not sure I want to do that...
 @property (copy) NSString *name;
-@property (copy) NSString *action;
 @property BOOL editable;
 
 @end

@@ -63,42 +63,41 @@
 - (void)viewDidLoad {
     // TODO: better abstraction to other wheels
     _wheelConnection = [CDCyrWheelConnection new];
-    _wheelConnection.name = @"10.0.1.6"; //self.wheelName;
     
     // TODO: load the table..
     [self _loadSequences];
 }
 
 - (void)_loadSequences {
-    if (self.loadingSequences) {
-        [_wheelConnection cancelAllObjectRequests]; // Try again...
-    }
+//    if (self.loadingSequences) {
+//        [_wheelConnection cancelAllObjectRequests]; // Try again...
+//    }
     
     self.loadingSequences = YES;
-    [_wheelConnection getSequencesWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        self.loadingSequences = NO;
-        NSArray *newSequences = mappingResult.array;
-        if (_sequences != nil || _sequences.count == 0) {
-            // Do some animations from what we had to the new stuff
-            NSArray *oldSequences = _sequences;
-            _sequences = newSequences;
-            [self._sequencesTableView applyPermutationsFromArray:oldSequences toArray:_sequences insertionAnimation:NSTableViewAnimationEffectFade removalAnimation:NSTableViewAnimationSlideUp];
-        } else {
-            // nothing shown..reload it all
-            _sequences = newSequences;
-            [self._sequencesTableView reloadData];
-        }
-        
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        self.loadingSequences = NO;
-        [NSApp presentError:error modalForWindow:self.view.window delegate:nil didPresentSelector:@selector(_didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
-    }];
+//    [_wheelConnection getSequencesWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//        self.loadingSequences = NO;
+//        NSArray *newSequences = mappingResult.array;
+//        if (_sequences != nil || _sequences.count == 0) {
+//            // Do some animations from what we had to the new stuff
+//            NSArray *oldSequences = _sequences;
+//            _sequences = newSequences;
+//            [self._sequencesTableView applyPermutationsFromArray:oldSequences toArray:_sequences insertionAnimation:NSTableViewAnimationEffectFade removalAnimation:NSTableViewAnimationSlideUp];
+//        } else {
+//            // nothing shown..reload it all
+//            _sequences = newSequences;
+//            [self._sequencesTableView reloadData];
+//        }
+//        
+//    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//        self.loadingSequences = NO;
+//        [NSApp presentError:error modalForWindow:self.view.window delegate:nil didPresentSelector:@selector(_didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
+//    }];
 }
 - (IBAction)btnDynamicPatternClicked:(id)sender {
     CDCyrWheelPattern *p = [CDCyrWheelPattern new];
     p.patternEndCondition = CDPatternEndConditionOnButtonClick;
     p.patternType = LEDPatternTypeBlueFire;
-    [_wheelConnection setDynamicPatternItem:p];
+    [_wheelConnection setPatternItem:p];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
@@ -215,13 +214,13 @@
     }
     
     self.uploadingFile = YES;
-    [_wheelConnection uploadNewSequence:sequence atURL:url success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        self.uploadingFile = NO;
-        [self _loadSequences];
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        self.uploadingFile = NO;
-        [self presentError:error modalForWindow:self.view.window delegate:nil didPresentSelector:@selector(_didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
-    }];
+//    [_wheelConnection uploadNewSequence:sequence atURL:url success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//        self.uploadingFile = NO;
+//        [self _loadSequences];
+//    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//        self.uploadingFile = NO;
+//        [self presentError:error modalForWindow:self.view.window delegate:nil didPresentSelector:@selector(_didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
+//    }];
 }
 
 
@@ -233,11 +232,12 @@
     
     // TODO: disable buttons while we are sending the command?
     // or cancel all prior sends
-    [_wheelConnection sendCommand:(CDCyrWheelCommand)sender.tag success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        [self presentError:error modalForWindow:self.view.window delegate:nil didPresentSelector:@selector(_didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
-    }];
+    [_wheelConnection sendCommand:(CDCyrWheelCommand)sender.tag];
+//    [_wheelConnection sendCommand:(CDCyrWheelCommand)sender.tag success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//        
+//    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+//        [self presentError:error modalForWindow:self.view.window delegate:nil didPresentSelector:@selector(_didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
+//    }];
 }
 
 @end
