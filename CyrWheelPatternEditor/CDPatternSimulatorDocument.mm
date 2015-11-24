@@ -82,11 +82,11 @@
 //    corbin..jeeze this doesn't working '
 
     // Mainly use the same code as the hardware so I can test it
-    _sequenceManager.init(false);
+    _sequenceManager.init();
     
     // Go through and find the sequence with the given name
     NSString *fileToFind = [url lastPathComponent];
-    for (int i = 0; i < _sequenceManager.getNumberOfSequenceNames(); i++) {
+    for (NSInteger i = 0; i < _sequenceManager.getNumberOfSequenceNames(); i++) {
         char *currentName = _sequenceManager.getCurrentSequenceName();
         if (currentName) {
             NSString *currentNameStr = [[NSString alloc] initWithBytes:currentName length:strlen(currentName) encoding:NSASCIIStringEncoding];

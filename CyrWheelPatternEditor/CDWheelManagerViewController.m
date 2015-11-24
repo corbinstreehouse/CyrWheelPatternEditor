@@ -37,7 +37,6 @@
 - (id)init {
     self = [self initWithNibName:[self className] bundle:nil];
     self.title = @"Cyr Wheel Manager";
-    self.wheelName = @WLAN_MACHINE_NAME; // TODO: make this dynamic
     return self;
 }
 

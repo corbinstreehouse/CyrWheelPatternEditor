@@ -37,11 +37,6 @@ static const char *CDWheelCommandToPath[] = {
     return self;
 }
 
-@synthesize name;
-
-- (void)dealloc {
-    self.name = nil;
-}
 
 - (void)playSequence:(CDCyrWheelSequence *)sequence {
 

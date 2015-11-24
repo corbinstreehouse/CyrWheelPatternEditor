@@ -6,6 +6,12 @@
 //  Copyright (c) 2014 Corbin Dunn. All rights reserved.
 //
 
+
+
+
+
+// TODO: kill this file
+
 #import <Foundation/Foundation.h>
 #import "CDCyrWheelSequence.h"
 #import "CDCyrWheelPattern.h"
@@ -26,7 +32,6 @@ typedef enum {
 
 @interface CDCyrWheelConnection : NSObject
 
-@property(copy) NSString *name; // The wheel name/server name we connect to. Can only be set once (currently)
 
 
 - (void)sendCommand:(CDCyrWheelCommand)command;

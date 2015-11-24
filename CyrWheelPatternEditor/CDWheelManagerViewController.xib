@@ -186,9 +186,9 @@
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="9uH-gz-SpS">
-                    <rect key="frame" x="84" y="5" width="88" height="32"/>
+                    <rect key="frame" x="68" y="5" width="121" height="32"/>
                     <animations/>
-                    <buttonCell key="cell" type="push" title="Refresh" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9pu-g7-etU">
+                    <buttonCell key="cell" type="push" title="Refresh/Sync" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9pu-g7-etU">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -263,8 +263,8 @@
                     <animations/>
                     <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="4ag-RV-aU1"/>
                 </slider>
-                <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="GrS-Nm-9Ml">
-                    <rect key="frame" x="174" y="14" width="16" height="16"/>
+                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="GrS-Nm-9Ml">
+                    <rect key="frame" x="191" y="12" width="16" height="16"/>
                     <animations/>
                     <connections>
                         <binding destination="-2" name="animate" keyPath="showingProgress" id="QO1-6Y-o7g"/>
