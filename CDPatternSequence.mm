@@ -15,6 +15,7 @@ NSString *CDPatternChildrenKey = @"children";
 
 @dynamic pixelCount;
 @dynamic children, ignoreSingleClickButtonForTimedPatterns;
+@dynamic name;
 
 + (instancetype)newPatternSequenceInContext:(NSManagedObjectContext *)context {
     CDPatternSequence *result = [NSEntityDescription insertNewObjectForEntityForName:[self className] inManagedObjectContext:context];

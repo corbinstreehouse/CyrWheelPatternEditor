@@ -402,7 +402,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     sp.allowsOtherFileTypes = NO;
     sp.title = @"Export pattern to an SD card";
     [sp beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
-        if (result == NSOKButton) {
+        if (result == NSModalResponseOK) {
             [self _exportDataToURL:sp.URL];
         }
     }];

@@ -148,7 +148,7 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     op.allowsMultipleSelection = NO;
     op.allowsOtherFileTypes = NO;
     [op beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
-        if (result == NSOKButton) {
+        if (result == NSModalResponseOK) {
             [self _setImageWithURL:op.URL];
         }
     }];

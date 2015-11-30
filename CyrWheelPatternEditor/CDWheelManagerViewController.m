@@ -7,10 +7,10 @@
 //
 
 #import "CDWheelManagerViewController.h"
-#import "CDCyrWheelConnection.h"
 #import "CWPatternSequenceManager.h"
-#import "CDCyrWheelPattern.h"
 
+/*
+ #import "CDCyrWheelPattern.h"
 @interface NSTableView(hack)
 
 - (void)applyPermutationsFromArray:(NSArray *)oldContents toArray:(NSArray *)newContents insertionAnimation:(NSTableViewAnimationOptions)insertAnimation removalAnimation:(NSTableViewAnimationOptions)removeAnimation NS_AVAILABLE_MAC(10_8);
@@ -195,7 +195,7 @@
     if (baseName.length > 8) {
         baseName = [baseName substringToIndex:7];
     }
-    
+    /*
     // Make sure it is unique
     NSInteger counter = 1;
     CDCyrWheelSequence *sequence = [CDCyrWheelSequence new];
@@ -220,6 +220,7 @@
 //        self.uploadingFile = NO;
 //        [self presentError:error modalForWindow:self.view.window delegate:nil didPresentSelector:@selector(_didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
 //    }];
+
 }
 
 
@@ -240,3 +241,4 @@
 }
 
 @end
+     */

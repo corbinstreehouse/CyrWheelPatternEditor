@@ -16,8 +16,10 @@
 // TODO: rename to "CDSequenceGroup"??
 @interface CDPatternSequence : NSManagedObject
 
-@property (nonatomic) int32_t pixelCount;
-@property (nonatomic, retain) NSOrderedSet *children;
+@property (nonatomic) NSString *name; // The filename when I use this
+
+@property (nonatomic) int32_t pixelCount; // TODO: remove this option
+@property (nonatomic, retain) NSOrderedSet<CDPatternItem *> *children;
 @property (nonatomic) BOOL ignoreSingleClickButtonForTimedPatterns;
 @end
 

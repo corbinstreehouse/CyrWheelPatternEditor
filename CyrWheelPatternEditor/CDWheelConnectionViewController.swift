@@ -15,10 +15,14 @@ extension CDWheelCommand {
     }
 }
 
-class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegate {
+class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegate, CDWheelConnectionDelegate, NSTableViewDelegate, NSTableViewDataSource {
 
     lazy var centralManager: CBCentralManager = CBCentralManager(delegate: self, queue: nil)
-    dynamic var connectedWheel: CDWheelConnection? = nil;
+    dynamic var connectedWheel: CDWheelConnection? = nil {
+        didSet {
+            _updateConnectButtonTitle()
+        }
+    }
     lazy var discoveredPeripherals: [CBPeripheral] = []
     dynamic var lastConnectedWheelUUID: NSUUID? = nil {
         didSet {
@@ -26,6 +30,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
+    @IBOutlet weak var sequencesTableView: NSTableView!
     // state restoration
     override class func restorableStateKeyPaths() -> [String] {
         var result = super.restorableStateKeyPaths()
@@ -58,18 +63,33 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
                 return false;
             }
         }
+        set {
+            // dummy setter for KVO
+        }
+    }
+    
+    func _updateIsConnectingToWheel() {
+        isConnectingToWheel = true; // ignored... pings KVO
     }
     
     // properties for bindings to UI
     dynamic var managerStateDescription: String = ""
     dynamic var cyrWheelName: String = "Unknown Cyr Wheel"
-    dynamic var scanButtonEnabled: Bool {
+    dynamic var scanButtonEnabled: Bool
+    {
         get {
             if centralManager.state == .PoweredOn {
-                return connectedWheel!.peripheral.state != .Connecting
+                if connectedWheel != nil {
+                    return connectedWheel!.peripheral.state != .Connecting
+                } else {
+                    return true
+                }
             } else {
                 return false;
             }
+        }
+        set {
+            // does nothing, but for writing to signal it changed.
         }
     }
     
@@ -89,7 +109,15 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
                 }
             }
         }
+        set {
+            
+        }
     }
+    
+    func _updateConnectButtonTitle() {
+        connectButtonTitle = "" // fires KVC
+    }
+    
     
     override class func keyPathsForValuesAffectingValueForKey(key: String) -> Set<String> {
         if key == "connectButtonTitle" || key == "isConnectingToWheel" {
@@ -179,6 +207,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
         let poweredOn = state == .PoweredOn
         wheelChooserViewController?.scanning = poweredOn
+        scanButtonEnabled = poweredOn
         
         if poweredOn {
             connectToWheelOrStartScanning()
@@ -203,7 +232,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
     func centralManager(central: CBCentralManager, didRetrievePeripherals peripherals: [CBPeripheral]) {
-        print("didRetrieve: %@", peripherals)
+        print("didRetrieve peripherals: %@", peripherals)
     }
 
     func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
@@ -224,12 +253,10 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         print("didConnect to ", peripheral)
         if connectedWheel == nil {
             connectedWheel = CDWheelConnection(peripheral: peripheral);
+            connectedWheel!.delegate = self;
             lastConnectedWheelUUID = peripheral.identifier
         } else if connectedWheel?.peripheral == peripheral {
-            // ping KVO
-            willChangeValueForKey("isConnectingToWheel")
-            didChangeValueForKey("isConnectingToWheel")
-            
+            _updateIsConnectingToWheel();
         }
         
         // Stop scanning once we are connected to something
@@ -254,16 +281,57 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         print("did disconnect ", peripheral)
         // Don't drop the connectedWheel so we can reconnect easily, but update our state
         if peripheral == connectedWheel?.peripheral {
-            
+            _updateConnectButtonTitle();
         }
-        
     }
 
+    // complete reload or new values
+    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String]) {
+        sequencesTableView.reloadData()
+    }
     
-    
+//    func wheelConnection(wheelConnection: CDWheelConnection, didAddFilenames filenmames: String, atIndexes indexesAdded: NSIndexSet) {
+//        sequencesTableView.insertRowsAtIndexes(indexesAdded, withAnimation: NSTableViewAnimationOptions.EffectFade)
+//    }
+//    
+//    func wheelConnection(wheelConnection: CDWheelConnection, didRemoveFilenamesAtIndexes indexesRemoved: NSIndexSet) {
+//        sequencesTableView.removeRowsAtIndexes(indexesRemoved, withAnimation: NSTableViewAnimationOptions.EffectFade)
+//
+//    }
 
+    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+        if let wheel = connectedWheel {
+            return wheel.sequenceFilenames.count
+        } else {
+            return 0;
+        }
+    }
+    
+    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        let cellView = tableView.makeViewWithIdentifier(tableColumn!.identifier, owner: nil) as! NSTableCellView
+        cellView.textField!.stringValue = connectedWheel!.sequenceFilenames[row]
+        return cellView
+    }
 
+    // row actions from the sequences table
+    @IBAction func btnStartSequenceClicked(sender: NSButton) {
+        let row = sequencesTableView.rowForView(sender)
+        if row != -1 {
+            if let wheel = connectedWheel {
+                let indexes = NSIndexSet(index: row)
+                wheel.deleteFilenamesAtIndexes(indexes, didCompleteHandler: { (succeeded: Bool) -> Void in
+                    if (succeeded) {
+                        self.sequencesTableView.removeRowsAtIndexes(indexes, withAnimation: NSTableViewAnimationOptions.EffectFade)
+                    } else {
+                        // TODO: present some error..
+                    }
+                })
+            }
+        }
+    }
     
     
+    @IBAction func btnRemoveSequenceClicked(sender: NSButton) {
+    }
     
 }

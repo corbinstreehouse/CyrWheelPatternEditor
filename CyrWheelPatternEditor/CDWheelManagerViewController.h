@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+// TODO: delete this
+
 @interface CDWheelManagerViewController : NSViewController
 
 @end
