@@ -13,16 +13,68 @@ class CDWheelConnectionChooserViewController: NSViewController, NSTableViewDeleg
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
+        self.view.wantsLayer = true
+        _spinnerView.layerContentsRedrawPolicy = NSViewLayerContentsRedrawPolicy.Never
+        _spinnerView.layerContentsPlacement = NSViewLayerContentsPlacement.ScaleProportionallyToFit
+        
+        // All this to get a spinning layer!
+        let parentLayer = _spinnerView.layer!
+        let spinnerLayer = CALayer()
+        
+        spinnerLayer.position = CGPointMake(0.5, 0.5)
+        spinnerLayer.contentsScale = parentLayer.contentsScale
+        spinnerLayer.frame = parentLayer.bounds
+        spinnerLayer.contentsGravity = kCAGravityResizeAspect
+//        spinnerLayer.backgroundColor = NSColor.redColor().CGColor
+        
+        // http://uxrepo.com/icon/spinner5-by-icomoon#
+
+        // Maintain the same aspect ratio
+        var imageSize = _spinnerView.bounds.size
+        
+        imageSize.width = min(imageSize.width, imageSize.height)
+        imageSize.height = imageSize.width;
+        spinnerLayer.contents = NSImage(size: imageSize, flipped: false, drawingHandler: { (frame) -> Bool in
+            let image = NSImage(named: "spinner2")!
+            image.drawInRect(frame)
+            return true
+        })
+        
+        let animation = CABasicAnimation(keyPath: "transform.rotation")
+        animation.duration = 2.0
+        animation.fromValue = NSNumber(double: 0.0)
+        animation.toValue = NSNumber(double: -1*2.0*M_PI)
+        animation.cumulative = true
+        animation.repeatCount = Float.infinity
+        spinnerLayer.addAnimation(animation, forKey: "rotationAnimation")
+        
+        parentLayer.addSublayer(spinnerLayer)
+        
+    }
+    
+    func _setupScanningTextFieldFadeAnimation() {
+        
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.duration = 1.0
+        animation.fromValue = NSNumber(double: 0.0)
+        animation.toValue = NSNumber(double: 1.0)
+        animation.autoreverses = true
+        animation.repeatCount = Float.infinity
+        
+        _scanningTextField.layer!.addAnimation(animation, forKey: "fadeAnimation")
     }
     
     override func viewDidAppear() {
         if wheelSelectTableView.numberOfRows > 0 &&  wheelSelectTableView.selectedRow == -1 {
             wheelSelectTableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
         }
+        _scanningTextField.hidden = discoveredPeripherals.count > 0
+        _setupScanningTextFieldFadeAnimation()
     }
     
     @IBOutlet weak var wheelSelectTableView: NSTableView!
+    @IBOutlet weak var _spinnerView: NSView!
+    @IBOutlet weak var _scanningTextField: NSTextField!
     
     // Bindings
     dynamic var validSelection: Bool = false
@@ -53,6 +105,7 @@ class CDWheelConnectionChooserViewController: NSViewController, NSTableViewDeleg
             if wheelSelectTableView.selectedRow == -1 {
                 wheelSelectTableView.selectRowIndexes(NSIndexSet(index: 0), byExtendingSelection: false)
             }
+            _scanningTextField.hidden = discoveredPeripherals.count > 0
         }
     }
     
@@ -60,6 +113,7 @@ class CDWheelConnectionChooserViewController: NSViewController, NSTableViewDeleg
         if let index = discoveredPeripherals.indexOf(peripheral) {
             discoveredPeripherals.removeAtIndex(index)
             wheelSelectTableView.removeRowsAtIndexes(NSIndexSet(index: index), withAnimation: [NSTableViewAnimationOptions.EffectFade])
+            _scanningTextField.hidden = discoveredPeripherals.count > 0
         }
         
     }

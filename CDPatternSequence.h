@@ -16,7 +16,7 @@
 // TODO: rename to "CDSequenceGroup"??
 @interface CDPatternSequence : NSManagedObject
 
-@property (nonatomic) NSString *name; // The filename when I use this
+@property (nonatomic) NSString *name; // The filename when I use this to upload a new item...etc
 
 @property (nonatomic) int32_t pixelCount; // TODO: remove this option
 @property (nonatomic, retain) NSOrderedSet<CDPatternItem *> *children;

@@ -287,6 +287,7 @@
 		9DFBAC161888EDFC00737C2F /* CyrWheelPatternEditor */ = {
 			isa = PBXGroup;
 			children = (
+				9DFBAC2E1888EDFC00737C2F /* Images.xcassets */,
 				9DFBAC281888EDFC00737C2F /* MainMenu.xib */,
 				9D9775791BFEEB9D002D78EE /* Main.storyboard */,
 				9D0EF1CC1BFEE406002C687E /* CDAppDelegate.swift */,
@@ -317,7 +318,6 @@
 				9DBD8046189B66FA00A6A067 /* CDPatternSequence.mm */,
 				9D117A201A049C960045C12B /* CDWheelManagerViewController.h */,
 				9D117A211A049C960045C12B /* CDWheelManagerViewController.m */,
-				9DFBAC2E1888EDFC00737C2F /* Images.xcassets */,
 				9DFBAC2B1888EDFC00737C2F /* CDDocument.xcdatamodeld */,
 				9DCE4EBD19D3B62C002664D9 /* MappingModel.xcmappingmodel */,
 				9DFBAC171888EDFC00737C2F /* Supporting Files */,

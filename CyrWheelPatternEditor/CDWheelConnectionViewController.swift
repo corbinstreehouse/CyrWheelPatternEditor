@@ -23,14 +23,15 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
             _updateConnectButtonTitle()
         }
     }
-    lazy var discoveredPeripherals: [CBPeripheral] = []
+    lazy var _discoveredPeripherals: [CBPeripheral] = []
     dynamic var lastConnectedWheelUUID: NSUUID? = nil {
         didSet {
 //            self.invalidateRestorableState()
         }
     }
     
-    @IBOutlet weak var sequencesTableView: NSTableView!
+    @IBOutlet weak var _sequencesTableView: NSTableView!
+    
     // state restoration
     override class func restorableStateKeyPaths() -> [String] {
         var result = super.restorableStateKeyPaths()
@@ -129,7 +130,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    var wheelChooserViewController: CDWheelConnectionChooserViewController?
+    var _wheelChooserViewController: CDWheelConnectionChooserViewController?
     
     func startScanning() {
         // TODO: limit the peripherals when I have a UUID
@@ -143,14 +144,14 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     func showConnectionChooser() {
         // Start the sheet to choose a periperal..ideally the code to bind things together shouldn't be here, but it is hard to seperate the delegate for the manager to provide just the items
         let localWheelChooserViewController: CDWheelConnectionChooserViewController = self.storyboard!.instantiateControllerWithIdentifier("CDWheelConnectionChooserViewController") as! CDWheelConnectionChooserViewController
-        localWheelChooserViewController.discoveredPeripherals = discoveredPeripherals
+        localWheelChooserViewController.discoveredPeripherals = _discoveredPeripherals
         localWheelChooserViewController.scanning = true
         self.addChildViewController(localWheelChooserViewController)
         let sheetWindow: NSWindow = NSWindow(contentViewController: localWheelChooserViewController)
         sheetWindow.setFrameAutosaveName("ConnnectionChooserWindow")
         
         // Keep track of it so we can update it when the peripherals change
-        wheelChooserViewController = localWheelChooserViewController
+        _wheelChooserViewController = localWheelChooserViewController
         self.view.window?.beginSheet(sheetWindow, completionHandler: { (sheetResult: NSModalResponse) -> Void in
             if sheetResult == NSModalResponseOK {
                 // Connect to the selected wheel
@@ -159,7 +160,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
                 self.startConnectionToPeripheral(peripheral)
             }
             localWheelChooserViewController.removeFromParentViewController()
-            self.wheelChooserViewController = nil
+            self._wheelChooserViewController = nil
         })
     }
     
@@ -188,6 +189,37 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         connectedWheel?.sendCommand(CDWheelCommand(sender.tag));
     }
     
+
+    private func _doAddWithOpenPanel() {
+        let openPanel = NSOpenPanel()
+        openPanel.title = "Select a pattern sequence"
+        openPanel.allowedFileTypes = [gPatternFilenameExtension]
+        openPanel.allowsOtherFileTypes = false
+        openPanel.beginWithCompletionHandler { (result: Int) -> Void in
+            if result == NSModalResponseOK {
+                openPanel.orderOut(self)
+                self.connectedWheel?.uploadPatternItemWithURL(openPanel.URL!, progressHandler: { (progress, error) -> Void in
+                    
+                })
+            }
+        }
+        
+    }
+
+    private func _doRemoveSelectedRows() {
+        _removeSequencesAtIndexes(_sequencesTableView.selectedRowIndexes)
+    }
+
+
+    @IBAction func btnAddSequenceClicked(sender: NSButton) {
+        _doAddWithOpenPanel()
+    }
+    
+    
+    @IBAction func btnRemoveSelectedSequencesClicked(sender: NSButton) {
+        _doRemoveSelectedRows()
+    }
+    
     func checkBluetoothState() {
         let state: CBCentralManagerState = centralManager.state;
         
@@ -206,7 +238,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
             managerStateDescription = ""
         }
         let poweredOn = state == .PoweredOn
-        wheelChooserViewController?.scanning = poweredOn
+        _wheelChooserViewController?.scanning = poweredOn
         scanButtonEnabled = poweredOn
         
         if poweredOn {
@@ -236,15 +268,15 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
 
     func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
-        if !discoveredPeripherals.contains(peripheral) {
-            discoveredPeripherals.append(peripheral)
-            if wheelChooserViewController == nil {
+        if !_discoveredPeripherals.contains(peripheral) {
+            _discoveredPeripherals.append(peripheral)
+            if _wheelChooserViewController == nil {
                 if lastConnectedWheelUUID == peripheral.identifier {
                     // autoconnect to the last one..
                     self.startConnectionToPeripheral(peripheral)
                 }
             } else {
-                wheelChooserViewController?.addPeripheral(peripheral)
+                _wheelChooserViewController!.addPeripheral(peripheral)
             }
         }
     }
@@ -287,15 +319,15 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
 
     // complete reload or new values
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String]) {
-        sequencesTableView.reloadData()
+        _sequencesTableView.reloadData()
     }
     
 //    func wheelConnection(wheelConnection: CDWheelConnection, didAddFilenames filenmames: String, atIndexes indexesAdded: NSIndexSet) {
-//        sequencesTableView.insertRowsAtIndexes(indexesAdded, withAnimation: NSTableViewAnimationOptions.EffectFade)
+//        _sequencesTableView.insertRowsAtIndexes(indexesAdded, withAnimation: NSTableViewAnimationOptions.EffectFade)
 //    }
 //    
 //    func wheelConnection(wheelConnection: CDWheelConnection, didRemoveFilenamesAtIndexes indexesRemoved: NSIndexSet) {
-//        sequencesTableView.removeRowsAtIndexes(indexesRemoved, withAnimation: NSTableViewAnimationOptions.EffectFade)
+//        _sequencesTableView.removeRowsAtIndexes(indexesRemoved, withAnimation: NSTableViewAnimationOptions.EffectFade)
 //
 //    }
 
@@ -312,26 +344,29 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         cellView.textField!.stringValue = connectedWheel!.sequenceFilenames[row]
         return cellView
     }
+    
+    func _removeSequencesAtIndexes(indexes: NSIndexSet) {
+        // TODO: Remove them right away from our visual representation. If we failed to really remove them, we add them back in..
+        connectedWheel?.deleteFilenamesAtIndexes(indexes, didCompleteHandler: { (succeeded: Bool) -> Void in
+            if (succeeded) {
+                self._sequencesTableView.removeRowsAtIndexes(indexes, withAnimation: NSTableViewAnimationOptions.EffectFade)
+            } else {
+                // TODO: present some error..
+            }
+        })
+    }
 
     // row actions from the sequences table
     @IBAction func btnStartSequenceClicked(sender: NSButton) {
-        let row = sequencesTableView.rowForView(sender)
-        if row != -1 {
-            if let wheel = connectedWheel {
-                let indexes = NSIndexSet(index: row)
-                wheel.deleteFilenamesAtIndexes(indexes, didCompleteHandler: { (succeeded: Bool) -> Void in
-                    if (succeeded) {
-                        self.sequencesTableView.removeRowsAtIndexes(indexes, withAnimation: NSTableViewAnimationOptions.EffectFade)
-                    } else {
-                        // TODO: present some error..
-                    }
-                })
-            }
-        }
+        assert(false, "impl");
     }
     
     
     @IBAction func btnRemoveSequenceClicked(sender: NSButton) {
+        let row = _sequencesTableView.rowForView(sender)
+        if row != -1 {
+            _removeSequencesAtIndexes(NSIndexSet(index: row))
+        }
     }
     
 }
