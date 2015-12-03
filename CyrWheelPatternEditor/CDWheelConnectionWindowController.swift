@@ -17,6 +17,11 @@ class CDWheelConnectionWindowController: NSWindowController, NSWindowRestoration
         window.restorable = true;
         window.restorationClass = self.dynamicType
         window.delegate = self
+        
+        // for the new UI
+        window.titleVisibility = NSWindowTitleVisibility.Hidden
+        window.titlebarAppearsTransparent = true
+        
         let delegate = NSApp.delegate as! CDAppDelegate
         delegate.connectionWindows.append(window)
     }

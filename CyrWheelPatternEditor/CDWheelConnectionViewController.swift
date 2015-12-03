@@ -46,9 +46,12 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
 //        super.restoreStateWithCoder(coder)
 //    }
     
+    @IBOutlet weak var _brightnessContainerView: NSView!
+    @IBOutlet weak var _brightnessMenuItem: NSMenuItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        _brightnessMenuItem.view = _brightnessContainerView
     }
     
     override func viewWillAppear() {
