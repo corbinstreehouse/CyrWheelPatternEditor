@@ -23,7 +23,7 @@ class CDWheelConnectionWindowController: NSWindowController, NSWindowRestoration
         window.titlebarAppearsTransparent = true
         
         let delegate = NSApp.delegate as! CDAppDelegate
-        delegate.connectionWindows.append(window)
+        delegate.connectionWindowControllers.append(self)
     }
     
     static func restoreWindowWithIdentifier(identifier: String, state: NSCoder, completionHandler: (NSWindow?, NSError?) -> Void) {
@@ -38,6 +38,13 @@ class CDWheelConnectionWindowController: NSWindowController, NSWindowRestoration
         }
     }
     
+    func window(window: NSWindow, willPositionSheet sheet: NSWindow, usingRect rect: NSRect) -> NSRect {
+        // drop it down
+        var result = rect;
+        result.origin.y -= 36
+        return result
+    }
+
     
 //    func window(window: NSWindow, willEncodeRestorableState state: NSCoder) {
 //        connectionViewController.encodeRestorableStateWithCoder(<#T##coder: NSCoder##NSCoder#>)
@@ -50,8 +57,8 @@ class CDWheelConnectionWindowController: NSWindowController, NSWindowRestoration
     
     func windowWillClose(notification: NSNotification) {
         let delegate = NSApp.delegate as! CDAppDelegate
-        if let index = delegate.connectionWindows.indexOf(self.window!) {
-            delegate.connectionWindows.removeAtIndex(index)
+        if let index = delegate.connectionWindowControllers.indexOf(self) {
+            delegate.connectionWindowControllers.removeAtIndex(index)
         }
     }
     

@@ -167,7 +167,39 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         })
     }
     
-    // Target/actions...
+    
+    @IBOutlet weak var _mnuItemConnect: NSMenuItem!
+    @IBOutlet weak var _menuItemDisconnect: NSMenuItem!
+    
+    @IBAction func _mnuConnectClicked(sender: AnyObject) {
+        startScanning()
+        showConnectionChooser()
+    }
+    
+    @IBAction func _mnuDisconnectClicked(sender: AnyObject) {
+        if let peripheral: CBPeripheral = connectedWheel?.peripheral {
+            centralManager.cancelPeripheralConnection(peripheral)
+            connectedWheel = nil
+        }
+    }
+    
+    override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
+        if menuItem == _mnuItemConnect {
+            return true; // maybe limit...
+        } else if menuItem == _menuItemDisconnect {
+            if let peripheral: CBPeripheral = connectedWheel?.peripheral {
+                if peripheral.state != .Disconnected {
+                    return true
+                }
+            }
+            return false;
+        }
+        // super doesn't implement this..
+        return true;
+    }
+
+    
+    // TODO: remove this....
     @IBAction func bntStartConnectionClicked(sender: AnyObject) {
         if let peripheral: CBPeripheral = connectedWheel?.peripheral {
             switch (peripheral.state) {
@@ -185,6 +217,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
     @IBAction func btnCommandClicked(sender: NSButton) {
+        // TODO: fixup play/pause to flip state depending on what we are doing..
         connectedWheel?.sendCommand(CDWheelCommand(sender.tag));
     }
     
@@ -208,6 +241,9 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
         
     }
+    
+    dynamic var _addSequenceEnabled: Bool = false // for bindings
+    dynamic var _removeSequencesEnabled: Bool = false;
 
     private func _doRemoveSelectedRows() {
         _removeSequencesAtIndexes(_sequencesTableView.selectedRowIndexes)
@@ -319,6 +355,16 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
             _updateConnectButtonTitle();
         }
     }
+    
+    func _updateButtons() {
+        _addSequenceEnabled = connectedWheel != nil && connectedWheel!.sequenceFilenames.count > 0
+        _removeSequencesEnabled = _sequencesTableView.selectedRow != -1
+    }
+    
+    func _sequenceFilenamesChanged() {
+        _sequencesTableView.reloadData()
+        _updateButtons()
+    }
 
     // complete reload or new values
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String]) {
@@ -348,11 +394,16 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         return cellView
     }
     
+    func tableViewSelectionDidChange(notification: NSNotification) {
+        _removeSequencesEnabled = _sequencesTableView.selectedRow != -1
+    }
+    
     func _removeSequencesAtIndexes(indexes: NSIndexSet) {
         // TODO: Remove them right away from our visual representation. If we failed to really remove them, we add them back in..
         connectedWheel?.deleteFilenamesAtIndexes(indexes, didCompleteHandler: { (succeeded: Bool) -> Void in
             if (succeeded) {
                 self._sequencesTableView.removeRowsAtIndexes(indexes, withAnimation: NSTableViewAnimationOptions.EffectFade)
+                self._updateButtons()
             } else {
                 // TODO: present some error..
             }
@@ -364,7 +415,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         assert(false, "impl");
     }
     
-    
+    // NOTE: not used..
     @IBAction func btnRemoveSequenceClicked(sender: NSButton) {
         let row = _sequencesTableView.rowForView(sender)
         if row != -1 {

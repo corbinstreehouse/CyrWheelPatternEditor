@@ -1378,29 +1378,27 @@ DQ
                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="JNO-sE-V0s">
                                             <rect key="frame" x="274" y="314" width="296" height="39"/>
                                             <subviews>
-                                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UqA-Zz-n98" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                <button verticalHuggingPriority="750" fixedFrame="YES" tag="3" translatesAutoresizingMaskIntoConstraints="NO" id="UqA-Zz-n98" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                     <rect key="frame" x="34" y="8" width="27" height="23"/>
                                                     <animations/>
                                                     <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="previous" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="OOC-Sx-10p" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="btnCommandClicked:" target="mLl-X1-Dpi" id="wWa-Xh-HNq"/>
+                                                    </connections>
                                                 </button>
-                                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GmC-Dk-eRG" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                                    <rect key="frame" x="69" y="0.0" width="48" height="39"/>
-                                                    <animations/>
-                                                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="rewind" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="AB3-jX-hMl" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                        <font key="font" metaFont="system"/>
-                                                    </buttonCell>
-                                                </button>
-                                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rEe-wr-ffm" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                <button verticalHuggingPriority="750" fixedFrame="YES" tag="10" translatesAutoresizingMaskIntoConstraints="NO" id="rEe-wr-ffm" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                     <rect key="frame" x="125" y="0.0" width="48" height="39"/>
                                                     <animations/>
                                                     <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="play" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="6XD-Gi-5hB" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="btnCommandClicked:" target="mLl-X1-Dpi" id="Ahe-W8-OS6"/>
+                                                    </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YNj-8Q-DYz" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                     <rect key="frame" x="180" y="0.0" width="48" height="39"/>
@@ -1409,14 +1407,31 @@ DQ
                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="btnCommandClicked:" target="mLl-X1-Dpi" id="Fcf-v0-gQB"/>
+                                                    </connections>
                                                 </button>
-                                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lxl-Ih-RvL" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                <button verticalHuggingPriority="750" fixedFrame="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="lxl-Ih-RvL" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                     <rect key="frame" x="236" y="8" width="27" height="23"/>
                                                     <animations/>
                                                     <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="next" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="Zbj-yA-TPv" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="btnCommandClicked:" target="mLl-X1-Dpi" id="frK-mT-qQy"/>
+                                                    </connections>
+                                                </button>
+                                                <button verticalHuggingPriority="750" fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="GmC-Dk-eRG" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                    <rect key="frame" x="69" y="0.0" width="48" height="39"/>
+                                                    <animations/>
+                                                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="rewind" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="AB3-jX-hMl" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                    </buttonCell>
+                                                    <connections>
+                                                        <action selector="btnCommandClicked:" target="mLl-X1-Dpi" id="foQ-iN-gVy"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -1446,7 +1461,7 @@ DQ
                                                             <constraint firstAttribute="height" constant="24" id="7tm-i9-Zxc"/>
                                                         </constraints>
                                                         <animations/>
-                                                        <popUpButtonCell key="cell" type="smallSquare" bezelStyle="smallSquare" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" altersStateOfSelectedItem="NO" selectedItem="EK1-FN-ywv" id="eJV-g1-O7t" customClass="CDPopupButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                        <popUpButtonCell key="cell" type="smallSquare" bezelStyle="smallSquare" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" altersStateOfSelectedItem="NO" id="eJV-g1-O7t" customClass="CDPopupButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="menu"/>
                                                             <menu key="menu" id="Zje-HU-fZl">
@@ -1454,6 +1469,19 @@ DQ
                                                                     <menuItem image="gear" hidden="YES" id="cLE-La-QSs">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                                     </menuItem>
+                                                                    <menuItem title="Connect..." tag="5" id="mFD-HS-fBn">
+                                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        <connections>
+                                                                            <action selector="_mnuConnectClicked:" target="mLl-X1-Dpi" id="usr-5q-aaZ"/>
+                                                                        </connections>
+                                                                    </menuItem>
+                                                                    <menuItem title="Disconnect" tag="5" id="nOt-hH-Ogo">
+                                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        <connections>
+                                                                            <action selector="_mnuDisconnectClicked:" target="mLl-X1-Dpi" id="ufT-zK-JPN"/>
+                                                                        </connections>
+                                                                    </menuItem>
+                                                                    <menuItem isSeparatorItem="YES" id="HrX-gV-oiq"/>
                                                                     <menuItem title="Begin Calibrating" tag="5" id="HxN-JE-0WB">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                                         <connections>
@@ -1463,7 +1491,7 @@ DQ
                                                                     <menuItem title="End Calibrating" tag="6" id="ZOj-V3-BeK">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                                         <connections>
-                                                                            <action selector="menuCommandClicked:" target="XfG-lQ-9wD" id="kzi-BI-Tai"/>
+                                                                            <action selector="menuCommandClicked:" target="mLl-X1-Dpi" id="JhQ-j2-bk0"/>
                                                                         </connections>
                                                                     </menuItem>
                                                                     <menuItem title="Cancel Calibrating" tag="7" id="udh-jo-cKo">
@@ -1480,9 +1508,6 @@ DQ
                                                                     </menuItem>
                                                                     <menuItem title="End Saving Data" tag="9" id="mA9-Gu-vqa">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
-                                                                        <connections>
-                                                                            <action selector="menuCommandClicked:" target="XfG-lQ-9wD" id="nK7-Ld-jxK"/>
-                                                                        </connections>
                                                                     </menuItem>
                                                                     <menuItem title="Brightness Menu Item" tag="9" id="EK1-FN-ywv">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
@@ -1628,6 +1653,10 @@ DQ
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="btnAddSequenceClicked:" target="mLl-X1-Dpi" id="FIv-Bi-RdW"/>
+                                                <binding destination="mLl-X1-Dpi" name="enabled" keyPath="_addSequenceEnabled" id="Ih8-jp-ty1"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hVd-Bk-jCG" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                             <rect key="frame" x="182" y="286" width="18" height="18"/>
@@ -1640,6 +1669,10 @@ DQ
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="btnRemoveSelectedSequencesClicked:" target="mLl-X1-Dpi" id="wbK-bg-Y8Y"/>
+                                                <binding destination="mLl-X1-Dpi" name="enabled" keyPath="_removeSequencesEnabled" id="fDm-TY-Piw"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                     <constraints>
@@ -1683,6 +1716,8 @@ DQ
                     <connections>
                         <outlet property="_brightnessContainerView" destination="2rx-YI-rbp" id="qqi-5F-zaa"/>
                         <outlet property="_brightnessMenuItem" destination="EK1-FN-ywv" id="YCp-aT-w2S"/>
+                        <outlet property="_menuItemDisconnect" destination="nOt-hH-Ogo" id="BX7-A3-CGN"/>
+                        <outlet property="_mnuItemConnect" destination="mFD-HS-fBn" id="5q4-O8-Yt2"/>
                         <outlet property="_sequencesTableView" destination="y5X-uY-SgC" id="tCO-Rl-OPM"/>
                     </connections>
                 </viewController>
@@ -1695,6 +1730,10 @@ DQ
                             <rect key="frame" x="96" y="2" width="196" height="20"/>
                             <animations/>
                             <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="Z5u-mw-j9j"/>
+                            <connections>
+                                <binding destination="mLl-X1-Dpi" name="enabled" keyPath="connectedWheel.brightnessEnabled" id="kVb-xP-tv0"/>
+                                <binding destination="mLl-X1-Dpi" name="value" keyPath="connectedWheel.brightness" id="zbB-Ev-2rU"/>
+                            </connections>
                         </slider>
                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Wc-nw-fXO">
                             <rect key="frame" x="19" y="4" width="73" height="17"/>
@@ -1708,8 +1747,61 @@ DQ
                     </subviews>
                     <animations/>
                 </customView>
+                <userDefaultsController id="AMM-P1-Xsp"/>
             </objects>
             <point key="canvasLocation" x="511" y="1294.5"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="vqs-uO-uDu">
+            <objects>
+                <windowController id="DQT-8n-JDb" sceneMemberID="viewController">
+                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="Kip-Yt-RZb">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="425" y="461" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+                    </window>
+                    <connections>
+                        <segue destination="7VP-dy-PYe" kind="relationship" relationship="window.shadowedContentViewController" id="bFL-hX-peb"/>
+                    </connections>
+                </windowController>
+                <customObject id="9RN-Kr-New" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1309" y="1327"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="QGk-uK-6Ub">
+            <objects>
+                <viewController id="7VP-dy-PYe" sceneMemberID="viewController">
+                    <view key="view" id="oSC-G7-ugW">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2fc-x3-g7b">
+                                <rect key="frame" x="18" y="243" width="94" height="17"/>
+                                <animations/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Pattern Folder:" id="vX4-B9-ORy">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qV1-yA-W8D">
+                                <rect key="frame" x="111" y="240" width="169" height="22"/>
+                                <animations/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="wku-vk-ZPZ">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <animations/>
+                    </view>
+                </viewController>
+                <customObject id="P83-eD-WGh" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2016" y="1302"/>
         </scene>
     </scenes>
     <resources>

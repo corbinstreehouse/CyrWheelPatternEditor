@@ -17,12 +17,6 @@ File SDClass::open(const char *filepath, uint8_t mode) {
 }
 
 
-static NSURL *g_baseDirectoryURL = nil;
-
-void SDSetBaseDirectoryURL(NSURL *url) {
-    g_baseDirectoryURL = url;
-}
-
 File::File(const char *filepath) {
     size_t filepathLength = strlen(filepath);
     if (filepathLength > 0) {
@@ -41,9 +35,9 @@ File::~File() {
 
 NSURL *File::getURL() {
     NSCAssert(_filepath != NULL, @"need a filepath");
-    NSString *pathToAppend = [NSString stringWithCString:_filepath encoding:NSASCIIStringEncoding];
-    pathToAppend = [pathToAppend lastPathComponent];
-    NSURL *directoryURL = [g_baseDirectoryURL URLByAppendingPathComponent:pathToAppend];
+    NSString *filePathString = [NSString stringWithCString:_filepath encoding:NSASCIIStringEncoding];
+//    pathToAppend = [pathToAppend lastPathComponent];
+    NSURL *directoryURL = [NSURL fileURLWithPath:filePathString];
     return directoryURL;
 }
 

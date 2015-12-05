@@ -12,7 +12,7 @@ import Cocoa
 class CDAppDelegate: NSObject, NSApplicationDelegate {
 
     // This ensures they are around
-    internal lazy var connectionWindows: [NSWindow] = []
+    internal lazy var connectionWindowControllers: [NSWindowController] = []
     
     func applicationDidFinishLaunching(notification: NSNotification) {
         

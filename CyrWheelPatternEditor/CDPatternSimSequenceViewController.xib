@@ -195,6 +195,17 @@
                         <action selector="btnClickSimClicked:" target="-2" id="c0X-bf-cm8"/>
                     </connections>
                 </button>
+                <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r0C-e4-5eD">
+                    <rect key="frame" x="400" y="8" width="117" height="32"/>
+                    <animations/>
+                    <buttonCell key="cell" type="push" title="Play" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="dH0-BC-QYU">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="btnPlayClicked:" target="-2" id="B9f-ZK-XQ8"/>
+                    </connections>
+                </button>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="oZu-8a-0px" customClass="CDCyrWheelView">
                     <rect key="frame" x="20" y="42" width="651" height="481"/>
                     <constraints>
@@ -212,6 +223,17 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PXK-dH-rgR">
+                    <rect key="frame" x="517" y="8" width="117" height="32"/>
+                    <animations/>
+                    <buttonCell key="cell" type="push" title="Pause" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="w14-0g-g67">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="btnPauseClicked:" target="-2" id="7tc-So-sfm"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstItem="XBN-Lg-3zE" firstAttribute="leading" secondItem="lUi-r0-Ijd" secondAttribute="trailing" constant="8" id="0Wu-0W-cLz"/>
@@ -232,12 +254,16 @@
                 <constraint firstItem="v1y-GU-LV6" firstAttribute="leading" secondItem="OgF-hs-oYL" secondAttribute="trailing" constant="11" id="Xa3-5s-giy"/>
                 <constraint firstItem="OgF-hs-oYL" firstAttribute="leading" secondItem="Oqr-gk-iHE" secondAttribute="trailing" constant="12" id="cbj-XI-1Lu"/>
                 <constraint firstItem="MZz-N0-Tyt" firstAttribute="baseline" secondItem="0CL-fJ-OP6" secondAttribute="baseline" id="dg9-jD-E9l"/>
+                <constraint firstItem="PXK-dH-rgR" firstAttribute="leading" secondItem="r0C-e4-5eD" secondAttribute="trailing" constant="12" id="dkF-td-2kt"/>
                 <constraint firstItem="6ru-un-SHy" firstAttribute="leading" secondItem="Jwl-31-ycs" secondAttribute="trailing" constant="8" id="i7q-A0-cS0"/>
                 <constraint firstItem="0CL-fJ-OP6" firstAttribute="leading" secondItem="6ru-un-SHy" secondAttribute="trailing" constant="19" id="iFT-SS-zZp"/>
                 <constraint firstItem="cP1-Y8-St2" firstAttribute="baseline" secondItem="6ru-un-SHy" secondAttribute="baseline" id="k19-Ru-UBA"/>
                 <constraint firstItem="Jwl-31-ycs" firstAttribute="leading" secondItem="cP1-Y8-St2" secondAttribute="trailing" constant="19" id="kBX-6u-6YH"/>
                 <constraint firstItem="Oqr-gk-iHE" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="11" id="lD1-xh-Pro"/>
+                <constraint firstItem="r0C-e4-5eD" firstAttribute="leading" secondItem="v1y-GU-LV6" secondAttribute="trailing" constant="12" id="nEV-Me-15M"/>
+                <constraint firstItem="r0C-e4-5eD" firstAttribute="bottom" secondItem="v1y-GU-LV6" secondAttribute="bottom" id="rZD-T9-uWa"/>
                 <constraint firstItem="XBN-Lg-3zE" firstAttribute="baseline" secondItem="lUi-r0-Ijd" secondAttribute="baseline" id="s59-1I-FdR"/>
+                <constraint firstItem="PXK-dH-rgR" firstAttribute="bottom" secondItem="r0C-e4-5eD" secondAttribute="bottom" id="soh-ho-0CD"/>
                 <constraint firstItem="oZu-8a-0px" firstAttribute="top" secondItem="6ru-un-SHy" secondAttribute="bottom" constant="8" id="tDJ-u5-pcY"/>
                 <constraint firstItem="lUi-r0-Ijd" firstAttribute="leading" secondItem="MZz-N0-Tyt" secondAttribute="trailing" constant="13" id="tTe-Ja-wEf"/>
                 <constraint firstItem="0CL-fJ-OP6" firstAttribute="baseline" secondItem="6ru-un-SHy" secondAttribute="baseline" id="uyj-DB-gZS"/>

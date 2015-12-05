@@ -33,6 +33,7 @@ let gPatternFilenameExtension: String = "pat"
 
 class CDWheelConnection: NSObject, CBPeripheralDelegate {
     internal var peripheral: CBPeripheral
+    
     private var _cyrWheelService: CBService?
     private var _commandCharacteristic: CBCharacteristic?
     private var _getSequencesCharacteristic: CBCharacteristic?
@@ -62,7 +63,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         let possibleBaseFilename = url.URLByDeletingPathExtension?.lastPathComponent
         var baseFilename: String = possibleBaseFilename != nil ? possibleBaseFilename! : "Untitled"
 
-        // We are lmitied to 8.3 filenames.. I should make the names prettier...
+        // We are limited to 8.3 filenames.. I should make the names prettier...
         if baseFilename.characters.count > 8 {
             // Take the first 8 characters
             let range: Range<String.Index> = Range<String.Index>(start: baseFilename.startIndex.advancedBy(8), end: baseFilename.endIndex)

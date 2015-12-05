@@ -61,5 +61,11 @@
 - (IBAction)btnClickSimClicked:(id)sender {
     [self.document performButtonClick];
 }
+- (IBAction)btnPlayClicked:(id)sender {
+    [_document play];
+}
+- (IBAction)btnPauseClicked:(id)sender {
+    [_document pause];
+}
 
 @end

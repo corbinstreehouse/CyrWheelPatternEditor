@@ -3,6 +3,8 @@
 
 #include "Arduino.h"
 
+@class NSURL;
+
 uint8_t const O_READ = 0X01;
 /** open() oflag - same as O_READ */
 //uint8_t const O_RDONLY = O_READ;
@@ -87,5 +89,4 @@ public:
 extern SDClass SD;
 
 
-extern void SDSetBaseDirectoryURL(NSURL *url);
 #endif

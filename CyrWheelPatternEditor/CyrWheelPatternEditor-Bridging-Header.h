@@ -3,4 +3,5 @@
 //
 
 #import "CDWheelBluetoothShared.h"
+#import "CDPatternSequenceManagerShared.h"
 #import "CDPatternSequence.h"

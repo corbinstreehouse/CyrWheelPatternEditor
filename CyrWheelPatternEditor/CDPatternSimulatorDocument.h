@@ -36,5 +36,8 @@
 - (BOOL)isRunning;
 - (void)setCyrWheelView:(CDCyrWheelView *)view;
 
+- (void)play;
+- (void)pause;
+
 - (void)reload;
 @end

@@ -16,6 +16,7 @@
 		9D4FCB36193C2E100000DE28 /* hsv2rgb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D4FCB34193C2E100000DE28 /* hsv2rgb.cpp */; };
 		9D500A2518BD88E8003BD8C2 /* CDEncodedColorTransformer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */; };
 		9D683E2C1C0FF0AC0058EFA0 /* CDRolloverButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D683E2B1C0FF0AC0058EFA0 /* CDRolloverButton.swift */; };
+		9D684ABC1C128F780058EFA0 /* Patterns.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9D684ABA1C128F5F0058EFA0 /* Patterns.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9D97757B1BFEEB9D002D78EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D9775791BFEEB9D002D78EE /* Main.storyboard */; };
 		9D97757F1C005BB3002D78EE /* CDWheelConnectionWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D97757E1C005BB3002D78EE /* CDWheelConnectionWindowController.swift */; };
 		9D9775811C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9775801C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift */; };
@@ -75,6 +76,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9D684AB61C128E9D0058EFA0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				9D684ABC1C128F780058EFA0 /* Patterns.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -97,6 +108,8 @@
 		9D500A2318BD88E8003BD8C2 /* CDEncodedColorTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDEncodedColorTransformer.h; sourceTree = "<group>"; };
 		9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDEncodedColorTransformer.mm; sourceTree = "<group>"; };
 		9D683E2B1C0FF0AC0058EFA0 /* CDRolloverButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDRolloverButton.swift; sourceTree = "<group>"; };
+		9D683E2F1C1139380058EFA0 /* CDPatternSequenceManagerShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDPatternSequenceManagerShared.h; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternSequenceManagerShared.h; sourceTree = "<group>"; };
+		9D684ABA1C128F5F0058EFA0 /* Patterns.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Patterns.framework; sourceTree = "<group>"; };
 		9D7F8C4B1A11B4DB009785C0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		9D97757A1BFEEB9D002D78EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9D97757E1C005BB3002D78EE /* CDWheelConnectionWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDWheelConnectionWindowController.swift; sourceTree = "<group>"; };
@@ -235,6 +248,7 @@
 				9D4FCB35193C2E100000DE28 /* hsv2rgb.h */,
 				9DCE4EC519D52D28002664D9 /* colorpalettes.h */,
 				9DCE4EC419D52D27002664D9 /* colorpalettes.cpp */,
+				9D683E2F1C1139380058EFA0 /* CDPatternSequenceManagerShared.h */,
 				9DBEC63418A2FF0D00A05FB7 /* CWPatternSequenceManager.h */,
 				9DBEC63518A2FF0D00A05FB7 /* CWPatternSequenceManager.cpp */,
 				9DD394D7191EB30400B77A4F /* CDOrientation.h */,
@@ -325,6 +339,7 @@
 				9DCE4EBD19D3B62C002664D9 /* MappingModel.xcmappingmodel */,
 				9DFBAC171888EDFC00737C2F /* Supporting Files */,
 				9D0EF1C71BFEE1BD002C687E /* CyrWheelPatternEditor-Bridging-Header.h */,
+				9D684ABA1C128F5F0058EFA0 /* Patterns.framework */,
 			);
 			path = CyrWheelPatternEditor;
 			sourceTree = "<group>";
@@ -369,6 +384,7 @@
 				9DFBAC0A1888EDFC00737C2F /* Frameworks */,
 				9DFBAC0B1888EDFC00737C2F /* Resources */,
 				9D662D531AA4C5C70022BFD5 /* CopyFiles */,
+				9D684AB61C128E9D0058EFA0 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -638,6 +654,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CyrWheelPatternEditor",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CyrWheelPatternEditor/CyrWheelPatternEditor-Prefix.pch";
 				INFOPLIST_FILE = "CyrWheelPatternEditor/CyrWheelPatternEditor-Info.plist";
@@ -656,6 +676,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CyrWheelPatternEditor",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CyrWheelPatternEditor/CyrWheelPatternEditor-Prefix.pch";
 				INFOPLIST_FILE = "CyrWheelPatternEditor/CyrWheelPatternEditor-Info.plist";

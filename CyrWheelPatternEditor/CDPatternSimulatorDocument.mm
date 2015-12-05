@@ -78,12 +78,11 @@
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
     // drop the filename, and use the CWPatternSequenceManager to test loading
     _baseURL = [url URLByDeletingLastPathComponent];
-    SDSetBaseDirectoryURL(_baseURL);
-//    corbin..jeeze this doesn't working '
-
-    // Mainly use the same code as the hardware so I can test it
-    _sequenceManager.init();
     
+    // Mainly use the same code as the hardware so I can test it
+    _sequenceManager.setBaseURL(_baseURL);
+    _sequenceManager.init();
+
     // Go through and find the sequence with the given name
     NSString *fileToFind = [url lastPathComponent];
     for (NSInteger i = 0; i < _sequenceManager.getNumberOfSequenceNames(); i++) {
@@ -135,7 +134,7 @@
         [context deleteObject:_patternSequence];
     }
     _patternSequence = [CDPatternSequence newPatternSequenceInContext:context];
-    _patternSequence.pixelCount = _sequenceManager.getPixelCount();
+//    _patternSequence.pixelCount = _sequenceManager.getPixelCount();
     NSMutableOrderedSet *newChildren = [NSMutableOrderedSet new];
     for (uint32_t i = 0; i < _sequenceManager.getNumberOfPatternItems(); i++) {
         CDPatternItemHeader *header = _sequenceManager.getPatternItemHeaderAtIndex(i);
@@ -179,6 +178,15 @@
     _sequenceManager.loadNextSequence();
     [self _loadPatternSequence];
 }
+
+- (void)play {
+    _sequenceManager.play();
+}
+
+- (void)pause {
+    _sequenceManager.pause();
+}
+
 
 - (NSString *)sequenceName {
     if (_sequenceManager.getNumberOfSequenceNames() > 0) {
@@ -241,8 +249,6 @@ static CDPatternSimulatorDocument *g_activeDoc = nil;
         [g_activeDoc stop];
         g_activeDoc = self;
     }
-    // should make this not a singlton
-    SDSetBaseDirectoryURL(_baseURL);
     if (_timer == nil) {
         // Speed of the teensy...96000000 == 96Mhz 14 loops per usec.. according to source
         NSTimeInterval time = 14.0/1000000.0;
