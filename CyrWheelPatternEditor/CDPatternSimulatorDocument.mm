@@ -85,8 +85,9 @@
 
     // Go through and find the sequence with the given name
     NSString *fileToFind = [url lastPathComponent];
-    for (NSInteger i = 0; i < _sequenceManager.getNumberOfSequenceNames(); i++) {
-        char *currentName = _sequenceManager.getCurrentSequenceName();
+    
+    for (NSInteger i = 0; i < _sequenceManager.getRootNumberOfSequenceFilenames(); i++) {
+        char *currentName = _sequenceManager.getCurrentPatternFileName();
         if (currentName) {
             NSString *currentNameStr = [[NSString alloc] initWithBytes:currentName length:strlen(currentName) encoding:NSASCIIStringEncoding];
             if ([[currentNameStr lastPathComponent] isEqualToString:fileToFind]) {
@@ -189,13 +190,11 @@
 
 
 - (NSString *)sequenceName {
-    if (_sequenceManager.getNumberOfSequenceNames() > 0) {
-        char *cstr = _sequenceManager.getCurrentSequenceName();
-        if (cstr) {
-            return [NSString stringWithCString:cstr encoding:NSASCIIStringEncoding];
-        } else {
-            return @"Default Sequence";
-        }
+    char *cstr = _sequenceManager.getCurrentPatternFileName();
+    if (cstr) {
+        return [NSString stringWithCString:cstr encoding:NSASCIIStringEncoding];
+    } else {
+        return @"Default Sequence";
     }
     return nil;
 }

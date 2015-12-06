@@ -26,15 +26,14 @@ uint8_t const O_WRITE = 0X02;
 class File/* : public Stream*/ {
 private:
     NSArray *_urls;
-    NSURL *_url;
     NSInteger _index;
     NSData *_data;
     char *_filepath;
     NSInteger _offset;
-    
+    NSURL *_baseURL;
     NSURL *getURL();
 public:
-    File(const char *filepath);
+    File(NSURL *baseURL = NULL, const char *filepath = NULL);
     ~File();
     
     size_t readBytes(char *buffer, size_t length);
@@ -52,9 +51,11 @@ public:
     void close();
 //    operator bool();
     char *name();
+    
+    bool isValid() { return _filepath != NULL; }
 //    
-//    boolean isDirectory(void);
-//    File openNextFile(uint8_t mode = O_RDONLY);
+    boolean isDirectory(void);
+    File openNextFile(uint8_t mode = O_RDONLY);
 //    
 //    // Pass a buffer of PATH_COMPONENT_BUFFER_LEN size
     bool getNextFilename(char *buffer);

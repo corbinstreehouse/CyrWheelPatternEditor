@@ -191,9 +191,6 @@
                             <real value="250"/>
                             <real value="250"/>
                         </holdingPriorities>
-                        <connections>
-                            <outlet property="delegate" destination="-2" id="8sO-Jg-Fen"/>
-                        </connections>
                     </splitView>
                 </subviews>
                 <animations/>

@@ -846,7 +846,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="29" viewBased="YES" id="mCZ-m5-Z0h">
-                                                        <rect key="frame" x="0.0" y="0.0" width="610" height="149"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="610" height="0.0"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <animations/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
@@ -1319,12 +1319,12 @@ DQ
                                 <animations/>
                                 <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="gyJ-w6-slH"/>
                                 <connections>
-                                    <binding destination="XfG-lQ-9wD" name="enabled" keyPath="connectedWheel.brightnessEnabled" id="cNV-I9-q2Y"/>
                                     <binding destination="XfG-lQ-9wD" name="value" keyPath="connectedWheel.brightness" id="nUZ-PB-gO4">
                                         <dictionary key="options">
                                             <real key="NSNullPlaceholder" value="0.69999999999999996"/>
                                         </dictionary>
                                     </binding>
+                                    <binding destination="XfG-lQ-9wD" name="enabled" keyPath="connectedWheel.brightnessEnabled" id="cNV-I9-q2Y"/>
                                 </connections>
                             </slider>
                             <button verticalHuggingPriority="750" fixedFrame="YES" tag="3" translatesAutoresizingMaskIntoConstraints="NO" id="dYA-gC-jLg">
@@ -1556,7 +1556,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="29" viewBased="YES" id="y5X-uY-SgC">
-                                                        <rect key="frame" x="0.0" y="0.0" width="844" height="281"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="844" height="0.0"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <animations/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
@@ -1731,8 +1731,8 @@ DQ
                             <animations/>
                             <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="Z5u-mw-j9j"/>
                             <connections>
-                                <binding destination="mLl-X1-Dpi" name="enabled" keyPath="connectedWheel.brightnessEnabled" id="kVb-xP-tv0"/>
                                 <binding destination="mLl-X1-Dpi" name="value" keyPath="connectedWheel.brightness" id="zbB-Ev-2rU"/>
+                                <binding destination="mLl-X1-Dpi" name="enabled" keyPath="connectedWheel.brightnessEnabled" id="kVb-xP-tv0"/>
                             </connections>
                         </slider>
                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Wc-nw-fXO">

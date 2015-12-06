@@ -12,33 +12,41 @@ boolean SDClass::remove(char *filepath) {
 
 
 File SDClass::open(const char *filepath, uint8_t mode) {
-    File result = File(filepath);
+    File result = File(NULL, filepath);
     return result;
 }
 
 
-File::File(const char *filepath) {
-    size_t filepathLength = strlen(filepath);
-    if (filepathLength > 0) {
-        _filepath = (char*)malloc(sizeof(char*) * filepathLength + 1);
-        strcpy(_filepath, filepath);
+File::File(NSURL *baseURL, const char *filepath) {
+    _baseURL = baseURL;
+    if (filepath) {
+        size_t filepathLength = strlen(filepath);
+        if (filepathLength > 0) {
+            _filepath = (char*)malloc(sizeof(char*) * filepathLength + 1);
+            strcpy(_filepath, filepath);
+        } else {
+            _filepath = NULL;
+        }
     } else {
         _filepath = NULL;
     }
 }
 
 File::~File() {
+    _baseURL = nil;
     if (_filepath) {
         free(_filepath);
     }
 }
 
 NSURL *File::getURL() {
-    NSCAssert(_filepath != NULL, @"need a filepath");
     NSString *filePathString = [NSString stringWithCString:_filepath encoding:NSASCIIStringEncoding];
-//    pathToAppend = [pathToAppend lastPathComponent];
-    NSURL *directoryURL = [NSURL fileURLWithPath:filePathString];
-    return directoryURL;
+    NSCAssert(_filepath != NULL, @"need a filepath");
+    if (_baseURL) {
+        return [_baseURL URLByAppendingPathComponent:filePathString];
+    } else {
+        return [NSURL fileURLWithPath:filePathString];
+    }
 }
 
 bool File::getNextFilename(char *buffer) {
@@ -60,6 +68,28 @@ bool File::getNextFilename(char *buffer) {
 
     return false;
 }
+
+File File::openNextFile(uint8_t mode) {
+    char name[PATH_COMPONENT_BUFFER_LEN];
+    if (getNextFilename(name)) {
+        return File(getURL(), name);
+    }
+    return File(NULL);
+}
+
+
+boolean File::isDirectory(void) {
+    NSURL *directoryURL = getURL();
+    NSNumber *value = nil;
+    NSError *error = nil;
+    if ([directoryURL getResourceValue:&value forKey:NSURLIsDirectoryKey error:&error]) {
+        return [value boolValue];
+    } else {
+        return false;
+    }
+
+}
+
 
 void File::moveToStartOfDirectory() {
     _index = 0;
