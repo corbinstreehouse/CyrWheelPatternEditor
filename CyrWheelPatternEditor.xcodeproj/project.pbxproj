@@ -16,6 +16,7 @@
 		9D500A2518BD88E8003BD8C2 /* CDEncodedColorTransformer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */; };
 		9D683E2C1C0FF0AC0058EFA0 /* CDRolloverButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D683E2B1C0FF0AC0058EFA0 /* CDRolloverButton.swift */; };
 		9D684ABC1C128F780058EFA0 /* Patterns.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9D684ABA1C128F5F0058EFA0 /* Patterns.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9D684AC21C1502160058EFA0 /* CDLazyBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D684AC01C1502160058EFA0 /* CDLazyBitmap.cpp */; };
 		9D97757B1BFEEB9D002D78EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D9775791BFEEB9D002D78EE /* Main.storyboard */; };
 		9D97757F1C005BB3002D78EE /* CDWheelConnectionWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D97757E1C005BB3002D78EE /* CDWheelConnectionWindowController.swift */; };
 		9D9775811C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9775801C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift */; };
@@ -107,6 +108,8 @@
 		9D683E2B1C0FF0AC0058EFA0 /* CDRolloverButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDRolloverButton.swift; sourceTree = "<group>"; };
 		9D683E2F1C1139380058EFA0 /* CDPatternSequenceManagerShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDPatternSequenceManagerShared.h; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternSequenceManagerShared.h; sourceTree = "<group>"; };
 		9D684ABA1C128F5F0058EFA0 /* Patterns.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Patterns.framework; sourceTree = "<group>"; };
+		9D684AC01C1502160058EFA0 /* CDLazyBitmap.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = CDLazyBitmap.cpp; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDLazyBitmap.cpp; sourceTree = "<group>"; };
+		9D684AC11C1502160058EFA0 /* CDLazyBitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDLazyBitmap.h; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDLazyBitmap.h; sourceTree = "<group>"; };
 		9D7F8C4B1A11B4DB009785C0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		9D97757A1BFEEB9D002D78EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9D97757E1C005BB3002D78EE /* CDWheelConnectionWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDWheelConnectionWindowController.swift; sourceTree = "<group>"; };
@@ -253,6 +256,8 @@
 				9DA685B019417089003631F6 /* LEDPatterns.h */,
 				9DA685B119417089003631F6 /* LEDPatterns.cpp */,
 				9D142EF21C03DEDA0085A377 /* CDWheelBluetoothShared.h */,
+				9D684AC11C1502160058EFA0 /* CDLazyBitmap.h */,
+				9D684AC01C1502160058EFA0 /* CDLazyBitmap.cpp */,
 			);
 			name = "Shared with firmware";
 			sourceTree = "<group>";
@@ -504,6 +509,7 @@
 				9D4FCB30193C29DB0000DE28 /* CDSimulatorLEDPatterns.cpp in Sources */,
 				9D0EF1CD1BFEE406002C687E /* CDAppDelegate.swift in Sources */,
 				9D9775811C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift in Sources */,
+				9D684AC21C1502160058EFA0 /* CDLazyBitmap.cpp in Sources */,
 				9DBE92C618A9210800154550 /* CDPatternSimSequenceViewController.mm in Sources */,
 				9DFBAC241888EDFC00737C2F /* CDDocument.mm in Sources */,
 				9DBEC64318A3071C00A05FB7 /* Arduino.cpp in Sources */,

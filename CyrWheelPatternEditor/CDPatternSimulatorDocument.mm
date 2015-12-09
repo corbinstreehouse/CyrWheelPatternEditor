@@ -86,16 +86,18 @@
     // Go through and find the sequence with the given name
     NSString *fileToFind = [url lastPathComponent];
     
-    for (NSInteger i = 0; i < _sequenceManager.getRootNumberOfSequenceFilenames(); i++) {
-        char *currentName = _sequenceManager.getCurrentPatternFileName();
-        if (currentName) {
-            NSString *currentNameStr = [[NSString alloc] initWithBytes:currentName length:strlen(currentName) encoding:NSASCIIStringEncoding];
-            if ([[currentNameStr lastPathComponent] isEqualToString:fileToFind]) {
-                break;
-            }
-        }
-        _sequenceManager.loadNextSequence();
-    }
+    _sequenceManager.setCurrentSequenceWithName(fileToFind.UTF8String);
+//    
+//    for (NSInteger i = 0; i < _sequenceManager.getRootNumberOfSequenceFilenames(); i++) {
+//        char *currentName = _sequenceManager.getCurrentPatternFileName();
+//        if (currentName) {
+//            NSString *currentNameStr = [[NSString alloc] initWithBytes:currentName length:strlen(currentName) encoding:NSASCIIStringEncoding];
+//            if ([[currentNameStr lastPathComponent] isEqualToString:fileToFind]) {
+//                break;
+//            }
+//        }
+//        _sequenceManager.loadNextSequence();
+//    }
     
     [self _loadPatternSequence];
 

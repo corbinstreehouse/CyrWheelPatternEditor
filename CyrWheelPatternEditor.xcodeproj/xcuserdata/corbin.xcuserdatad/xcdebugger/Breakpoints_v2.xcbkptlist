@@ -32,11 +32,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CyrWheelPatternEditor/CDPatternSimulatorDocument.mm"
-            timestampString = "471129401.824306"
+            timestampString = "471234769.714108"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
             landmarkName = "-_loadPatternSequence"
             landmarkType = "5">
             <Locations>
@@ -95,11 +95,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CyrWheelPatternEditor/CDPatternSimulatorDocument.mm"
-            timestampString = "471129401.824306"
+            timestampString = "471234769.714108"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
             landmarkName = "-_loadPatternSequence"
             landmarkType = "5">
          </BreakpointContent>
@@ -127,11 +127,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CWPatternSequenceManager.cpp"
-            timestampString = "471135463.836246"
+            timestampString = "471234838.619372"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "769"
-            endingLineNumber = "769"
+            startingLineNumber = "812"
+            endingLineNumber = "812"
             landmarkName = "CWPatternSequenceManager::init()"
             landmarkType = "5">
          </BreakpointContent>
@@ -143,11 +143,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CWPatternSequenceManager.cpp"
-            timestampString = "471135463.836246"
+            timestampString = "471234838.619372"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "769"
-            endingLineNumber = "769"
+            startingLineNumber = "812"
+            endingLineNumber = "812"
             landmarkName = "CWPatternSequenceManager::init()"
             landmarkType = "5">
          </BreakpointContent>
@@ -303,11 +303,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CWPatternSequenceManager.cpp"
-            timestampString = "471135463.836246"
+            timestampString = "471234838.619372"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "912"
-            endingLineNumber = "912"
+            startingLineNumber = "955"
+            endingLineNumber = "955"
             landmarkName = "CWPatternSequenceManager::process()"
             landmarkType = "5">
          </BreakpointContent>
@@ -523,31 +523,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CWPatternSequenceManager.cpp"
-            timestampString = "471135463.836246"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1091"
-            endingLineNumber = "1091"
-            landmarkName = "CWPatternSequenceManager::processCommand(CDWheelCommand command)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatterns.cpp"
-            timestampString = "470975332.003683"
+            timestampString = "471320173.652393"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "616"
-            endingLineNumber = "616"
+            startingLineNumber = "621"
+            endingLineNumber = "621"
             landmarkName = "LEDPatterns::play()"
             landmarkType = "5">
          </BreakpointContent>
@@ -597,6 +581,150 @@
             startingLineNumber = "62"
             endingLineNumber = "62"
             landmarkName = "File::getNextFilename(char *buffer)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatterns.h"
+            timestampString = "471320251.654963"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
+            landmarkName = "setBitmapFilename(const char *filename)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CWPatternSequenceManager.cpp"
+            timestampString = "471234148.721292"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "286"
+            endingLineNumber = "286"
+            landmarkName = "CWPatternSequenceManager::loadAsBitmapFileInfo(CDPatternFileInfo *fileInfo)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CWPatternSequenceManager.cpp"
+            timestampString = "471234766.161705"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "575"
+            endingLineNumber = "575"
+            landmarkName = "CWPatternSequenceManager::setCurrentSequenceWithName(const char *name)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CWPatternSequenceManager.cpp"
+            timestampString = "471234891.590211"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "285"
+            endingLineNumber = "285"
+            landmarkName = "CWPatternSequenceManager::loadAsBitmapFileInfo(CDPatternFileInfo *fileInfo)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SD.cpp"
+            timestampString = "471235708.140653"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "File::readBytes(char *buffer, size_t length)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDLazyBitmap.cpp"
+            timestampString = "471319746.477401"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "m_lineData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDLazyBitmap.cpp"
+            timestampString = "471319746.477401"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
+            landmarkName = "m_lineData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatterns.cpp"
+            timestampString = "471320173.652393"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2160"
+            endingLineNumber = "2160"
+            landmarkName = "LEDPatterns::bitmapPattern()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatterns.cpp"
+            timestampString = "471320324.536989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2143"
+            endingLineNumber = "2143"
+            landmarkName = "LEDPatterns::bitmapPattern()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
