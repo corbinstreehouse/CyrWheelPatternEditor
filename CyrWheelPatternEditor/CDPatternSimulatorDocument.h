@@ -29,6 +29,7 @@
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError;
 
+- (void)priorSequence;
 - (void)loadNextSequence;
 - (void)performButtonClick;
 - (void)start;

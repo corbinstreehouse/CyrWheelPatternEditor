@@ -32,6 +32,10 @@
     [self.document loadNextSequence];
 }
 
+- (IBAction)btnPriorSequenceClicked:(id)sender {
+    [self.document priorSequence];
+}
+
 - (void)loadView {
     [super loadView];
     // view did load

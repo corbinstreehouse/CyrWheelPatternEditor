@@ -12,7 +12,9 @@
 #import "CDPatternItemViewController.h"
 
 #import "CWPatternSequenceManager.h"
-#import "SD.h"
+#import "SdFat.h"
+
+#define MAX_PATH 260 // Corbin!!! this is probably too low, but is win32
 
 
 @interface CDPatternSimulatorDocument() {
@@ -182,6 +184,11 @@
     [self _loadPatternSequence];
 }
 
+- (void)priorSequence {
+    _sequenceManager.loadPriorSequence();
+    [self _loadPatternSequence];
+}
+
 - (void)play {
     _sequenceManager.play();
 }
@@ -192,13 +199,12 @@
 
 
 - (NSString *)sequenceName {
-    char *cstr = _sequenceManager.getCurrentPatternFileName();
-    if (cstr) {
-        return [NSString stringWithCString:cstr encoding:NSASCIIStringEncoding];
+    char fullFilenamePath[MAX_PATH];
+    if (_sequenceManager.getCurrentPatternFileName(fullFilenamePath, MAX_PATH)) {
+        return [NSString stringWithCString:fullFilenamePath encoding:NSASCIIStringEncoding];
     } else {
         return @"Default Sequence";
     }
-    return nil;
 }
 
 - (NSString *)patternTypeName {

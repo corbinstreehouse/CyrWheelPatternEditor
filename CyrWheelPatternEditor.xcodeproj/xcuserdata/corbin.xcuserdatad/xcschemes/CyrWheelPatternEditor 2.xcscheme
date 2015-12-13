@@ -17,7 +17,7 @@
                BlueprintIdentifier = "9DFBAC0C1888EDFC00737C2F"
                BuildableName = "CyrWheelPatternEditor.app"
                BlueprintName = "CyrWheelPatternEditor"
-               ReferencedContainer = "container:CyrWheelPatternEditor.xcodeproj">
+               ReferencedContainer = "container:../../../Volumes/Fern/corbin/Projects/CyrWheelPatternEditor/CyrWheelPatternEditor.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "9DFBAC331888EDFC00737C2F"
                BuildableName = "CyrWheelPatternEditorTests.xctest"
                BlueprintName = "CyrWheelPatternEditorTests"
-               ReferencedContainer = "container:CyrWheelPatternEditor.xcodeproj">
+               ReferencedContainer = "container:../../../Volumes/Fern/corbin/Projects/CyrWheelPatternEditor/CyrWheelPatternEditor.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -45,7 +45,7 @@
             BlueprintIdentifier = "9DFBAC0C1888EDFC00737C2F"
             BuildableName = "CyrWheelPatternEditor.app"
             BlueprintName = "CyrWheelPatternEditor"
-            ReferencedContainer = "container:CyrWheelPatternEditor.xcodeproj">
+            ReferencedContainer = "container:../../../Volumes/Fern/corbin/Projects/CyrWheelPatternEditor/CyrWheelPatternEditor.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -68,7 +68,7 @@
             BlueprintIdentifier = "9DFBAC0C1888EDFC00737C2F"
             BuildableName = "CyrWheelPatternEditor.app"
             BlueprintName = "CyrWheelPatternEditor"
-            ReferencedContainer = "container:CyrWheelPatternEditor.xcodeproj">
+            ReferencedContainer = "container:../../../Volumes/Fern/corbin/Projects/CyrWheelPatternEditor/CyrWheelPatternEditor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -87,7 +87,7 @@
             BlueprintIdentifier = "9DFBAC0C1888EDFC00737C2F"
             BuildableName = "CyrWheelPatternEditor.app"
             BlueprintName = "CyrWheelPatternEditor"
-            ReferencedContainer = "container:CyrWheelPatternEditor.xcodeproj">
+            ReferencedContainer = "container:../../../Volumes/Fern/corbin/Projects/CyrWheelPatternEditor/CyrWheelPatternEditor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
