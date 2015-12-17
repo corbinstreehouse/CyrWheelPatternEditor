@@ -146,7 +146,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     
     // 0 to 255..ugly..
     // NOTE: this would be perfect as an optional value, and return NIL when it isn't available yet...but I want it to be bindable, so I use -1 for a value of not set
-    internal dynamic var brightness: UInt8 = 178 {
+    internal dynamic var brightness: UInt16 = 178 {
         willSet(newBrightness) {
             assert(newBrightness >= 0 && newBrightness <= 255, "Brightness can be from 0 to 255")
         }
@@ -166,7 +166,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     
     private func _updateWheelBrightnessIfNeeded() {
         if !_internalUpdate && _brightnessCharacteristic != nil {
-            _writeInt8Value(brightness, forCharacteristic: _brightnessCharacteristic!)
+            _writeInt16Value(Int16(brightness), forCharacteristic: _brightnessCharacteristic!)
         }
     }
     
@@ -180,22 +180,20 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         self.brightnessEnabled = true;
         _internalUpdate = true;
         
-        var byteValue: UInt8 = 0; // 8 bit value in a 16 bits..
+        var byteValue: UInt16 = UInt16(littleEndian: 0);
         value.getBytes(&byteValue, length: sizeofValue(byteValue))
-        // convert that to a percentage
-//        self.brightness = Float(byteValue) / Float(sizeofValue(byteValue));
-        self.brightness = byteValue;
+        self.brightness = byteValue.bigEndian;
         _internalUpdate = false;
     }
 
     
     // Private API, delegate implementations, etc.
     
-    private func _writeInt8Value(value: UInt8, forCharacteristic characteristic: CBCharacteristic) {
-        var val: UInt8 = value
-        let data: NSData = NSData(bytes: &val, length: sizeofValue(val))
-        peripheral.writeValue(data, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithoutResponse)
-    }
+//    private func _writeInt8Value(value: UInt8, forCharacteristic characteristic: CBCharacteristic) {
+//        var val: UInt8 = value
+//        let data: NSData = NSData(bytes: &val, length: sizeofValue(val))
+//        peripheral.writeValue(data, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithoutResponse)
+//    }
 
     private func _writeInt16Value(value: Int16, forCharacteristic characteristic: CBCharacteristic) {
         var val: Int16 = value.littleEndian
