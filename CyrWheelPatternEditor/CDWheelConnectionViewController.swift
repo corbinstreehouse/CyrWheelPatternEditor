@@ -11,16 +11,17 @@ import CoreBluetooth
 
 extension CDWheelCommand {
     public init(_ rawValue: Int) {
-        self.init(UInt32(rawValue))
+        self.init(Int16(rawValue))
     }
 }
 
 class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegate, CDWheelConnectionDelegate, NSTableViewDelegate, NSTableViewDataSource {
 
     lazy var centralManager: CBCentralManager = CBCentralManager(delegate: self, queue: nil)
+    
     dynamic var connectedWheel: CDWheelConnection? = nil {
         didSet {
-            _updateConnectButtonTitle()
+            _updatePlayButton()
         }
     }
     lazy var _discoveredPeripherals: [CBPeripheral] = []
@@ -29,8 +30,13 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
 //            self.invalidateRestorableState()
         }
     }
-    
+
+    // outlets
     @IBOutlet weak var _sequencesTableView: NSTableView!
+    @IBOutlet weak var _titleTextField: NSTextField!
+    @IBOutlet weak var _brightnessContainerView: NSView!
+    @IBOutlet weak var _brightnessMenuItem: NSMenuItem!
+    @IBOutlet weak var _playButton: CDRolloverButton!
     
     // state restoration
     override class func restorableStateKeyPaths() -> [String] {
@@ -46,12 +52,14 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
 //        super.restoreStateWithCoder(coder)
 //    }
     
-    @IBOutlet weak var _brightnessContainerView: NSView!
-    @IBOutlet weak var _brightnessMenuItem: NSMenuItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         _brightnessMenuItem.view = _brightnessContainerView
+        // The title color for the placeholder is terrible with bindings... control it
+        let placeHolderAttributes =  [NSForegroundColorAttributeName : _titleTextField.textColor!]
+        _titleTextField.placeholderAttributedString = NSAttributedString(string: "Connecting...", attributes: placeHolderAttributes)
+        _updatePlayButton()
     }
     
     override func viewWillAppear() {
@@ -78,7 +86,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     // properties for bindings to UI
     dynamic var managerStateDescription: String = ""
-    dynamic var cyrWheelName: String = "Unknown Cyr Wheel"
     dynamic var scanButtonEnabled: Bool
     {
         get {
@@ -97,34 +104,8 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    // actually, I don't like this style...I need two buttons
-    dynamic var connectButtonTitle: String {
-        get {
-            if connectedWheel == nil {
-                return "Connect..."
-            } else {
-                switch (connectedWheel!.peripheral.state) {
-                case .Connecting:
-                    return "Disconnect" // We do the same action
-                case .Connected:
-                    return "Disconnect"
-                case .Disconnected:
-                    return "Reconnect"
-                }
-            }
-        }
-        set {
-            
-        }
-    }
-    
-    func _updateConnectButtonTitle() {
-        connectButtonTitle = "" // fires KVC
-    }
-    
-    
     override class func keyPathsForValuesAffectingValueForKey(key: String) -> Set<String> {
-        if key == "connectButtonTitle" || key == "isConnectingToWheel" {
+        if key == "isConnectingToWheel" {
             return ["connectedWheel", "connectedWheel.peripheral.state"]
         } else if key == "scanButtonEnabled" {
             return ["centralManager.state", "isConnectingToWheel"]
@@ -136,8 +117,9 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     var _wheelChooserViewController: CDWheelConnectionChooserViewController?
     
     func startScanning() {
-        // TODO: limit the peripherals when I have a UUID
-        centralManager.scanForPeripheralsWithServices([], options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+        let services = [CBUUID(string: kLEDWheelServiceUUID)]
+//        let services: [CBUUID] = [] // scan's for everything!!
+        centralManager.scanForPeripheralsWithServices(services, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
     }
     
     func startConnectionToPeripheral(peripheral: CBPeripheral) {
@@ -198,8 +180,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         return true;
     }
 
-    
-    // TODO: remove this....
     @IBAction func bntStartConnectionClicked(sender: AnyObject) {
         if let peripheral: CBPeripheral = connectedWheel?.peripheral {
             switch (peripheral.state) {
@@ -216,8 +196,23 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
+    @IBAction func btnPlayClicked(sender: AnyObject) {
+        var wheelState = (connectedWheel != nil) ? connectedWheel!.wheelState : CDWheelStatePaused
+        var command: CDWheelCommand
+        if wheelState == CDWheelStatePaused {
+            wheelState = CDWheelStatePlaying
+            command = CDWheelCommandPlay
+        } else {
+            wheelState = CDWheelStatePaused;
+            command = CDWheelCommandPause
+        }
+        // Assume it worked so we update the UI right away
+        _updatePlayButtonWithState(wheelState)
+        // Maybe I should set the state? make it read/write
+        connectedWheel?.sendCommand(command);
+    }
+    
     @IBAction func btnCommandClicked(sender: NSButton) {
-        // TODO: fixup play/pause to flip state depending on what we are doing..
         connectedWheel?.sendCommand(CDWheelCommand(sender.tag));
     }
     
@@ -332,6 +327,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         
         // Stop scanning once we are connected to something
         centralManager.stopScan()
+        _discoveredPeripherals = []; // drop whatever we found
     }
     
     func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
@@ -350,9 +346,10 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
         print("did disconnect ", peripheral)
+        startScanning()
         // Don't drop the connectedWheel so we can reconnect easily, but update our state
         if peripheral == connectedWheel?.peripheral {
-            _updateConnectButtonTitle();
+            connectedWheel = nil
         }
     }
     
@@ -366,10 +363,31 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         _updateButtons()
     }
 
+    //MARK: Wheel Connection Delegate
+    
     // complete reload or new values
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String]) {
         _sequencesTableView.reloadData()
     }
+    
+    func wheelConnection(wheelConnection: CDWheelConnection, didChangeState wheelState: CDWheelState) {
+        _updatePlayButton();
+    }
+    
+    func _updatePlayButtonWithState(wheelState: CDWheelState) {
+        // When paused, show Play, and when playing show Paused
+        _playButton.image = wheelState == CDWheelStatePaused ? NSImage(named: "play") : NSImage(named: "pause")
+    }
+    
+    func _updatePlayButton() {
+        let wheelState = (connectedWheel != nil) ? connectedWheel!.wheelState : CDWheelStatePaused
+        _updatePlayButtonWithState(wheelState)
+    }
+    
+    
+    
+    //MARK: ------------------------
+
     
 //    func wheelConnection(wheelConnection: CDWheelConnection, didAddFilenames filenmames: String, atIndexes indexesAdded: NSIndexSet) {
 //        _sequencesTableView.insertRowsAtIndexes(indexesAdded, withAnimation: NSTableViewAnimationOptions.EffectFade)

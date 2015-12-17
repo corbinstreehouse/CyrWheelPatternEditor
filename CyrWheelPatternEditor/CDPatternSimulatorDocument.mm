@@ -14,7 +14,9 @@
 #import "CWPatternSequenceManager.h"
 #import "SdFat.h"
 
-#define MAX_PATH 260 // Corbin!!! this is probably too low, but is win32
+//#ifndef MAX_PATH
+//    #define MAX_PATH 260 // Corbin!!! this is probably too low, but is win32
+//#endif
 
 
 @interface CDPatternSimulatorDocument() {
@@ -148,7 +150,7 @@
         item.duration = header->duration / 1000; // Header stores it in MS
         item.patternEndCondition = header->patternEndCondition;
         item.patternDuration = header->patternDuration;
-        item.patternOptions = header->patternOptions;
+        item.patternOptions = header->patternOptions.raw;
         item.encodedColor = header->color;
         // TODO: data???
 #warning data fill in..
@@ -197,6 +199,10 @@
     _sequenceManager.pause();
 }
 
+@dynamic playing;
+- (BOOL)isPlaying {
+    return !_sequenceManager.isPaused();
+}
 
 - (NSString *)sequenceName {
     char fullFilenamePath[MAX_PATH];

@@ -12,6 +12,7 @@ import CoreBluetooth
 protocol CDWheelConnectionDelegate {
     // complete reload or new values
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String])
+    func wheelConnection(wheelConnection: CDWheelConnection, didChangeState: CDWheelState)
     // adding values
 //    func wheelConnection(wheelConnection: CDWheelConnection, didAddFilenames filenmames: String, atIndexes indexesAdded: NSIndexSet);
     // removing values
@@ -35,6 +36,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     internal var peripheral: CBPeripheral
     
     private var _cyrWheelService: CBService?
+    private var _stateCharacteristic: CBCharacteristic?
     private var _commandCharacteristic: CBCharacteristic?
     private var _getSequencesCharacteristic: CBCharacteristic?
     private var _deleteSequenceCharacteristic: CBCharacteristic?
@@ -47,19 +49,37 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         self.peripheral = peripheral;
         super.init()
         peripheral.delegate = self;
-        peripheral.discoverServices(nil); // TODO: limit services!
+        
+        let services = [CBUUID(string: kLEDWheelServiceUUID)]
+        peripheral.discoverServices(services)
+        
+        if let name = peripheral.name {
+            wheelTitle = name
+        }
     }
     
     // Internal API
 
     internal var sequenceFilenames: [String] = []
     
+    var wheelState: CDWheelState = CDWheelStatePaused {
+        didSet {
+            if let d = delegate {
+                d.wheelConnection(self, didChangeState: wheelState);
+            }
+        }
+    }
+    
     internal var commandEnabled: Bool = false;
     internal func sendCommand(command: CDWheelCommand) {
-        _writeInt16Value(Int16(command.rawValue), forCharacteristic: _commandCharacteristic!);
+        if let char = _commandCharacteristic {
+            _writeInt16Value(Int16(command.rawValue), forCharacteristic: char);
+        }
     }
     
     internal func _makeFilenameFromURL(url: NSURL) -> String {
+        // TODO: rework this to have long filenames
+        
         let possibleBaseFilename = url.URLByDeletingPathExtension?.lastPathComponent
         var baseFilename: String = possibleBaseFilename != nil ? possibleBaseFilename! : "Untitled"
 
@@ -121,21 +141,14 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         peripheral.writeValue(dataToUpload, forCharacteristic: _uploadCharacteristic!, type: .WithResponse)
     }
     
-    func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-        if characteristic == _uploadCharacteristic {
-            if let handler = _writeProgressHandler {
-                handler(progress: 1.0, error: error)
-                _writeProgressHandler = nil
-            }
-        }
-    }
     
-    // 0 to 1
+    private var _internalUpdate: Bool = false;
+    
+    // 0 to 255..ugly..
     // NOTE: this would be perfect as an optional value, and return NIL when it isn't available yet...but I want it to be bindable, so I use -1 for a value of not set
-    private var _settingBrightness: Bool = false;
-    internal dynamic var brightness: Float = 0.7 {
+    internal dynamic var brightness: UInt8 = 178 {
         willSet(newBrightness) {
-            assert(newBrightness >= 0 && newBrightness <= 1, "Brightness can be from 0 to 1")
+            assert(newBrightness >= 0 && newBrightness <= 255, "Brightness can be from 0 to 255")
         }
         didSet {
             _updateWheelBrightnessIfNeeded()
@@ -144,42 +157,60 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     
     internal dynamic var brightnessEnabled = false;
     
-    private func _updateWheelBrightnessIfNeeded() {
-        if !_settingBrightness && _brightnessCharacteristic != nil {
-            let tmpValue: Float = round(self.brightness*Float(sizeof(UInt8)))
-            _writeInt8Value(Int8(tmpValue), forCharacteristic: _brightnessCharacteristic!)
+    dynamic var wheelTitle: String = "Unknown Cyr Wheel" {
+        didSet(value) {
+            // TODO: update the name on the device..
         }
+    }
+
+    
+    private func _updateWheelBrightnessIfNeeded() {
+        if !_internalUpdate && _brightnessCharacteristic != nil {
+            _writeInt8Value(brightness, forCharacteristic: _brightnessCharacteristic!)
+        }
+    }
+    
+    private func _getInt16FromData(value: NSData) -> Int16 {
+        var resultLittleE = Int16(littleEndian: 0) // Bytes are little Endian
+        value.getBytes(&resultLittleE, length: sizeofValue(resultLittleE))
+        return resultLittleE.bigEndian // We deal w/big..
     }
     
     private func _updateBrightnessFromData(value: NSData) {
         self.brightnessEnabled = true;
-        _settingBrightness = true;
+        _internalUpdate = true;
+        
         var byteValue: UInt8 = 0; // 8 bit value in a 16 bits..
         value.getBytes(&byteValue, length: sizeofValue(byteValue))
         // convert that to a percentage
-        self.brightness = Float(byteValue) / Float(sizeofValue(byteValue));
-        _settingBrightness = false;
+//        self.brightness = Float(byteValue) / Float(sizeofValue(byteValue));
+        self.brightness = byteValue;
+        _internalUpdate = false;
     }
 
     
     // Private API, delegate implementations, etc.
     
-    private func _writeInt8Value(value: Int8, forCharacteristic characteristic: CBCharacteristic) {
-        var val: Int8 = value
+    private func _writeInt8Value(value: UInt8, forCharacteristic characteristic: CBCharacteristic) {
+        var val: UInt8 = value
         let data: NSData = NSData(bytes: &val, length: sizeofValue(val))
         peripheral.writeValue(data, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithoutResponse)
     }
 
     private func _writeInt16Value(value: Int16, forCharacteristic characteristic: CBCharacteristic) {
-        var val: Int16 = value.bigEndian
+        var val: Int16 = value.littleEndian
         let data: NSData = NSData(bytes: &val, length: sizeofValue(val))
-        peripheral.writeValue(data, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithoutResponse)
+       // NSLog("writing: %@", data.debugDescription)
+        // with our without response works
+        peripheral.writeValue(data, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithResponse)
     }
     
+// MARK: ---------------------------
+// MARK: Peripheral delegate methods
     
     func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?) {
         if peripheral.services == nil {
-            debugPrint("no services found")
+//            debugPrint("no services found")
             return;
         }
         
@@ -191,9 +222,9 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 // Request the characteristics right away so we can get values and represent our current state
                 peripheral.discoverCharacteristics(nil, forService: service);
             }
-
         }
     }
+    
     
     func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
         debugPrint("characteristics found for service", service)
@@ -201,7 +232,13 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             return;
         }
         for characteristic: CBCharacteristic in service.characteristics! {
-            debugPrint("\tcharactaristic", characteristic)
+            debugPrint("charactaristic", characteristic)
+            
+            func watchChar() {
+                peripheral.setNotifyValue(true, forCharacteristic: characteristic)
+                peripheral.readValueForCharacteristic(characteristic)
+            }
+            
             let uuid = characteristic.UUID;
             if uuid.isEqual(CBUUID(string: kLEDWheelCharSendCommandUUID)) {
                 _commandCharacteristic = characteristic
@@ -214,11 +251,45 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 _deleteSequenceCharacteristic = characteristic
             } else if (uuid.isEqual(CBUUID(string: kLEDWheelBrightnessCharacteristicUUID))) {
                 _brightnessCharacteristic = characteristic;
-                // Read it right away
-                peripheral.readValueForCharacteristic(characteristic)
+                if let data = characteristic.value {
+                    _updateBrightnessFromData(data);
+                }
+                watchChar();
+            }  else if (uuid.isEqual(CBUUID(string: kLEDWheelCharGetWheelStateUUID))) {
+                _stateCharacteristic = characteristic;
+                if let data = characteristic.value {
+                    self.wheelState = CDWheelState(_getInt16FromData(data));
+                }
+                watchChar();
             }
         }
     }
+    
+    func peripheralDidUpdateName(peripheral: CBPeripheral) {
+        if let name = peripheral.name {
+            wheelTitle = name
+        } else {
+            wheelTitle = "Untitled Cyr Wheel"
+        }
+    }
+
+    func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
+        debugPrint("didWriteValueForCharacteristic", characteristic, error)
+        if characteristic == _uploadCharacteristic {
+            if let handler = _writeProgressHandler {
+                handler(progress: 1.0, error: error)
+                _writeProgressHandler = nil
+            }
+        }
+    }
+
+    
+    // MARK: ---------------------------
+
+    
+    
+    
+    
     
     private var _sequenceListData: NSMutableData? // Valid when we are loading the data
     private func _addDataToSequenceList(data: NSData?) {
@@ -245,7 +316,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         
         for var index = indexes.firstIndex; index != NSNotFound; index = indexes.indexGreaterThanIndex(index) {
             // Send 16-bit indexes
-            var indexAs16Bit: Int16 = Int16(index).bigEndian;
+            var indexAs16Bit: Int16 = Int16(index).littleEndian;
             data.appendBytes(&indexAs16Bit, length: sizeof(Int16))
         }
             
@@ -277,12 +348,29 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     
     // Sequences loading
     func peripheral(peripheral: CBPeripheral, didUpdateNotificationStateForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
+        debugPrint("didUpdateNotify for characteristic: \(stringFromUUID(characteristic.UUID))")
         if (characteristic == _getSequencesCharacteristic) {
             if (characteristic.isNotifying) {
                 debugPrint("sequence data read start")
             } else {
                 debugPrint("sequence data read end")
             }
+        }
+    }
+    
+    func stringFromUUID(uuid: CBUUID) -> String {
+        if uuid.isEqual(CBUUID(string: kLEDWheelCharSendCommandUUID)) {
+            return "Wheel CommandCharacteristic"
+        } else if uuid.isEqual(CBUUID(string: kLEDWheelCharGetSequencesUUID)) {
+            return "Get SequencesCharacteristic"
+        } else if (uuid.isEqual(CBUUID(string: kLEDWheelDeleteCharacteristicUUID))) {
+            return "Delete Characteristic"
+        } else if (uuid.isEqual(CBUUID(string: kLEDWheelBrightnessCharacteristicUUID))) {
+            return "Brightness Characteristic"
+        }  else if (uuid.isEqual(CBUUID(string: kLEDWheelCharGetWheelStateUUID))) {
+            return "Get State Characteristic"
+        } else {
+            return uuid.description
         }
     }
 
@@ -292,8 +380,12 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             debugPrint("didUpdateValueForCharacteristic error:\(error)!")
             return;
         }
-
-
+        
+        if characteristic.value != nil {
+            let charValueAsString = String(data: characteristic.value!, encoding: NSUTF8StringEncoding)
+            debugPrint("didUpdateValueforChar:\(stringFromUUID(characteristic.UUID)) value:\(characteristic.value) charValueAsString: '\(charValueAsString)'")
+        }
+        
         
         if characteristic == _getSequencesCharacteristic {
             _addDataToSequenceList(characteristic.value)
@@ -301,10 +393,12 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             if let data = characteristic.value {
                 _updateBrightnessFromData(data)
             }
+        } else if (characteristic == _stateCharacteristic) {
+            if let data = characteristic.value {
+                self.wheelState = CDWheelState(_getInt16FromData(data));
+            }
         }
     }
-    
-    
     
     
     

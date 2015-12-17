@@ -76,20 +76,31 @@ class CDWheelConnectionChooserViewController: NSViewController, NSTableViewDeleg
     @IBOutlet weak var _spinnerView: NSView!
     @IBOutlet weak var _scanningTextField: NSTextField!
     
-    // Bindings
+    //MARK: Bindings
     dynamic var validSelection: Bool = false
     internal dynamic var scanning: Bool = false;
     
+    //MARK: Target/actions
     @IBAction func btnConnectClicked(sender: AnyObject) {
-        let sheet = self.view.window!
-        sheet.sheetParent?.endSheet(sheet, returnCode: NSModalResponseOK)
+        closeWithOK();
+    }
+    
+    @IBAction func wheelSelectTableDoubleClicked(sender: NSTableView) {
+        if selectedPeripheral != nil {
+            closeWithOK();
+        }
     }
     
     func cancel(sender: AnyObject?) {
         let sheet = self.view.window!
         sheet.sheetParent?.endSheet(sheet, returnCode: NSModalResponseCancel)
     }
-
+    
+    func closeWithOK() {
+        let sheet = self.view.window!
+        sheet.sheetParent?.endSheet(sheet, returnCode: NSModalResponseOK)
+    }
+    
     internal var discoveredPeripherals: [CBPeripheral] = []
 //        {
 //        didSet {

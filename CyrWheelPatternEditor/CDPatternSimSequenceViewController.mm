@@ -21,7 +21,7 @@
 
 @implementation CDPatternSimSequenceViewController
 
-@synthesize document = _document;
+@dynamic document;
 
 - (id)init {
     self = [super initWithNibName:[self className] bundle:nil];
@@ -54,6 +54,10 @@
     }
 }
 
+- (CDPatternSimulatorDocument *)document {
+    return _document;
+}
+
 - (IBAction)btnStartStopClicked:(id)sender {
     if (self.document.isRunning) {
         [self.document stop];
@@ -66,10 +70,14 @@
     [self.document performButtonClick];
 }
 - (IBAction)btnPlayClicked:(id)sender {
-    [_document play];
+    if (_document.playing) {
+        [_document pause];
+    } else {
+        [_document play];
+    }
 }
-- (IBAction)btnPauseClicked:(id)sender {
-    [_document pause];
-}
+//- (IBAction)btnPauseClicked:(id)sender {
+//    [_document pause];
+//}
 
 @end

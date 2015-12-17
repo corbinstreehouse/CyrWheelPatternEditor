@@ -132,7 +132,7 @@ bool FatFile::getSFN(char* name) {
 size_t FatFile::printName() {
     if (m_url) {
         NSString *filename = [m_url lastPathComponent];
-        Serial.print(filename.UTF8String);
+        Serial.printf("%s", filename.UTF8String);
         return filename.length;
     }
     return 0;

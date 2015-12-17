@@ -71,6 +71,7 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     @"Bounce",
     @"Rainbow Fire",
     @"Lava Fire",
+    @"LEDPatternTypeBitmap", 
     
     @"All Off"
 };

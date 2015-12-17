@@ -22,7 +22,7 @@
 @property (nonatomic) int16_t shouldSetBrightnessByRotationalVelocity;
 
 @property (nonatomic) double patternDuration; // in seconds; only needs to be set if patternTypeNeedsPatternDuration = YES
-@property (nonatomic) int32_t patternOptions; // used however the pattern needs this; could be a bit set or something else
+@property (nonatomic) uint32_t /*LEDPatternOptions*/ patternOptions; // 32-bit
 
 
 @property (nonatomic, readonly) BOOL patternTypeRequiresImageData; // synthesized for bindings

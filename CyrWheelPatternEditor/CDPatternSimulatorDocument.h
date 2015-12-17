@@ -22,6 +22,7 @@
 @property(retain, readonly) NSString *patternTypeName;
 @property(readonly) NSTimeInterval patternDuration;
 @property(readonly) NSTimeInterval patternRepeatDuration;
+@property(readonly, getter=isPlaying) BOOL playing;
 //@property(readonly) NSTimeInterval patternRepeatCount;
 
 - (NSTimeInterval)patternTimePassedFromFirstTimedPattern;

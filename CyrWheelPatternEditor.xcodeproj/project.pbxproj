@@ -95,6 +95,7 @@
 		9D0EF1C81BFEE1BD002C687E /* CDWheelConnectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDWheelConnectionViewController.swift; sourceTree = "<group>"; };
 		9D0EF1CC1BFEE406002C687E /* CDAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDAppDelegate.swift; path = ../CDAppDelegate.swift; sourceTree = "<group>"; };
 		9D142EF21C03DEDA0085A377 /* CDWheelBluetoothShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDWheelBluetoothShared.h; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDWheelBluetoothShared.h; sourceTree = "<group>"; };
+		9D18071D1C2287A000B80DDC /* EEPROM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EEPROM.h; path = ArduinoWrappers/EEPROM.h; sourceTree = "<group>"; };
 		9D3A0DB0188A3D26001AD553 /* CDPatternData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternData.h; path = ../../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternData.h; sourceTree = "<group>"; };
 		9D4FCB2A193C278E0000DE28 /* pixeltypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pixeltypes.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/pixeltypes.h; sourceTree = "<group>"; };
 		9D4FCB2E193C29DB0000DE28 /* CDSimulatorLEDPatterns.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = CDSimulatorLEDPatterns.cpp; sourceTree = "<group>"; };
@@ -244,6 +245,7 @@
 				9D8F58FC1C1CA9CD00826D8D /* FatFile.cpp */,
 				9D8F58FD1C1CA9CD00826D8D /* FatFile.h */,
 				9D8F58FF1C1CAD6E00826D8D /* FatApiConstants.h */,
+				9D18071D1C2287A000B80DDC /* EEPROM.h */,
 			);
 			name = "Arudino Wrappers";
 			sourceTree = "<group>";
@@ -268,8 +270,8 @@
 				9DA685B019417089003631F6 /* LEDPatterns.h */,
 				9DA685B119417089003631F6 /* LEDPatterns.cpp */,
 				9D142EF21C03DEDA0085A377 /* CDWheelBluetoothShared.h */,
-				9D684AC31C17E77C0058EFA0 /* CDLazyBitmap.cpp */,
 				9D684AC41C17E77C0058EFA0 /* CDLazyBitmap.h */,
+				9D684AC31C17E77C0058EFA0 /* CDLazyBitmap.cpp */,
 			);
 			name = "Shared with firmware";
 			sourceTree = "<group>";
