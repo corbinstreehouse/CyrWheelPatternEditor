@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
@@ -1003,7 +1003,7 @@ DQ
                     <subviews>
                         <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gk8-EP-9V4">
                             <rect key="frame" x="96" y="2" width="196" height="20"/>
-                            <sliderCell key="cell" state="on" alignment="left" maxValue="255" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="Z5u-mw-j9j"/>
+                            <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="1" maxValue="255" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="Z5u-mw-j9j"/>
                             <connections>
                                 <binding destination="mLl-X1-Dpi" name="value" keyPath="connectedWheel.brightness" id="zbB-Ev-2rU"/>
                                 <binding destination="mLl-X1-Dpi" name="enabled" keyPath="connectedWheel.brightnessEnabled" id="kVb-xP-tv0"/>
@@ -1295,6 +1295,16 @@ DQ
                                             <connections>
                                                 <action selector="btnRemoveSelectedSequencesClicked:" target="mLl-X1-Dpi" id="wbK-bg-Y8Y"/>
                                                 <binding destination="mLl-X1-Dpi" name="enabled" keyPath="_removeSequencesEnabled" id="fDm-TY-Piw"/>
+                                            </connections>
+                                        </button>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tnb-x4-11c">
+                                            <rect key="frame" x="618" y="316" width="81" height="32"/>
+                                            <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="URR-lq-9w6">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="btnDoTest:" target="mLl-X1-Dpi" id="CkE-Oi-6wo"/>
                                             </connections>
                                         </button>
                                     </subviews>

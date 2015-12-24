@@ -63,7 +63,14 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
     override func viewWillAppear() {
+        super.viewWillAppear()
         checkBluetoothState()
+    }
+    
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        centralManager.delegate = nil // drop our ref to us so we don't do anything...
+        _disconnectFromWheel();
     }
     
     dynamic var isConnectingToWheel: Bool {
@@ -158,11 +165,15 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         showConnectionChooser()
     }
     
-    @IBAction func _mnuDisconnectClicked(sender: AnyObject) {
+    func _disconnectFromWheel() {
         if let peripheral: CBPeripheral = connectedWheel?.peripheral {
             centralManager.cancelPeripheralConnection(peripheral)
             connectedWheel = nil
         }
+    }
+    
+    @IBAction func _mnuDisconnectClicked(sender: AnyObject) {
+        _disconnectFromWheel();
     }
     
     override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
@@ -313,6 +324,10 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
                 _wheelChooserViewController!.addPeripheral(peripheral)
             }
         }
+    }
+    
+    @IBAction func btnDoTest(sender: AnyObject) {
+        connectedWheel?.doTest()    
     }
     
     func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {

@@ -5,7 +5,7 @@
 struct EEPROMClass{
     //Basic user access methods.
 //    EERef operator[]( const int idx )    { return idx; }
-//    uint8_t read( int idx )              { return EERef( idx ); }
+    uint8_t read( int idx )              { return 0; }
     void write( int idx, uint8_t val )   {  }
 //    void update( int idx, uint8_t val )  { EERef( idx ).update( val ); }
 

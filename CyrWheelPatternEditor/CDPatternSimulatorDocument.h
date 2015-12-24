@@ -13,7 +13,7 @@
 
 @interface CDPatternSimulatorDocument : NSPersistentDocument {
 @private
-    NSPersistentStoreCoordinator *_persistentStoreCoordinator;
+//    NSPersistentStoreCoordinator *_persistentStoreCoordinator;
     NSURL *_baseURL;
 }
 
