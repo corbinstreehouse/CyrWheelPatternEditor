@@ -55,7 +55,7 @@ int32_t random(int32_t howsmall, int32_t howbig);
 
 void randomSeed(uint32_t newseed);
 void yield();
- uint32_t micros();
+extern uint32_t micros();
 long map(long x, long in_min, long in_max, long out_min, long out_max);
 
 bool mainProcess();

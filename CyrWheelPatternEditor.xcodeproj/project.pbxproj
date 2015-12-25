@@ -128,6 +128,8 @@
 		9DA685B019417089003631F6 /* LEDPatterns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LEDPatterns.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatterns.h; sourceTree = "<group>"; };
 		9DA685B119417089003631F6 /* LEDPatterns.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = LEDPatterns.cpp; path = ../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatterns.cpp; sourceTree = "<group>"; };
 		9DA685B3194176B6003631F6 /* lib8tion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lib8tion.cpp; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/lib8tion.cpp; sourceTree = "<group>"; };
+		9DAF74F31C2CE35F00B43F75 /* FastLED.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FastLED.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/FastLED.h; sourceTree = "<group>"; };
+		9DAF74F41C2CE71E00B43F75 /* led_sysdefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = led_sysdefs.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/led_sysdefs.h; sourceTree = "<group>"; };
 		9DBB2A7218A2F21A00C44C7C /* CDPatternSimulatorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternSimulatorWindowController.h; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.h; sourceTree = "<group>"; };
 		9DBB2A7318A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CDPatternSimulatorWindowController.mm; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.mm; sourceTree = "<group>"; };
 		9DBB2A7418A2F21A00C44C7C /* CDPatternSimulatorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CDPatternSimulatorWindowController.xib; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.xib; sourceTree = "<group>"; };
@@ -272,6 +274,8 @@
 				9D142EF21C03DEDA0085A377 /* CDWheelBluetoothShared.h */,
 				9D684AC41C17E77C0058EFA0 /* CDLazyBitmap.h */,
 				9D684AC31C17E77C0058EFA0 /* CDLazyBitmap.cpp */,
+				9DAF74F31C2CE35F00B43F75 /* FastLED.h */,
+				9DAF74F41C2CE71E00B43F75 /* led_sysdefs.h */,
 			);
 			name = "Shared with firmware";
 			sourceTree = "<group>";

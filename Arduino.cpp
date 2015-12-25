@@ -100,3 +100,7 @@ void delay(int i) {
 void busyDelay(unsigned int i) {
 
 }
+
+uint16_t XY( uint8_t a, uint8_t b) {
+    return a;
+}
