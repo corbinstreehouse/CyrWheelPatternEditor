@@ -10,8 +10,10 @@
 #import <CoreData/CoreData.h>
 #import "CDPatternData.h"
 
+#import <CoreBluetooth/CoreBluetooth.h>
+#import "CyrWheelPatternEditor-Swift.h"
 
-@interface CDPatternItem : NSManagedObject<NSPasteboardWriting, NSPasteboardReading, NSCoding>
+@interface CDPatternItem : NSManagedObject<NSPasteboardWriting, NSPasteboardReading, NSCoding, CDTimelineItem>
 
 @property (nonatomic, retain) NSData *imageData;
 @property (nonatomic) LEDPatternType patternType;

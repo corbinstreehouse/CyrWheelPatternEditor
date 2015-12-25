@@ -304,7 +304,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     
     func doTest() {
         // send 20 bytes at a time..ugh!
-        _dataToSend = NSData(contentsOfFile: "/corbin/Desktop/testing.txt")
+        _dataToSend = NSData(contentsOfFile: "/Volumes/Fern/Users/corbin/Desktop/testing.txt")
 
         // 20 bytes max..ugh...
         // send the size..then the next packets follow
@@ -450,7 +450,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             return "Brightness READ Characteristic"
         }  else if (uuid.isEqual(CBUUID(string: kLEDWheelCharGetWheelStateUUID))) {
             return "Get State Characteristic"
-        } else if (uuid.isEqual(_uartTransmitCharacteristic)) {
+        } else if (uuid.isEqual(uartTransmitCharacteristicUUID)) {
             return "UART Transmit characteristic"
         } else {
             return uuid.description

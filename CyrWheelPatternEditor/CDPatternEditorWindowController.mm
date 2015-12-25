@@ -15,9 +15,12 @@
 #import "CDPatternSimulatorDocument.h"
 #import "CDPatternSimSequenceViewController.h"
 
+#import <CoreBluetooth/CoreBluetooth.h>
+#import "CyrWheelPatternEditor-Swift.h"
+
 static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 
-@interface CDPatternEditorWindowController () {
+@interface CDPatternEditorWindowController ()<CDTimelineViewDataSource> {
 @private
     NSMutableArray *_patternViewControllers;
     __weak NSTableView *_tableView;
@@ -30,6 +33,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 @property (weak) IBOutlet NSImageView *imgViewPreview;
 @property (weak) IBOutlet NSTableView *tableView;
 @property (weak) IBOutlet NSView *topView;
+@property (weak) IBOutlet CDTimelineView *timelineView;
 
 @end
 
@@ -139,6 +143,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
         [_patternViewControllers addObject:[NSNull null]]; // placeholder
     }
     [_tableView reloadData];
+    [_timelineView reloadData];
 }
 
 - (void)windowDidLoad {
@@ -153,6 +158,12 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     [_tableView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:YES];
     [_tableView registerForDraggedTypes:[NSArray arrayWithObjects:CDPatternTableViewPBoardType, nil]];
     [self _setupSimView];
+    
+    // corbin!
+    
+    _timelineView.enclosingScrollView.contentView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    _timelineView.dataSource = self;
 }
 
 - (void)_patternItemChanged:(id)sender {
@@ -235,7 +246,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
         }
     }
     
-//    [_tableView reloadData]; // uh, oops,corbin??
+    [_timelineView reloadData];
 }
 
 
@@ -245,7 +256,6 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     } else {
         NSAssert(NO, @"bad observation");
     }
-
 }
 
 - (NSManagedObjectContext *)managedObjectContext {
@@ -539,5 +549,17 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     }
     
 }
+
+// Timeline view testing..
+
+- (NSInteger)numberOfItemsInTimelineView:(CDTimelineView *)timelineView {
+    return self._patternSequence.children.count;
+}
+
+
+-(id<CDTimelineItem>)timelineView:(CDTimelineView *)timelineView itemAtIndex:(NSInteger)index {
+    return [self._patternSequence.children objectAtIndex:index];
+}
+
 
 @end

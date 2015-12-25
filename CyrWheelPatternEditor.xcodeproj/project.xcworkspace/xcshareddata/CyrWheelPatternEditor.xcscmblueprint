@@ -5,16 +5,16 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "C16FB4D06A59F77F429E376E579261B28DEFFAC3" : 0,
-    "A1DD5C037D7B143761ABEB5BBAF556657A5A89C2" : 0,
     "445165399F010635F8C8DA546E878D9F4302478D" : 0,
-    "6920F3797F7813915682D317F749167AACBD8BDD" : 0
+    "69528E4B1D772782E7A324C782BFFD97D386AF43" : 0,
+    "A1DD5C037D7B143761ABEB5BBAF556657A5A89C2" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "4ECFAE30-011A-48C8-8E8B-4E07925BC115",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "C16FB4D06A59F77F429E376E579261B28DEFFAC3" : "CyrWheelPatternEditor\/",
-    "A1DD5C037D7B143761ABEB5BBAF556657A5A89C2" : "Arduino\/LEDDigitalCyrWheel\/",
     "445165399F010635F8C8DA546E878D9F4302478D" : "Arduino\/LEDDigitalCyrWheel\/Libraries\/LEDPatterns\/",
-    "6920F3797F7813915682D317F749167AACBD8BDD" : "Arduino\/LEDDigitalCyrWheel\/Libraries\/FastLED\/"
+    "69528E4B1D772782E7A324C782BFFD97D386AF43" : "Arduino\/LEDDigitalCyrWheel\/Libraries\/FastLED\/",
+    "A1DD5C037D7B143761ABEB5BBAF556657A5A89C2" : "Arduino\/LEDDigitalCyrWheel\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "CyrWheelPatternEditor",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -28,7 +28,7 @@
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:corbinstreehouse\/FastLED.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6920F3797F7813915682D317F749167AACBD8BDD"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "69528E4B1D772782E7A324C782BFFD97D386AF43"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:corbinstreehouse\/LEDDigitalCyrWheel.git",
