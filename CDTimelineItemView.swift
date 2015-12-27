@@ -8,7 +8,6 @@
 
 import Cocoa
 
-
 class CDTimelineItemView: NSView {
     
     override init(frame frameRect: NSRect) {
@@ -22,7 +21,21 @@ class CDTimelineItemView: NSView {
     
     var timelineItem: CDTimelineItem! {
         didSet {
+            let obj: NSObject = self.timelineItem as! NSObject
+            obj.addObserver(self, forKeyPath: "duration", options: [], context: nil)
             self.invalidateIntrinsicContentSize()
+        }
+    }
+    
+    var selected: Bool = false {
+        didSet {
+            self.needsDisplay = true
+        }
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if keyPath == "duration" {
+            self.invalidateIntrinsicContentSize();
         }
     }
 
@@ -53,11 +66,13 @@ class CDTimelineItemView: NSView {
         guard let layer = self.layer else {
             return;
         }
-        layer.borderColor = NSColor.grayColor().CGColor
+        let borderColor = self.selected ? NSColor.alternateSelectedControlColor() : NSColor.grayColor();
+        layer.borderColor = borderColor.CGColor
         layer.backgroundColor = NSColor.lightGrayColor().CGColor
         layer.cornerRadius = 4.0;
-        layer.borderWidth = 1.0
+        layer.borderWidth = 2.0
     }
+    
     
     
 }

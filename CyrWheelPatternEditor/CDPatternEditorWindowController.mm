@@ -206,6 +206,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 //                [NSAnimationContext beginGrouping];
 //                [NSAnimationContext.currentContext setDuration:.3];
                 [_tableView insertRowsAtIndexes:indexes withAnimation:NSTableViewAnimationEffectFade];
+                [self _insertItemsInTimlineViewAtIndexes:indexes];
 //                [NSAnimationContext endGrouping];
             } else {
                 [self _resetPatternViewControllers];
@@ -219,6 +220,8 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
                 [_patternViewControllers removeObjectsAtIndexes:indexes];
                 
                 [_tableView removeRowsAtIndexes:indexes withAnimation:NSTableViewAnimationEffectFade];
+
+                [self _removeItemsInTimlineViewAtIndexes:indexes];
             } else {
                 [self _resetPatternViewControllers];
             }
@@ -235,6 +238,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
                 }
                 [_patternViewControllers insertObjects:emptyObjects atIndexes:indexes];
                 [_tableView reloadDataForRowIndexes:indexes columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                [self _removeItemsInTimlineViewAtIndexes:indexes];
             } else {
                 [self _resetPatternViewControllers];
             }
@@ -246,9 +250,22 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
         }
     }
     
-    [_timelineView reloadData];
+//    [_timelineView reloadData];
 }
 
+// TODO: batch versions for timeline view
+- (void)_removeItemsInTimlineViewAtIndexes:(NSIndexSet *)indexes {
+    [indexes enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+        // flight 45
+        [_timelineView removeItemAtIndex:idx];
+    }];
+}
+
+- (void)_insertItemsInTimlineViewAtIndexes:(NSIndexSet *)indexes {
+    [indexes enumerateIndexesWithOptions:0 usingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+        [_timelineView insertItemAtIndex:idx];
+    }];
+}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:CDPatternChildrenKey]) {
@@ -287,6 +304,8 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     [self._patternSequence insertObject:patternItem inChildrenAtIndex:self._patternSequence.children.count];
     [_tableView scrollRowToVisible:_tableView.numberOfRows - 1];
     
+    
+    [_timelineView scrollItemAtIndexToVisible:_timelineView.numberOfItems - 1];
 }
 
 - (void)_removeSelectedItem {
