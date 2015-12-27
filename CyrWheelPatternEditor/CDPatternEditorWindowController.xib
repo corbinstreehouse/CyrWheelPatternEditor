@@ -19,7 +19,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="879" height="746"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="800"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
             <view key="contentView" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="879" height="746"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -120,7 +120,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveColumns="NO" rowHeight="60" viewBased="YES" id="1rF-tf-8dy" customClass="CDPatternEditTableView">
-                                            <rect key="frame" x="0.0" y="0.0" width="879" height="291"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="879" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="0.0" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -193,20 +193,20 @@
                     <scrollView horizontalCompressionResistancePriority="250" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="bPs-O4-4jf">
                         <rect key="frame" x="-1" y="36" width="881" height="166"/>
                         <clipView key="contentView" id="JIm-R0-e8a">
-                            <rect key="frame" x="1" y="1" width="181" height="94"/>
+                            <rect key="frame" x="1" y="1" width="879" height="164"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="44v-HQ-7kc" customClass="CDTimelineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="879" height="164"/>
+                                    <rect key="frame" x="0.0" y="70" width="879" height="164"/>
                                 </customView>
                             </subviews>
                         </clipView>
                         <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="c5j-bB-irB">
-                            <rect key="frame" x="1" y="79" width="181" height="16"/>
+                            <rect key="frame" x="1" y="149" width="879" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="XBp-It-moH">
-                            <rect key="frame" x="166" y="1" width="16" height="94"/>
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="XBp-It-moH">
+                            <rect key="frame" x="865" y="1" width="15" height="164"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
