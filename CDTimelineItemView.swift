@@ -14,8 +14,23 @@ extension NSEvent {
     }
 }
 
+enum CDBorderedViewEdge : Int {
+    
+    case Both
+    case Left
+    case Right
+}
+
 class CDBorderedView: NSView {
     
+    static let durationResizeWidth: CGFloat = 8
+    static let selectionBorderWidth: CGFloat = 2
+    static let normalBorderWidth: CGFloat = 1
+    
+    // Each second will be X points on screen
+    static let defaultWidthPerSecond: CGFloat = 50.0
+    static let minWidth: CGFloat = 5.0
+
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
@@ -78,30 +93,22 @@ class CDBorderedView: NSView {
         }
     }
 
-    override func drawRect(dirtyRect: NSRect) {
-        let rect = self.bounds;
-        
-                    let tmpRect = NSInsetRect(rect, self.borderWidth/2.0, self.borderWidth/2.0)
-                    if let fillColr = self.backgroundColor {
-                        let p = NSBezierPath(roundedRect: tmpRect, xRadius: self.cornerRadius, yRadius: self.cornerRadius)
-                        fillColr.set()
-                        p.fill()
-                    }
-//                    if let strokeColor = self.borderColor
-//                        let tmpRect = NSInsetRect(rect, 0.5, 0.5)
-                        let p = NSBezierPath(roundedRect: tmpRect, xRadius: self.cornerRadius, yRadius: self.cornerRadius)
-//                        strokeColor.set()
-                        NSColor.redColor().set()
-                        p.lineWidth = self.borderWidth
-                        p.stroke()
-
+    var borderEdge: CDBorderedViewEdge = CDBorderedViewEdge.Both {
+        willSet(v) {
+            if (v != borderEdge) {
+                self.needsDisplay = true
+            }
+        }
     }
-    
     
     override func updateLayer() {
         if let layer = self.layer {
             if self.borderColor != nil && self.borderWidth > 0 {
-                let width: CGFloat = CGFloat(2)*self.borderWidth+CGFloat(8)
+                
+// TODO: cache these and use the same values...
+                
+                let centerWidth = CGFloat(8) // probably cus the cornerRadius
+                let width: CGFloat = CGFloat(2) * self.borderWidth + centerWidth
                 let size = NSSize(width: width, height: width)
                 let image = NSImage(size: size, flipped: false, drawingHandler: { (rect: NSRect) -> Bool in
                     let tmpRect = NSInsetRect(rect, self.borderWidth/2.0, self.borderWidth/2.0)
@@ -120,20 +127,23 @@ class CDBorderedView: NSView {
                     return true
                 })
                 layer.contents = image.CGImageForProposedRect(nil, context: nil, hints: nil)
-                layer.contentsCenter = CGRect(x: 0.5, y: 0.5, width: 0, height: 0)
+                if self.borderEdge == .Right {
+                    layer.contentsRect = CGRect(x: 0.5, y: 0, width: 0.5, height: 1)
+                    layer.contentsCenter = CGRect(x: 0, y: 0.5, width: 0, height: 0)
+                } else {
+                    layer.contentsCenter = CGRect(x: 0.5, y: 0.5, width: 0, height: 0)
+                }
                 layer.contentsScale = self.window != nil ? self.window!.backingScaleFactor : 1.0
             } else {
                 layer.contents = nil
                 layer.backgroundColor = self.backgroundColor?.CGColor
             }
-            layer.borderColor = self.borderColor?.CGColor
-            layer.backgroundColor = self.backgroundColor?.CGColor
-            layer.borderWidth = self.borderWidth
-            layer.cornerRadius = self.cornerRadius
+//            layer.borderColor = self.borderColor?.CGColor
+//            layer.backgroundColor = self.backgroundColor?.CGColor
+//            layer.borderWidth = self.borderWidth
+//            layer.cornerRadius = self.cornerRadius
         }
-        
     }
-
 }
 
 class CDTimelineItemView: CDBorderedView {
@@ -150,11 +160,12 @@ class CDTimelineItemView: CDBorderedView {
     func _commonSetup() {
         self.backgroundColor = NSColor.lightGrayColor()
         self.cornerRadius = 4.0
-        self.borderWidth = 2.0
+        self.borderWidth = CDTimelineItemView.normalBorderWidth
     }
     
     func _updateBorderColor() {
         self.borderColor = self.selected && !self.resizing ? NSColor.alternateSelectedControlColor() : NSColor.grayColor();
+        self.borderWidth = self.selected || self.resizing ? CDTimelineItemView.selectionBorderWidth : CDTimelineItemView.normalBorderWidth
     }
     
     var timelineItem: CDTimelineItem! {
@@ -177,9 +188,6 @@ class CDTimelineItemView: CDBorderedView {
         }
     }
 
-    // Each second will be X points on screen
-    static let defaultWidthPerSecond: CGFloat = 50.0
-    static let minWidth: CGFloat = 5.0
     
     override var intrinsicContentSize: NSSize {
         get {
@@ -214,12 +222,14 @@ class CDTimelineItemView: CDBorderedView {
     override func layout() {
         if self.resizing  {
             if _resizingView == nil {
-                let v = CDBorderedView(frame: self.bounds)
-                v.cornerRadius = 4.0
-                v.borderWidth = 4.0
+                let frame = _durationHitRect()
+                let v = CDBorderedView(frame: frame)
+                v.cornerRadius = self.cornerRadius
+                v.borderWidth = CDTimelineItemView.selectionBorderWidth
                 v.borderColor = NSColor.yellowColor()
                 v.translatesAutoresizingMaskIntoConstraints = true
                 v.autoresizingMask = [NSAutoresizingMaskOptions.ViewWidthSizable, .ViewHeightSizable];
+                v.borderEdge = .Right
                 self.addSubview(v)
                 _resizingView = v
                 
@@ -248,8 +258,8 @@ class CDTimelineItemView: CDBorderedView {
     
     func _durationHitRect() -> NSRect {
         var bounds = self.bounds;
-        bounds.origin.x = NSMaxX(bounds) - 2
-        bounds.size.width = 2
+        bounds.origin.x = NSMaxX(bounds) - CDTimelineItemView.durationResizeWidth
+        bounds.size.width = CDTimelineItemView.durationResizeWidth
         return bounds
     }
     
