@@ -80,6 +80,10 @@ class CDTimelineView: NSStackView {
         for view in self.views {
             self.removeView(view)
         }
+        _viewBeingResized = nil;
+        
+        _anchorRow = nil
+        _selectedIndexes = NSIndexSet()
     }
     
     func _makeTimelineItemViewWithFrame(frame: NSRect, timelineItem: CDTimelineItem) -> CDTimelineItemView {
@@ -110,11 +114,42 @@ class CDTimelineView: NSStackView {
         let itemFrame = _defaultItemViewFrame()
         let itemView = _makeTimelineItemViewWithFrame(itemFrame, timelineItem: timelineItem)
         self.insertView(itemView, atIndex: index, inGravity: NSStackViewGravity.Leading)
+        
+        _shiftSelectionFromIndex(index)
+    }
+    
+    func _shiftSelectionFromIndex(index: Int) {
+        if let anchorRow = _anchorRow {
+            if anchorRow >= index {
+                _anchorRow = anchorRow + 1
+            }
+        }
+        
+        let mutableIndexes = NSMutableIndexSet(indexSet: _selectedIndexes)
+        mutableIndexes.shiftIndexesStartingAtIndex(index, by: 1)
+        _selectedIndexes = mutableIndexes;
+    }
+    
+    
+    func _removeIndexFromSelection(index: Int) {
+        // Don't go through the "setter"
+        let mutableIndexes = NSMutableIndexSet(indexSet: _selectedIndexes)
+        mutableIndexes.removeIndex(index)
+        _selectedIndexes = mutableIndexes;
+        
+        if _anchorRow == index {
+            if _selectedIndexes.count > 0 {
+                _anchorRow = _selectedIndexes.firstIndex
+            } else {
+                _anchorRow = nil
+            }
+        }
     }
     
     func removeItemAtIndex(index: Int) {
         let view = self.views[index]
         self.removeView(view)
+        _removeIndexFromSelection(index)
     }
     
     override func viewWillMoveToSuperview(newSuperview: NSView?) {
@@ -201,10 +236,28 @@ class CDTimelineView: NSStackView {
             let itemView = self.views[index] as! CDTimelineItemView
             itemView.selected = true
         })
-        
-
     }
-
+    
+    func assignViewBeingResized(newView: CDTimelineItemView?) {
+        if let oldView = self._viewBeingResized {
+            if oldView != newView {
+                oldView.resizing = false;
+            }
+        }
+        
+        self._viewBeingResized = newView;
+        
+        
+        if newView != nil {
+            // drop selection
+            self.selectedIndexes = NSIndexSet()
+        }
+        
+    }
+    
+    // when non-nil, we can't extend selection, etc.
+    private weak var _viewBeingResized: CDTimelineItemView?
+    
     var _shouldUpdateAnchorRow = true
     var _selectedIndexes: NSIndexSet = NSIndexSet()
     var selectedIndexes: NSIndexSet {
@@ -220,6 +273,11 @@ class CDTimelineView: NSStackView {
                     _resetAnchorRow()
                 }
                 _updateSelectionState(priorSelectedIndexes, newSelectedRows: v);
+                
+                // Don't allow a duration selection when this is selected..
+                if v.count != 0 {
+                    assignViewBeingResized(nil)
+                }
             }
         }
         get {
@@ -255,7 +313,7 @@ class CDTimelineView: NSStackView {
             return
         }
         
-        let hitLocation = self.convertPoint(theEvent.locationInWindow, fromView: nil)
+        let hitLocation = theEvent.locationInView(self)
         let hitView = self.hitTest(hitLocation)
         let hitIndex = self.indexOfView(hitView)
         let newSelectedRows = NSMutableIndexSet()
@@ -266,7 +324,12 @@ class CDTimelineView: NSStackView {
                 // If we did hit something, then select from the anchor to it, if extending the selection
                 let shiftIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.ShiftKeyMask);
                 let cmdIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.CommandKeyMask);
-                if (shiftIsDown) {
+                if (_viewBeingResized != nil && (cmdIsDown || shiftIsDown)) {
+                    // We can't process it; it conflicts with the duration selection
+                    newAnchorRow = _anchorRow
+                    newSelectedRows.addIndexes(self.selectedIndexes)
+                    NSBeep();
+                } else if (shiftIsDown) {
                     // anchor row direct to the new hit row
                     let firstIndex = min(hitIndex, currentAnchorIndex)
                     let lastIndex = max(hitIndex, currentAnchorIndex)
