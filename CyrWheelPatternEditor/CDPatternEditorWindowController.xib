@@ -190,7 +190,7 @@
                             <real value="250"/>
                         </holdingPriorities>
                     </splitView>
-                    <scrollView horizontalCompressionResistancePriority="250" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="bPs-O4-4jf">
+                    <scrollView wantsLayer="YES" horizontalCompressionResistancePriority="250" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="bPs-O4-4jf">
                         <rect key="frame" x="-1" y="36" width="881" height="166"/>
                         <clipView key="contentView" id="JIm-R0-e8a">
                             <rect key="frame" x="1" y="1" width="879" height="164"/>
@@ -206,7 +206,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="XBp-It-moH">
-                            <rect key="frame" x="865" y="1" width="15" height="164"/>
+                            <rect key="frame" x="864" y="1" width="16" height="164"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
