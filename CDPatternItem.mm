@@ -14,7 +14,7 @@
 
 #define PATTERN_ITEM_PASTEBOARD_TYPE @"com.corbinstreehouse.patternitem"
 
-@dynamic imageData, patternType, duration, patternEndCondition, /*repeatCount,*/ durationEnabled, encodedColor, needsColor, shouldSetBrightnessByRotationalVelocity, patternOptions, patternDuration, patternTypeNeedsPatternDuration;
+@dynamic imageData, patternType, duration, patternEndCondition, /*repeatCount,*/ durationEnabled, encodedColor, needsColor, shouldSetBrightnessByRotationalVelocity, patternOptions, patternDuration, patternTypeNeedsPatternDuration, displayName;
 
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context {
@@ -203,5 +203,75 @@ static NSManagedObjectContext *g_currentContext = nil;
     return LEDPatterns::PatternNeedsDuration(self.patternType);
 }
 
+// Mapping from the type to the string we display. Yeah, not localized
+NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
+    
+    @"Rotating Rainbow",
+    @"Mini Rotating Rainbows",
+    
+    @"Fade Out",
+    @"Fade In",
+    @"Color Wipe",
+    @"Do nothing",
+
+    @"Theater Chase",
+
+    @"Gradient",
+    @"Pulse Gradient",
+    @"Random Gradients",
+
+    @"Image Linear Fade",
+    @"Image Strip",
+
+    @"Warm white shimmer",
+    @"Random color walk",
+    @"Traditional colors",
+    @"Color explosion",
+    @"Gradient 2",
+    @"White Bright Twinkle",
+    @"White and Red Twinkle",
+    @"Red and Green Twinkle",
+    @"Multi-color Twinkle",
+    
+    @"Collission",
+    
+    @"Sine Wave",
+
+    @"Bottom Glow",
+    @"Rotating Bottom Glow",
+    
+    @"Solid Color",
+    
+    @"Solid Rainbow",
+    @"Rainbow with spaces",
+    
+    @"Blink",
+    
+    @"Fire",
+    @"Blue Fire",
+    
+    @"Flag Effect",
+    
+    @"Crossfade",
+    
+    @"SinWave Effect",
+    
+    @"Funky Clouds",
+    
+    @"Life (Full)",
+    @"Life (Dynamic)",
+
+    @"Bounce",
+    @"Rainbow Fire",
+    @"Lava Fire",
+    @"LEDPatternTypeBitmap", 
+    
+    @"All Off"
+};
+
+
+- (NSString *)displayName {
+    return g_patternTypeNames[self.patternType];
+}
 
 @end

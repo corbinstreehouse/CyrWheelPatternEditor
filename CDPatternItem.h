@@ -32,6 +32,7 @@
 @property (nonatomic, readonly) BOOL needsColor; // synthesized for bindings
 @property (nonatomic, readonly) BOOL patternTypeNeedsPatternDuration;
 
+@property (nonatomic, readonly) NSString *displayName;
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context;
 
@@ -42,3 +43,5 @@
 
 
 @end 
+
+extern NSString *g_patternTypeNames[LEDPatternTypeMax+1];

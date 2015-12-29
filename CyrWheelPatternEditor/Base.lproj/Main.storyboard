@@ -1356,6 +1356,33 @@ DQ
             </objects>
             <point key="canvasLocation" x="511" y="1294.5"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="tEO-OM-TnU">
+            <objects>
+                <viewController storyboardIdentifier="TimelineItemView" id="gYm-8t-BH8" sceneMemberID="viewController">
+                    <customView key="view" id="RhU-ga-pkV" customClass="CDTimelineItemView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="344" height="93"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m7F-tP-anO">
+                                <rect key="frame" x="0.0" y="72" width="346" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="ye1-sC-S6q">
+                                    <font key="font" metaFont="system" size="11"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KYO-hV-4Yi">
+                                <rect key="frame" x="0.0" y="22" width="48" height="48"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSApplicationIcon" id="cdf-IZ-D19"/>
+                            </imageView>
+                        </subviews>
+                    </customView>
+                </viewController>
+                <customObject id="NVO-6E-ahI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="935" y="863.5"/>
+        </scene>
         <!--Window Controller-->
         <scene sceneID="vqs-uO-uDu">
             <objects>
@@ -1407,6 +1434,7 @@ DQ
         </scene>
     </scenes>
     <resources>
+        <image name="NSApplicationIcon" width="128" height="128"/>
         <image name="add" width="512" height="512"/>
         <image name="delete" width="512" height="512"/>
         <image name="fastforward" width="512" height="512"/>

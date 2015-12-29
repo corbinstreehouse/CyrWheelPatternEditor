@@ -10,14 +10,15 @@ import Cocoa
 
 @objc // temporary....maybe, I am going to use KVO on it too
 protocol CDTimelineItem: NSObjectProtocol {
-    var duration : NSTimeInterval { get }
+    var duration : NSTimeInterval { get set }
 }
 
-@objc // cuz I use it there for testing (For now)
+@objc // Needed (I forget why)
 protocol CDTimelineViewDataSource : NSObjectProtocol {
     // complete reload or new values
     func numberOfItemsInTimelineView(timelineView: CDTimelineView) -> Int
     func timelineView(timelineView: CDTimelineView, itemAtIndex: Int) -> CDTimelineItem
+    optional func timelineView(timelineView: CDTimelineView, viewAtIndex: Int) -> CDTimelineItemView
 }
 
 let CDTimelineNoIndex: Int = -1
@@ -86,8 +87,16 @@ class CDTimelineView: NSStackView {
         _selectedIndexes = NSIndexSet()
     }
     
-    func _makeTimelineItemViewWithFrame(frame: NSRect, timelineItem: CDTimelineItem) -> CDTimelineItemView {
-        let result = CDTimelineItemView(frame: frame)
+    func _delegateTimelineItemViewAtIndex(index: Int, frame: NSRect) -> CDTimelineItemView {
+        if let result = dataSource?.timelineView?(self, viewAtIndex: index) {
+            return result
+        } else {
+            return CDTimelineItemView(frame: frame)
+        }
+    }
+    
+    func _makeTimelineItemViewAtIndex(index: Int, frame: NSRect, timelineItem: CDTimelineItem) -> CDTimelineItemView {
+        let result = _delegateTimelineItemViewAtIndex(index, frame: frame)
         result.timelineItem = timelineItem
         return result
     }
@@ -104,7 +113,7 @@ class CDTimelineView: NSStackView {
         let itemFrame = _defaultItemViewFrame()
         for var i = 0; i < self.numberOfItems; i++ {
             let timelineItem = self.dataSource!.timelineView(self, itemAtIndex: i)
-            let itemView = _makeTimelineItemViewWithFrame(itemFrame, timelineItem: timelineItem)
+            let itemView = _makeTimelineItemViewAtIndex(i, frame: itemFrame, timelineItem: timelineItem)
             self.addView(itemView, inGravity: NSStackViewGravity.Leading)
         }
     }
@@ -112,7 +121,7 @@ class CDTimelineView: NSStackView {
     func insertItemAtIndex(index: Int) {
         let timelineItem = self.dataSource!.timelineView(self, itemAtIndex: index)
         let itemFrame = _defaultItemViewFrame()
-        let itemView = _makeTimelineItemViewWithFrame(itemFrame, timelineItem: timelineItem)
+        let itemView = _makeTimelineItemViewAtIndex(index, frame: itemFrame, timelineItem: timelineItem)
         self.insertView(itemView, atIndex: index, inGravity: NSStackViewGravity.Leading)
         
         _shiftSelectionFromIndex(index)

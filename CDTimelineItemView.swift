@@ -37,7 +37,8 @@ class CDBorderedView: NSView {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
     }
 
     override var layer: CALayer? {
@@ -154,7 +155,8 @@ class CDTimelineItemView: CDBorderedView {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        _commonSetup()
     }
 
     func _commonSetup() {
@@ -176,6 +178,12 @@ class CDTimelineItemView: CDBorderedView {
         }
     }
     
+    deinit {
+        let obj: NSObject = self.timelineItem as! NSObject
+        obj.removeObserver(self, forKeyPath: "duration")
+ 
+    }
+    
     var selected: Bool = false {
         didSet {
             self.needsDisplay = true
@@ -188,11 +196,18 @@ class CDTimelineItemView: CDBorderedView {
         }
     }
 
+    private func _widthForDuration(duration: NSTimeInterval) -> CGFloat {
+        return CGFloat(duration) * CDTimelineItemView.defaultWidthPerSecond
+    }
+    
+    private func _durationForWidth(width: CGFloat) -> NSTimeInterval {
+        return NSTimeInterval(width / CDTimelineItemView.defaultWidthPerSecond)
+    }
     
     override var intrinsicContentSize: NSSize {
         get {
             var result: NSRect = NSRect(origin: NSZeroPoint, size: super.intrinsicContentSize)
-            result.size.width = CGFloat(timelineItem.duration) * CDTimelineItemView.defaultWidthPerSecond
+            result.size.width = _widthForDuration(timelineItem.duration)
             if let superview = self.superview {
                 result.size.height = superview.bounds.size.height
             } else {
@@ -228,7 +243,7 @@ class CDTimelineItemView: CDBorderedView {
                 v.borderWidth = CDTimelineItemView.selectionBorderWidth
                 v.borderColor = NSColor.yellowColor()
                 v.translatesAutoresizingMaskIntoConstraints = true
-                v.autoresizingMask = [NSAutoresizingMaskOptions.ViewWidthSizable, .ViewHeightSizable];
+                v.autoresizingMask = [NSAutoresizingMaskOptions.ViewMinXMargin, .ViewHeightSizable];
                 v.borderEdge = .Right
                 self.addSubview(v)
                 _resizingView = v
@@ -274,8 +289,18 @@ class CDTimelineItemView: CDBorderedView {
         tv.assignViewBeingResized(self) // affects selection
         
         self.resizing = true
+        let startingPoint = theEvent.locationInWindow
+        let startingDuration = timelineItem.duration
         
         self.window?.trackEventsMatchingMask([NSEventMask.LeftMouseDraggedMask, NSEventMask.LeftMouseUpMask], timeout: NSEventDurationForever, mode: NSDefaultRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+            
+            let currentPoint = event.locationInWindow
+            let distanceMoved = currentPoint.x - startingPoint.x
+            let newDuration = startingDuration + self._durationForWidth(distanceMoved)
+            if self.timelineItem.duration != newDuration {
+                self.timelineItem.duration = newDuration
+                self.invalidateIntrinsicContentSize()
+            }
             
             if event.type == .LeftMouseUp {
                 stop.memory = true

@@ -580,5 +580,13 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     return [self._patternSequence.children objectAtIndex:index];
 }
 
+- (CDTimelineItemView *)timelineView:(CDTimelineView *)timelineView viewAtIndex:(NSInteger)viewAtIndex {
+    NSStoryboard *mainStoryboard = ((CDAppDelegate *)NSApp.delegate).mainStoryboard;
+    
+    NSViewController *tmpVC = [mainStoryboard instantiateControllerWithIdentifier:@"TimelineItemView"];
+
+    return (CDTimelineItemView *)tmpVC.view;
+}
+
 
 @end

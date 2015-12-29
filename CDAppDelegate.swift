@@ -19,6 +19,8 @@ class CDAppDelegate: NSObject, NSApplicationDelegate {
         
     }
     
+    lazy var mainStoryboard: NSStoryboard = NSStoryboard(name: "Main", bundle: nil)
+    
     
 //    @IBAction func mnuNewWheelConnectionClicked(sender: AnyObject) {
 //        let contentViewController: CDWheelConnectionViewController = CDWheelConnectionViewController();
