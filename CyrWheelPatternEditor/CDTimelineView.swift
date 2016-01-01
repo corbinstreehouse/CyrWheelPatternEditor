@@ -18,7 +18,7 @@ protocol CDTimelineViewDataSource : NSObjectProtocol {
     // complete reload or new values
     func numberOfItemsInTimelineView(timelineView: CDTimelineView) -> Int
     func timelineView(timelineView: CDTimelineView, itemAtIndex: Int) -> CDTimelineItem
-    optional func timelineView(timelineView: CDTimelineView, viewAtIndex: Int) -> CDTimelineItemView
+    optional func timelineView(timelineView: CDTimelineView, makeViewControllerAtIndex: Int) -> NSViewController
 }
 
 let CDTimelineNoIndex: Int = -1
@@ -34,8 +34,11 @@ class CDTimelineView: NSStackView {
 
     func _commonInit() {
         self.wantsLayer = true;
+        self.orientation = .Horizontal
         self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
-        
+        self.setClippingResistancePriority(NSLayoutPriorityDefaultLow, forOrientation: NSLayoutConstraintOrientation.Horizontal)
+        self.setClippingResistancePriority(NSLayoutPriorityDefaultLow, forOrientation: NSLayoutConstraintOrientation.Vertical)
+        self.setHuggingPriority(NSLayoutPriorityDefaultLow, forOrientation: NSLayoutConstraintOrientation.Horizontal)
         // stack view properties
         self.spacing = 0;
     }
@@ -82,21 +85,28 @@ class CDTimelineView: NSStackView {
             self.removeView(view)
         }
         _viewBeingResized = nil;
+        _timelineItemViewControllers.removeAllObjects()
         
         _anchorRow = nil
         _selectedIndexes = NSIndexSet()
     }
     
-    func _delegateTimelineItemViewAtIndex(index: Int, frame: NSRect) -> CDTimelineItemView {
-        if let result = dataSource?.timelineView?(self, viewAtIndex: index) {
+    func _delegateTimelineViewControllerAtIndex(index: Int) -> NSViewController {
+        if let result = dataSource?.timelineView?(self, makeViewControllerAtIndex: index) {
             return result
         } else {
-            return CDTimelineItemView(frame: frame)
+            let vc = NSViewController()
+            vc.view = CDTimelineItemView(frame: frame)
+            return vc
         }
     }
     
+    var _timelineItemViewControllers = NSMutableArray()
+    
     func _makeTimelineItemViewAtIndex(index: Int, frame: NSRect, timelineItem: CDTimelineItem) -> CDTimelineItemView {
-        let result = _delegateTimelineItemViewAtIndex(index, frame: frame)
+        let vc: NSViewController = _delegateTimelineViewControllerAtIndex(index)
+        _timelineItemViewControllers.insertObject(vc, atIndex: index)
+        let result = vc.view as! CDTimelineItemView
         result.timelineItem = timelineItem
         return result
     }
@@ -158,6 +168,7 @@ class CDTimelineView: NSStackView {
     func removeItemAtIndex(index: Int) {
         let view = self.views[index]
         self.removeView(view)
+        _timelineItemViewControllers.removeObjectAtIndex(index)
         _removeIndexFromSelection(index)
     }
     

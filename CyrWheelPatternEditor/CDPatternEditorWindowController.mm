@@ -256,7 +256,6 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 // TODO: batch versions for timeline view
 - (void)_removeItemsInTimlineViewAtIndexes:(NSIndexSet *)indexes {
     [indexes enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-        // flight 45
         [_timelineView removeItemAtIndex:idx];
     }];
 }
@@ -580,12 +579,9 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     return [self._patternSequence.children objectAtIndex:index];
 }
 
-- (CDTimelineItemView *)timelineView:(CDTimelineView *)timelineView viewAtIndex:(NSInteger)viewAtIndex {
+-(NSViewController *)timelineView:(CDTimelineView *)timelineView makeViewControllerAtIndex:(NSInteger)makeViewControllerAtIndex {
     NSStoryboard *mainStoryboard = ((CDAppDelegate *)NSApp.delegate).mainStoryboard;
-    
-    NSViewController *tmpVC = [mainStoryboard instantiateControllerWithIdentifier:@"TimelineItemView"];
-
-    return (CDTimelineItemView *)tmpVC.view;
+    return [mainStoryboard instantiateControllerWithIdentifier:@"TimelineItemView"];
 }
 
 
