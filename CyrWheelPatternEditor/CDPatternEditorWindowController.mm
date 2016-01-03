@@ -20,7 +20,7 @@
 
 static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 
-@interface CDPatternEditorWindowController ()<CDTimelineViewDataSource> {
+@interface CDPatternEditorWindowController ()<NSTableViewDataSource, NSTableViewDelegate> {
 @private
     NSMutableArray *_patternViewControllers;
     __weak NSTableView *_tableView;
@@ -30,10 +30,8 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     CDPatternSimSequenceViewController *_simViewController;
 }
     
-@property (weak) IBOutlet NSImageView *imgViewPreview;
 @property (weak) IBOutlet NSTableView *tableView;
 @property (weak) IBOutlet NSView *topView;
-@property (weak) IBOutlet CDTimelineView *timelineView;
 
 @end
 
@@ -143,7 +141,6 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
         [_patternViewControllers addObject:[NSNull null]]; // placeholder
     }
     [_tableView reloadData];
-    [_timelineView reloadData];
 }
 
 - (void)windowDidLoad {
@@ -158,12 +155,6 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     [_tableView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:YES];
     [_tableView registerForDraggedTypes:[NSArray arrayWithObjects:CDPatternTableViewPBoardType, nil]];
     [self _setupSimView];
-    
-    // corbin!
-    
-    _timelineView.enclosingScrollView.contentView.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    _timelineView.dataSource = self;
 }
 
 - (void)_patternItemChanged:(id)sender {
@@ -249,21 +240,13 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
             break;
         }
     }
-    
-//    [_timelineView reloadData];
 }
 
 // TODO: batch versions for timeline view
 - (void)_removeItemsInTimlineViewAtIndexes:(NSIndexSet *)indexes {
-    [indexes enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-        [_timelineView removeItemAtIndex:idx];
-    }];
 }
 
 - (void)_insertItemsInTimlineViewAtIndexes:(NSIndexSet *)indexes {
-    [indexes enumerateIndexesWithOptions:0 usingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-        [_timelineView insertItemAtIndex:idx];
-    }];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -304,7 +287,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     [_tableView scrollRowToVisible:_tableView.numberOfRows - 1];
     
     
-    [_timelineView scrollItemAtIndexToVisible:_timelineView.numberOfItems - 1];
+//    [_timelineView scrollItemAtIndexToVisible:_timelineView.numberOfItems - 1];
 }
 
 - (void)_removeSelectedItem {
@@ -569,20 +552,6 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 }
 
 // Timeline view testing..
-
-- (NSInteger)numberOfItemsInTimelineView:(CDTimelineView *)timelineView {
-    return self._patternSequence.children.count;
-}
-
-
--(id<CDTimelineItem>)timelineView:(CDTimelineView *)timelineView itemAtIndex:(NSInteger)index {
-    return [self._patternSequence.children objectAtIndex:index];
-}
-
--(NSViewController *)timelineView:(CDTimelineView *)timelineView makeViewControllerAtIndex:(NSInteger)makeViewControllerAtIndex {
-    NSStoryboard *mainStoryboard = ((CDAppDelegate *)NSApp.delegate).mainStoryboard;
-    return [mainStoryboard instantiateControllerWithIdentifier:@"TimelineItemView"];
-}
 
 
 @end

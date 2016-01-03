@@ -58,16 +58,22 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
     }
     
     func numberOfItemsInTimelineView(timelineView: CDTimelineView) -> Int {
-        return self.patternSequence.children.count
+        if self.patternSequence.children != nil {
+            return self.patternSequence.children.count
+        } else {
+            return 0
+        }
     }
     
     func timelineView(timelineView: CDTimelineView, itemAtIndex index: Int) -> CDTimelineItem {
         return self.patternSequence.children[index] as! CDTimelineItem
     }
     
-    func timelineView(timelineView: CDTimelineView, makeViewControllerAtIndex: Int) -> NSViewController {
+    func timelineView(timelineView: CDTimelineView, makeViewControllerAtIndex index: Int) -> NSViewController {
         let mainStoryboard: NSStoryboard = (NSApp.delegate as! CDAppDelegate).mainStoryboard
-        return mainStoryboard.instantiateControllerWithIdentifier("TimelineItemView") as! NSViewController
+        let result = mainStoryboard.instantiateControllerWithIdentifier("TimelineItemView") as! NSViewController
+        result.representedObject = self.patternSequence.children[index]
+        return result
     }
     
     

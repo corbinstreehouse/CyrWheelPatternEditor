@@ -23,7 +23,7 @@ enum CDBorderedViewEdge : Int {
 
 class CDBorderedView: NSView {
     
-    static let durationResizeWidth: CGFloat = 8
+    static let durationResizeWidth: CGFloat = 5
     static let selectionBorderWidth: CGFloat = 2
     static let normalBorderWidth: CGFloat = 1
     
@@ -160,13 +160,13 @@ class CDTimelineItemView: CDBorderedView {
     }
 
     func _commonSetup() {
-        self.backgroundColor = NSColor.lightGrayColor()
+        self.backgroundColor = TIMELINE_ITEM_FILL_COLOR
         self.cornerRadius = 4.0
         self.borderWidth = CDTimelineItemView.normalBorderWidth
     }
     
     func _updateBorderColor() {
-        self.borderColor = self.selected && !self.resizing ? NSColor.alternateSelectedControlColor() : NSColor.grayColor();
+        self.borderColor = self.selected && !self.resizing ? NSColor.alternateSelectedControlColor() : CDTimelineItemBorderColor;
         self.borderWidth = self.selected || self.resizing ? CDTimelineItemView.selectionBorderWidth : CDTimelineItemView.normalBorderWidth
     }
     
@@ -181,7 +181,6 @@ class CDTimelineItemView: CDBorderedView {
     deinit {
         let obj: NSObject = self.timelineItem as! NSObject
         obj.removeObserver(self, forKeyPath: "duration")
- 
     }
     
     var selected: Bool = false {
@@ -209,9 +208,9 @@ class CDTimelineItemView: CDBorderedView {
             var result: NSRect = NSRect(origin: NSZeroPoint, size: super.intrinsicContentSize)
             result.size.width = _widthForDuration(timelineItem.duration)
             if let superview = self.superview {
-                result.size.height = superview.bounds.size.height
+                result.size.height = superview.bounds.size.height - TOP_SPACING - BOTTOM_SPACING
             } else {
-                result.size.height = 50; // abitrary
+                result.size.height = 50; // abitrary until we have a super..
             }
             if result.size.width < CDTimelineItemView.minWidth {
                 result.size.width = CDTimelineItemView.minWidth
@@ -237,7 +236,7 @@ class CDTimelineItemView: CDBorderedView {
     override func layout() {
         if self.resizing  {
             if _resizingView == nil {
-                let frame = _durationHitRect()
+                let frame = _resizeDrawingRect()
                 let v = CDBorderedView(frame: frame)
                 v.cornerRadius = self.cornerRadius
                 v.borderWidth = CDTimelineItemView.selectionBorderWidth
@@ -270,11 +269,23 @@ class CDTimelineItemView: CDBorderedView {
         }
         return itemView
     }
+
+    private func _leftSideResizeRect() -> NSRect {
+        var bounds = self.bounds;
+        bounds.size.width = CDTimelineItemView.durationResizeWidth;
+        return bounds
+    }
     
-    func _durationHitRect() -> NSRect {
+    private func _resizeDrawingRect() -> NSRect {
         var bounds = self.bounds;
         bounds.origin.x = NSMaxX(bounds) - CDTimelineItemView.durationResizeWidth
-        bounds.size.width = CDTimelineItemView.durationResizeWidth
+        bounds.size.width = CDTimelineItemView.durationResizeWidth;
+        return bounds
+    }
+
+    private func _durationHitRect() -> NSRect {
+        var bounds = _resizeDrawingRect();
+        bounds.size.width *= 2.0 // goes into the other view's area
         return bounds
     }
     
@@ -296,7 +307,9 @@ class CDTimelineItemView: CDBorderedView {
             
             let currentPoint = event.locationInWindow
             let distanceMoved = currentPoint.x - startingPoint.x
-            let newDuration = startingDuration + self._durationForWidth(distanceMoved)
+            // cap it at 0...which would be an instantaenous flip...
+            let newDuration = max(startingDuration + self._durationForWidth(distanceMoved), 0)
+            
             if self.timelineItem.duration != newDuration {
                 self.timelineItem.duration = newDuration
                 self.invalidateIntrinsicContentSize()
@@ -321,6 +334,18 @@ class CDTimelineItemView: CDBorderedView {
             if NSPointInRect(hitPoint, hitBounds) {
                 _trackEventsForResizingFromEvent(theEvent)
                 callSuper = false
+            } else if NSPointInRect(hitPoint, _leftSideResizeRect()) {
+                // forward to our left sibling (if any)
+                if let enclosingView = self._enclosingTimelineView() {
+                    if let index = enclosingView.indexOfView(self) {
+                        if index > 0 {
+                            let sibling = enclosingView.views[index - 1]
+                            sibling.mouseDown(theEvent)
+                            callSuper = false
+                        }
+                    }
+                }
+                
             }
         }
         if callSuper {

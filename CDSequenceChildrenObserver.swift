@@ -49,7 +49,8 @@ class CDPatternSequenceChildrenObserver: NSObject {
     }
     
     private func _childrenChanged(change: [String : AnyObject]) {
-        if let changeKind: NSKeyValueChange = change[NSKeyValueChangeKindKey] as? NSKeyValueChange {
+        if let changeKindInt = change[NSKeyValueChangeKindKey] as? UInt  {
+            let changeKind: NSKeyValueChange = NSKeyValueChange(rawValue: changeKindInt)!
             switch (changeKind) {
             case NSKeyValueChange.Setting:
                 childrenAllChanged()
@@ -72,8 +73,8 @@ class CDPatternSequenceChildrenObserver: NSObject {
                     childrenAllChanged()
                 }
             }
-            
-            
+        } else {
+            childrenAllChanged()
         }
     }
     

@@ -23,6 +23,18 @@ protocol CDTimelineViewDataSource : NSObjectProtocol {
 
 let CDTimelineNoIndex: Int = -1
 
+let TOP_SPACING: CGFloat = 10.0
+let BOTTOM_SPACING: CGFloat = 10.0
+let TIMELINE_ITEM_FILL_COLOR = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
+// the border color
+let CDTimelineItemBorderColor = NSColor(SRGBRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
+
+// also see:
+//static let durationResizeWidth: CGFloat = 5
+//static let selectionBorderWidth: CGFloat = 2
+//static let normalBorderWidth: CGFloat = 1
+
+
 extension NSEvent {
     var character: Int {
         let str = charactersIgnoringModifiers!.utf16
@@ -36,11 +48,16 @@ class CDTimelineView: NSStackView {
         self.wantsLayer = true;
         self.orientation = .Horizontal
         self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
-        self.setClippingResistancePriority(NSLayoutPriorityDefaultLow, forOrientation: NSLayoutConstraintOrientation.Horizontal)
-        self.setClippingResistancePriority(NSLayoutPriorityDefaultLow, forOrientation: NSLayoutConstraintOrientation.Vertical)
-        self.setHuggingPriority(NSLayoutPriorityDefaultLow, forOrientation: NSLayoutConstraintOrientation.Horizontal)
+
+        self.setClippingResistancePriority(NSLayoutPriorityRequired, forOrientation: NSLayoutConstraintOrientation.Horizontal)
+        self.setClippingResistancePriority(NSLayoutPriorityRequired, forOrientation: NSLayoutConstraintOrientation.Vertical)
+        self.setHuggingPriority(NSLayoutPriorityDefaultLow - 0.00001, forOrientation: NSLayoutConstraintOrientation.Horizontal)
+        self.setHuggingPriority(NSLayoutPriorityDefaultLow - 0.00001, forOrientation: NSLayoutConstraintOrientation.Vertical)
         // stack view properties
         self.spacing = 0;
+        self.edgeInsets = NSEdgeInsetsMake(TOP_SPACING, 0, BOTTOM_SPACING, 0)
+        
+        self.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
     }
     
     override init(frame frameRect: NSRect) {
@@ -184,6 +201,10 @@ class CDTimelineView: NSStackView {
             // We want to know when the clip view's size changes (via the scrollview) so we can fill the height by changing our intrinsic size that we have
             NSNotificationCenter.defaultCenter().addObserverForName(NSViewFrameDidChangeNotification, object: newSuper, queue: nil, usingBlock: { (note: NSNotification) -> Void in
                 self.invalidateIntrinsicContentSize()
+                // All our vies also depend on our size (for now!)
+//                for view in self.views {
+//                    view.invalidateIntrinsicContentSize()
+//                }
             })
         }
     }
@@ -479,6 +500,24 @@ class CDTimelineView: NSStackView {
             return true;
         }
     }
+    
+//    override func hitTest(aPoint: NSPoint) -> NSView? {
+//        var hitView = super.hitTest(aPoint);
+//        // push hits on the left edge of the non-0 view to to the prior one to resize it..
+//        if let reallyHitView = hitView as? CDTimelineItemView {
+//            if let index = self.views.indexOf(reallyHitView) {
+//                if index > 0 {
+//                    // did we hit the left of it?
+//                    let resizeLeftRect = self.convertRect(reallyHitView.leftSideResizeRect(), fromView: reallyHitView)
+//                    if NSPointInRect(aPoint, resizeLeftRect) {
+//                        // REturn the view to our left.
+//                        hitView = self.views[index - 1]
+//                    }
+//                }
+//            }
+//        }
+//        return hitView;
+//    }
     
 
 }

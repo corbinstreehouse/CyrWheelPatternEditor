@@ -8,7 +8,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="CDPatternEditorWindowController">
             <connections>
                 <outlet property="tableView" destination="1rF-tf-8dy" id="rex-6T-cMw"/>
-                <outlet property="timelineView" destination="44v-HQ-7kc" id="PKS-lW-Oj7"/>
                 <outlet property="topView" destination="hvo-ZT-51l" id="MZv-sl-Zdf"/>
                 <outlet property="window" destination="1" id="3"/>
             </connections>
@@ -19,7 +18,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="879" height="746"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="800"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
             <view key="contentView" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="879" height="746"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -106,21 +105,21 @@
                         </connections>
                     </button>
                     <splitView dividerStyle="thin" translatesAutoresizingMaskIntoConstraints="NO" id="JFa-7h-t1C">
-                        <rect key="frame" x="-1" y="209" width="881" height="537"/>
+                        <rect key="frame" x="-1" y="36" width="881" height="710"/>
                         <subviews>
                             <customView fixedFrame="YES" id="hvo-ZT-51l">
-                                <rect key="frame" x="0.0" y="0.0" width="881" height="243"/>
+                                <rect key="frame" x="0.0" y="0.0" width="881" height="321.5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                             <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="62" horizontalPageScroll="10" verticalLineScroll="62" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="IbG-Yh-8gI">
-                                <rect key="frame" x="0.0" y="244" width="881" height="293"/>
+                                <rect key="frame" x="0.0" y="322.5" width="881" height="387.5"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="hGX-Yw-p7T">
-                                    <rect key="frame" x="1" y="1" width="879" height="291"/>
+                                    <rect key="frame" x="1" y="1" width="879" height="385.5"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveColumns="NO" rowHeight="60" viewBased="YES" id="1rF-tf-8dy" customClass="CDPatternEditTableView">
-                                            <rect key="frame" x="0.0" y="0.0" width="879" height="0.0"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="879" height="385.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="0.0" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -190,47 +189,23 @@
                             <real value="250"/>
                         </holdingPriorities>
                     </splitView>
-                    <scrollView wantsLayer="YES" horizontalCompressionResistancePriority="250" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="bPs-O4-4jf">
-                        <rect key="frame" x="-1" y="36" width="881" height="166"/>
-                        <clipView key="contentView" id="JIm-R0-e8a">
-                            <rect key="frame" x="1" y="1" width="879" height="164"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="44v-HQ-7kc" customClass="CDTimelineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="70" width="879" height="164"/>
-                                </customView>
-                            </subviews>
-                        </clipView>
-                        <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="c5j-bB-irB">
-                            <rect key="frame" x="1" y="149" width="879" height="16"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="XBp-It-moH">
-                            <rect key="frame" x="864" y="1" width="16" height="164"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                    </scrollView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="bPs-O4-4jf" firstAttribute="leading" secondItem="JFa-7h-t1C" secondAttribute="leading" id="72K-Sq-Mpu"/>
-                    <constraint firstAttribute="trailing" secondItem="bPs-O4-4jf" secondAttribute="trailing" constant="-1" id="9rL-Bb-JPy"/>
                     <constraint firstAttribute="bottom" secondItem="I0b-Yb-5nI" secondAttribute="bottom" constant="7" id="FS9-M8-Pil"/>
                     <constraint firstItem="L7y-Qc-DhI" firstAttribute="leading" secondItem="zPU-a7-AFf" secondAttribute="trailing" constant="38" id="J7T-vo-tGA"/>
                     <constraint firstItem="ZlC-mQ-9Su" firstAttribute="leading" secondItem="IhB-dL-BL8" secondAttribute="trailing" constant="3" id="PRr-cE-Kvr"/>
-                    <constraint firstItem="I0b-Yb-5nI" firstAttribute="top" secondItem="bPs-O4-4jf" secondAttribute="bottom" constant="8" symbolic="YES" id="RKv-Vu-YvI"/>
+                    <constraint firstAttribute="bottom" secondItem="JFa-7h-t1C" secondAttribute="bottom" constant="36" id="Rq5-6h-73A"/>
                     <constraint firstItem="IhB-dL-BL8" firstAttribute="leading" secondItem="ydh-Me-Klz" secondAttribute="trailing" constant="11" id="Rtf-2u-9iy"/>
                     <constraint firstItem="JFa-7h-t1C" firstAttribute="top" secondItem="2" secondAttribute="top" id="TY6-m8-ZdQ"/>
                     <constraint firstAttribute="trailing" secondItem="ZlC-mQ-9Su" secondAttribute="trailing" constant="11" id="UMT-db-H9h"/>
                     <constraint firstItem="zPU-a7-AFf" firstAttribute="bottom" secondItem="ydh-Me-Klz" secondAttribute="bottom" id="X13-Hf-gOB"/>
                     <constraint firstItem="L7y-Qc-DhI" firstAttribute="bottom" secondItem="I0b-Yb-5nI" secondAttribute="bottom" id="YFs-Vt-xih"/>
-                    <constraint firstItem="bPs-O4-4jf" firstAttribute="top" secondItem="JFa-7h-t1C" secondAttribute="bottom" constant="7" id="aCB-I5-Z9Y"/>
-                    <constraint firstItem="JFa-7h-t1C" firstAttribute="trailing" secondItem="bPs-O4-4jf" secondAttribute="trailing" id="fNx-CH-cpp"/>
+                    <constraint firstItem="JFa-7h-t1C" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="-1" id="bu5-nr-6BU"/>
                     <constraint firstItem="IhB-dL-BL8" firstAttribute="baseline" secondItem="I0b-Yb-5nI" secondAttribute="baseline" id="gKC-SV-VRS"/>
+                    <constraint firstAttribute="trailing" secondItem="JFa-7h-t1C" secondAttribute="trailing" constant="-1" id="gtJ-HX-P1C"/>
                     <constraint firstItem="L7y-Qc-DhI" firstAttribute="baseline" secondItem="ydh-Me-Klz" secondAttribute="baseline" id="kg1-rb-gJw"/>
-                    <constraint firstItem="bPs-O4-4jf" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="-1" id="mcJ-41-MfZ"/>
                     <constraint firstItem="I0b-Yb-5nI" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="14" id="mk3-P8-onX"/>
                     <constraint firstItem="ydh-Me-Klz" firstAttribute="bottom" secondItem="ZlC-mQ-9Su" secondAttribute="bottom" id="rcA-v2-vvD"/>
-                    <constraint firstItem="bPs-O4-4jf" firstAttribute="top" secondItem="2" secondAttribute="top" constant="544" id="uyp-3B-Yuh"/>
                     <constraint firstItem="zPU-a7-AFf" firstAttribute="leading" secondItem="I0b-Yb-5nI" secondAttribute="trailing" constant="8" symbolic="YES" id="xbb-5X-hUv"/>
                 </constraints>
             </view>

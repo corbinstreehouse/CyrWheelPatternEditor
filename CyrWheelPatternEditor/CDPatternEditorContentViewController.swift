@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-
+//not used!!
 class CDPatternEditorContentViewController: NSViewController {
 
     override func viewDidLoad() {

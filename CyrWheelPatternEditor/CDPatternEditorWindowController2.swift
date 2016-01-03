@@ -19,6 +19,7 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
 //        window.titleVisibility = NSWindowTitleVisibility.Hidden
         window.titlebarAppearsTransparent = true
         window.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+        window.contentView!.appearance = NSAppearance(named: NSAppearanceNameAqua)
         _documentChanged();
     }
     

@@ -139,7 +139,7 @@ static NSManagedObjectContext *g_currentContext = nil;
 }
 
 + (NSSet *)keyPathsForValuesAffectingDurationEnabled {
-    return [NSSet setWithObjects:@"patternType", nil];
+    return [NSSet setWithObject:@"patternType"];
 }
 
 + (NSSet *)keyPathsForValuesAffectingNeedsColor {
@@ -147,6 +147,10 @@ static NSManagedObjectContext *g_currentContext = nil;
 }
 
 + (NSSet *)keyPathsForValuesAffectingPatternTypeNeedsPatternDuration {
+    return [NSSet setWithObject:@"patternType"];
+}
+
++ (NSSet *)keyPathsForValuesAffectingDisplayName {
     return [NSSet setWithObject:@"patternType"];
 }
 
