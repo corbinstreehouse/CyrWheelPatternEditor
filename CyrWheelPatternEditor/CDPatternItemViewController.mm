@@ -10,9 +10,8 @@
 #import "CDPatternData.h"
 
 @interface CDPatternItemViewController () {
-@private
-    __weak CDPatternItem *_patternItem;
-    
+//@private
+//    CDPatternItem *_patternItem;
 }
 
 @property BOOL durationEnabled;
@@ -33,7 +32,7 @@
     return self;
 }
 
-@dynamic patternItem, durationEnabled;
+@dynamic durationEnabled;
 
 - (void)loadView {
     [super loadView];
@@ -69,8 +68,8 @@
         item.tag = i;
     }
     // update the UI since we changed the content
-    if (_patternItem) {
-        [_popupPatternType selectItemWithTag:_patternItem.patternType];
+    if (self.patternItem) {
+        [_popupPatternType selectItemWithTag:self.patternItem.patternType];
     }
 }
 
@@ -98,15 +97,16 @@
     self.patternItem.imageData = nil;
 }
 
-- (void)setPatternItem:(CDPatternItem *)patternItem {
-    if (_patternItem != patternItem) {
-        _patternItem = patternItem;
-    }
-}
-
-- (CDPatternItem *)patternItem {
-    return _patternItem;
-}
+@synthesize patternItem;
+//- (void)setPatternItem:(CDPatternItem *)patternItem {
+//    if (_patternItem != patternItem) {
+//        _patternItem = patternItem;
+//    }
+//}
+//
+//- (CDPatternItem *)patternItem {
+//    return _patternItem;
+//}
 
 - (void)_setImageWithURL:(NSURL *)url {
     NSData *data = [NSData dataWithContentsOfURL:url];

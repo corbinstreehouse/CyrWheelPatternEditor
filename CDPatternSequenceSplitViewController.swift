@@ -16,8 +16,7 @@ protocol CDPatternSequenceProvider {
     var patternSequence: CDPatternSequence! { get }
 }
 
-
-class CDMainContentViewController: NSSplitViewController, CDPatternSequencePresenter {
+class CDPatternSequenceSplitViewController: NSSplitViewController, CDPatternSequencePresenter {
 
     override init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)

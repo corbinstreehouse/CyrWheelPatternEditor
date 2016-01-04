@@ -11,8 +11,8 @@
 
 @interface CDPatternItemViewController : NSViewController
 
-// the thing we are editing
-@property(weak) CDPatternItem *patternItem;
+// the thing we are editing; strongly referenced so we can clean up
+@property CDPatternItem *patternItem;
 
 @end
 

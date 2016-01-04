@@ -170,6 +170,7 @@ class CDTimelineItemView: CDBorderedView {
         self.borderWidth = self.selected || self.resizing ? CDTimelineItemView.selectionBorderWidth : CDTimelineItemView.normalBorderWidth
     }
     
+    // weak??
     var timelineItem: CDTimelineItem! {
         didSet {
             let obj: NSObject = self.timelineItem as! NSObject

@@ -101,12 +101,11 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     [self.topView addSubview:view];
 }
 
-//- (void)dealloc {
-//    if (_observingChildren) {
-//        [self._patternSequence removeObserver:self forKeyPath:CDPatternChildrenKey];
-//    }
-////    [super dealloc]; // ARC silly
-//}
+- (void)dealloc {
+    if (_observingChildren) {
+        [self._patternSequence removeObserver:self forKeyPath:CDPatternChildrenKey];
+    }
+}
 
 - (CDDocument *)document {
     return (CDDocument *)super.document;
