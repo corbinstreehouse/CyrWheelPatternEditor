@@ -1567,12 +1567,12 @@ DQ
                 </splitViewController>
                 <customObject id="Fm9-6i-gg0" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2267" y="-235"/>
+            <point key="canvasLocation" x="2211" y="-187"/>
         </scene>
-        <!--Split View Controller-->
+        <!--Pattern Sequence Split View Controller-->
         <scene sceneID="PVB-Mn-ivO">
             <objects>
-                <splitViewController id="eGC-aN-fCP" sceneMemberID="viewController">
+                <splitViewController id="eGC-aN-fCP" customClass="CDPatternSequenceSplitViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem id="t61-lU-sHO"/>
                         <splitViewItem id="XvO-5c-PYh"/>
@@ -1733,7 +1733,7 @@ DQ
                 </viewController>
                 <customObject id="ORQ-sf-WdA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2997" y="50"/>
+            <point key="canvasLocation" x="2997" y="78"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="TM8-b6-UAh">
@@ -1941,6 +1941,9 @@ DQ
                                     <font key="font" metaFont="menu"/>
                                     <menu key="menu" title="OtherViews" id="MAS-b5-zuZ"/>
                                 </popUpButtonCell>
+                                <connections>
+                                    <binding destination="heP-6G-9Ue" name="selectedIndex" keyPath="selection.patternType" id="Sbx-iM-fab"/>
+                                </connections>
                             </popUpButton>
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="inf-XG-uDG">
                                 <rect key="frame" x="8" y="366" width="183" height="26"/>
@@ -2006,14 +2009,6 @@ DQ
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sId-Rf-nHn">
-                                <rect key="frame" x="8" y="398" width="157" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Proceed to the next item:" id="EZk-YV-tSB">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sed-RX-dPf">
                                 <rect key="frame" x="8" y="275" width="182" height="20"/>
                                 <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="jEg-4Q-bA0"/>
@@ -2048,11 +2043,27 @@ DQ
                                     <font key="font" metaFont="cellTitle"/>
                                 </buttonCell>
                             </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sId-Rf-nHn">
+                                <rect key="frame" x="8" y="398" width="157" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Proceed to the next item:" id="EZk-YV-tSB">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="_popupPatternType" destination="dPY-ud-NTH" id="4up-wI-w7c"/>
+                    </connections>
                 </viewController>
                 <customObject id="lM2-aE-RNQ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <arrayController selectsInsertedObjects="NO" avoidsEmptySelection="NO" id="heP-6G-9Ue"/>
+                <arrayController selectsInsertedObjects="NO" avoidsEmptySelection="NO" id="heP-6G-9Ue">
+                    <connections>
+                        <binding destination="aKN-dg-R1Y" name="contentArray" keyPath="self.patternSequence.children.@array" id="RaS-of-8gx"/>
+                        <binding destination="aKN-dg-R1Y" name="selectionIndexes" keyPath="self.parentViewController.parentViewController.patternSelectionIndexes" id="63z-K4-Xek"/>
+                    </connections>
+                </arrayController>
             </objects>
             <point key="canvasLocation" x="3374" y="122.5"/>
         </scene>

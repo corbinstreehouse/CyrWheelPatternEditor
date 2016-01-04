@@ -63,7 +63,7 @@
 - (void)__viewDidLoad {
     [_popupPatternType removeAllItems];
     for (NSInteger i = 0; i <= LEDPatternTypeMax; i++) {
-        [_popupPatternType addItemWithTitle:(NSString *)g_patternTypeNames[i]];
+        [_popupPatternType addItemWithTitle:g_patternTypeNames[i]];
         NSMenuItem *item = [_popupPatternType lastItem];
         item.tag = i;
     }

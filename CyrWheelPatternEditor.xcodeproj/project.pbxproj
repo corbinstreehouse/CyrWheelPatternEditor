@@ -11,6 +11,7 @@
 		9D0EF1CD1BFEE406002C687E /* CDAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0EF1CC1BFEE406002C687E /* CDAppDelegate.swift */; };
 		9D117A1F1A0497B90045C12B /* colorpalettes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DCE4EC419D52D27002664D9 /* colorpalettes.cpp */; };
 		9D1E1AE71C2DA292002BD920 /* CDTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1E1AE61C2DA292002BD920 /* CDTimelineView.swift */; };
+		9D211A1E1C3A438A006A75FC /* CDPatternItemNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D211A1D1C3A438A006A75FC /* CDPatternItemNames.m */; };
 		9D2217791C2DB0660046D72C /* CDTimelineItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2217781C2DB0660046D72C /* CDTimelineItemView.swift */; };
 		9D4FCB30193C29DB0000DE28 /* CDSimulatorLEDPatterns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D4FCB2E193C29DB0000DE28 /* CDSimulatorLEDPatterns.cpp */; };
 		9D4FCB33193C2E090000DE28 /* colorutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D4FCB31193C2E090000DE28 /* colorutils.cpp */; };
@@ -106,6 +107,9 @@
 		9D142EF21C03DEDA0085A377 /* CDWheelBluetoothShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDWheelBluetoothShared.h; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDWheelBluetoothShared.h; sourceTree = "<group>"; };
 		9D18071D1C2287A000B80DDC /* EEPROM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EEPROM.h; path = ArduinoWrappers/EEPROM.h; sourceTree = "<group>"; };
 		9D1E1AE61C2DA292002BD920 /* CDTimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDTimelineView.swift; sourceTree = "<group>"; };
+		9D211A1B1C3A1DA4006A75FC /* LEDPatternType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LEDPatternType.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatternType.h; sourceTree = "<group>"; };
+		9D211A1C1C3A438A006A75FC /* CDPatternItemNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPatternItemNames.h; sourceTree = "<group>"; };
+		9D211A1D1C3A438A006A75FC /* CDPatternItemNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDPatternItemNames.m; sourceTree = "<group>"; };
 		9D2217781C2DB0660046D72C /* CDTimelineItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDTimelineItemView.swift; path = ../CDTimelineItemView.swift; sourceTree = "<group>"; };
 		9D3A0DB0188A3D26001AD553 /* CDPatternData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternData.h; path = ../../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternData.h; sourceTree = "<group>"; };
 		9D4FCB2A193C278E0000DE28 /* pixeltypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pixeltypes.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/pixeltypes.h; sourceTree = "<group>"; };
@@ -287,6 +291,7 @@
 				9DBEC63518A2FF0D00A05FB7 /* CWPatternSequenceManager.cpp */,
 				9DD394D7191EB30400B77A4F /* CDOrientation.h */,
 				9DD394D5191EB2FD00B77A4F /* CDOrientation.cpp */,
+				9D211A1B1C3A1DA4006A75FC /* LEDPatternType.h */,
 				9DA685B019417089003631F6 /* LEDPatterns.h */,
 				9DA685B119417089003631F6 /* LEDPatterns.cpp */,
 				9D142EF21C03DEDA0085A377 /* CDWheelBluetoothShared.h */,
@@ -380,6 +385,8 @@
 				9DFBAC511888F03C00737C2F /* CDPatternItem.mm */,
 				9DBD8045189B66FA00A6A067 /* CDPatternSequence.h */,
 				9DBD8046189B66FA00A6A067 /* CDPatternSequence.mm */,
+				9D211A1C1C3A438A006A75FC /* CDPatternItemNames.h */,
+				9D211A1D1C3A438A006A75FC /* CDPatternItemNames.m */,
 				9DFBAC2B1888EDFC00737C2F /* CDDocument.xcdatamodeld */,
 				9DCE4EBD19D3B62C002664D9 /* MappingModel.xcmappingmodel */,
 				9DFBAC171888EDFC00737C2F /* Supporting Files */,
@@ -548,6 +555,7 @@
 				9DBD8047189B66FA00A6A067 /* CDPatternSequence.mm in Sources */,
 				9DBE92D518ACE19900154550 /* CDCyrWheelView.mm in Sources */,
 				9D500A2518BD88E8003BD8C2 /* CDEncodedColorTransformer.mm in Sources */,
+				9D211A1E1C3A438A006A75FC /* CDPatternItemNames.m in Sources */,
 				9DBD804A189C9FB200A6A067 /* CDPatternDataToImageTransformer.mm in Sources */,
 				9D931EB01C33B4B70065222F /* CDTimelineViewController.swift in Sources */,
 				9D931EB41C35D0B80065222F /* CDPatternSequenceSplitViewController.swift in Sources */,

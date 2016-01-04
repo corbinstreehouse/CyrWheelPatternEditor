@@ -96,6 +96,12 @@ class CDTimelineView: NSStackView {
     }
     
     // MARK: private stuff
+    func _doWorkToChangeSelection(work: () -> Void) {
+        self.willChangeValueForKey("selectionIndexes")
+        work()
+        self.didChangeValueForKey("selectionIndexes")
+        
+    }
     
     func _removeAllTimelineItemViews() {
         for view in self.views {
@@ -105,7 +111,10 @@ class CDTimelineView: NSStackView {
         _timelineItemViewControllers.removeAllObjects()
         
         _anchorRow = nil
-        _selectedIndexes = NSIndexSet()
+        _doWorkToChangeSelection({
+            self._selectionIndexes = NSIndexSet()
+        })
+        
     }
     
     func _delegateTimelineViewControllerAtIndex(index: Int) -> NSViewController {
@@ -155,29 +164,33 @@ class CDTimelineView: NSStackView {
     }
     
     func _shiftSelectionFromIndex(index: Int) {
-        if let anchorRow = _anchorRow {
-            if anchorRow >= index {
-                _anchorRow = anchorRow + 1
+        _doWorkToChangeSelection() {
+            if let anchorRow = self._anchorRow {
+                if anchorRow >= index {
+                    self._anchorRow = anchorRow + 1
+                }
             }
+            
+            let mutableIndexes = NSMutableIndexSet(indexSet: self._selectionIndexes)
+            mutableIndexes.shiftIndexesStartingAtIndex(index, by: 1)
+            self._selectionIndexes = mutableIndexes;
         }
-        
-        let mutableIndexes = NSMutableIndexSet(indexSet: _selectedIndexes)
-        mutableIndexes.shiftIndexesStartingAtIndex(index, by: 1)
-        _selectedIndexes = mutableIndexes;
     }
     
     
     func _removeIndexFromSelection(index: Int) {
         // Don't go through the "setter"
-        let mutableIndexes = NSMutableIndexSet(indexSet: _selectedIndexes)
-        mutableIndexes.removeIndex(index)
-        _selectedIndexes = mutableIndexes;
-        
-        if _anchorRow == index {
-            if _selectedIndexes.count > 0 {
-                _anchorRow = _selectedIndexes.firstIndex
-            } else {
-                _anchorRow = nil
+        _doWorkToChangeSelection() {
+            let mutableIndexes = NSMutableIndexSet(indexSet: self._selectionIndexes)
+            mutableIndexes.removeIndex(index)
+            self._selectionIndexes = mutableIndexes;
+            
+            if self._anchorRow == index {
+                if self._selectionIndexes.count > 0 {
+                    self._anchorRow = self._selectionIndexes.firstIndex
+                } else {
+                    self._anchorRow = nil
+                }
             }
         }
     }
@@ -259,8 +272,8 @@ class CDTimelineView: NSStackView {
     }
     
     func _resetAnchorRow() {
-        if self.selectedIndexes.count > 0 {
-            _anchorRow = self.selectedIndexes.firstIndex
+        if self.selectionIndexes.count > 0 {
+            _anchorRow = self.selectionIndexes.firstIndex
         } else {
             _anchorRow = nil;
         }
@@ -290,8 +303,10 @@ class CDTimelineView: NSStackView {
         
         
         if newView != nil {
-            // drop selection
-            self.selectedIndexes = NSIndexSet()
+            if let itemIndex = self.views.indexOf(newView!) {
+                // drop selection to just this item
+                self.selectionIndexes = NSIndexSet(index: itemIndex)
+            }
         }
         
     }
@@ -300,14 +315,14 @@ class CDTimelineView: NSStackView {
     private weak var _viewBeingResized: CDTimelineItemView?
     
     var _shouldUpdateAnchorRow = true
-    var _selectedIndexes: NSIndexSet = NSIndexSet()
-    var selectedIndexes: NSIndexSet {
+    var _selectionIndexes: NSIndexSet = NSIndexSet()
+    dynamic var selectionIndexes: NSIndexSet {
         set(v) {
-            if (!_selectedIndexes.isEqualToIndexSet(v)) {
-                let priorSelectedIndexes = _selectedIndexes.mutableCopy() as! NSMutableIndexSet
+            if (!_selectionIndexes.isEqualToIndexSet(v)) {
+                let priorSelectedIndexes = _selectionIndexes.mutableCopy() as! NSMutableIndexSet
                 priorSelectedIndexes.removeIndexes(v)
                 
-                _selectedIndexes = v
+                _selectionIndexes = v
 
                 // Keep the anchor row valid..
                 if _shouldUpdateAnchorRow {
@@ -322,7 +337,7 @@ class CDTimelineView: NSStackView {
             }
         }
         get {
-            return _selectedIndexes;
+            return _selectionIndexes;
         }
     }
     
@@ -368,7 +383,7 @@ class CDTimelineView: NSStackView {
                 if (_viewBeingResized != nil && (cmdIsDown || shiftIsDown)) {
                     // We can't process it; it conflicts with the duration selection
                     newAnchorRow = _anchorRow
-                    newSelectedRows.addIndexes(self.selectedIndexes)
+                    newSelectedRows.addIndexes(self.selectionIndexes)
                     NSBeep();
                 } else if (shiftIsDown) {
                     // anchor row direct to the new hit row
@@ -380,7 +395,7 @@ class CDTimelineView: NSStackView {
                 } else if (cmdIsDown) {
                     // toggle behavior
                     newAnchorRow = currentAnchorIndex
-                    newSelectedRows.addIndexes(self.selectedIndexes)
+                    newSelectedRows.addIndexes(self.selectionIndexes)
                     if (newSelectedRows.contains(hitIndex)) {
                         newSelectedRows.removeIndex(hitIndex)
                     } else {
@@ -399,7 +414,7 @@ class CDTimelineView: NSStackView {
         }
 
         _anchorRow = newAnchorRow
-        self.selectedIndexes = newSelectedRows
+        self.selectionIndexes = newSelectedRows
     }
     
     override func mouseDown(theEvent: NSEvent) {
@@ -437,8 +452,8 @@ class CDTimelineView: NSStackView {
         let itemCount = self.numberOfItems;
         if let anchorIndex = _anchorRow {
             if extendingSelection {
-                var firstIndex = self.selectedIndexes.firstIndex
-                var endingIndex = self.selectedIndexes.lastIndex
+                var firstIndex = self.selectionIndexes.firstIndex
+                var endingIndex = self.selectionIndexes.lastIndex
                 if anchorIndex == firstIndex {
                     // From the anchor to somewhere past it
                     if goingForward {
@@ -462,17 +477,17 @@ class CDTimelineView: NSStackView {
                 endingIndex = _keepIndexValid(endingIndex)
                 let length = endingIndex - firstIndex + 1
                 // Leave the anchor row where it is
-                self.selectedIndexes = NSIndexSet(indexesInRange: NSRange(location: firstIndex, length: length))
+                self.selectionIndexes = NSIndexSet(indexesInRange: NSRange(location: firstIndex, length: length))
             } else {
                 var nextIndex = goingForward ? anchorIndex + 1 : anchorIndex - 1;
                 nextIndex = _keepIndexValid(nextIndex)
                 _anchorRow = nextIndex
-                self.selectedIndexes = NSIndexSet(index: nextIndex);
+                self.selectionIndexes = NSIndexSet(index: nextIndex);
             }
             
         } else if itemCount > 0 {
             _anchorRow = goingForward ? 0 : itemCount - 1
-            self.selectedIndexes = NSIndexSet(index: _anchorRow!)
+            self.selectionIndexes = NSIndexSet(index: _anchorRow!)
         }
         _shouldUpdateAnchorRow = true
     }

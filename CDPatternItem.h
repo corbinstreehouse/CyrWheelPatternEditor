@@ -44,4 +44,3 @@
 
 @end 
 
-extern NSString *g_patternTypeNames[LEDPatternTypeMax+1];

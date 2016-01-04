@@ -5,3 +5,5 @@
 #import "CDWheelBluetoothShared.h"
 #import "CDPatternSequenceManagerShared.h"
 #import "CDPatternSequence.h"
+#import "LEDPatternType.h"
+#import "CDPatternItemNames.h"

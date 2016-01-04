@@ -33,6 +33,11 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         if self.patternSequence != nil {
             _timelineView.dataSource = self
         }
+
+        let parentVC = self.parentViewController as! CDPatternSequenceSplitViewController
+        // Bind the parent to our value
+        // TODO: unbind when done!
+        parentVC.bind("patternSelectionIndexes", toObject: _timelineView, withKeyPath: "selectionIndexes", options: nil)
     }
     
     
