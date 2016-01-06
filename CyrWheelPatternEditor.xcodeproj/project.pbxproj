@@ -33,6 +33,7 @@
 		9D97757F1C005BB3002D78EE /* CDWheelConnectionWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D97757E1C005BB3002D78EE /* CDWheelConnectionWindowController.swift */; };
 		9D9775811C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9775801C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift */; };
 		9D9775831C0223E3002D78EE /* CDWheelConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9775821C0223E3002D78EE /* CDWheelConnection.swift */; };
+		9DA21BA21C3C9A200047E8C1 /* CDWheelPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA21BA11C3C9A200047E8C1 /* CDWheelPreviewViewController.swift */; };
 		9DA685B219417089003631F6 /* LEDPatterns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DA685B119417089003631F6 /* LEDPatterns.cpp */; };
 		9DA685B4194176B6003631F6 /* lib8tion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DA685B3194176B6003631F6 /* lib8tion.cpp */; };
 		9DBB2A7518A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7318A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm */; };
@@ -146,6 +147,7 @@
 		9D97757E1C005BB3002D78EE /* CDWheelConnectionWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDWheelConnectionWindowController.swift; sourceTree = "<group>"; };
 		9D9775801C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDWheelConnectionChooserViewController.swift; sourceTree = "<group>"; };
 		9D9775821C0223E3002D78EE /* CDWheelConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDWheelConnection.swift; sourceTree = "<group>"; };
+		9DA21BA11C3C9A200047E8C1 /* CDWheelPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDWheelPreviewViewController.swift; sourceTree = "<group>"; };
 		9DA685B019417089003631F6 /* LEDPatterns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LEDPatterns.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatterns.h; sourceTree = "<group>"; };
 		9DA685B119417089003631F6 /* LEDPatterns.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = LEDPatterns.cpp; path = ../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatterns.cpp; sourceTree = "<group>"; };
 		9DA685B3194176B6003631F6 /* lib8tion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lib8tion.cpp; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/lib8tion.cpp; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 				9DFBAC2E1888EDFC00737C2F /* Images.xcassets */,
 				9DFBAC281888EDFC00737C2F /* MainMenu.xib */,
 				9D9775791BFEEB9D002D78EE /* Main.storyboard */,
+				9DA21BA11C3C9A200047E8C1 /* CDWheelPreviewViewController.swift */,
 				9D683E2B1C0FF0AC0058EFA0 /* CDRolloverButton.swift */,
 				9D0EF1CC1BFEE406002C687E /* CDAppDelegate.swift */,
 				9D9775821C0223E3002D78EE /* CDWheelConnection.swift */,
@@ -568,6 +571,7 @@
 				9D0EF1CA1BFEE1BD002C687E /* CDWheelConnectionViewController.swift in Sources */,
 				9D97757F1C005BB3002D78EE /* CDWheelConnectionWindowController.swift in Sources */,
 				9D683E2C1C0FF0AC0058EFA0 /* CDRolloverButton.swift in Sources */,
+				9DA21BA21C3C9A200047E8C1 /* CDWheelPreviewViewController.swift in Sources */,
 				9DBEC63618A2FF0D00A05FB7 /* CWPatternSequenceManager.cpp in Sources */,
 				9D4FCB30193C29DB0000DE28 /* CDSimulatorLEDPatterns.cpp in Sources */,
 				9D0EF1CD1BFEE406002C687E /* CDAppDelegate.swift in Sources */,
