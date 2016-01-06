@@ -123,6 +123,8 @@
 			<string>Cyr Wheel Compiled Sequence</string>
 			<key>UTTypeIdentifier</key>
 			<string>public.compiledcyrwheelsequence</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://www.corbinstreehouse.com</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

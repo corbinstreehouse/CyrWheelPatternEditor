@@ -14,11 +14,6 @@
 #import "CWPatternSequenceManager.h"
 #import "SdFat.h"
 
-//#ifndef MAX_PATH
-//    #define MAX_PATH 260 // Corbin!!! this is probably too low, but is win32
-//#endif
-
-
 @interface CDPatternSimulatorDocument() {
 @private
     CWPatternSequenceManager _sequenceManager;
@@ -91,17 +86,6 @@
     NSString *fileToFind = [url lastPathComponent];
     
     _sequenceManager.setCurrentSequenceWithName(fileToFind.UTF8String);
-//    
-//    for (NSInteger i = 0; i < _sequenceManager.getRootNumberOfSequenceFilenames(); i++) {
-//        char *currentName = _sequenceManager.getCurrentPatternFileName();
-//        if (currentName) {
-//            NSString *currentNameStr = [[NSString alloc] initWithBytes:currentName length:strlen(currentName) encoding:NSASCIIStringEncoding];
-//            if ([[currentNameStr lastPathComponent] isEqualToString:fileToFind]) {
-//                break;
-//            }
-//        }
-//        _sequenceManager.loadNextSequence();
-//    }
     
     [self _loadPatternSequence];
 
@@ -255,13 +239,7 @@
     return YES;
 }
 
-static CDPatternSimulatorDocument *g_activeDoc = nil;
-
 - (void)start {
-    if (g_activeDoc != self) {
-        [g_activeDoc stop];
-        g_activeDoc = self;
-    }
     if (_timer == nil) {
         // Speed of the teensy...96000000 == 96Mhz 14 loops per usec.. according to source
         NSTimeInterval time = 14.0/1000000.0;
@@ -273,7 +251,6 @@ static CDPatternSimulatorDocument *g_activeDoc = nil;
 - (void)stop {
     [_timer invalidate];
     _timer = nil;
-    g_activeDoc = nil;
 }
 
 - (BOOL)isRunning {

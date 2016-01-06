@@ -1672,10 +1672,10 @@ DQ
             </objects>
             <point key="canvasLocation" x="2623" y="44"/>
         </scene>
-        <!--View Controller-->
+        <!--Wheel Preview View Controller-->
         <scene sceneID="l63-S3-kDm">
             <objects>
-                <viewController id="nRD-7i-dlI" sceneMemberID="viewController">
+                <viewController id="nRD-7i-dlI" customClass="CDWheelPreviewViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="BBR-X3-AQX">
                         <rect key="frame" x="0.0" y="0.0" width="518" height="338"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1689,6 +1689,9 @@ DQ
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="btnStartClicked:" target="nRD-7i-dlI" id="JgE-o0-LfU"/>
+                                        </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" tag="10" translatesAutoresizingMaskIntoConstraints="NO" id="oVM-lu-PAm" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                         <rect key="frame" x="125" y="0.0" width="48" height="39"/>
@@ -1696,6 +1699,9 @@ DQ
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="btnPlayPauseClicked:" target="nRD-7i-dlI" id="ky1-RB-SOE"/>
+                                        </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yu5-9h-ucH" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                         <rect key="frame" x="180" y="0.0" width="48" height="39"/>
@@ -1703,6 +1709,9 @@ DQ
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="btnNextClicked:" target="nRD-7i-dlI" id="N66-gH-yF1"/>
+                                        </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="Frq-SC-eo8" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                         <rect key="frame" x="236" y="8" width="27" height="23"/>
@@ -1710,6 +1719,9 @@ DQ
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="btnEndClicked:" target="nRD-7i-dlI" id="x0N-u1-Xtp"/>
+                                        </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="0ci-m7-wx5" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                         <rect key="frame" x="69" y="0.0" width="48" height="39"/>
@@ -1717,6 +1729,9 @@ DQ
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="btnPriorClicked:" target="nRD-7i-dlI" id="Oc7-t9-ZgE"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -1724,10 +1739,17 @@ DQ
                                     <constraint firstAttribute="height" constant="39" id="hsu-9e-TRh"/>
                                 </constraints>
                             </customView>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="dxH-4V-fs3" customClass="CDCyrWheelView">
+                                <rect key="frame" x="0.0" y="43" width="518" height="295"/>
+                            </customView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="4xp-bK-Zh9" firstAttribute="centerX" secondItem="BBR-X3-AQX" secondAttribute="centerX" id="8ga-YO-d4f"/>
-                            <constraint firstAttribute="bottom" secondItem="4xp-bK-Zh9" secondAttribute="bottom" constant="6" id="o4V-sr-Kyd"/>
+                            <constraint firstItem="dxH-4V-fs3" firstAttribute="top" secondItem="BBR-X3-AQX" secondAttribute="top" id="7kr-gw-gmY"/>
+                            <constraint firstItem="dxH-4V-fs3" firstAttribute="leading" secondItem="BBR-X3-AQX" secondAttribute="leading" id="7zX-uh-fig"/>
+                            <constraint firstAttribute="bottom" secondItem="4xp-bK-Zh9" secondAttribute="bottom" constant="6" id="8Fc-PG-Ii3"/>
+                            <constraint firstItem="4xp-bK-Zh9" firstAttribute="centerX" secondItem="BBR-X3-AQX" secondAttribute="centerX" id="Mms-P7-LdI"/>
+                            <constraint firstAttribute="trailing" secondItem="dxH-4V-fs3" secondAttribute="trailing" id="jEt-pv-834"/>
+                            <constraint firstAttribute="bottom" secondItem="dxH-4V-fs3" secondAttribute="bottom" constant="43" id="m46-ZW-Ubz"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -2179,7 +2201,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wZJ-Op-eAi">
-                                                <rect key="frame" x="610" y="0.0" width="16" height="150"/>
+                                                <rect key="frame" x="611" y="0.0" width="15" height="150"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>

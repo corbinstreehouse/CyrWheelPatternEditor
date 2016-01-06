@@ -8,6 +8,10 @@
 
 import Cocoa
 
+//protocol CDPatternSimulatorDocumentPresenter {
+//    var simulatorDocument: CDPatternSimulatorDocument! { get set }
+//}
+
 protocol CDPatternSequencePresenter {
     var patternSequence: CDPatternSequence! { get set }
 }

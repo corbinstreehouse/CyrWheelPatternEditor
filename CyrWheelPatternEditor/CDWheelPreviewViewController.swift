@@ -14,5 +14,17 @@ class CDWheelPreviewViewController: NSViewController {
         super.viewDidLoad()
         // Do view setup here.
     }
+
+    @IBOutlet weak var _cyrWheelView: CDCyrWheelView!
     
+    @IBAction func btnStartClicked(sender: NSButton) {
+    }
+    @IBAction func btnPriorClicked(sender: NSButton) {
+    }
+    @IBAction func btnPlayPauseClicked(sender: NSButton) {
+    }
+    @IBAction func btnNextClicked(sender: NSButton) {
+    }
+    @IBAction func btnEndClicked(sender: NSButton) {
+    }
 }

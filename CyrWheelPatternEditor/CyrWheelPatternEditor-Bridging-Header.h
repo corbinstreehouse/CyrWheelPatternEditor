@@ -7,3 +7,4 @@
 #import "CDPatternSequence.h"
 #import "LEDPatternType.h"
 #import "CDPatternItemNames.h"
+#import "CDCyrWheelView.h"

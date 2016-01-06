@@ -73,7 +73,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
         // Create a temp file name that we constantly export to and reload
         NSURL *tempFile = [self _makeTempURLForExport];
         [self _exportDataToURL:tempFile];
-        // wrap it int he sim document
+        // wrap it in the sim document
         _simulatorDocument = [[CDPatternSimulatorDocument alloc] init];
         _simulatorDocument.fileURL = tempFile;
         NSError *error = nil;
