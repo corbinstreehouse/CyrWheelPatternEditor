@@ -34,7 +34,10 @@ public:
 
 extern Print Serial;
 
-#define pinMode(a, b)
+#ifndef pinMode
+    #define pinMode(a, b)
+#endif
+
 #define OUTPUT 0
 typedef bool boolean;
 
