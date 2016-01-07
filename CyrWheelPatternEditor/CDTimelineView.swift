@@ -8,11 +8,6 @@
 
 import Cocoa
 
-@objc // temporary....maybe, I am going to use KVO on it too
-protocol CDTimelineItem: NSObjectProtocol {
-    var duration : NSTimeInterval { get set }
-}
-
 @objc // Needed (I forget why)
 protocol CDTimelineViewDataSource : NSObjectProtocol {
     // complete reload or new values

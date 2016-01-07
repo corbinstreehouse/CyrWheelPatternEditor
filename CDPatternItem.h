@@ -9,9 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "CDPatternData.h"
+#import "CDTimelineItem.h"
+#import "LEDPatternType.h"
 
 #import <CoreBluetooth/CoreBluetooth.h>
-#import "CyrWheelPatternEditor-Swift.h"
 
 @interface CDPatternItem : NSManagedObject<NSPasteboardWriting, NSPasteboardReading, NSCoding, CDTimelineItem>
 

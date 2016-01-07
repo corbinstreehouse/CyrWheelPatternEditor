@@ -22,10 +22,30 @@
 
 @implementation CDPatternRunner
 
+static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
+    CDPatternRunner *doc = (__bridge CDPatternRunner *)data;
+    [doc _wheelChanged:changeReason];
+}
+
 - (id)init {
     self = [super init];
     _sequenceManager.init();
+    _sequenceManager.setWheelChangeHandler(_wheelChangedHandler, (__bridge void*)self);
     return self;
+}
+
+- (void)_wheelChanged:(CDWheelChangeReason)changeReason {
+    switch (changeReason) {
+        case CDWheelChangeReasonPatternChanged: {
+            
+            break;
+        }
+        case CDWheelChangeReasonSequenceChanged: {
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 - (void)_makeTimerIfNeeded {
@@ -42,20 +62,7 @@
 @synthesize patternTimePassedFromFirstTimedPattern;
 
 - (void)_tick:(NSTimer *)sender {
-    // TODO: a callback when the item changes for us to hook into!
-//    CDPatternItemHeader *oldHeader = _sequenceManager.getCurrentPatternItemHeader();
     _sequenceManager.process();
-//    CDPatternItemHeader *newHeader = _sequenceManager.getCurrentPatternItemHeader();
-//    if (oldHeader != newHeader) {
-//        [self willChangeValueForKey:@"patternTypeName"];
-//        [self didChangeValueForKey:@"patternTypeName"];
-//    }
-//    // will this be too expensive to do?
-//    [self willChangeValueForKey:@"patternTimePassed"];
-//    [self didChangeValueForKey:@"patternTimePassed"];
-//    [self willChangeValueForKey:@"patternTimePassedFromFirstTimedPattern"];
-//    [self didChangeValueForKey:@"patternTimePassedFromFirstTimedPattern"];
-    
     // ms -> s
     self.patternTimePassed = _sequenceManager.getPatternTimePassed() / 1000.0;
     self.patternTimePassedFromFirstTimedPattern = _sequenceManager.getPatternTimePassedFromFirstTimedPattern() / 1000.0;
@@ -95,12 +102,12 @@
 
 - (void)loadNextSequence {
     _sequenceManager.loadNextSequence();
-    [self _loadPatternSequence];
+//    [self _loadPatternSequence];
 }
 
 - (void)priorSequence {
     _sequenceManager.loadPriorSequence();
-    [self _loadPatternSequence];
+//    [self _loadPatternSequence];
 }
 
 

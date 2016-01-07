@@ -8,3 +8,5 @@
 #import "LEDPatternType.h"
 #import "CDPatternItemNames.h"
 #import "CDCyrWheelView.h"
+#import "CDPatternRunner.h"
+#import "CDTimelineItem.h"

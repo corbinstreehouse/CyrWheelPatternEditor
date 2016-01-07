@@ -9,6 +9,7 @@
 #import "CDDocument.h"
 #import "CDPatternEditorWindowController.h"
 #import "CDPatternSimulatorWindowController.h"
+#import "CyrWheelPatternEditor-Swift.h"
 
 NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
 

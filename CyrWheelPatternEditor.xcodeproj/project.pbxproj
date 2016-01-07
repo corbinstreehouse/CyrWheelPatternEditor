@@ -126,6 +126,7 @@
 		9D4FCB37193C333C0000DE28 /* lib8tion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = lib8tion.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/lib8tion.h; sourceTree = "<group>"; };
 		9D500A2318BD88E8003BD8C2 /* CDEncodedColorTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDEncodedColorTransformer.h; sourceTree = "<group>"; };
 		9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDEncodedColorTransformer.mm; sourceTree = "<group>"; };
+		9D5706C31C3E0A7B0094D2F0 /* CDTimelineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDTimelineItem.h; sourceTree = "<group>"; };
 		9D62EAAE1C332C1500BFB916 /* CDPatternEditorWindowController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorWindowController2.swift; sourceTree = "<group>"; };
 		9D62EAB01C332C2D00BFB916 /* CDPatternEditorContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorContentViewController.swift; sourceTree = "<group>"; };
 		9D683E2B1C0FF0AC0058EFA0 /* CDRolloverButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDRolloverButton.swift; sourceTree = "<group>"; };
@@ -363,6 +364,7 @@
 				9D0EF1C81BFEE1BD002C687E /* CDWheelConnectionViewController.swift */,
 				9D9775801C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift */,
 				9D97757E1C005BB3002D78EE /* CDWheelConnectionWindowController.swift */,
+				9D5706C31C3E0A7B0094D2F0 /* CDTimelineItem.h */,
 				9D1E1AE61C2DA292002BD920 /* CDTimelineView.swift */,
 				9D2217781C2DB0660046D72C /* CDTimelineItemView.swift */,
 				9D931EAF1C33B4B70065222F /* CDTimelineViewController.swift */,
@@ -737,6 +739,10 @@
 				GCC_PREFIX_HEADER = "CyrWheelPatternEditor/CyrWheelPatternEditor-Prefix.pch";
 				INFOPLIST_FILE = "CyrWheelPatternEditor/CyrWheelPatternEditor-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				OTHER_CFLAGS = (
+					"-DPATTERN_EDITOR",
+					"-Wno-deprecated-register",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.corbinstreehouse.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -760,6 +766,10 @@
 				GCC_PREFIX_HEADER = "CyrWheelPatternEditor/CyrWheelPatternEditor-Prefix.pch";
 				INFOPLIST_FILE = "CyrWheelPatternEditor/CyrWheelPatternEditor-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				OTHER_CFLAGS = (
+					"-DPATTERN_EDITOR",
+					"-Wno-deprecated-register",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.corbinstreehouse.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

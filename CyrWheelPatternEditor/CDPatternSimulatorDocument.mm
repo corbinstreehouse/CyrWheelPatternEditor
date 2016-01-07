@@ -13,6 +13,7 @@
 
 #import "CWPatternSequenceManager.h"
 #import "SdFat.h"
+#import "CDPatternItemNames.h"
 
 @interface CDPatternSimulatorDocument() {
 @private
@@ -74,6 +75,27 @@
     _sequenceManager.setCyrWheelView(view);
 }
 
+static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
+    CDPatternSimulatorDocument *doc = (__bridge CDPatternSimulatorDocument *)data;
+    [doc _wheelChanged:changeReason];
+}
+
+- (void)_wheelChanged:(CDWheelChangeReason)changeReason {
+    switch (changeReason) {
+        case CDWheelChangeReasonPatternChanged: {
+            [self willChangeValueForKey:@"patternTypeName"];
+            [self didChangeValueForKey:@"patternTypeName"];
+            break;
+        }
+        case CDWheelChangeReasonSequenceChanged: {
+            [self _loadPatternSequence];
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
     // drop the filename, and use the CWPatternSequenceManager to test loading
     _baseURL = [url URLByDeletingLastPathComponent];
@@ -81,6 +103,7 @@
     // Mainly use the same code as the hardware so I can test it
     _sequenceManager.setBaseURL(_baseURL);
     _sequenceManager.init();
+    _sequenceManager.setWheelChangeHandler(_wheelChangedHandler, (__bridge void*)self);
 
     // Go through and find the sequence with the given name
     NSString *fileToFind = [url lastPathComponent];
@@ -136,8 +159,7 @@
         item.patternDuration = header->patternDuration;
         item.patternOptions = header->patternOptions.raw;
         item.encodedColor = header->color;
-        // TODO: data???
-#warning data fill in..
+// data not needed...
 //        if (header->data) {
 //            NSData *data = [[NSData alloc] initWithBytes:(const void *)header->data length:header->dataLength];
 //            item.imageData = data;
@@ -210,9 +232,9 @@
     if (itemHeader) {
         // Header stores duration in MS
         return itemHeader->duration / 1000.0;
-    } else {
-        return 0;
     }
+    return 0;
+
 }
 
 - (NSTimeInterval)patternRepeatDuration {
@@ -258,13 +280,7 @@
 }
 
 - (void)_tick:(NSTimer *)sender {
-    CDPatternItemHeader *oldHeader = _sequenceManager.getCurrentPatternItemHeader();
     _sequenceManager.process();
-    CDPatternItemHeader *newHeader = _sequenceManager.getCurrentPatternItemHeader();
-    if (oldHeader != newHeader) {
-        [self willChangeValueForKey:@"patternTypeName"];
-        [self didChangeValueForKey:@"patternTypeName"];
-    }
     // will this be too expensive to do?
     [self willChangeValueForKey:@"patternTimePassed"];
     [self didChangeValueForKey:@"patternTimePassed"];

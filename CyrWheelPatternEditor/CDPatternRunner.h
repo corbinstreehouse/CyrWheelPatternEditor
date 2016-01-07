@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CDPatternItem.h"
 
 @interface CDPatternRunner : NSObject
 
@@ -18,6 +19,7 @@
 // KVO compliant
 @property NSTimeInterval patternTimePassed;
 @property NSTimeInterval patternTimePassedFromFirstTimedPattern;
+@property CDPatternItem *currentPatternItem;
 
 - (void)setBaseURL:(NSURL *)url; // optional
 - (void)setCurrentSequenceName:(NSString *)name; // Call after setBaseURL is called

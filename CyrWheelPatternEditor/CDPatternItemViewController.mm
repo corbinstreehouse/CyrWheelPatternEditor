@@ -8,10 +8,9 @@
 
 #import "CDPatternItemViewController.h"
 #import "CDPatternData.h"
+#import "CDPatternItemNames.h"
 
 @interface CDPatternItemViewController () {
-//@private
-//    CDPatternItem *_patternItem;
 }
 
 @property BOOL durationEnabled;

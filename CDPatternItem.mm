@@ -8,7 +8,8 @@
 
 #import "CDPatternItem.h"
 #import "CDEncodedColorTransformer.h"
-
+#import "LEDPatterns.h"
+#import "CDPatternItemNames.h"
 
 @implementation CDPatternItem
 
