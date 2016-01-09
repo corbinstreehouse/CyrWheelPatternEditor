@@ -7,38 +7,31 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "CDPatternSequence.h"
 
-@class CDCyrWheelView;
+@class CDCyrWheelView, CDPatternRunner;
 
 @interface CDPatternSimulatorDocument : NSPersistentDocument {
 @private
 //    NSPersistentStoreCoordinator *_persistentStoreCoordinator;
-    NSURL *_baseURL;
 }
 
-@property(retain, readonly) CDPatternSequence *patternSequence;
-@property(retain, readonly) NSString *sequenceName;
-@property(retain, readonly) NSString *patternTypeName;
-@property(readonly) NSTimeInterval patternDuration;
-@property(readonly) NSTimeInterval patternRepeatDuration;
-@property(readonly, getter=isPlaying) BOOL playing;
-
-- (NSTimeInterval)patternTimePassedFromFirstTimedPattern;
-@property(readonly) NSTimeInterval patternTimePassed;
+@property(readonly) CDPatternRunner *patternRunner;
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError;
 
+- (void)setCyrWheelView:(CDCyrWheelView *)view;
+
+// These are now all cover methods for the patternRunner
 - (void)priorSequence;
 - (void)loadNextSequence;
 - (void)performButtonClick;
 - (void)start;
 - (void)stop;
 - (BOOL)isRunning;
-- (void)setCyrWheelView:(CDCyrWheelView *)view;
+@property(readonly, getter=isPlaying) BOOL playing; // TODO: bind to the value directly!
 
 - (void)play;
 - (void)pause;
-
 - (void)reload;
+
 @end

@@ -12,14 +12,15 @@
 @class CDPatternItem;
 
 // Each document represents one pattern sequence to be played back.. each can be stored as a file.
+NS_ASSUME_NONNULL_BEGIN
 
 // TODO: rename to "CDSequenceGroup"??
 @interface CDPatternSequence : NSManagedObject
 
-@property (nonatomic) NSString *name; // The filename when I use this to upload a new item...etc
+@property (nonatomic) NSString *name; // The base part of the filename; it is only set when I'm using the simulator portion to display what we are running, and isn't stored in the model
 
 @property (nonatomic) int32_t pixelCount; // TODO: remove this option
-@property (nonatomic, retain) NSOrderedSet<CDPatternItem *> *children;
+@property (null_unspecified, nonatomic, retain) NSOrderedSet<CDPatternItem *> *children; // Unfortunately maybe nullable
 @property (nonatomic) BOOL ignoreSingleClickButtonForTimedPatterns;
 @end
 
@@ -40,3 +41,5 @@ extern NSString *CDPatternChildrenKey;
 - (void)addChildren:(NSOrderedSet *)values;
 - (void)removeChildren:(NSOrderedSet *)values;
 @end
+
+NS_ASSUME_NONNULL_END

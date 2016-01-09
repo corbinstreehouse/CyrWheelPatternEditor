@@ -77,8 +77,10 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
         _simulatorDocument = [[CDPatternSimulatorDocument alloc] init];
         _simulatorDocument.fileURL = tempFile;
         NSError *error = nil;
+        
+        // TODO: I only need the pattern runner now, and can eliminate the document!
         [_simulatorDocument readFromURL:tempFile ofType:CDCompiledSequenceTypeName error:&error];
-        _simViewController.document = _simulatorDocument; // this binds them..
+        _simViewController.patternRunner = _simulatorDocument.patternRunner; // this binds them..
         // handle errors??
         if (error) {
             NSLog(@"error: %@", error);

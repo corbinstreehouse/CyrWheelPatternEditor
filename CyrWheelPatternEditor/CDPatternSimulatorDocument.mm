@@ -11,15 +11,17 @@
 #import "CDPatternItem.h"
 #import "CDPatternItemViewController.h"
 
-#import "CWPatternSequenceManager.h"
-#import "SdFat.h"
-#import "CDPatternItemNames.h"
+//#import "CDPatternSequence.h"
+//#import "CWPatternSequenceManager.h"
+//#import "SdFat.h"
+//#import "CDPatternItemNames.h"
+#import "CDPatternRunner.h"
 
 @interface CDPatternSimulatorDocument() {
-@private
-    CWPatternSequenceManager _sequenceManager;
-    NSTimer *_timer;
 }
+
+@property(readwrite) CDPatternRunner *patternRunner;
+
 @end
 
 
@@ -28,9 +30,12 @@
 
 @implementation CDPatternSimulatorDocument
 
+@synthesize patternRunner = _patternRunner;
+
 - (id)init
 {
     self = [super init];
+    self.patternRunner = [[CDPatternRunner alloc] init];
     return self;
 }
 
@@ -72,52 +77,24 @@
 }
 
 - (void)setCyrWheelView:(CDCyrWheelView *)view {
-    _sequenceManager.setCyrWheelView(view);
-}
-
-static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
-    CDPatternSimulatorDocument *doc = (__bridge CDPatternSimulatorDocument *)data;
-    [doc _wheelChanged:changeReason];
-}
-
-- (void)_wheelChanged:(CDWheelChangeReason)changeReason {
-    switch (changeReason) {
-        case CDWheelChangeReasonPatternChanged: {
-            [self willChangeValueForKey:@"patternTypeName"];
-            [self didChangeValueForKey:@"patternTypeName"];
-            break;
-        }
-        case CDWheelChangeReasonSequenceChanged: {
-            [self _loadPatternSequence];
-            break;
-        }
-        default:
-            break;
-    }
+    [self.patternRunner setCyrWheelView:view];
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
+    NSAssert(self.patternRunner != nil, @"self.patternRunner should exist");
     // drop the filename, and use the CWPatternSequenceManager to test loading
-    _baseURL = [url URLByDeletingLastPathComponent];
+    self.patternRunner.baseURL = [url URLByDeletingLastPathComponent];
     
-    // Mainly use the same code as the hardware so I can test it
-    _sequenceManager.setBaseURL(_baseURL);
-    _sequenceManager.init();
-    _sequenceManager.setWheelChangeHandler(_wheelChangedHandler, (__bridge void*)self);
-
     // Go through and find the sequence with the given name
     NSString *fileToFind = [url lastPathComponent];
     
-    _sequenceManager.setCurrentSequenceWithName(fileToFind.UTF8String);
+    [self.patternRunner setCurrentSequenceName:fileToFind];
     
-    [self _loadPatternSequence];
-
-
     return YES;
 }
 
 - (void)reload {
-    _sequenceManager.loadCurrentSequence();
+    [self.patternRunner loadCurrentSequence];
 }
 
 -(BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url ofType:(NSString *)fileType modelConfiguration:(NSString *)configuration storeOptions:(NSDictionary *)storeOptions error:(NSError *__autoreleasing *)error {
@@ -139,159 +116,63 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
     return result;
 }
 
-- (void)_loadPatternSequence {
-    [self willChangeValueForKey:@"patternSequence"];
-    NSManagedObjectContext *context = self.managedObjectContext;
-    [[context undoManager] disableUndoRegistration];
-    // Convert the sequenceManager to the pattern sequence
-    if (_patternSequence) {
-        [context deleteObject:_patternSequence];
-    }
-    _patternSequence = [CDPatternSequence newPatternSequenceInContext:context];
-//    _patternSequence.pixelCount = _sequenceManager.getPixelCount();
-    NSMutableOrderedSet *newChildren = [NSMutableOrderedSet new];
-    for (uint32_t i = 0; i < _sequenceManager.getNumberOfPatternItems(); i++) {
-        CDPatternItemHeader *header = _sequenceManager.getPatternItemHeaderAtIndex(i);
-        CDPatternItem *item = [CDPatternItem newItemInContext:context];
-        item.patternType = header->patternType;
-        item.duration = header->duration / 1000; // Header stores it in MS
-        item.patternEndCondition = header->patternEndCondition;
-        item.patternDuration = header->patternDuration;
-        item.patternOptions = header->patternOptions.raw;
-        item.encodedColor = header->color;
-// data not needed...
-//        if (header->data) {
-//            NSData *data = [[NSData alloc] initWithBytes:(const void *)header->data length:header->dataLength];
-//            item.imageData = data;
-//        }
-        [newChildren addObject:item];
-    }
-    _patternSequence.children = newChildren;
-    [[context undoManager] enableUndoRegistration];
-    [self didChangeValueForKey:@"patternSequence"];
-}
-
-+ (NSSet *)keyPathsForValuesAffectingSequenceName {
-    return [NSSet setWithObject:@"patternSequence"];
-}
-
-+ (NSSet *)keyPathsForValuesAffectingPatternDuration {
-    return [NSSet setWithObjects:@"patternTypeName", nil];
-}
-
-+ (NSSet *)keyPathsForValuesAffectingPatternTypeName {
-    return [NSSet setWithObjects:@"patternSequence", nil];
-}
-
-+ (NSSet *)keyPathsForValuesAffectingPatternRepeatDuration {
-    return [NSSet setWithObjects:@"patternTypeName", nil];
-}
 
 - (void)loadNextSequence {
-    _sequenceManager.loadNextSequence();
-    [self _loadPatternSequence];
+    [self.patternRunner loadNextSequence];
 }
 
 - (void)priorSequence {
-    _sequenceManager.loadPriorSequence();
-    [self _loadPatternSequence];
+    [self.patternRunner priorSequence];
 }
 
 - (void)play {
-    _sequenceManager.play();
+    [self.patternRunner play];
 }
 
 - (void)pause {
-    _sequenceManager.pause();
+    [self.patternRunner pause];
 }
 
 @dynamic playing;
 - (BOOL)isPlaying {
-    return !_sequenceManager.isPaused();
+    return !self.patternRunner.paused;
 }
 
-- (NSString *)sequenceName {
-    char fullFilenamePath[MAX_PATH];
-    if (_sequenceManager.getCurrentPatternFileName(fullFilenamePath, MAX_PATH)) {
-        return [NSString stringWithCString:fullFilenamePath encoding:NSASCIIStringEncoding];
-    } else {
-        return @"Default Sequence";
-    }
-}
-
-- (NSString *)patternTypeName {
-    CDPatternItemHeader *itemHeader = _sequenceManager.getCurrentPatternItemHeader();
-    if (itemHeader) {
-        return g_patternTypeNames[itemHeader->patternType];
-    }
-    return @"<None>";
-}
-
-- (NSTimeInterval)patternDuration {
-    CDPatternItemHeader *itemHeader = _sequenceManager.getCurrentPatternItemHeader();
-    if (itemHeader) {
-        // Header stores duration in MS
-        return itemHeader->duration / 1000.0;
-    }
-    return 0;
-
-}
-
-- (NSTimeInterval)patternRepeatDuration {
-    CDPatternItemHeader *itemHeader = _sequenceManager.getCurrentPatternItemHeader();
-    if (itemHeader) {
-        // Header stores duration in MS
-        return itemHeader->patternDuration / 1000.0;
-    } else {
-        return 0;
-    }
-}
-
-- (NSTimeInterval)patternTimePassed {
-// ms -> s
-    return _sequenceManager.getPatternTimePassed() / 1000.0;
-}
-
-- (NSTimeInterval)patternTimePassedFromFirstTimedPattern {
-    // ms -> s
-    return _sequenceManager.getPatternTimePassedFromFirstTimedPattern() / 1000.0;
-}
+//- (NSString *)sequenceName {
+//    char fullFilenamePath[MAX_PATH];
+//    if (_sequenceManager.getCurrentPatternFileName(fullFilenamePath, MAX_PATH)) {
+//        return [NSString stringWithCString:fullFilenamePath encoding:NSASCIIStringEncoding];
+//    } else {
+//        return @"Default Sequence";
+//    }
+//}
+//
+//- (NSString *)patternTypeName {
+//    CDPatternItemHeader *itemHeader = _sequenceManager.getCurrentPatternItemHeader();
+//    if (itemHeader) {
+//        return g_patternTypeNames[itemHeader->patternType];
+//    }
+//    return @"<None>";
+//}
 
 + (BOOL)autosavesInPlace {
     return YES;
 }
 
 - (void)start {
-    if (_timer == nil) {
-        // Speed of the teensy...96000000 == 96Mhz 14 loops per usec.. according to source
-        NSTimeInterval time = 14.0/1000000.0;
-        _timer = [NSTimer timerWithTimeInterval:time target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
-        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
-    }
+    [self.patternRunner play];
 }
 
 - (void)stop {
-    [_timer invalidate];
-    _timer = nil;
+    [self.patternRunner pause];
 }
 
 - (BOOL)isRunning {
-    return _timer != nil;
-}
-
-- (void)_tick:(NSTimer *)sender {
-    _sequenceManager.process();
-    // will this be too expensive to do?
-    [self willChangeValueForKey:@"patternTimePassed"];
-    [self didChangeValueForKey:@"patternTimePassed"];
-    [self willChangeValueForKey:@"patternTimePassedFromFirstTimedPattern"];
-    [self didChangeValueForKey:@"patternTimePassedFromFirstTimedPattern"];
+    return !self.patternRunner.isPaused;
 }
 
 - (void)performButtonClick {
-    [self willChangeValueForKey:@"patternTypeName"];
-    _sequenceManager.nextPatternItem();
-    [self didChangeValueForKey:@"patternTypeName"];
+    [self.patternRunner nextPatternItem];
 }
 
 

@@ -7,24 +7,36 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CDPatternItem.h"
+
+@class CDCyrWheelView, CDPatternSequence, CDPatternItem;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface CDPatternRunner : NSObject
 
 - (void)play;
 - (void)pause;
 
+- (void)loadCurrentSequence; // "reload"
+- (void)loadNextSequence;
+- (void)priorSequence;
+- (void)nextPatternItem;
+- (void)priorPatternItem;
+- (void)performButtonClick;
+
 @property(readonly, getter=isPaused) BOOL paused;
 
 // KVO compliant
 @property NSTimeInterval patternTimePassed;
 @property NSTimeInterval patternTimePassedFromFirstTimedPattern;
-@property CDPatternItem *currentPatternItem;
+@property (nullable) CDPatternItem *currentPatternItem;
+@property (nullable) CDPatternSequence *currentPatternSequence;
 
-- (void)setBaseURL:(NSURL *)url; // optional
+@property (nullable) NSURL *baseURL; // optional
 - (void)setCurrentSequenceName:(NSString *)name; // Call after setBaseURL is called
-
-- (void)nextPatternItem;
+- (void)setCyrWheelView:(nullable CDCyrWheelView *)view;
 
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -9,10 +9,11 @@
 #import "CDPatternSimSequenceViewController.h"
 #import "CDCyrWheelView.h"
 #import "CDPatternSimulatorDocument.h"
+#import "CDPatternRunner.h"
 
 @interface CDPatternSimSequenceViewController () {
-    BOOL _loaded;
-    CDPatternSimulatorDocument *_document;
+@private
+    CDPatternRunner *_patternRunner;
 }
 
 @property (weak) IBOutlet CDCyrWheelView *cyrWheelView;
@@ -21,7 +22,7 @@
 
 @implementation CDPatternSimSequenceViewController
 
-@dynamic document;
+@dynamic patternRunner;
 
 - (id)init {
     self = [super initWithNibName:[self className] bundle:nil];
@@ -29,55 +30,43 @@
 }
 
 - (IBAction)btnNextSequenceClicked:(id)sender {
-    [self.document loadNextSequence];
+    [self.patternRunner loadNextSequence];
 }
 
 - (IBAction)btnPriorSequenceClicked:(id)sender {
-    [self.document priorSequence];
+    [self.patternRunner priorSequence];
 }
 
 - (void)loadView {
     [super loadView];
-    // view did load
-    _loaded = YES;
-    
-    // TODO: corbin - some better way of hooking up a non-singleton NeoPixel class to the cyr wheel view it is controlling. If I had it operating not on globals I could easily abstract it..
-    // I also have to figure out how to make it operate on the currently active view.
-    /// is the doc set at this point?
-    [self.document setCyrWheelView:_cyrWheelView];
+    [self.patternRunner setCyrWheelView:_cyrWheelView];
 }
 
-- (void)setDocument:(CDPatternSimulatorDocument *)document {
-    _document = document;
-    if (_loaded) {
-        [self.document setCyrWheelView:_cyrWheelView];
+- (void)setPatternRunner:(CDPatternRunner *)patternRunner {
+    if (_patternRunner) {
+        [_patternRunner setCyrWheelView:nil];
+    }
+    _patternRunner = patternRunner;
+    
+    if (_patternRunner) {
+        [_patternRunner setCyrWheelView:_cyrWheelView];
     }
 }
 
-- (CDPatternSimulatorDocument *)document {
-    return _document;
+- (CDPatternRunner *)patternRunner {
+    return _patternRunner;
 }
 
 - (IBAction)btnStartStopClicked:(id)sender {
-    if (self.document.isRunning) {
-        [self.document stop];
+    if (self.patternRunner.isPaused) {
+        [self.patternRunner play];
     } else {
-        [self.document start];
+        [self.patternRunner pause];
     }
 }
 
-- (IBAction)btnClickSimClicked:(id)sender {
-    [self.document performButtonClick];
-}
 - (IBAction)btnPlayClicked:(id)sender {
-    if (_document.playing) {
-        [_document pause];
-    } else {
-        [_document play];
-    }
+    [self btnStartStopClicked:sender];
 }
-//- (IBAction)btnPauseClicked:(id)sender {
-//    [_document pause];
-//}
 
 @end

@@ -8,7 +8,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="CDPatternItemViewController">
             <connections>
                 <outlet property="imgViewPreview" destination="eJL-43-cah" id="lUC-Wr-5TZ"/>
-                <outlet property="patternType" destination="C1b-2n-0Sp" id="ddS-hq-bKU"/>
                 <outlet property="popupDurationType" destination="uOF-qb-gV0" id="aEv-yQ-HJf"/>
                 <outlet property="popupPatternType" destination="C1b-2n-0Sp" id="rnK-oe-6Ns"/>
                 <outlet property="txtfldDuration" destination="TQ1-g9-CAK" id="H2Z-9o-mvu"/>

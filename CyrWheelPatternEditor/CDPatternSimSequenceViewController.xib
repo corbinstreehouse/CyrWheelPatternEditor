@@ -25,7 +25,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="self.document.sequenceName" id="hBd-WI-pqI"/>
+                        <binding destination="-2" name="value" keyPath="self.patternRunner.currentPatternSequence.name" id="1Kz-z1-r86"/>
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cP1-Y8-St2">
@@ -36,7 +36,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="displayPatternValue1" keyPath="self.document.patternTypeName" id="nef-7o-BPT">
+                        <binding destination="-2" name="displayPatternValue1" keyPath="self.patternRunner.currentPatternItem.displayName" id="U2f-su-gwl">
                             <dictionary key="options">
                                 <string key="NSDisplayPattern">Current Pattern: %{value1}@</string>
                             </dictionary>
@@ -51,7 +51,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="displayPatternValue1" keyPath="self.document.patternDuration" id="e8i-P7-jTa">
+                        <binding destination="-2" name="displayPatternValue1" keyPath="self.patternRunner.currentPatternItem.duration" id="oAY-z3-mst">
                             <dictionary key="options">
                                 <string key="NSDisplayPattern">Duration: %{value1}@</string>
                             </dictionary>
@@ -66,7 +66,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="displayPatternValue1" keyPath="self.document.patternRepeatDuration" id="Ok8-Lo-Eyv">
+                        <binding destination="-2" name="displayPatternValue1" keyPath="self.patternRunner.currentPatternItem.patternDuration" id="mz4-pZ-Cvc">
                             <dictionary key="options">
                                 <string key="NSDisplayPattern">Repeat duration: %{value1}@</string>
                             </dictionary>
@@ -89,7 +89,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="self.document.patternTimePassed" id="Tbg-Xa-ASv">
+                        <binding destination="-2" name="value" keyPath="self.patternRunner.patternTimePassed" id="mFZ-zm-lh3">
                             <dictionary key="options">
                                 <string key="NSValueTransformerName">CDTimeValueTransformer</string>
                             </dictionary>
@@ -104,7 +104,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="self.document.patternTimePassedFromFirstTimedPattern" id="2vg-Kl-17R">
+                        <binding destination="-2" name="value" keyPath="self.patternRunner.patternTimePassedFromFirstTimedPattern" id="ekw-81-QwY">
                             <dictionary key="options">
                                 <string key="NSValueTransformerName">CDTimeValueTransformer</string>
                             </dictionary>
@@ -119,25 +119,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TBd-Gh-Q3Z">
-                    <rect key="frame" x="297" y="550" width="96" height="17"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="90" id="kg2-I6-yrl"/>
-                    </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;Pixel Count&gt;" id="J4R-7X-lOL">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                    <connections>
-                        <binding destination="-2" name="displayPatternValue1" keyPath="self.document.patternSequence.pixelCount" id="hFE-Ct-Aew">
-                            <dictionary key="options">
-                                <string key="NSDisplayPattern">%{value1}@ pixels</string>
-                            </dictionary>
-                        </binding>
-                    </connections>
-                </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rI8-Fp-QAT">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rI8-Fp-QAT">
                     <rect key="frame" x="395" y="550" width="140" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="&lt;ignore single click&gt;" id="4Nn-ga-bE7">
                         <font key="font" metaFont="system"/>
@@ -145,14 +127,14 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="-2" name="displayPatternValue1" keyPath="self.document.patternSequence.ignoreSingleClickButtonForTimedPatterns" id="JgT-Th-gKo">
+                        <binding destination="-2" name="displayPatternValue1" keyPath="self.patternRunner.currentPatternSequence.ignoreSingleClickButtonForTimedPatterns" id="U1i-40-nh6">
                             <dictionary key="options">
                                 <string key="NSDisplayPattern">Ignore single click: %{value1}@</string>
                             </dictionary>
                         </binding>
                     </connections>
                 </textField>
-                <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Oqr-gk-iHE">
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Oqr-gk-iHE">
                     <rect key="frame" x="121" y="4" width="134" height="32"/>
                     <buttonCell key="cell" type="push" title="Next Sequence" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wd7-hS-hXA">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -160,26 +142,6 @@
                     </buttonCell>
                     <connections>
                         <action selector="btnNextSequenceClicked:" target="-2" id="PTR-f5-maZ"/>
-                    </connections>
-                </button>
-                <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OgF-hs-oYL">
-                    <rect key="frame" x="255" y="4" width="145" height="32"/>
-                    <buttonCell key="cell" type="push" title="Start/Stop Timer" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="M27-lK-X5Z">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="btnStartStopClicked:" target="-2" id="AIN-Ua-5KI"/>
-                    </connections>
-                </button>
-                <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v1y-GU-LV6">
-                    <rect key="frame" x="399" y="4" width="117" height="32"/>
-                    <buttonCell key="cell" type="push" title="Button Click" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="A7b-ST-ZYx">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="btnClickSimClicked:" target="-2" id="c0X-bf-cm8"/>
                     </connections>
                 </button>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="oZu-8a-0px" customClass="CDCyrWheelView">
@@ -211,8 +173,18 @@
                         <action selector="btnPriorSequenceClicked:" target="-2" id="H7o-dW-Vbm"/>
                     </connections>
                 </button>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v1y-GU-LV6">
+                    <rect key="frame" x="255" y="4" width="117" height="32"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="105" id="VoL-2J-heW"/>
+                    </constraints>
+                    <buttonCell key="cell" type="push" title="Button Click" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="A7b-ST-ZYx">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="r0C-e4-5eD">
-                    <rect key="frame" x="515" y="4" width="106" height="32"/>
+                    <rect key="frame" x="371" y="4" width="106" height="32"/>
                     <buttonCell key="cell" type="push" title="Play/Pause" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="dH0-BC-QYU">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
@@ -225,31 +197,28 @@
             <constraints>
                 <constraint firstItem="XBN-Lg-3zE" firstAttribute="leading" secondItem="lUi-r0-Ijd" secondAttribute="trailing" constant="8" id="0Wu-0W-cLz"/>
                 <constraint firstAttribute="trailing" secondItem="oZu-8a-0px" secondAttribute="trailing" constant="20" id="1iB-nL-bHd"/>
+                <constraint firstItem="r0C-e4-5eD" firstAttribute="baseline" secondItem="v1y-GU-LV6" secondAttribute="baseline" id="1k9-oC-5mB"/>
                 <constraint firstItem="058-Lz-Rpz" firstAttribute="baseline" secondItem="vAM-Jp-4bi" secondAttribute="baseline" id="5Qg-IP-dbt"/>
-                <constraint firstItem="TBd-Gh-Q3Z" firstAttribute="baseline" secondItem="rI8-Fp-QAT" secondAttribute="baseline" id="6MJ-cv-pO2"/>
                 <constraint firstItem="Oqr-gk-iHE" firstAttribute="top" secondItem="oZu-8a-0px" secondAttribute="bottom" constant="10" id="7Na-cl-UQM"/>
                 <constraint firstItem="vAM-Jp-4bi" firstAttribute="top" secondItem="1" secondAttribute="top" constant="7" id="A2i-9h-zqC"/>
-                <constraint firstItem="Oqr-gk-iHE" firstAttribute="top" secondItem="OgF-hs-oYL" secondAttribute="top" id="C4b-uA-bqE"/>
-                <constraint firstItem="TBd-Gh-Q3Z" firstAttribute="leading" secondItem="058-Lz-Rpz" secondAttribute="trailing" constant="14" id="DZ9-Y1-jyh"/>
+                <constraint firstItem="v1y-GU-LV6" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="261" id="C1y-hB-Zcz"/>
+                <constraint firstItem="v1y-GU-LV6" firstAttribute="leading" secondItem="Oqr-gk-iHE" secondAttribute="trailing" constant="12" symbolic="YES" id="HIx-eb-RwP"/>
+                <constraint firstItem="r0C-e4-5eD" firstAttribute="leading" secondItem="v1y-GU-LV6" secondAttribute="trailing" constant="11" id="HkU-rM-qVb"/>
                 <constraint firstAttribute="bottom" secondItem="bhU-Kl-r76" secondAttribute="bottom" constant="11" id="IN2-qq-Q6v"/>
                 <constraint firstAttribute="bottom" secondItem="Oqr-gk-iHE" secondAttribute="bottom" constant="11" id="KeF-xt-VMH"/>
-                <constraint firstItem="v1y-GU-LV6" firstAttribute="baseline" secondItem="OgF-hs-oYL" secondAttribute="baseline" id="L1n-bh-E6R"/>
                 <constraint firstItem="vAM-Jp-4bi" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" id="O7O-Fy-xxl"/>
                 <constraint firstItem="058-Lz-Rpz" firstAttribute="leading" secondItem="vAM-Jp-4bi" secondAttribute="trailing" constant="11" id="QK7-KQ-HtU"/>
                 <constraint firstItem="cP1-Y8-St2" firstAttribute="leading" secondItem="vAM-Jp-4bi" secondAttribute="leading" constant="1" id="SLZ-mB-vPj"/>
                 <constraint firstItem="cP1-Y8-St2" firstAttribute="top" secondItem="vAM-Jp-4bi" secondAttribute="bottom" constant="2" id="UBB-PK-xRS"/>
                 <constraint firstItem="MZz-N0-Tyt" firstAttribute="baseline" secondItem="lUi-r0-Ijd" secondAttribute="baseline" id="Va8-Ml-MBO"/>
-                <constraint firstItem="v1y-GU-LV6" firstAttribute="leading" secondItem="OgF-hs-oYL" secondAttribute="trailing" constant="11" id="Xa3-5s-giy"/>
+                <constraint firstItem="v1y-GU-LV6" firstAttribute="baseline" secondItem="Oqr-gk-iHE" secondAttribute="baseline" id="Wy7-Du-KVu"/>
                 <constraint firstItem="bhU-Kl-r76" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="32" id="aqH-WA-1p0"/>
-                <constraint firstItem="OgF-hs-oYL" firstAttribute="leading" secondItem="Oqr-gk-iHE" secondAttribute="trailing" constant="12" id="cbj-XI-1Lu"/>
                 <constraint firstItem="MZz-N0-Tyt" firstAttribute="baseline" secondItem="0CL-fJ-OP6" secondAttribute="baseline" id="dg9-jD-E9l"/>
                 <constraint firstItem="6ru-un-SHy" firstAttribute="leading" secondItem="Jwl-31-ycs" secondAttribute="trailing" constant="8" id="i7q-A0-cS0"/>
                 <constraint firstItem="0CL-fJ-OP6" firstAttribute="leading" secondItem="6ru-un-SHy" secondAttribute="trailing" constant="19" id="iFT-SS-zZp"/>
                 <constraint firstItem="cP1-Y8-St2" firstAttribute="baseline" secondItem="6ru-un-SHy" secondAttribute="baseline" id="k19-Ru-UBA"/>
                 <constraint firstItem="Jwl-31-ycs" firstAttribute="leading" secondItem="cP1-Y8-St2" secondAttribute="trailing" constant="19" id="kBX-6u-6YH"/>
                 <constraint firstItem="Oqr-gk-iHE" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="127" id="lD1-xh-Pro"/>
-                <constraint firstItem="r0C-e4-5eD" firstAttribute="leading" secondItem="v1y-GU-LV6" secondAttribute="trailing" constant="20" id="nEV-Me-15M"/>
-                <constraint firstItem="r0C-e4-5eD" firstAttribute="bottom" secondItem="v1y-GU-LV6" secondAttribute="bottom" id="rZD-T9-uWa"/>
                 <constraint firstItem="XBN-Lg-3zE" firstAttribute="baseline" secondItem="lUi-r0-Ijd" secondAttribute="baseline" id="s59-1I-FdR"/>
                 <constraint firstItem="oZu-8a-0px" firstAttribute="top" secondItem="6ru-un-SHy" secondAttribute="bottom" constant="8" id="tDJ-u5-pcY"/>
                 <constraint firstItem="lUi-r0-Ijd" firstAttribute="leading" secondItem="MZz-N0-Tyt" secondAttribute="trailing" constant="13" id="tTe-Ja-wEf"/>
@@ -258,7 +227,6 @@
                 <constraint firstItem="MZz-N0-Tyt" firstAttribute="leading" secondItem="0CL-fJ-OP6" secondAttribute="trailing" constant="3" id="wV6-w7-8za"/>
                 <constraint firstItem="oZu-8a-0px" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" id="wXe-el-Mfa"/>
                 <constraint firstItem="0CL-fJ-OP6" firstAttribute="top" secondItem="rI8-Fp-QAT" secondAttribute="bottom" constant="2" id="wvm-fb-KzO"/>
-                <constraint firstItem="rI8-Fp-QAT" firstAttribute="leading" secondItem="TBd-Gh-Q3Z" secondAttribute="trailing" constant="8" id="zzw-wb-qjI"/>
             </constraints>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="ZhV-2c-0RF"/>

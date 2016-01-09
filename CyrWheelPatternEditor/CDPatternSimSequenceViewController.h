@@ -8,10 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import "CDPatternSequence.h"
+
 @class CDPatternSimulatorDocument;
+@class CDPatternRunner;
 
 @interface CDPatternSimSequenceViewController : NSViewController
 
-@property CDPatternSimulatorDocument *document;
+@property CDPatternRunner *patternRunner; 
 
 @end

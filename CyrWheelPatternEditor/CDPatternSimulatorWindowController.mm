@@ -31,7 +31,7 @@
 {
     [super windowDidLoad];
     _simViewController = [CDPatternSimSequenceViewController new];
-    _simViewController.document = self.document;
+    _simViewController.patternRunner = self.document.patternRunner;
     self.window.contentView = _simViewController.view;
     [self.document start]; // Start running...
 }

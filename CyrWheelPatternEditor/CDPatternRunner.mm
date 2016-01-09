@@ -8,6 +8,10 @@
 
 #import "CDPatternRunner.h"
 
+#import "CDPatternItem.h"
+#import "CDPatternSequence.h"
+#import "CDCyrWheelView.h"
+
 #import "CWPatternSequenceManager.h"
 #import "SdFat.h"
 
@@ -16,6 +20,8 @@
 @private
     CWPatternSequenceManager _sequenceManager;
     NSTimer *_timer;
+    NSManagedObjectContext *_context;
+    NSPersistentStoreCoordinator *_coordinator;
 }
 @end
 
@@ -31,16 +37,25 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
     self = [super init];
     _sequenceManager.init();
     _sequenceManager.setWheelChangeHandler(_wheelChangedHandler, (__bridge void*)self);
+    [self _loadCurrentSequence];
     return self;
+}
+
+- (void)dealloc {
+    if (self.currentPatternSequence) {
+        [_context deleteObject:self.currentPatternSequence];
+        self.currentPatternSequence = nil;
+    }
 }
 
 - (void)_wheelChanged:(CDWheelChangeReason)changeReason {
     switch (changeReason) {
         case CDWheelChangeReasonPatternChanged: {
-            
+            [self _loadCurrentPatternItem];
             break;
         }
         case CDWheelChangeReasonSequenceChanged: {
+            [self _loadCurrentSequence];
             break;
         }
         default:
@@ -60,6 +75,8 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
 
 @synthesize patternTimePassed;
 @synthesize patternTimePassedFromFirstTimedPattern;
+@synthesize currentPatternItem;
+@synthesize currentPatternSequence;
 
 - (void)_tick:(NSTimer *)sender {
     _sequenceManager.process();
@@ -88,12 +105,21 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
     return _sequenceManager.isPaused();
 }
 
+@dynamic baseURL;
 - (void)setBaseURL:(NSURL *)url {
     _sequenceManager.setBaseURL(url);
 }
 
+- (NSURL *)baseURL {
+    return _sequenceManager.getBaseURL();
+}
+
 - (void)setCurrentSequenceName:(NSString *)name {
     _sequenceManager.setCurrentSequenceWithName(name.UTF8String);
+}
+
+- (void)priorPatternItem {
+    _sequenceManager.priorPatternItem();
 }
 
 - (void)nextPatternItem {
@@ -102,13 +128,89 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
 
 - (void)loadNextSequence {
     _sequenceManager.loadNextSequence();
-//    [self _loadPatternSequence];
 }
 
 - (void)priorSequence {
     _sequenceManager.loadPriorSequence();
-//    [self _loadPatternSequence];
 }
 
+- (void)loadCurrentSequence {
+    _sequenceManager.loadCurrentSequence();
+}
+
+- (void)performButtonClick {
+    _sequenceManager.buttonClick();
+}
+
++ (NSManagedObjectModel *)_sharedManagedObjectModel {
+    static NSManagedObjectModel *model;
+    if (model == nil) {
+        model = [NSManagedObjectModel mergedModelFromBundles:@[[NSBundle mainBundle]]];
+    }
+    return model;
+}
+
+- (NSString *)_currentSequenceName {
+    char fullFilenamePath[MAX_PATH];
+    if (_sequenceManager.getCurrentPatternFileName(fullFilenamePath, MAX_PATH)) {
+        return [NSString stringWithCString:fullFilenamePath encoding:NSASCIIStringEncoding];
+    } else {
+        return @"Default Sequence";
+    }
+}
+
+- (void)_loadCurrentSequence {
+    if (_context == nil) {
+        _context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+        _coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[[self class] _sharedManagedObjectModel]];
+        _context.persistentStoreCoordinator = _coordinator;
+    }
+    NSManagedObjectContext *context = _context;
+    [[context undoManager] disableUndoRegistration];
+    // Convert the sequenceManager to the pattern sequence
+    if (self.currentPatternSequence) {
+        [context deleteObject:self.currentPatternSequence];
+    }
+    CDPatternSequence *patternSequence = [CDPatternSequence newPatternSequenceInContext:context];
+    patternSequence.name = [self _currentSequenceName];
+    
+    NSMutableOrderedSet *newChildren = [NSMutableOrderedSet new];
+    for (uint32_t i = 0; i < _sequenceManager.getNumberOfPatternItems(); i++) {
+        CDPatternItemHeader *header = _sequenceManager.getPatternItemHeaderAtIndex(i);
+        CDPatternItem *item;
+        item = [CDPatternItem newItemInContext:context];
+        item.patternType = header->patternType;
+        item.duration = header->duration / 1000; // Header stores it in MS
+        item.patternEndCondition = header->patternEndCondition;
+        item.patternDuration = header->patternDuration;
+        item.patternOptions = header->patternOptions.raw;
+        item.encodedColor = header->color;
+        // data not needed...yet??
+        //        if (header->data) {
+        //            NSData *data = [[NSData alloc] initWithBytes:(const void *)header->data length:header->dataLength];
+        //            item.imageData = data;
+        //        }
+        [newChildren addObject:item];
+    }
+    patternSequence.children = newChildren;
+    self.currentPatternSequence = patternSequence;
+    
+    [self _loadCurrentPatternItem];
+    [[context undoManager] enableUndoRegistration];
+    
+}
+
+- (void)_loadCurrentPatternItem {
+    NSInteger index = _sequenceManager.getCurrentPatternItemIndex();
+    if (index != -1) {
+        self.currentPatternItem = self.currentPatternSequence.children[index];
+    } else {
+        self.currentPatternItem = nil;
+    }
+}
+
+- (void)setCyrWheelView:(CDCyrWheelView *)view {
+    _sequenceManager.setCyrWheelView(view);
+}
 
 @end
