@@ -110,6 +110,44 @@ NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
     return _patternSequence;
 }
 
+- (void)addNewPatternItem {
+    CDPatternItem *patternItem = [CDPatternItem newItemInContext:self.managedObjectContext];
+    // copy the last item, if we had one
+    if (self.patternSequence.children.count > 0) {
+        CDPatternItem *lastPatternItem = self.patternSequence.children.lastObject;
+        [lastPatternItem copyTo:patternItem];
+    }
+    
+    [self.patternSequence insertObject:patternItem inChildrenAtIndex:self.patternSequence.children.count];
+}
+
+- (void)removePatternItemsAtIndexes:(NSIndexSet *)indexesToDelete {
+    if (indexesToDelete.count > 0) {
+        CDPatternSequence *patternSequence = self.patternSequence;
+        // grab the children first
+        NSArray *selectedChildren = [patternSequence.children objectsAtIndexes:indexesToDelete];
+        
+        // remove them from the relationship
+        [patternSequence removeChildrenAtIndexes:indexesToDelete];
+
+        // delete them
+        for (CDPatternItem *childToDelete in selectedChildren) {
+            [self.managedObjectContext deleteObject:childToDelete];
+        }
+    }
+    
+    //        [self.managedObjectContext processPendingChanges];
+    
+    //        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:[CDPatternItem className] inManagedObjectContext:self.managedObjectContext];
+    //        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    //        fetchRequest.entity = entityDesc;
+    //        NSError *error = nil;
+    //        NSArray *resultArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    //        NSLog(@"%ld", resultArray.count);
+    
+}
+
+
 - (void)makeWindowControllers {
     NSWindowController *wc;
     // switch on the sim vs real thing on what we initially opened

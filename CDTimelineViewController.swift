@@ -34,7 +34,14 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
             _timelineView.dataSource = self
         }
 
-        let parentVC = self.parentViewController as! CDPatternSequenceSplitViewController
+//        let parentVC = self.patternSequenceProvider as! NSObject
+//        // Bind the parent to our value
+//        // TODO: unbind when done!
+//        parentVC.bind("patternSelectionIndexes", toObject: _timelineView, withKeyPath: "selectionIndexes", options: nil)
+    }
+    
+    override func viewWillAppear() {
+        let parentVC = self.patternSequenceProvider as! NSObject
         // Bind the parent to our value
         // TODO: unbind when done!
         parentVC.bind("patternSelectionIndexes", toObject: _timelineView, withKeyPath: "selectionIndexes", options: nil)
@@ -48,6 +55,11 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
     func childrenInsertedAtIndexes(indexes: NSIndexSet) {
         indexes.enumerateIndexesUsingBlock { (index:Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
             self._timelineView.insertItemAtIndex(index)
+        }
+        // Show new items added a the end
+        let lastIndex = indexes.lastIndex
+        if lastIndex == self._timelineView.numberOfItems - 1 {
+            self._timelineView.scrollItemAtIndexToVisible(lastIndex)
         }
     }
     

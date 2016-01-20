@@ -10,10 +10,17 @@
 #import "CDPatternItem.h"
 #import "CDPatternSequence.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CDDocument : NSPersistentDocument
 
 @property(retain, readonly) CDPatternSequence *patternSequence;
 
+- (void)addNewPatternItem;
+- (void)removePatternItemsAtIndexes:(NSIndexSet *)indexes;
+
 @end
 
 extern NSString *CDCompiledSequenceTypeName;
+
+NS_ASSUME_NONNULL_END

@@ -102,7 +102,7 @@ class CDTimelineView: NSStackView {
         for view in self.views {
             self.removeView(view)
         }
-        _viewBeingResized = nil;
+        assignViewBeingResized(nil)
         _timelineItemViewControllers.removeAllObjects()
         
         _anchorRow = nil
@@ -287,6 +287,7 @@ class CDTimelineView: NSStackView {
         })
     }
     
+    private var _settingViewBeingResized: Bool = false;
     func assignViewBeingResized(newView: CDTimelineItemView?) {
         if let oldView = self._viewBeingResized {
             if oldView != newView {
@@ -296,11 +297,12 @@ class CDTimelineView: NSStackView {
         
         self._viewBeingResized = newView;
         
-        
         if newView != nil {
             if let itemIndex = self.views.indexOf(newView!) {
                 // drop selection to just this item
+                _settingViewBeingResized = true;
                 self.selectionIndexes = NSIndexSet(index: itemIndex)
+                _settingViewBeingResized = false
             }
         }
         
@@ -326,7 +328,7 @@ class CDTimelineView: NSStackView {
                 _updateSelectionState(priorSelectedIndexes, newSelectedRows: v);
                 
                 // Don't allow a duration selection when this is selected..
-                if v.count != 0 {
+                if !_settingViewBeingResized && v.count != 0 {
                     assignViewBeingResized(nil)
                 }
             }
@@ -410,6 +412,7 @@ class CDTimelineView: NSStackView {
 
         _anchorRow = newAnchorRow
         self.selectionIndexes = newSelectedRows
+        assignViewBeingResized(nil) // drop it..
     }
     
     override func mouseDown(theEvent: NSEvent) {

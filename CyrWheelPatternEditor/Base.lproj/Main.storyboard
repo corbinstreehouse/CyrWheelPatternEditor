@@ -1430,10 +1430,10 @@ DQ
             </objects>
             <point key="canvasLocation" x="511" y="1294.5"/>
         </scene>
-        <!--View Controller-->
+        <!--Pattern Editor Bottom Bar-->
         <scene sceneID="Vtc-l8-Ugi">
             <objects>
-                <viewController id="2qG-zv-trm" sceneMemberID="viewController">
+                <viewController id="2qG-zv-trm" customClass="CDPatternEditorBottomBar" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="Z0J-lu-qKe">
                         <rect key="frame" x="0.0" y="0.0" width="578" height="30"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1444,11 +1444,11 @@ DQ
                                     <rect key="frame" x="0.0" y="0.0" width="578" height="30"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FgC-kf-wac">
+                                        <slider hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FgC-kf-wac">
                                             <rect key="frame" x="464" y="4" width="96" height="20"/>
                                             <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="lcw-Dj-1ZD"/>
                                         </slider>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eIm-UD-xCj">
+                                        <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eIm-UD-xCj">
                                             <rect key="frame" x="417" y="8" width="41" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Scale:" id="PPh-H2-ONC">
                                                 <font key="font" metaFont="system"/>
@@ -1456,7 +1456,45 @@ DQ
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dx8-v9-E67">
+                                            <rect key="frame" x="337" y="2" width="54" height="25"/>
+                                            <buttonCell key="cell" type="roundTextured" title="Export" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DJb-Ng-7Mr">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="btnExportClicked:" target="2qG-zv-trm" id="aQ8-Iz-qrA"/>
+                                            </connections>
+                                        </button>
+                                        <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RKI-z0-gZZ">
+                                            <rect key="frame" x="5" y="3" width="63" height="24"/>
+                                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="momentary" id="6Gk-QS-b3D">
+                                                <font key="font" metaFont="system"/>
+                                                <segments>
+                                                    <segment label="+" tag="1"/>
+                                                    <segment label="-" tag="1"/>
+                                                </segments>
+                                            </segmentedCell>
+                                            <connections>
+                                                <action selector="btnAddRemoveClicked:" target="2qG-zv-trm" id="74q-uo-cw4"/>
+                                            </connections>
+                                        </segmentedControl>
+                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wy0-tS-YYp">
+                                            <rect key="frame" x="75" y="7" width="187" height="18"/>
+                                            <buttonCell key="cell" type="check" title="Ignore button after starting" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="NG7-a1-aKo">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                                <connections>
+                                                    <binding destination="2qG-zv-trm" name="value" keyPath="patternSequence.ignoreSingleClickButtonForTimedPatterns" id="rxn-jg-z2S"/>
+                                                </connections>
+                                            </buttonCell>
+                                        </button>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="RKI-z0-gZZ" secondAttribute="bottom" constant="5" id="Byn-j3-zdU"/>
+                                        <constraint firstItem="RKI-z0-gZZ" firstAttribute="top" secondItem="a8q-2b-Vq0" secondAttribute="top" constant="4" id="QsC-2T-aaL"/>
+                                        <constraint firstItem="RKI-z0-gZZ" firstAttribute="leading" secondItem="a8q-2b-Vq0" secondAttribute="leading" constant="7" id="ph1-EB-Dmc"/>
+                                    </constraints>
                                 </view>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="7GO-kb-z3A"/>
@@ -1464,30 +1502,12 @@ DQ
                                 <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                 <color key="fillColor" red="0.1450980392" green="0.1450980392" blue="0.1450980392" alpha="1" colorSpace="calibratedRGB"/>
                             </box>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dx8-v9-E67">
-                                <rect key="frame" x="13" y="2" width="54" height="25"/>
-                                <buttonCell key="cell" type="roundTextured" title="Export" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DJb-Ng-7Mr">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                            </button>
-                            <button translatesAutoresizingMaskIntoConstraints="NO" id="Wy0-tS-YYp">
-                                <rect key="frame" x="73" y="6" width="187" height="18"/>
-                                <buttonCell key="cell" type="check" title="Ignore button after starting" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="NG7-a1-aKo">
-                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="w1U-Pz-KfE" secondAttribute="bottom" id="2LI-tz-aBf"/>
                             <constraint firstItem="w1U-Pz-KfE" firstAttribute="leading" secondItem="Z0J-lu-qKe" secondAttribute="leading" id="2Uu-M4-wsb"/>
-                            <constraint firstItem="Wy0-tS-YYp" firstAttribute="leading" secondItem="dx8-v9-E67" secondAttribute="trailing" constant="8" symbolic="YES" id="BPf-Sj-p9z"/>
-                            <constraint firstItem="dx8-v9-E67" firstAttribute="baseline" secondItem="Wy0-tS-YYp" secondAttribute="baseline" id="DpI-xt-YUL"/>
-                            <constraint firstItem="dx8-v9-E67" firstAttribute="centerY" secondItem="w1U-Pz-KfE" secondAttribute="centerY" id="bQU-gn-r0a"/>
                             <constraint firstItem="w1U-Pz-KfE" firstAttribute="top" secondItem="Z0J-lu-qKe" secondAttribute="top" id="m46-OL-2KE"/>
                             <constraint firstAttribute="trailing" secondItem="w1U-Pz-KfE" secondAttribute="trailing" id="xLU-pr-6Pt"/>
-                            <constraint firstItem="dx8-v9-E67" firstAttribute="leading" secondItem="Z0J-lu-qKe" secondAttribute="leading" constant="13" id="xNT-lw-nCS"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -2160,7 +2180,7 @@ DQ
                 <customObject id="lM2-aE-RNQ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <arrayController selectsInsertedObjects="NO" avoidsEmptySelection="NO" id="heP-6G-9Ue">
                     <connections>
-                        <binding destination="aKN-dg-R1Y" name="selectionIndexes" keyPath="self.parentViewController.parentViewController.patternSelectionIndexes" id="63z-K4-Xek"/>
+                        <binding destination="aKN-dg-R1Y" name="selectionIndexes" keyPath="self.view.window.windowController.patternSelectionIndexes" id="Dec-iD-mLR"/>
                         <binding destination="aKN-dg-R1Y" name="contentArray" keyPath="self.patternSequence.children.@array" id="RaS-of-8gx"/>
                     </connections>
                 </arrayController>

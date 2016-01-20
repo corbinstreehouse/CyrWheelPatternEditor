@@ -10,3 +10,5 @@
 #import "CDCyrWheelView.h"
 #import "CDPatternRunner.h"
 #import "CDTimelineItem.h"
+#import "CDPatternItem.h"
+#import "CDDocument.h"

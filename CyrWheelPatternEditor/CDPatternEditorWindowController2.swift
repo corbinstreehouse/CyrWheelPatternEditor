@@ -43,5 +43,8 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
         }
     }
 
+    // Bound to a child's value, so that another view can be bound to this one
+    dynamic var patternSelectionIndexes: NSIndexSet = NSIndexSet()
+
     
 }

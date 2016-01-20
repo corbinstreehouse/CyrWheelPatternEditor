@@ -50,6 +50,78 @@ NSString *CDPatternChildrenKey = @"children";
     [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:CDPatternChildrenKey];
 }
 
+- (void)_writeHeaderToData:(NSMutableData *)data {
+    CDPatternSequenceHeader header;
+    bzero(&header, sizeof(CDPatternSequenceHeader));
+    header.marker[0] = 'S';
+    header.marker[1] = 'Q';
+    header.marker[2] = 'C';
+    header.version = SEQUENCE_VERSION;
+    header.pixelCount = self.pixelCount;
+    header.patternCount = self.children.count;
+    header.ignoreButtonForTimedPatterns = self.ignoreSingleClickButtonForTimedPatterns;
+    NSAssert(sizeof(header) == 14, @"did I change the size of the header and forget to recompile this file?");
+    [data appendBytes:&header length:sizeof(header)];
+}
+
+- (BOOL)_writePatternItem:(CDPatternItem *)item toData:(NSMutableData *)data error:(NSError **)errorPtr {
+    *errorPtr = nil;
+    CDPatternItemHeader itemHeader;
+    bzero(&itemHeader, sizeof(CDPatternItemHeader));
+    itemHeader.patternType = item.patternType;
+    // Duration is stored in seconds but the header uses ms, and we round.
+    itemHeader.duration = round(item.duration * 1000);
+    itemHeader.patternDuration = round(item.patternDuration * 1000);
+    itemHeader.patternOptions = item.patternOptions;
+    itemHeader.patternEndCondition = item.patternEndCondition;
+    //    itemHeader.intervalCount = item.repeatCount;
+    itemHeader.shouldSetBrightnessByRotationalVelocity = item.shouldSetBrightnessByRotationalVelocity ? 1 : 0;
+    itemHeader.color = item.encodedColor;
+    
+    BOOL result = YES;
+    if (item.patternTypeRequiresImageData) {
+        // item.imageData is the raw image format. We have to convert it to something easier to deal with....
+        NSData *encodedData = [item getImageDataWithEncoding:CDPatternEncodingTypeRGB24]; // TODO: we could figure out which is smallest and use that encoded type
+        
+        NSUInteger dataLength = encodedData.length;
+        if (dataLength > UINT32_MAX) {
+            // sort of ugly way to show errors
+            *errorPtr = [NSError errorWithDomain:@"image or data size exceeds 32 bits in size. time for me to up data sizes..." code:0 userInfo:nil];
+            result = NO;
+        } else {
+            itemHeader.dataLength = (uint32_t)dataLength;
+            [data appendBytes:&itemHeader length:sizeof(itemHeader)];
+            // Write the data
+            if (dataLength > 0) {
+                [data appendData:encodedData];
+            }
+        }
+    } else {
+        itemHeader.dataLength = 0;
+        [data appendBytes:&itemHeader length:sizeof(itemHeader)];
+    }
+    return result;
+}
+
+- (BOOL)exportToURL:(NSURL *)url error:(NSError **)errorPtr {
+    BOOL result = YES;
+    NSMutableData *data = [NSMutableData new];
+    [self _writeHeaderToData:data];
+    for (NSInteger i = 0; i < self.children.count; i++) {
+        CDPatternItem *item = self.children[i];
+        if (![self _writePatternItem:item toData:data error:errorPtr]) {
+            result = NO;
+            break;
+        }
+    }
+    
+    if (result) {
+        result = [data writeToURL:url options:0 error:errorPtr];
+    }
+    return result;
+}
+
+
 
 /*
 

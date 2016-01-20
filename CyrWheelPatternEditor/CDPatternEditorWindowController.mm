@@ -277,51 +277,23 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 }
 
 - (void)_addItem {
-    CDPatternItem *patternItem = [CDPatternItem newItemInContext:self.managedObjectContext];
-    // copy the last item, if we had one
-    if (self._patternSequence.children.count > 0) {
-        CDPatternItem *lastPatternItem = self._patternSequence.children.lastObject;
-        [lastPatternItem copyTo:patternItem];
-    }
-    
-    [self._patternSequence insertObject:patternItem inChildrenAtIndex:self._patternSequence.children.count];
+    [self.document addNewPatternItem];
     [_tableView scrollRowToVisible:_tableView.numberOfRows - 1];
-    
-    
-//    [_timelineView scrollItemAtIndexToVisible:_timelineView.numberOfItems - 1];
 }
 
 - (void)_removeSelectedItem {
     NSInteger selectedRow = _tableView.selectedRow;
     if (selectedRow != -1) {
         [_tableView beginUpdates];
-        CDPatternSequence *patternSequence = [self _patternSequence];
         NSIndexSet *indexesToDelete = [_tableView selectedRowIndexes];
-        // grab the children first
-        NSArray *selectedChildren = [patternSequence.children objectsAtIndexes:indexesToDelete];
 
-        // remove them from the relationship
-        [patternSequence removeChildrenAtIndexes:indexesToDelete];
+        [self.document removePatternItemsAtIndexes:indexesToDelete];
+        
         [_tableView endUpdates];
         selectedRow--;
         if (selectedRow >= 0 && selectedRow < _tableView.numberOfRows) {
             [_tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection:NO];
         }
-
-        // delete them
-        for (CDPatternItem *childToDelete in selectedChildren) {
-            [self.managedObjectContext deleteObject:childToDelete];
-        }
-
-//        [self.managedObjectContext processPendingChanges];
-        
-//        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:[CDPatternItem className] inManagedObjectContext:self.managedObjectContext];
-//        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-//        fetchRequest.entity = entityDesc;
-//        NSError *error = nil;
-//        NSArray *resultArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-//        NSLog(@"%ld", resultArray.count);
-
     }
 }
 
@@ -333,71 +305,9 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     }
 }
 
-- (void)_writeHeaderToData:(NSMutableData *)data {
-    CDPatternSequenceHeader header;
-    bzero(&header, sizeof(CDPatternSequenceHeader));
-    header.marker[0] = 'S';
-    header.marker[1] = 'Q';
-    header.marker[2] = 'C';
-    header.version = SEQUENCE_VERSION;
-    header.pixelCount = self._patternSequence.pixelCount;
-    header.patternCount = self._patternSequence.children.count;
-    header.ignoreButtonForTimedPatterns = self._patternSequence.ignoreSingleClickButtonForTimedPatterns;
-    NSAssert(sizeof(header) == 14, @"did I change the size of the header and forget to recompile this file?");
-    [data appendBytes:&header length:sizeof(header)];
-}
-
-- (BOOL)_writePatternItem:(CDPatternItem *)item toData:(NSMutableData *)data {
-    CDPatternItemHeader itemHeader;
-    bzero(&itemHeader, sizeof(CDPatternItemHeader));
-    itemHeader.patternType = item.patternType;
-    // Duration is stored in seconds but the header uses ms, and we round.
-    itemHeader.duration = round(item.duration * 1000);
-    itemHeader.patternDuration = round(item.patternDuration * 1000);
-    itemHeader.patternOptions = item.patternOptions;
-    itemHeader.patternEndCondition = item.patternEndCondition;
-//    itemHeader.intervalCount = item.repeatCount;
-    itemHeader.shouldSetBrightnessByRotationalVelocity = item.shouldSetBrightnessByRotationalVelocity ? 1 : 0;
-    itemHeader.color = item.encodedColor;
-
-    BOOL result = YES;
-    if (item.patternTypeRequiresImageData) {
-        // item.imageData is the raw image format. We have to convert it to something easier to deal with....
-        NSData *encodedData = [item getImageDataWithEncoding:CDPatternEncodingTypeRGB24]; // TODO: we could figure out which is smallest and use that encoded type
-        
-        NSUInteger dataLength = encodedData.length;
-        if (dataLength > UINT32_MAX) {
-            // sort of ugly way to show errors
-            NSError *error = [NSError errorWithDomain:@"image or data size exceeds 32 bits in size. time for me to up data sizes..." code:0 userInfo:nil];
-            [self.window presentError:error modalForWindow:self.window delegate:nil didPresentSelector:nil contextInfo:nil];
-            result = NO;
-        } else {
-            itemHeader.dataLength = (uint32_t)dataLength;
-            [data appendBytes:&itemHeader length:sizeof(itemHeader)];
-            // Write the data
-            if (dataLength > 0) {
-                [data appendData:encodedData];
-            }
-        }
-    } else {
-        itemHeader.dataLength = 0;
-        [data appendBytes:&itemHeader length:sizeof(itemHeader)];
-    }
-    return result;
-}
-
 - (void)_exportDataToURL:(NSURL *)url {
-    NSMutableData *data = [NSMutableData new];
-    [self _writeHeaderToData:data];
-    for (NSInteger i = 0; i < self._patternSequence.children.count; i++) {
-        CDPatternItem *item = self._patternSequence.children[i];
-        if (![self _writePatternItem:item toData:data]) {
-            break;
-        }
-    }
-    
     NSError *error = nil;
-    if (![data writeToURL:url options:0 error:&error]) {
+    if (![self._patternSequence exportToURL:url error:&error]) {
         NSAssert(error != nil, @"failures should generate an error");
         [self.window presentError:error modalForWindow:self.window delegate:nil didPresentSelector:nil contextInfo:nil];
     }

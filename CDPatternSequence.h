@@ -40,6 +40,9 @@ extern NSString *CDPatternChildrenKey;
 - (void)removeChildrenObject:(CDPatternItem *)value;
 - (void)addChildren:(NSOrderedSet *)values;
 - (void)removeChildren:(NSOrderedSet *)values;
+
+- (BOOL)exportToURL:(NSURL *)url error:(NSError **)errorPtr;
+
 @end
 
 NS_ASSUME_NONNULL_END
