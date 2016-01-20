@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class CDPatternEditorWindowController2: NSWindowController, CDPatternSequenceProvider {
+class CDPatternEditorWindowController2: NSWindowController, CDPatternSequenceProvider, NSWindowDelegate {
 
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -20,6 +20,7 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
         window.titlebarAppearsTransparent = true
         window.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         window.contentView!.appearance = NSAppearance(named: NSAppearanceNameAqua)
+        window.delegate = self
         _documentChanged();
     }
     
@@ -45,6 +46,14 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
 
     // Bound to a child's value, so that another view can be bound to this one
     dynamic var patternSelectionIndexes: NSIndexSet = NSIndexSet()
+
+    
+    func window(window: NSWindow, willPositionSheet sheet: NSWindow, usingRect rect: NSRect) -> NSRect {
+        // drop it down
+        var result = rect;
+        result.origin.y -= 23
+        return result
+    }
 
     
 }
