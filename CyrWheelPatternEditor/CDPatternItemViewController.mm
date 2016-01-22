@@ -93,7 +93,7 @@
 }
 
 - (IBAction)btnClearImageClicked:(id)sender {
-    self.patternItem.imageData = nil;
+//    self.patternItem.imageData = nil;
 }
 
 @synthesize patternItem;
@@ -108,8 +108,8 @@
 //}
 
 - (void)_setImageWithURL:(NSURL *)url {
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    self.patternItem.imageData = data; // save the original data..compressed,whatever
+//    NSData *data = [NSData dataWithContentsOfURL:url];
+//    self.patternItem.imageData = data; // save the original data..compressed,whatever
 }
 
 

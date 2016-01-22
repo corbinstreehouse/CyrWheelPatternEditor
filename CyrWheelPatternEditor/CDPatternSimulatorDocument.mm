@@ -10,6 +10,7 @@
 #import "CDPatternSimulatorWindowController.h"
 #import "CDPatternItem.h"
 #import "CDPatternItemViewController.h"
+#import "CyrWheelPatternEditor-Swift.h"
 
 //#import "CDPatternSequence.h"
 //#import "CWPatternSequenceManager.h"
@@ -35,7 +36,7 @@
 - (id)init
 {
     self = [super init];
-    self.patternRunner = [[CDPatternRunner alloc] init];
+    self.patternRunner = [[CDPatternRunner alloc] initWithPatternDirectoryURL:[CDAppDelegate appDelegate].patternDirectoryURL];
     return self;
 }
 
@@ -84,6 +85,7 @@
     NSAssert(self.patternRunner != nil, @"self.patternRunner should exist");
     // drop the filename, and use the CWPatternSequenceManager to test loading
     self.patternRunner.baseURL = [url URLByDeletingLastPathComponent];
+    
     
     // Go through and find the sequence with the given name
     NSString *fileToFind = [url lastPathComponent];

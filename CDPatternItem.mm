@@ -15,7 +15,7 @@
 
 #define PATTERN_ITEM_PASTEBOARD_TYPE @"com.corbinstreehouse.patternitem"
 
-@dynamic imageData, patternType, duration, patternEndCondition, /*repeatCount,*/ durationEnabled, encodedColor, needsColor, shouldSetBrightnessByRotationalVelocity, patternOptions, patternDuration, patternTypeNeedsPatternDuration, displayName;
+@dynamic imageFilename, patternType, duration, patternEndCondition, /*repeatCount,*/ durationEnabled, encodedColor, needsColor, shouldSetBrightnessByRotationalVelocity, patternOptions, patternDuration, patternTypeNeedsPatternDuration, displayName;
 
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context {
@@ -33,13 +33,6 @@
     for (NSString *attributeName in attributeNameArray) {
         [item setValue:[self valueForKey:attributeName] forKey:attributeName];
     }
-
-//    item.duration = self.duration;
-//    item.imageData = self.imageData;
-//    item.repeatCount = self.repeatCount;
-//    item.patternEndCondition = self.patternEndCondition;
-//    item.encodedColor = self.encodedColor;
-//    item.patternType = self.patternType;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
@@ -127,16 +120,8 @@ static NSManagedObjectContext *g_currentContext = nil;
 //    return cloned;
 //}
 
-- (BOOL)patternTypeRequiresImageData {
-    return self.patternType == LEDPatternTypeImageLinearFade || self.patternType == LEDPatternTypeImageEntireStrip;
-}
-
 - (BOOL)durationEnabled {
     return YES; // self.patternType != CDDurationTypeUntilButtonClick;
-}
-
-+ (NSSet *)keyPathsForValuesAffectingPatternTypeRequiresImageData {
-    return [NSSet setWithObject:@"patternType"];
 }
 
 + (NSSet *)keyPathsForValuesAffectingDurationEnabled {
@@ -171,38 +156,29 @@ static NSManagedObjectContext *g_currentContext = nil;
     }
 }
 
-- (NSMutableData *)_encodeRepAsRGB:(NSBitmapImageRep *)imageRep {
-    NSMutableData *result = [NSMutableData new];
-    // pre-allocate cuz we know the size
-    NSInteger length = sizeof(uint8) * 3 * imageRep.pixelsWide * imageRep.pixelsHigh;
-    [result setLength:length];
-    uint8 *bytes = (uint8 *)result.mutableBytes;
-    // Go from top to bottom, and scan horizontal lines. That is the easiest thing to do for all images. How we interpret the data is up to the kind (although, that might affect encoding..)
-    for (NSInteger y = 0; y < imageRep.pixelsHigh; y++) {
-        for (NSInteger x = 0; x < imageRep.pixelsWide; x++) {
-            NSColor *color = [imageRep colorAtX:x y:y]; // convert to NSDeviceRGB?? or calibrated RBG? Otherwise, this will throw...
-            // Write out the pixels.. RGB..ignore alpha
-            CGFloat r, g, b, a;
-            [color getRed:&r green:&g blue:&b alpha:&a];
-            *bytes = r*255;
-            bytes++;
-            *bytes = g*255;
-            bytes++;
-            *bytes = b*255;
-            bytes++;
-        }
-    }
-    return result;
-}
-
-- (NSData *)getImageDataWithEncoding:(CDPatternEncodingType)encodingType {
-    NSAssert(encodingType == CDPatternEncodingTypeRGB24, @"only rgb");
-    // encoding type ignored...
-    NSData *rawData = self.imageData;
-    NSBitmapImageRep *imageRep = [[NSBitmapImageRep alloc] initWithData:rawData];
-    NSMutableData *rgbData = [self _encodeRepAsRGB:imageRep];
-    return rgbData;
-}
+//- (NSMutableData *)_encodeRepAsRGB:(NSBitmapImageRep *)imageRep {
+//    NSMutableData *result = [NSMutableData new];
+//    // pre-allocate cuz we know the size
+//    NSInteger length = sizeof(uint8) * 3 * imageRep.pixelsWide * imageRep.pixelsHigh;
+//    [result setLength:length];
+//    uint8 *bytes = (uint8 *)result.mutableBytes;
+//    // Go from top to bottom, and scan horizontal lines. That is the easiest thing to do for all images. How we interpret the data is up to the kind (although, that might affect encoding..)
+//    for (NSInteger y = 0; y < imageRep.pixelsHigh; y++) {
+//        for (NSInteger x = 0; x < imageRep.pixelsWide; x++) {
+//            NSColor *color = [imageRep colorAtX:x y:y]; // convert to NSDeviceRGB?? or calibrated RBG? Otherwise, this will throw...
+//            // Write out the pixels.. RGB..ignore alpha
+//            CGFloat r, g, b, a;
+//            [color getRed:&r green:&g blue:&b alpha:&a];
+//            *bytes = r*255;
+//            bytes++;
+//            *bytes = g*255;
+//            bytes++;
+//            *bytes = b*255;
+//            bytes++;
+//        }
+//    }
+//    return result;
+//}
 
 - (BOOL)patternTypeNeedsPatternDuration {
     return LEDPatterns::PatternNeedsDuration(self.patternType);

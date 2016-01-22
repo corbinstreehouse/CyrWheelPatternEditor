@@ -10,7 +10,7 @@
             <plist version="1.0">
                 <dict>
                     <key>NSPersistenceFrameworkVersion</key>
-                    <integer>407</integer>
+                    <integer>641</integer>
                     <key>NSStoreModelVersionHashes</key>
                     <dict>
                         <key>XDDevAttributeMapping</key>
@@ -55,7 +55,7 @@
         <attribute name="destinationname" type="string">CDPatternSequence</attribute>
         <attribute name="autogenerateexpression" type="bool">1</attribute>
         <relationship name="mappingmodel" type="1/1" destination="XDDEVMAPPINGMODEL" idrefs="z109"></relationship>
-        <relationship name="attributemappings" type="0/0" destination="XDDEVATTRIBUTEMAPPING" idrefs="z111 z106"></relationship>
+        <relationship name="attributemappings" type="0/0" destination="XDDEVATTRIBUTEMAPPING" idrefs="z106"></relationship>
         <relationship name="relationshipmappings" type="0/0" destination="XDDEVRELATIONSHIPMAPPING" idrefs="z104"></relationship>
     </object>
     <object type="XDDEVRELATIONSHIPMAPPING" id="z104">
@@ -95,11 +95,11 @@ cBIAAYagrxEBdAAHAAgAFwAzADQANQA/AEAAQQBcAF0AXgBkAGUAcQCFAIYAhwCIAIkAigCLAIwAjQCm
     </object>
     <object type="XDDEVATTRIBUTEMAPPING" id="z110">
         <attribute name="name" type="string">imageData</attribute>
-        <relationship name="entitymapping" type="1/1" destination="XDDEVENTITYMAPPING" idrefs="z114"></relationship>
+        <relationship name="entitymapping" type="1/1" destination="XDDEVENTITYMAPPING"></relationship>
     </object>
     <object type="XDDEVATTRIBUTEMAPPING" id="z111">
         <attribute name="name" type="string">pixelCount</attribute>
-        <relationship name="entitymapping" type="1/1" destination="XDDEVENTITYMAPPING" idrefs="z103"></relationship>
+        <relationship name="entitymapping" type="1/1" destination="XDDEVENTITYMAPPING"></relationship>
     </object>
     <object type="XDDEVATTRIBUTEMAPPING" id="z112">
         <attribute name="valueexpressiondata" type="binary">YnBsaXN0MDDUAQIDBAUGGBlYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoKQH
@@ -119,7 +119,7 @@ CA8QVSRudWxs0wkKCwwNDl8QD05TQ29uc3RhbnRWYWx1ZV8QEE5TRXhwcmVzc2lvblR5cGVWJGNsYXNz
         <attribute name="destinationname" type="string">CDPatternItem</attribute>
         <attribute name="autogenerateexpression" type="bool">1</attribute>
         <relationship name="mappingmodel" type="1/1" destination="XDDEVMAPPINGMODEL" idrefs="z109"></relationship>
-        <relationship name="attributemappings" type="0/0" destination="XDDEVATTRIBUTEMAPPING" idrefs="z110 z108 z102 z113 z115 z105 z112 z107"></relationship>
+        <relationship name="attributemappings" type="0/0" destination="XDDEVATTRIBUTEMAPPING" idrefs="z105 z112 z113 z102 z108 z115 z107"></relationship>
         <relationship name="relationshipmappings" type="0/0" destination="XDDEVRELATIONSHIPMAPPING"></relationship>
     </object>
     <object type="XDDEVATTRIBUTEMAPPING" id="z115">

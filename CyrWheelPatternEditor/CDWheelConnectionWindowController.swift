@@ -22,7 +22,7 @@ class CDWheelConnectionWindowController: NSWindowController, NSWindowRestoration
         window.titleVisibility = NSWindowTitleVisibility.Hidden
         window.titlebarAppearsTransparent = true
         
-        let delegate = NSApp.delegate as! CDAppDelegate
+        let delegate = CDAppDelegate.appDelegate
         delegate.connectionWindowControllers.append(self)
     }
     
@@ -56,7 +56,7 @@ class CDWheelConnectionWindowController: NSWindowController, NSWindowRestoration
     
     
     func windowWillClose(notification: NSNotification) {
-        let delegate = NSApp.delegate as! CDAppDelegate
+        let delegate = CDAppDelegate.appDelegate
         if let index = delegate.connectionWindowControllers.indexOf(self) {
             delegate.connectionWindowControllers.removeAtIndex(index)
         }

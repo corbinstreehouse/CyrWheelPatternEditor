@@ -13,7 +13,6 @@ NSString *CDPatternChildrenKey = @"children";
 
 @implementation CDPatternSequence
 
-@dynamic pixelCount;
 @dynamic children, ignoreSingleClickButtonForTimedPatterns;
 @synthesize name;
 
@@ -56,17 +55,24 @@ NSString *CDPatternChildrenKey = @"children";
     header.marker[0] = 'S';
     header.marker[1] = 'Q';
     header.marker[2] = 'C';
-    header.version = SEQUENCE_VERSION;
-    header.pixelCount = self.pixelCount;
+    header.version = SEQUENCE_VERSION_v5;
     header.patternCount = self.children.count;
     header.ignoreButtonForTimedPatterns = self.ignoreSingleClickButtonForTimedPatterns;
-    NSAssert(sizeof(header) == 14, @"did I change the size of the header and forget to recompile this file?");
+    NSAssert(sizeof(header) == SEQUENCE_VERSION_SIZE, @"did I change the size of the header and forget to recompile this file?");
     [data appendBytes:&header length:sizeof(header)];
 }
 
 - (BOOL)_writePatternItem:(CDPatternItem *)item toData:(NSMutableData *)data error:(NSError **)errorPtr {
     *errorPtr = nil;
     CDPatternItemHeader itemHeader;
+    
+    // Figure out if we have a filename to follow the header
+    const char *cstrFilename = NULL;
+    NSString *imageFilename = item.imageFilename;
+    if (imageFilename && imageFilename.length > 0) {
+        cstrFilename = [imageFilename UTF8String];
+    }
+    
     bzero(&itemHeader, sizeof(CDPatternItemHeader));
     itemHeader.patternType = item.patternType;
     // Duration is stored in seconds but the header uses ms, and we round.
@@ -74,33 +80,20 @@ NSString *CDPatternChildrenKey = @"children";
     itemHeader.patternDuration = round(item.patternDuration * 1000);
     itemHeader.patternOptions = item.patternOptions;
     itemHeader.patternEndCondition = item.patternEndCondition;
-    //    itemHeader.intervalCount = item.repeatCount;
-    itemHeader.shouldSetBrightnessByRotationalVelocity = item.shouldSetBrightnessByRotationalVelocity ? 1 : 0;
     itemHeader.color = item.encodedColor;
+    itemHeader.shouldSetBrightnessByRotationalVelocity = item.shouldSetBrightnessByRotationalVelocity ? 1 : 0;
     
-    BOOL result = YES;
-    if (item.patternTypeRequiresImageData) {
-        // item.imageData is the raw image format. We have to convert it to something easier to deal with....
-        NSData *encodedData = [item getImageDataWithEncoding:CDPatternEncodingTypeRGB24]; // TODO: we could figure out which is smallest and use that encoded type
-        
-        NSUInteger dataLength = encodedData.length;
-        if (dataLength > UINT32_MAX) {
-            // sort of ugly way to show errors
-            *errorPtr = [NSError errorWithDomain:@"image or data size exceeds 32 bits in size. time for me to up data sizes..." code:0 userInfo:nil];
-            result = NO;
-        } else {
-            itemHeader.dataLength = (uint32_t)dataLength;
-            [data appendBytes:&itemHeader length:sizeof(itemHeader)];
-            // Write the data
-            if (dataLength > 0) {
-                [data appendData:encodedData];
-            }
-        }
-    } else {
-        itemHeader.dataLength = 0;
-        [data appendBytes:&itemHeader length:sizeof(itemHeader)];
+    itemHeader.filenameLength = cstrFilename ? (uint32_t)strlen(cstrFilename) : 0;
+    
+    // write the header
+    [data appendBytes:&itemHeader length:sizeof(itemHeader)];
+    
+    // Then the filename
+    if (cstrFilename) {
+        [data appendBytes:cstrFilename length:itemHeader.filenameLength + 1]; // Extra 1 is the NULL terminator
     }
-    return result;
+    // This doesn't fail anymore...
+    return YES;
 }
 
 - (BOOL)exportToURL:(NSURL *)url error:(NSError **)errorPtr {

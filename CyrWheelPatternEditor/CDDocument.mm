@@ -87,8 +87,6 @@ NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     [[managedObjectContext undoManager] disableUndoRegistration];
     CDPatternSequence *result = [NSEntityDescription insertNewObjectForEntityForName:[CDPatternSequence className] inManagedObjectContext:self.managedObjectContext];
-    // default values
-    result.pixelCount = 331; // For my wheel...
 
     // create one child
     CDPatternItem *patternItem = [self _makeDefaultItem];

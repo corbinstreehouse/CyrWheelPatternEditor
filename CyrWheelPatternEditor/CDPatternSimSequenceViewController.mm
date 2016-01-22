@@ -57,6 +57,17 @@
     return _patternRunner;
 }
 
+- (IBAction)btnClicked:(id)sender {
+    [_patternRunner performButtonClick];
+}
+
+- (IBAction)btnPriorPattern:(id)sender {
+    [_patternRunner priorPatternItem];
+}
+- (IBAction)btnNextPattern:(id)sender {
+    [_patternRunner nextPatternItem];
+}
+
 - (IBAction)btnStartStopClicked:(id)sender {
     if (self.patternRunner.isPaused) {
         [self.patternRunner play];

@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) NSString *name; // The base part of the filename; it is only set when I'm using the simulator portion to display what we are running, and isn't stored in the model
 
-@property (nonatomic) int32_t pixelCount; // TODO: remove this option
 @property (null_unspecified, nonatomic, retain) NSOrderedSet<CDPatternItem *> *children; // Unfortunately maybe nullable
 @property (nonatomic) BOOL ignoreSingleClickButtonForTimedPatterns;
 @end

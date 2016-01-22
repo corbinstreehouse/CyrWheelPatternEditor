@@ -33,10 +33,13 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
     [doc _wheelChanged:changeReason];
 }
 
-- (id)init {
+- (id)initWithPatternDirectoryURL:(NSURL *)patternDirectoryURLX {
     self = [super init];
     _sequenceManager.init();
+    _sequenceManager.pause(); // Start out paused
     _sequenceManager.setWheelChangeHandler(_wheelChangedHandler, (__bridge void*)self);
+    self.patternDirectoryURL = patternDirectoryURLX;
+    _sequenceManager.setPatternDirectoryURL(patternDirectoryURLX);
     [self _loadCurrentSequence];
     return self;
 }
@@ -105,6 +108,8 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
     return _sequenceManager.isPaused();
 }
 
+@synthesize patternDirectoryURL;
+
 @dynamic baseURL;
 - (void)setBaseURL:(NSURL *)url {
     _sequenceManager.setBaseURL(url);
@@ -115,7 +120,8 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
 }
 
 - (void)setCurrentSequenceName:(NSString *)name {
-    _sequenceManager.setCurrentSequenceWithName(name.UTF8String);
+#warning this doesn't work yet..
+//    _sequenceManager.setCurrentSequenceWithName(name.UTF8String);
 }
 
 - (void)priorPatternItem {
@@ -140,6 +146,10 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
 
 - (void)performButtonClick {
     _sequenceManager.buttonClick();
+}
+
+- (void)moveToTheStart {
+    _sequenceManager.restartCurrentSequence();
 }
 
 + (NSManagedObjectModel *)_sharedManagedObjectModel {
@@ -212,5 +222,9 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
 - (void)setCyrWheelView:(CDCyrWheelView *)view {
     _sequenceManager.setCyrWheelView(view);
 }
+
+
+
+
 
 @end

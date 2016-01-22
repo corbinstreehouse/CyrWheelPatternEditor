@@ -1710,7 +1710,7 @@ DQ
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
-                                            <action selector="btnStartClicked:" target="nRD-7i-dlI" id="JgE-o0-LfU"/>
+                                            <action selector="btnFirstClicked:" target="nRD-7i-dlI" id="zMO-8z-JYJ"/>
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" tag="10" translatesAutoresizingMaskIntoConstraints="NO" id="oVM-lu-PAm" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
@@ -1735,7 +1735,7 @@ DQ
                                     </button>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="Frq-SC-eo8" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                         <rect key="frame" x="236" y="8" width="27" height="23"/>
-                                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="next" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="jWg-GK-01c" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                        <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="next" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" enabled="NO" state="on" imageScaling="proportionallyDown" inset="2" id="jWg-GK-01c" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
@@ -1971,20 +1971,10 @@ DQ
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="cellTitle"/>
                                 </buttonCell>
-                                <connections>
-                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.patternTypeRequiresImageData" id="Apb-kC-y6t"/>
-                                </connections>
                             </button>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jAr-Z4-OUW">
                                 <rect key="frame" x="8" y="51" width="185" height="134"/>
                                 <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="proportionallyUpOrDown" imageFrameStyle="grayBezel" id="7bF-LR-8bV"/>
-                                <connections>
-                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.imageData" id="22r-a7-kzB">
-                                        <dictionary key="options">
-                                            <string key="NSValueTransformerName">CDEncodedColorTransformer</string>
-                                        </dictionary>
-                                    </binding>
-                                </connections>
                             </imageView>
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dPY-ud-NTH">
                                 <rect key="frame" x="8" y="427" width="183" height="26"/>
@@ -2152,9 +2142,6 @@ DQ
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="cellTitle"/>
                                 </buttonCell>
-                                <connections>
-                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.patternTypeRequiresImageData" id="hUo-zl-cFp"/>
-                                </connections>
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RKh-ib-2Fh">
                                 <rect key="frame" x="8" y="190" width="45" height="17"/>
@@ -2180,8 +2167,8 @@ DQ
                 <customObject id="lM2-aE-RNQ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <arrayController selectsInsertedObjects="NO" avoidsEmptySelection="NO" id="heP-6G-9Ue">
                     <connections>
-                        <binding destination="aKN-dg-R1Y" name="selectionIndexes" keyPath="self.view.window.windowController.patternSelectionIndexes" id="Dec-iD-mLR"/>
                         <binding destination="aKN-dg-R1Y" name="contentArray" keyPath="self.patternSequence.children.@array" id="RaS-of-8gx"/>
+                        <binding destination="aKN-dg-R1Y" name="selectionIndexes" keyPath="self.view.window.windowController.patternSelectionIndexes" id="Dec-iD-mLR"/>
                     </connections>
                 </arrayController>
             </objects>
@@ -2221,7 +2208,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wZJ-Op-eAi">
-                                                <rect key="frame" x="611" y="0.0" width="15" height="150"/>
+                                                <rect key="frame" x="610" y="0.0" width="16" height="150"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>

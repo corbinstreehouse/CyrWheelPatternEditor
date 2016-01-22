@@ -2,7 +2,7 @@
 
 #include "FatFile.h"
 #include <Foundation/Foundation.h>
-#include "CWPatternSequenceManager.h" / for MAX_PATH
+#include "CWPatternSequenceManager.h" // for MAX_PATH
 
 boolean SdFat::begin(uint8_t csPin, uint8_t speed) {
     return true;

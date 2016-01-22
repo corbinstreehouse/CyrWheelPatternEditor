@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CDPatternRunner : NSObject
 
+- (instancetype)initWithPatternDirectoryURL:(NSURL *)patternDirectoryURL NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
+
 - (void)play;
 - (void)pause;
 
@@ -24,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)priorPatternItem;
 - (void)performButtonClick;
 
+- (void)moveToTheStart;
+
+
 @property(readonly, getter=isPaused) BOOL paused;
 
 // KVO compliant
@@ -32,7 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable) CDPatternItem *currentPatternItem;
 @property (nullable) CDPatternSequence *currentPatternSequence;
 
-@property (nullable) NSURL *baseURL; // optional
+@property (retain, nullable) NSURL *baseURL; // optional
+@property (retain) NSURL *patternDirectoryURL; // required!
+
 - (void)setCurrentSequenceName:(NSString *)name; // Call after setBaseURL is called
 - (void)setCyrWheelView:(nullable CDCyrWheelView *)view;
 
