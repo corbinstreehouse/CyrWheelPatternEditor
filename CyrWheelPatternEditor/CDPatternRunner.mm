@@ -169,6 +169,13 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
     }
 }
 
+- (void)loadFromData:(NSData *)data {
+    FatFile fileInMemory = FatFile();
+    fileInMemory.setData(data);
+    _sequenceManager.loadSequenceInMemoryFromFatFile(&fileInMemory);
+    fileInMemory.close();
+}
+
 - (void)_loadCurrentSequence {
     if (_context == nil) {
         _context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];

@@ -62,8 +62,7 @@ NSString *CDPatternChildrenKey = @"children";
     [data appendBytes:&header length:sizeof(header)];
 }
 
-- (BOOL)_writePatternItem:(CDPatternItem *)item toData:(NSMutableData *)data error:(NSError **)errorPtr {
-    *errorPtr = nil;
+- (void)_writePatternItem:(CDPatternItem *)item toData:(NSMutableData *)data {
     CDPatternItemHeader itemHeader;
     
     // Figure out if we have a filename to follow the header
@@ -92,25 +91,21 @@ NSString *CDPatternChildrenKey = @"children";
     if (cstrFilename) {
         [data appendBytes:cstrFilename length:itemHeader.filenameLength + 1]; // Extra 1 is the NULL terminator
     }
-    // This doesn't fail anymore...
-    return YES;
 }
 
-- (BOOL)exportToURL:(NSURL *)url error:(NSError **)errorPtr {
-    BOOL result = YES;
+- (NSData *)exportAsData {
     NSMutableData *data = [NSMutableData new];
     [self _writeHeaderToData:data];
     for (NSInteger i = 0; i < self.children.count; i++) {
         CDPatternItem *item = self.children[i];
-        if (![self _writePatternItem:item toData:data error:errorPtr]) {
-            result = NO;
-            break;
-        }
+        [self _writePatternItem:item toData:data];
     }
-    
-    if (result) {
-        result = [data writeToURL:url options:0 error:errorPtr];
-    }
+    return data;
+}
+
+- (BOOL)exportToURL:(NSURL *)url error:(NSError **)errorPtr {
+    NSData *data = [self exportAsData];
+    BOOL result = [data writeToURL:url options:0 error:errorPtr];
     return result;
 }
 

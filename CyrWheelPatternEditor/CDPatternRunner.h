@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)moveToTheStart;
 
+- (void)loadFromData:(NSData *)data;
 
 @property(readonly, getter=isPaused) BOOL paused;
 

@@ -56,8 +56,10 @@ private:
     
 public:
     FatFile(const char *filepath, uint8_t oflag);
-    FatFile() { FatFile(NULL, 0); }
+    FatFile() : FatFile(NULL, 0) { }
     ~FatFile();
+    
+    void setData(NSData *data) { _data = data; } // Allows me to do file operations "in memory"
     
     size_t read(char *buffer, size_t length);
 

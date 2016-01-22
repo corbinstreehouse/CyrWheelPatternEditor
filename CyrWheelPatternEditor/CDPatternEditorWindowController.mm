@@ -26,7 +26,6 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     __weak NSTableView *_tableView;
     NSIndexSet *_draggedRowIndexes;
     BOOL _observingChildren;
-    CDPatternSimulatorDocument *_simulatorDocument;
     CDPatternSimSequenceViewController *_simViewController;
 }
     
@@ -52,46 +51,16 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     return self;
 }
 
-- (NSURL *)_makeTempURLForExport {
-    NSString *tempDir = NSTemporaryDirectory();
-    tempDir = [tempDir stringByAppendingPathComponent:@"CyrPatternEditor"];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:tempDir]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:tempDir withIntermediateDirectories:NO attributes:nil error:NULL];
-    }
-    NSInteger count = 0;
-    NSString *filename = nil;
-    do {
-        filename = [tempDir stringByAppendingPathComponent:[NSString stringWithFormat:@"preview%ld.pat", count]];
-        count++;
-    } while ([[NSFileManager defaultManager] fileExistsAtPath:filename isDirectory:NULL]);
-    NSURL *result = [NSURL fileURLWithPath:filename];
-    return result;
-}
-
 - (void)_refreshPreview {
-    if (_simulatorDocument == nil) {
-        // Create a temp file name that we constantly export to and reload
-        NSURL *tempFile = [self _makeTempURLForExport];
-        [self _exportDataToURL:tempFile];
-        // wrap it in the sim document
-        _simulatorDocument = [[CDPatternSimulatorDocument alloc] init];
-        _simulatorDocument.fileURL = tempFile;
-        NSError *error = nil;
-        
-        // TODO: I only need the pattern runner now, and can eliminate the document!
-        [_simulatorDocument readFromURL:tempFile ofType:CDCompiledSequenceTypeName error:&error];
-        _simViewController.patternRunner = _simulatorDocument.patternRunner; // this binds them..
-        // handle errors??
-        if (error) {
-            NSLog(@"error: %@", error);
-        }
-        
-    } else {
-        [self _exportDataToURL:_simulatorDocument.fileURL];
-        [_simulatorDocument reload];
+    // Create the runner here...
+    if (_simViewController.patternRunner == nil) {
+        _simViewController.patternRunner = [[CDPatternRunner alloc] initWithPatternDirectoryURL:[CDAppDelegate appDelegate].patternDirectoryURL];
     }
-    if (!_simulatorDocument.isRunning) {
-        [_simulatorDocument start];
+    
+    NSData *data = [self._patternSequence exportAsData];
+    [_simViewController.patternRunner loadFromData:data];
+    if (_simViewController.patternRunner.paused) {
+        [_simViewController.patternRunner play];
     }
 }
 

@@ -41,6 +41,7 @@ extern NSString *CDPatternChildrenKey;
 - (void)removeChildren:(NSOrderedSet *)values;
 
 - (BOOL)exportToURL:(NSURL *)url error:(NSError **)errorPtr;
+- (NSData *)exportAsData;
 
 @end
 
