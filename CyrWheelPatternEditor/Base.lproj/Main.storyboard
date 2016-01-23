@@ -1612,10 +1612,10 @@ DQ
             </objects>
             <point key="canvasLocation" x="3026.5" y="-415.5"/>
         </scene>
-        <!--View Controller-->
+        <!--Pattern Images Table View Controller-->
         <scene sceneID="RIL-xi-VZJ">
             <objects>
-                <viewController id="CRd-6Z-uQU" sceneMemberID="viewController">
+                <viewController id="CRd-6Z-uQU" customClass="CDPatternImagesTableViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="UuN-43-ydd">
                         <rect key="frame" x="0.0" y="0.0" width="216" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1666,6 +1666,10 @@ DQ
                                                     </prototypeCellViews>
                                                 </tableColumn>
                                             </tableColumns>
+                                            <connections>
+                                                <outlet property="dataSource" destination="CRd-6Z-uQU" id="57C-DJ-pJW"/>
+                                                <outlet property="delegate" destination="CRd-6Z-uQU" id="AhE-tN-pyl"/>
+                                            </connections>
                                         </tableView>
                                     </subviews>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1687,10 +1691,13 @@ DQ
                             <constraint firstAttribute="trailing" secondItem="R4u-ig-DtL" secondAttribute="trailing" id="ykU-VF-JmD"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="_tableView" destination="yPd-aO-o7G" id="0UU-pg-ul2"/>
+                    </connections>
                 </viewController>
                 <customObject id="0DA-dP-uov" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2623" y="44"/>
+            <point key="canvasLocation" x="2606" y="0.0"/>
         </scene>
         <!--Wheel Preview View Controller-->
         <scene sceneID="l63-S3-kDm">
