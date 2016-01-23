@@ -95,8 +95,8 @@
             NSRectFill(NSMakeRect(x, y, LED_SIZE, LED_SIZE));
         }
     } else {
-        [NSColor.redColor set];
-        NSFrameRect(self.bounds);
+//        [NSColor.redColor set];
+//        NSFrameRect(self.bounds);
     }
 }
 

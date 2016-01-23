@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="10060.2" systemVersion="16A102a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10060.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
         <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
@@ -1650,15 +1650,32 @@ DQ
                                                             <rect key="frame" x="1" y="1" width="213" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oia-0q-KKW">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
+                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dhs-w6-ilv">
+                                                                    <rect key="frame" x="3" y="2" width="14" height="14"/>
+                                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="v8j-xE-W1j"/>
+                                                                    <connections>
+                                                                        <binding destination="KEW-uK-JY0" name="data" keyPath="objectValue.image" id="myt-Hc-6QP"/>
+                                                                    </connections>
+                                                                </imageView>
+                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="oia-0q-KKW">
+                                                                    <rect key="frame" x="18" y="1" width="194" height="17"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="7mH-8V-hT3">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
+                                                                    <connections>
+                                                                        <binding destination="KEW-uK-JY0" name="value" keyPath="objectValue.label" id="mlz-Xl-Y76"/>
+                                                                    </connections>
                                                                 </textField>
                                                             </subviews>
+                                                            <constraints>
+                                                                <constraint firstItem="dhs-w6-ilv" firstAttribute="leading" secondItem="KEW-uK-JY0" secondAttribute="leading" constant="3" id="G0m-ct-e30"/>
+                                                                <constraint firstItem="oia-0q-KKW" firstAttribute="centerY" secondItem="KEW-uK-JY0" secondAttribute="centerY" constant="-1" id="NSc-Rf-FaH"/>
+                                                                <constraint firstItem="dhs-w6-ilv" firstAttribute="centerY" secondItem="KEW-uK-JY0" secondAttribute="centerY" id="d4D-l3-hbI"/>
+                                                                <constraint firstAttribute="trailing" secondItem="oia-0q-KKW" secondAttribute="trailing" constant="3" id="pvd-Fd-Eh4"/>
+                                                                <constraint firstItem="oia-0q-KKW" firstAttribute="leading" secondItem="dhs-w6-ilv" secondAttribute="trailing" constant="3" id="xVR-Vr-2f5"/>
+                                                            </constraints>
                                                             <connections>
                                                                 <outlet property="textField" destination="oia-0q-KKW" id="EU9-FB-Xxc"/>
                                                             </connections>
@@ -1854,15 +1871,26 @@ DQ
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="62O-Hv-GkC">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
+                                                                            <rect key="frame" x="21" y="-2" width="156" height="17"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="AeH-nl-UWi">
                                                                                 <font key="font" metaFont="system"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
+                                                                            <connections>
+                                                                                <binding destination="FPu-Jy-tjj" name="value" keyPath="objectValue.label" id="0zu-SV-55m"/>
+                                                                            </connections>
                                                                         </textField>
+                                                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2iH-jU-rdL">
+                                                                            <rect key="frame" x="3" y="-2" width="16" height="16"/>
+                                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="bSV-YR-Qt7"/>
+                                                                            <connections>
+                                                                                <binding destination="FPu-Jy-tjj" name="data" keyPath="objectValue.image" id="T9S-Jx-nbA"/>
+                                                                            </connections>
+                                                                        </imageView>
                                                                     </subviews>
                                                                     <connections>
+                                                                        <outlet property="imageView" destination="2iH-jU-rdL" id="QfZ-Bh-bUX"/>
                                                                         <outlet property="textField" destination="62O-Hv-GkC" id="aUL-ln-Blh"/>
                                                                     </connections>
                                                                 </tableCellView>
@@ -2218,7 +2246,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wZJ-Op-eAi">
-                                                <rect key="frame" x="611" y="0.0" width="15" height="150"/>
+                                                <rect key="frame" x="610" y="0.0" width="16" height="150"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
@@ -2282,6 +2310,7 @@ DQ
         </scene>
     </scenes>
     <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSApplicationIcon" width="128" height="128"/>
         <image name="add" width="512" height="512"/>
         <image name="delete" width="512" height="512"/>

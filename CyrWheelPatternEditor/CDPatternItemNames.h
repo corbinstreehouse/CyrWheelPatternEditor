@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "LEDPatternType.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CDPatternItemNames: NSObject
 
 + (NSString *)nameForPatternType:(LEDPatternType)type;
@@ -16,3 +18,5 @@
 @end
 
 extern NSString *g_patternTypeNames[LEDPatternTypeMax+1];
+
+NS_ASSUME_NONNULL_END
