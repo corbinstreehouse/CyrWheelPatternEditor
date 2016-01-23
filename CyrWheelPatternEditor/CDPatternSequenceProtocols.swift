@@ -19,6 +19,7 @@ protocol CDPatternSequencePresenter {
 protocol CDPatternSequenceProvider {
     var patternSequence: CDPatternSequence! { get }
     var patternSelectionIndexes: NSIndexSet { get set } // For bindings and manipulation; there should only be one in the hierarchy..
+    var managedObjectContext: NSManagedObjectContext { get }
 }
 
 
