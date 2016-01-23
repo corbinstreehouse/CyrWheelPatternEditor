@@ -26,6 +26,9 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         }
     }
     
+    func delete(sender: AnyObject?) {
+        self.patternSequence.removeChildrenAtIndexes(self._timelineView.selectionIndexes)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
