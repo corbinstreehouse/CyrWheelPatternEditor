@@ -490,6 +490,10 @@ class CDTimelineView: NSStackView {
         _shouldUpdateAnchorRow = true
     }
     
+    override func selectAll(sender: AnyObject?) {
+        self.selectionIndexes = NSIndexSet(indexesInRange: NSRange(location: 0, length: self.numberOfItems))
+    }
+    
     override func keyDown(theEvent: NSEvent) {
         var callSuper = false
         let shiftIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.ShiftKeyMask);
@@ -499,6 +503,10 @@ class CDTimelineView: NSStackView {
             _selectNextIndexFromAnchorExtending(shiftIsDown, goingForward: true)
         case NSLeftArrowFunctionKey:
             _selectNextIndexFromAnchorExtending(shiftIsDown, goingForward: false)
+        case NSDeleteCharacter:
+            if self.selectionIndexes.count > 0 {
+                NSApp.sendAction("delete:", to: nil, from: self)
+            }
         default:
             callSuper = true;
         }
