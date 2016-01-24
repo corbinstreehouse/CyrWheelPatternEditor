@@ -37,7 +37,7 @@
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification {
-    [self.document start];
+//    [self.document start];
 }
 
 - (void)windowWillClose:(NSNotification *)notification {

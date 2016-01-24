@@ -15,11 +15,11 @@
 #import "CWPatternSequenceManager.h"
 #import "SdFat.h"
 
+#define USE_TIMER 1
 
 @interface CDPatternRunner() {
 @private
     CWPatternSequenceManager _sequenceManager;
-    NSTimer *_timer;
     NSManagedObjectContext *_context;
     NSPersistentStoreCoordinator *_coordinator;
 }
@@ -65,15 +65,84 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
             break;
     }
 }
+#if USE_TIMER
+// One timer to rul them all
+NSTimer *g_timer = nil;
+#else
+static NSThread *g_runningThread = nil;
+#endif
+
+static OSSpinLock g_runningPatternsLock = OS_SPINLOCK_INIT;
+static NSMutableSet *g_runningPatterns = [NSMutableSet set];
+
+#if !USE_TIMER
+
+// Called on a background thread
++ (void)_processPatterns {
+    //        // Speed of the teensy...96000000 == 96Mhz 14 loops per usec.. according to source
+    static const NSTimeInterval durationForTick = 1.0/120.0;
+    NSTimeInterval lastTick = [NSDate timeIntervalSinceReferenceDate];
+    
+    while (1) {
+        bool isDone = false;
+        OSSpinLockLock(&g_runningPatternsLock);
+        if (g_runningPatterns.count == 0) {
+            // dead; let us die..
+            g_runningThread = nil;
+            isDone = true;
+        }
+        OSSpinLockUnlock(&g_runningPatternsLock);
+ 
+        if (!isDone) {
+            // See if we should tick..
+            NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+            if (now - lastTick >= durationForTick) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self _tickAllPatternRunners];
+                });
+                lastTick = now;
+            }
+        }
+    }
+}
+#endif
+
++ (void)_tickAllPatternRunners {
+#if USE_TIMER
+    if (g_runningPatterns.count == 0) {
+        [g_timer invalidate];
+        g_timer = nil;
+        return;
+    }
+#endif
+    // no lock needed because it is only ever modified on the foreground thread
+    for (CDPatternRunner *runner in g_runningPatterns) {
+        [runner _tick:nil];
+    }
+}
 
 - (void)_makeTimerIfNeeded {
-    if (_timer == nil) {
-        // Speed of the teensy...96000000 == 96Mhz 14 loops per usec.. according to source
-        NSTimeInterval time = 14.0/1000000.0;
-        _timer = [NSTimer timerWithTimeInterval:time target:self selector:@selector(_tick:) userInfo:nil repeats:YES];
-        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
-        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSModalPanelRunLoopMode];
+#if USE_TIMER
+    if (g_timer == nil) {
+        NSTimeInterval time = 1.0/60.0;
+        g_timer = [NSTimer timerWithTimeInterval:time target:[self class] selector:@selector(_tickAllPatternRunners) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:g_timer forMode:NSDefaultRunLoopMode];
+        [[NSRunLoop mainRunLoop] addTimer:g_timer forMode:NSModalPanelRunLoopMode];
+        [[NSRunLoop mainRunLoop] addTimer:g_timer forMode:NSEventTrackingRunLoopMode];
     }
+#endif
+    OSSpinLockLock(&g_runningPatternsLock);
+
+    [g_runningPatterns addObject:self];
+#if !USE_TIMER
+    if (g_runningThread == nil) {
+        g_runningThread = [[NSThread alloc] initWithTarget:[self class] selector:@selector(_processPatterns) object:nil];
+        g_runningThread.qualityOfService = NSQualityOfServiceUserInteractive;
+        [g_runningThread start];
+    }
+#endif
+    OSSpinLockUnlock(&g_runningPatternsLock);
+    
 }
 
 @synthesize patternTimePassed;
@@ -82,15 +151,18 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
 @synthesize currentPatternSequence;
 
 - (void)_tick:(NSTimer *)sender {
-    _sequenceManager.process();
-    // ms -> s
-    self.patternTimePassed = _sequenceManager.getPatternTimePassed() / 1000.0;
-    self.patternTimePassedFromFirstTimedPattern = _sequenceManager.getPatternTimePassedFromFirstTimedPattern() / 1000.0;
+    if (!_sequenceManager.isPaused()) {
+        _sequenceManager.process();
+        // ms -> s
+        self.patternTimePassed = _sequenceManager.getPatternTimePassed() / 1000.0;
+        self.patternTimePassedFromFirstTimedPattern = _sequenceManager.getPatternTimePassedFromFirstTimedPattern() / 1000.0;
+    }
 }
 
 - (void)_stopTimerIfNeeded {
-    [_timer invalidate];
-    _timer = nil;
+    OSSpinLockLock(&g_runningPatternsLock);
+    [g_runningPatterns removeObject:self];
+    OSSpinLockUnlock(&g_runningPatternsLock);
 }
 
 - (void)play {

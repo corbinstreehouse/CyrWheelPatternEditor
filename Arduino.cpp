@@ -22,7 +22,7 @@ uint32_t millis() {
 
 uint32_t micros() {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
-    now *= (1000000); // milliseconds
+    now *= (1000000); // microseconds
     uint32_t resAsInt = now; // trunc(now);
     return resAsInt;
 }
