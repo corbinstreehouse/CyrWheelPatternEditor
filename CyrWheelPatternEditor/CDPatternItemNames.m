@@ -36,8 +36,8 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     @"Pulse Gradient",
     @"Random Gradients",
     
-    @"Image Linear Fade",
-    @"Image Strip",
+    @"Image Type",
+    @"Image Type 2 (UNUSED)",
     
     @"Warm white shimmer",
     @"Random color walk",

@@ -185,7 +185,12 @@ static NSManagedObjectContext *g_currentContext = nil;
 }
 
 - (NSString *)displayName {
-    return g_patternTypeNames[self.patternType];
+    // The bitmap image types show the name of the file
+    if (self.patternType == LEDPatternTypeImageReferencedBitmap || self.patternType == LEDPatternTypeBitmap) {
+        return self.imageFilename;
+    } else {
+        return g_patternTypeNames[self.patternType];
+    }
 }
 
 @end

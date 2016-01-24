@@ -108,7 +108,7 @@ NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
     return _patternSequence;
 }
 
-- (void)addNewPatternItem {
+- (CDPatternItem *)addNewPatternItem {
     CDPatternItem *patternItem = [CDPatternItem newItemInContext:self.managedObjectContext];
     // copy the last item, if we had one
     if (self.patternSequence.children.count > 0) {
@@ -117,6 +117,7 @@ NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
     }
     
     [self.patternSequence insertObject:patternItem inChildrenAtIndex:self.patternSequence.children.count];
+    return patternItem;
 }
 
 - (void)removePatternItemsAtIndexes:(NSIndexSet *)indexesToDelete {

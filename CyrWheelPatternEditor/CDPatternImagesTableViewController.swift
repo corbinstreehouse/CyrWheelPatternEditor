@@ -27,7 +27,7 @@ extension Array {
 }
 
 
-// For binding the cell object value to
+// For binding the cell object value to and a simple model representing patterns that I can create
 class PatternObjectWrapper : NSObject {
     dynamic var label: String
     dynamic var image: NSImage?
@@ -35,69 +35,235 @@ class PatternObjectWrapper : NSObject {
         self.label = label
         self.image = image
     }
+}
+
+class HeaderPatternObjectWrapper : PatternObjectWrapper {
     
 }
 
-class CDPatternImagesTableViewController: NSViewController, NSTableViewDelegate, NSTableViewDataSource {
+class ImagePatternObjectWrapper: PatternObjectWrapper {
+    var url: NSURL!
+    var children: [ImagePatternObjectWrapper]?
+    var isDirectory: Bool = false
 
-    @IBOutlet weak var _tableView: NSTableView!
+    weak var parent: ImagePatternObjectWrapper?
     
-    private var _patternImages = [NSImage]()
-    private let _ignoredPatternTypes: [LEDPatternType] = [LEDPatternTypeMax, LEDPatternTypeImageLinearFade_UNUSED, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
-    private var _patternTypes: [PatternObjectWrapper] = [PatternObjectWrapper]()
+    init (label: String, url: NSURL, parent: ImagePatternObjectWrapper?) {
+        super.init(label: label, image: nil)
+        
+        self.url = url
+        self.parent = parent
+        self.isDirectory = false
+        do {
+            var getter: AnyObject? = false
+            try url.getResourceValue(&getter, forKey: NSURLIsDirectoryKey)
+            self.isDirectory = getter as! Bool
+        } catch {
+          
+        }
+        // TODO: load the image!
+    }
+    
+    var relativeFilename: String {
+        get {
+            var result: String!
+            var pWalker: ImagePatternObjectWrapper? = self
+            while let p = pWalker {
+                if result == nil {
+                    result = p.label
+                } else if p.label != "" {
+                    result = p.label + "/" + result
+                }
+                pWalker = p.parent
+            }
+            return result
+        }
+    }
+    
+}
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+class ProgrammedPatternObjectWrapper: PatternObjectWrapper {
+    var patternType: LEDPatternType = LEDPatternTypeAllOff
+    init(patternType: LEDPatternType) {
+        let image: NSImage? = nil; // TODO: Load the template image (or start creating it..)
+        super.init(label: CDPatternItemNames.nameForPatternType(patternType), image: image)
+        self.patternType = patternType
+    }
 
+}
+
+class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate {
+
+    @IBOutlet weak var _outlineView: NSOutlineView!
+    
+    private let _ignoredPatternTypes: [LEDPatternType] = [LEDPatternTypeMax, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
+    private var _rootChildren: [PatternObjectWrapper] = []
+    
+    private func _loadPatternTypeArray() -> [PatternObjectWrapper] {
+        var result = [PatternObjectWrapper]()
         // Create a sorted array of pattern types to show
         for rawType in LEDPatternTypeMin.rawValue...LEDPatternTypeMax.rawValue  {
             let patternType = LEDPatternType(rawType)
-            let patternImage: NSImage? = nil // TODO: image preview!
-            let patternTypeWrapper = PatternObjectWrapper(label: CDPatternItemNames.nameForPatternType(patternType), image: patternImage)
+            let patternTypeWrapper = ProgrammedPatternObjectWrapper(patternType: patternType)
             if !_ignoredPatternTypes.contains(patternType) {
-                let index = _patternTypes.insertionIndexOf(patternTypeWrapper) {
+                let index = result.insertionIndexOf(patternTypeWrapper) {
                     return $0.label.localizedStandardCompare($1.label) == NSComparisonResult.OrderedAscending
                 }
                 
-                _patternTypes.insert(patternTypeWrapper, atIndex: index)
-
+                result.insert(patternTypeWrapper, atIndex: index)
             }
         }
-        
-        // Load the pattern images we have...
+        return result
     }
     
-    
-    ///MARK: TableView datasource methods
-    
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        // Two group rows, and then the images
-        return _patternImages.count + _patternTypes.count + 2
-    }
-    
-    func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
-        let nextGroupRow = _patternTypes.count + 1
-        if row == 0 {
+    private func _loadChildrenItems(parentItem: ImagePatternObjectWrapper) {
+        if parentItem.children == nil {
+            var children: [ImagePatternObjectWrapper] = []
             
-        } else if row == nextGroupRow {
-            
-        } else if row > 0 && row < nextGroupRow {
-            // Subtract one for the group row
-            return _patternTypes[row - 1]
+            // I store a relative filename name in the label
+            let keys = [NSURLIsDirectoryKey, NSURLLocalizedNameKey]
+
+            let fileManager = NSFileManager.defaultManager()
+            do {
+                let patternImageURLs = try fileManager.contentsOfDirectoryAtURL(parentItem.url, includingPropertiesForKeys: keys, options: [NSDirectoryEnumerationOptions.SkipsHiddenFiles])
+                for url in patternImageURLs {
+                    let label = url.lastPathComponent!
+                    let child = ImagePatternObjectWrapper(label: label, url: url, parent: parentItem)
+                    if child.isDirectory {
+                        children.append(child)
+                    } else {
+                        // Only bitmap images
+                        if let ext = url.pathExtension {
+                            if ext.lowercaseString == "bmp" {
+                                children.append(child)
+                            }
+                        }
+                    }
+                }
+            } catch let error as NSError  {
+                NSLog("Error loading children: %@", error)
+            }
+            parentItem.children = children
         }
-        return nil
     }
     
-    func tableView(tableView: NSTableView, isGroupRow row: Int) -> Bool {
-        if row == 0 {
-            return true
-        } else if row == (_patternTypes.count + 1) {
-            return true
+    private func _loadRootPatternImages() -> ImagePatternObjectWrapper {
+        let patternURL = CDAppDelegate.appDelegate.patternDirectoryURL
+        let result = ImagePatternObjectWrapper(label: "", url: patternURL, parent: nil)
+        _loadChildrenItems(result)
+        return result
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        let programmedPatterns = _loadPatternTypeArray()
+        let programmedPatternGroupObject = HeaderPatternObjectWrapper(label: "Programmed Patterns", image: nil)
+        _rootChildren = [programmedPatternGroupObject]
+        _rootChildren.appendContentsOf(programmedPatterns)
+        
+        
+        let rootPatternImages = _loadRootPatternImages()
+        if let rootImages = rootPatternImages.children {
+            // Only at the image dir if we have images..
+            let imagePatternGroupObject = HeaderPatternObjectWrapper(label: "Image Patterns", image: nil)
+            _rootChildren.append(imagePatternGroupObject)
+            let a: [PatternObjectWrapper] = rootImages
+//            _rootChildren.appendContentsOf(rootImages) // why doesn't this work??
+            _rootChildren.appendContentsOf(a)
+        }
+        _outlineView.reloadData()
+        _outlineView.expandItem(nil)
+    }
+    
+    private func _getDocument() -> CDDocument {
+        // This is a rather ugly way to get to the document..
+        return self.parentWindowController!.document as! CDDocument
+    }
+    
+    private func _addNewItemWithPatternType(patternType: LEDPatternType) -> CDPatternItem {
+        let doc = _getDocument()
+        let newItem = doc.addNewPatternItem()
+        newItem.patternType = patternType
+        return newItem
+    }
+    
+    private func _addSelectedItemsToSequence(indexes: NSIndexSet) {
+        
+        for index in indexes {
+            let item = _outlineView.itemAtRow(index)
+            switch item {
+            case let programmedItem as ProgrammedPatternObjectWrapper:
+                _addNewItemWithPatternType(programmedItem.patternType)
+            case let imageItem as ImagePatternObjectWrapper:
+                if !imageItem.isDirectory {
+                    let newItem = _addNewItemWithPatternType(LEDPatternTypeImageReferencedBitmap)
+                    newItem.imageFilename = imageItem.relativeFilename
+                }
+            default:
+                assert(false, "Unhandled type")
+            }
+        }
+    }
+    
+    
+    ///MARK: OutlineView datasource/delegate methods
+
+    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
+        if item == nil {
+            // the root
+            return _rootChildren.count
+        } else {
+            if let imageItem: ImagePatternObjectWrapper = item as? ImagePatternObjectWrapper {
+                if imageItem.isDirectory {
+                    // Make sure we loaded the children
+                    _loadChildrenItems(imageItem)
+                    return imageItem.children!.count
+                }
+            }
+        }
+        return 0
+    }
+    
+    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
+        if item == nil {
+            // the root
+            return _rootChildren[index]
+        } else {
+            // must be a image wrapper
+            let imageItem = item as! ImagePatternObjectWrapper
+            _loadChildrenItems(imageItem)
+            return imageItem.children![index]
+        }
+    }
+    
+    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
+        if let imageItem = item as? ImagePatternObjectWrapper {
+            return imageItem.isDirectory
         } else {
             return false
         }
     }
     
     
+    func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
+        // The root item's
+        return item is HeaderPatternObjectWrapper
+    }
+    
+    func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool {
+        if item is HeaderPatternObjectWrapper {
+            return false
+        }
+        return true
+    }
+    
+    func outlineView(outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject? {
+        return item
+    }
+    
+    @IBAction func _outlineDoubleClick(sender: NSOutlineView) {
+        _addSelectedItemsToSequence(sender.selectedRowIndexes)
+    }
     
 }

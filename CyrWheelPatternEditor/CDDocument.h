@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(retain, readonly) CDPatternSequence *patternSequence;
 
-- (void)addNewPatternItem;
+- (CDPatternItem *)addNewPatternItem;
 - (void)removePatternItemsAtIndexes:(NSIndexSet *)indexes;
 
 @end
