@@ -2082,6 +2082,14 @@ DQ
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                                 <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection.needsColor" previousBinding="ymL-rb-Snl" id="ZV6-fN-JuV">
+                                        <dictionary key="options">
+                                            <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                            <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                            <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                            <integer key="NSNullPlaceholder" value="-1"/>
+                                        </dictionary>
+                                    </binding>
                                     <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="ymL-rb-Snl">
                                         <dictionary key="options">
                                             <string key="NSValueTransformerName">NSIsNotNil</string>
@@ -2123,6 +2131,16 @@ DQ
                                 <rect key="frame" x="53" y="215" width="44" height="23"/>
                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection" previousBinding="tvE-fJ-jNg" id="mh1-94-ILU">
+                                        <dictionary key="options">
+                                            <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                            <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                            <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                            <integer key="NSNullPlaceholder" value="-1"/>
+                                            <string key="NSValueTransformerName">NSIsNotNil</string>
+                                        </dictionary>
+                                    </binding>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.needsColor" id="tvE-fJ-jNg"/>
                                     <binding destination="heP-6G-9Ue" name="value" keyPath="selection.encodedColor" id="IpV-59-By3">
                                         <dictionary key="options">
                                             <string key="NSValueTransformerName">CDEncodedColorTransformer</string>
@@ -2165,7 +2183,11 @@ DQ
                             </textField>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sed-RX-dPf">
                                 <rect key="frame" x="8" y="278" width="182" height="20"/>
-                                <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="jEg-4Q-bA0"/>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="jEg-4Q-bA0"/>
+                                <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.patternSpeedEnabled" id="5sG-wf-koT"/>
+                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.patternSpeed" id="sz4-4x-IQU"/>
+                                </connections>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="66W-g2-1hY">
                                 <rect key="frame" x="8" y="304" width="93" height="17"/>

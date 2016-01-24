@@ -28,7 +28,8 @@
 
 @property (nonatomic, readonly) BOOL durationEnabled; // synthesized for bindings
 @property (nonatomic, readonly) BOOL needsColor; // synthesized for bindings
-@property (nonatomic, readonly) BOOL patternTypeNeedsPatternDuration;
+@property (nonatomic, readonly) BOOL patternTypeNeedsPatternDuration; // corbin, eliminate?
+@property (nonatomic, readonly) BOOL patternSpeedEnabled;
 
 @property (nonatomic, readonly) NSString *displayName;
 
@@ -37,6 +38,8 @@
 + (void)setCurrentContext:(NSManagedObjectContext *)context;
 
 - (void)copyTo:(CDPatternItem *)item;
+
+@property (nonatomic) double patternSpeed; // A float value from 0.0 to 1.0 (100%) (or higher is okay) to determine the speed of which the pattern runs, which is just affects the patternDuration
 
 
 @end 

@@ -21,9 +21,8 @@
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context {
     CDPatternItem *result = [NSEntityDescription insertNewObjectForEntityForName:[self className] inManagedObjectContext:context];
     result.duration = 3;
-    result.patternDuration = 3; // 3; // matches the default duration
-//    result.repeatCount = 1;
-    result.patternEndCondition = CDPatternEndConditionOnButtonClick;
+    result.patternSpeed = 0.5; // Sets the patternDuration
+    result.patternEndCondition = CDPatternEndConditionAfterDuration;
     result.encodedColor = [CDEncodedColorTransformer intFromColor:NSColor.blueColor];
     return result;
 }
@@ -136,8 +135,16 @@ static NSManagedObjectContext *g_currentContext = nil;
     return [NSSet setWithObject:@"patternType"];
 }
 
++ (NSSet *)keyPathsForValuesAffectingPatternSpeedEnabled {
+    return [NSSet setWithObject:@"patternType"];
+}
+
 + (NSSet *)keyPathsForValuesAffectingDisplayName {
     return [NSSet setWithObject:@"patternType"];
+}
+
++ (NSSet *)keyPathsForValuesAffectingPatternSpeed {
+    return [NSSet setWithObject:@"patternDuration"];
 }
 
 - (BOOL)needsColor {
@@ -192,5 +199,58 @@ static NSManagedObjectContext *g_currentContext = nil;
         return g_patternTypeNames[self.patternType];
     }
 }
+
+// For the speed, I abitrarily pick  half a second as the time for it to do "one tick" of its pattern, and the speed (or duration on how long the pattern runs before repeating) is based off of that. 100% should represent the "fastest" the pattern can go, and 0% represent the slowest...which just means a longer time.
+/*
+ Speed:     0%          50%         100%
+            ----------------------------
+ Duration:  2s          1s        .01s (or wahtever)
+ 
+ */
+@dynamic patternSpeed;
+
+#define SPEED_AT_0_IN_S 0.5 // seconds
+#define SPEED_AT_100_IN_S .001 // This is the "fastest" I can go without changing it to microseconds...
+#define SPEED_RANGE (SPEED_AT_0_IN_S - SPEED_AT_100_IN_S)
+
+- (void)setPatternSpeed:(double)patternSpeed {
+    // Faster speed means a shorter duration
+    if (patternSpeed <= 0) {
+        // I don't know.. 0 means slowest?
+        self.patternDuration = SPEED_AT_0_IN_S;
+    } else if (patternSpeed >= 1.0) {
+        // Linearly process the extra speed down to 0??
+        self.patternDuration = SPEED_AT_100_IN_S;
+    } else {
+        // quadratic
+        //    y=(x-1)^2
+        double quadSpeed = (patternSpeed-1)*(patternSpeed-1); // gives a percentage value
+        // add in the min
+        self.patternDuration = SPEED_AT_100_IN_S + quadSpeed*SPEED_RANGE;
+    }
+}
+
+- (double)patternSpeed {
+    double patternDuration = self.patternDuration;
+    // Long duration is a slow speed
+    if (patternDuration >= SPEED_AT_0_IN_S) {
+        return 0;
+    }
+    // Short duration is the fastest speed
+    if (patternDuration <= SPEED_AT_100_IN_S) {
+        return 1.0;
+    }
+    
+    // Somewhere in the middle.... quadratic function, do the inverse of: y=(x-1)^2: x = sqrt(y) + 1
+    double percentage = (self.patternDuration - SPEED_AT_100_IN_S) / SPEED_RANGE;
+    return sqrt(percentage) + 1;
+}
+
+@dynamic patternSpeedEnabled;
+
+- (BOOL)patternSpeedEnabled {
+    return LEDPatterns::PatternNeedsDuration(self.patternType);
+}
+
 
 @end

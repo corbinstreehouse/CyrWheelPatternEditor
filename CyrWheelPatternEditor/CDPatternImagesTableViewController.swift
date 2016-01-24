@@ -199,6 +199,9 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
                 if !imageItem.isDirectory {
                     let newItem = _addNewItemWithPatternType(LEDPatternTypeImageReferencedBitmap)
                     newItem.imageFilename = imageItem.relativeFilename
+                    // Set the default speed...
+                    newItem.patternSpeed = 0.50; // 50% speed by default (whatever that means..)
+                    
                 }
             default:
                 assert(false, "Unhandled type")
