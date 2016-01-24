@@ -184,7 +184,10 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     private func _addNewItemWithPatternType(patternType: LEDPatternType) -> CDPatternItem {
         let doc = _getDocument()
         let newItem = doc.addNewPatternItem()
+        // Make it have the same relative patternDuration/speed as the existing one
+        let speed = newItem.patternSpeed
         newItem.patternType = patternType
+        newItem.patternSpeed = speed
         return newItem
     }
     
@@ -200,8 +203,7 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
                     let newItem = _addNewItemWithPatternType(LEDPatternTypeImageReferencedBitmap)
                     newItem.imageFilename = imageItem.relativeFilename
                     // Set the default speed...
-                    newItem.patternSpeed = 0.50; // 50% speed by default (whatever that means..)
-                    
+                    newItem.patternSpeed = 0.60; // 60% speed by default for these types..
                 }
             default:
                 assert(false, "Unhandled type")

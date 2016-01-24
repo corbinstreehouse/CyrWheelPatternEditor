@@ -54,7 +54,7 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     @"Sine Wave",
     
     @"Bottom Glow",
-    @"Rotating Bottom Glow",
+    @"Bottom Glow - Rotating",
     
     @"Solid Color",
     
@@ -68,9 +68,9 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     
     @"Flag Effect",
     
-    @"Crossfade",
+    @"Crossfade [Transition]",
     
-    @"SinWave Effect",
+    @"Sine Wave Effect",
     
     @"Funky Clouds",
     
@@ -81,6 +81,7 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     @"Rainbow Fire",
     @"Lava Fire",
     @"LEDPatternTypeBitmap",
+    @"Fade In - Fade Out",
     
     @"All Off"
 };

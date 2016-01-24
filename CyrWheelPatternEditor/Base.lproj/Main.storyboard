@@ -2018,22 +2018,22 @@ DQ
             <objects>
                 <viewController id="aKN-dg-R1Y" userLabel="Item Detail View" customClass="CDPatternItemDetailViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="BZx-IQ-RSN">
-                        <rect key="frame" x="0.0" y="0.0" width="202" height="483"/>
+                        <rect key="frame" x="0.0" y="0.0" width="202" height="509"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WHt-Bh-BII">
-                                <rect key="frame" x="12" y="27" width="42" height="19"/>
+                                <rect key="frame" x="12" y="53" width="42" height="19"/>
                                 <buttonCell key="cell" type="roundRect" title="Load" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ejf-qe-vgZ">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="cellTitle"/>
                                 </buttonCell>
                             </button>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jAr-Z4-OUW">
-                                <rect key="frame" x="8" y="51" width="185" height="134"/>
+                                <rect key="frame" x="8" y="77" width="185" height="134"/>
                                 <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="proportionallyUpOrDown" imageFrameStyle="grayBezel" id="7bF-LR-8bV"/>
                             </imageView>
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dPY-ud-NTH">
-                                <rect key="frame" x="8" y="427" width="183" height="26"/>
+                                <rect key="frame" x="8" y="453" width="183" height="26"/>
                                 <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="Glh-5P-aMg">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
@@ -2044,7 +2044,7 @@ DQ
                                 </connections>
                             </popUpButton>
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="inf-XG-uDG">
-                                <rect key="frame" x="8" y="366" width="183" height="26"/>
+                                <rect key="frame" x="8" y="392" width="183" height="26"/>
                                 <popUpButtonCell key="cell" type="push" title="Manually on button click" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="2" imageScaling="proportionallyDown" inset="2" selectedItem="afw-b1-9Td" id="wes-Kn-U6e">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
@@ -2060,7 +2060,7 @@ DQ
                                 </connections>
                             </popUpButton>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wh2-tt-h1A">
-                                <rect key="frame" x="8" y="336" width="64" height="17"/>
+                                <rect key="frame" x="8" y="362" width="64" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Duration:" id="R3M-Lf-sQC">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -2075,7 +2075,7 @@ DQ
                                 </connections>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FcT-tl-idG">
-                                <rect key="frame" x="8" y="218" width="43" height="17"/>
+                                <rect key="frame" x="8" y="244" width="43" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Color:" id="rYS-EC-7aB">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -2098,7 +2098,7 @@ DQ
                                 </connections>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ANe-nP-QCY">
-                                <rect key="frame" x="135" y="336" width="56" height="17"/>
+                                <rect key="frame" x="135" y="362" width="56" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="seconds" id="9hp-bW-iv0">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -2113,7 +2113,7 @@ DQ
                                 </connections>
                             </textField>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DjD-v6-Z3Y">
-                                <rect key="frame" x="71" y="334" width="59" height="22"/>
+                                <rect key="frame" x="71" y="360" width="59" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="PuL-1X-fb5">
                                     <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="KpR-iX-EYq">
                                         <real key="minimum" value="0.0"/>
@@ -2127,8 +2127,23 @@ DQ
                                     <binding destination="heP-6G-9Ue" name="value" keyPath="selection.duration" id="Ecs-HJ-mt3"/>
                                 </connections>
                             </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmj-Kx-aOW">
+                                <rect key="frame" x="7" y="17" width="78" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Pattern Dur:" id="Ywc-ZK-adG">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="cmE-Eg-Ghc">
+                                        <dictionary key="options">
+                                            <string key="NSValueTransformerName">NSIsNotNil</string>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
+                            </textField>
                             <colorWell fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JoK-Bb-UhJ">
-                                <rect key="frame" x="53" y="215" width="44" height="23"/>
+                                <rect key="frame" x="53" y="241" width="44" height="23"/>
                                 <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection" previousBinding="tvE-fJ-jNg" id="mh1-94-ILU">
@@ -2149,7 +2164,7 @@ DQ
                                 </connections>
                             </colorWell>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Vf-oI-Uvo">
-                                <rect key="frame" x="8" y="459" width="83" height="17"/>
+                                <rect key="frame" x="8" y="485" width="83" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Pattern type:" id="9BK-HC-8Ix">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -2167,7 +2182,7 @@ DQ
                                 </connections>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sId-Rf-nHn">
-                                <rect key="frame" x="8" y="398" width="157" height="17"/>
+                                <rect key="frame" x="8" y="424" width="157" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Proceed to the next item:" id="EZk-YV-tSB">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -2182,7 +2197,7 @@ DQ
                                 </connections>
                             </textField>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sed-RX-dPf">
-                                <rect key="frame" x="8" y="278" width="182" height="20"/>
+                                <rect key="frame" x="8" y="304" width="182" height="20"/>
                                 <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="jEg-4Q-bA0"/>
                                 <connections>
                                     <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.patternSpeedEnabled" id="5sG-wf-koT"/>
@@ -2190,7 +2205,7 @@ DQ
                                 </connections>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="66W-g2-1hY">
-                                <rect key="frame" x="8" y="304" width="93" height="17"/>
+                                <rect key="frame" x="8" y="330" width="93" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Pattern speed:" id="oPR-aU-5Y3">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -2205,7 +2220,7 @@ DQ
                                 </connections>
                             </textField>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ldQ-qn-G2b">
-                                <rect key="frame" x="8" y="248" width="184" height="18"/>
+                                <rect key="frame" x="8" y="274" width="184" height="18"/>
                                 <buttonCell key="cell" type="check" title="Velocity based brightness" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="6r6-cN-ax2">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -2215,14 +2230,14 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FJx-oK-EFA">
-                                <rect key="frame" x="62" y="27" width="44" height="19"/>
+                                <rect key="frame" x="62" y="53" width="44" height="19"/>
                                 <buttonCell key="cell" type="roundRect" title="Clear" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="xOb-P2-K31">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="cellTitle"/>
                                 </buttonCell>
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RKh-ib-2Fh">
-                                <rect key="frame" x="8" y="190" width="45" height="17"/>
+                                <rect key="frame" x="8" y="216" width="45" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Image:" id="9cg-hw-y6L">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -2234,6 +2249,36 @@ DQ
                                             <string key="NSValueTransformerName">NSIsNotNil</string>
                                         </dictionary>
                                     </binding>
+                                </connections>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mBm-Fl-CGD">
+                                <rect key="frame" x="149" y="16" width="11" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="s" id="2Vj-XA-H0q">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="1Bm-bG-wde">
+                                        <dictionary key="options">
+                                            <string key="NSValueTransformerName">NSIsNotNil</string>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
+                            </textField>
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xcf-1c-TsW">
+                                <rect key="frame" x="88" y="14" width="59" height="22"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Dal-XD-KrM">
+                                    <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="erQ-VW-1HK">
+                                        <real key="minimum" value="0.0"/>
+                                        <real key="maximum" value="1024"/>
+                                    </numberFormatter>
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.patternDuration" id="NmW-0Y-cjE"/>
                                 </connections>
                             </textField>
                         </subviews>
@@ -2250,7 +2295,7 @@ DQ
                     </connections>
                 </arrayController>
             </objects>
-            <point key="canvasLocation" x="3371" y="122.5"/>
+            <point key="canvasLocation" x="3371" y="135.5"/>
         </scene>
         <!--Timeline View Controller-->
         <scene sceneID="4SP-PD-tuN">

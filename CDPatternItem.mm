@@ -140,7 +140,7 @@ static NSManagedObjectContext *g_currentContext = nil;
 }
 
 + (NSSet *)keyPathsForValuesAffectingDisplayName {
-    return [NSSet setWithObject:@"patternType"];
+    return [NSSet setWithObjects:@"patternType", @"imageFilename", nil];
 }
 
 + (NSSet *)keyPathsForValuesAffectingPatternSpeed {
@@ -209,46 +209,101 @@ static NSManagedObjectContext *g_currentContext = nil;
  */
 @dynamic patternSpeed;
 
-#define SPEED_AT_0_IN_S 0.5 // seconds
-#define SPEED_AT_100_IN_S .001 // This is the "fastest" I can go without changing it to microseconds...
-#define SPEED_RANGE (SPEED_AT_0_IN_S - SPEED_AT_100_IN_S)
 
+static double _minPatternDurationForPatternType(LEDPatternType type) {
+    switch (type) {
+        case LEDPatternTypeImageReferencedBitmap:
+        case LEDPatternTypeBitmap: {
+            return .001; // This is the "fastest" we can go
+        }
+        case LEDPatternTypeBlink: {
+            return 0.2; // Let blink go faster..
+        }
+        case LEDPatternTypeTheaterChase:
+            return .01;
+        default: {
+            return 0.3;
+        }
+    }
+}
+
+static double _maxPatternDurationForPatternType(LEDPatternType type) {
+    switch (type) {
+        case LEDPatternTypeImageReferencedBitmap:
+        case LEDPatternTypeBitmap: {
+            return 0.5; // Each tick will be half a second
+        }
+        case LEDPatternTypeTheaterChase:
+            return 2;
+        default: {
+            return 3; // 3 Seconds for each tick of a rainbow at the slowest
+        }
+    }
+}
+
+static double _speedRangeForPatternType(LEDPatternType type) {
+    return _maxPatternDurationForPatternType(type) - _minPatternDurationForPatternType(type);
+}
+
+#define A (-6.0)
 - (void)setPatternSpeed:(double)patternSpeed {
     // Faster speed means a shorter duration
     if (patternSpeed <= 0) {
-        // I don't know.. 0 means slowest?
-        self.patternDuration = SPEED_AT_0_IN_S;
+        // Slow speed means longest time..
+        self.patternDuration = _maxPatternDurationForPatternType(self.patternType);
     } else if (patternSpeed >= 1.0) {
         // Linearly process the extra speed down to 0??
-        self.patternDuration = SPEED_AT_100_IN_S;
+        self.patternDuration = _minPatternDurationForPatternType(self.patternType);
     } else {
-        // quadratic
-        //    y=(x-1)^2
-        double quadSpeed = (patternSpeed-1)*(patternSpeed-1); // gives a percentage value
+        double percentage;
+        double speedRange = _speedRangeForPatternType(self.patternType);
+        if (speedRange < 1.0) {
+            // quadratic
+            //    y=(x-1)^2
+    //        double percentage = (patternSpeed-1)*(patternSpeed-1); // gives a percentage value
+            // y = e^(-4x)
+            percentage = exp(A*patternSpeed);
+        } else {
+            // linear
+            percentage = 1.0 - patternSpeed;
+        }
         // add in the min
-        self.patternDuration = SPEED_AT_100_IN_S + quadSpeed*SPEED_RANGE;
+        self.patternDuration = _minPatternDurationForPatternType(self.patternType) + percentage * speedRange;
     }
 }
 
 - (double)patternSpeed {
     double patternDuration = self.patternDuration;
     // Long duration is a slow speed
-    if (patternDuration >= SPEED_AT_0_IN_S) {
+    if (patternDuration >= _maxPatternDurationForPatternType(self.patternType)) {
         return 0;
     }
     // Short duration is the fastest speed
-    if (patternDuration <= SPEED_AT_100_IN_S) {
+    if (patternDuration <= _minPatternDurationForPatternType(self.patternType)) {
         return 1.0;
     }
     
     // Somewhere in the middle.... quadratic function, do the inverse of: y=(x-1)^2: x = sqrt(y) + 1
-    double percentage = (self.patternDuration - SPEED_AT_100_IN_S) / SPEED_RANGE;
-    return sqrt(percentage) + 1;
+    double baseDuration = self.patternDuration - _minPatternDurationForPatternType(self.patternType);
+    
+    double percentage;
+    double speedRange = _speedRangeForPatternType(self.patternType);
+    if (speedRange < 1.0) {
+        percentage = log(baseDuration) / A;
+    } else {
+        percentage = patternDuration / speedRange;
+        percentage = 1.0 - percentage;
+    }
+    return percentage;
 }
 
 @dynamic patternSpeedEnabled;
 
 - (BOOL)patternSpeedEnabled {
+    if (LEDPatterns::PatternDurationShouldBeEqualToSegmentDuration(self.patternType)) {
+        return NO;
+    }
+
     return LEDPatterns::PatternNeedsDuration(self.patternType);
 }
 
