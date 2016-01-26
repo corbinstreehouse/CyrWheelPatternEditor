@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class CDPatternItemDetailViewController: NSViewController, CDPatternSequencePresenter {
+class CDPatternItemDetailViewController: CDPatternSequencePresenterViewController {
 
     @IBOutlet var _popupPatternType: NSPopUpButton!
     
@@ -16,14 +16,20 @@ class CDPatternItemDetailViewController: NSViewController, CDPatternSequencePres
         super.viewDidLoad()
 
         _popupPatternType.removeAllItems()
+        let ignoredPatternTypes = LEDPatternType.ignoredPatternTypes
+
         
         for var i: Int16 = 0; i <= Int16(LEDPatternTypeMax.rawValue); i++ {
             let type = LEDPatternType.init(i)
-            let name = CDPatternItemNames.nameForPatternType(type)
-            _popupPatternType.addItemWithTitle(name)
-            let item: NSMenuItem = _popupPatternType.lastItem!
-            item.tag = Int(i)
+            if !ignoredPatternTypes.contains(type) {
+                let name = CDPatternItemNames.nameForPatternType(type)
+                
+                _popupPatternType.addItemWithTitle(name)
+                let item: NSMenuItem = _popupPatternType.lastItem!
+                item.tag = Int(i)
+            }
         }
+        // TODO: sort the array..
         // update the UI since we changed the content
 //        if self.patternItem {
 //            popupPatternType.selectItemWithTag(self.patternItem.patternType)
@@ -32,7 +38,4 @@ class CDPatternItemDetailViewController: NSViewController, CDPatternSequencePres
         
         self.view.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
     }
-    
-    dynamic var patternSequence: CDPatternSequence! 
-
 }

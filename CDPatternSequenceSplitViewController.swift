@@ -10,15 +10,15 @@ import Cocoa
 
 class CDPatternSequenceSplitViewController: NSSplitViewController, CDPatternSequencePresenter {
 
-    override init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-
-    }
+//    override init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+//        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+//        
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        super.init(coder: coder)
+//
+//    }
     
     var patternSequence: CDPatternSequence! {
         didSet {
@@ -30,10 +30,10 @@ class CDPatternSequenceSplitViewController: NSSplitViewController, CDPatternSequ
         }
     }
         
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do view setup here.
-    }
-    
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        // Do view setup here.
+//    }
+//    
 }
 

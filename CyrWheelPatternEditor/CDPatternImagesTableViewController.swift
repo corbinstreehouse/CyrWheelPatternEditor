@@ -162,6 +162,15 @@ class ProgrammedPatternObjectWrapper: PatternObjectWrapper {
 
 }
 
+// TODO: put this somewhere else to share the code better
+extension LEDPatternType {
+    
+    static var ignoredPatternTypes: [LEDPatternType] {
+        return [LEDPatternTypeMax, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
+    }
+    
+}
+
 class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate {
 
     @IBOutlet weak var _outlineView: NSOutlineView!
@@ -170,12 +179,15 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     private var _rootChildren: [PatternObjectWrapper] = []
     
     private func _loadPatternTypeArray() -> [PatternObjectWrapper] {
+
+        let ignoredPatternTypes = LEDPatternType.ignoredPatternTypes
+        
         var result = [PatternObjectWrapper]()
         // Create a sorted array of pattern types to show
         for rawType in LEDPatternTypeMin.rawValue...LEDPatternTypeMax.rawValue  {
             let patternType = LEDPatternType(rawType)
             let patternTypeWrapper = ProgrammedPatternObjectWrapper(patternType: patternType)
-            if !_ignoredPatternTypes.contains(patternType) {
+            if !ignoredPatternTypes.contains(patternType) {
                 let index = result.insertionIndexOf(patternTypeWrapper) {
                     return $0.label.localizedStandardCompare($1.label) == NSComparisonResult.OrderedAscending
                 }
