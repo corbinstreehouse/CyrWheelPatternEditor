@@ -26,8 +26,8 @@
 // Mapping from the type to the string we display. Yeah, not localized
 NSString *g_patternTypeNames[LEDPatternTypeCount+1] =  {
     
-    @"Rotating Rainbow",
-    @"Mini Rotating Rainbows",
+    @"Rainbow - Rotating",
+    @"Rainbows - Rotating Mini",
     
     @"Fade Out",
     @"Fade In",
@@ -40,18 +40,18 @@ NSString *g_patternTypeNames[LEDPatternTypeCount+1] =  {
     @"Pulse Gradient",
     @"Random Gradients",
     
-    @"Image Type",
-    @"Image Type 2 (UNUSED)",
+    @"Pattern Image",
+    @"Pattern Image 2 [UNUSED]", // left in for compatability with older formats
     
-    @"Warm white shimmer",
-    @"Random color walk",
-    @"Traditional colors",
-    @"Color explosion",
+    @"Warm White Shimmer",
+    @"Random Color Walk",
+    @"Traditional Colors",
+    @"Color Explosion",
     @"Gradient 2",
-    @"White Bright Twinkle",
-    @"White and Red Twinkle",
-    @"Red and Green Twinkle",
-    @"Multi-color Twinkle",
+    @"Twinkle - White Bright",
+    @"Twinkle - White and Red",
+    @"Twinkle - Red and Green",
+    @"Twinkle - Multi Color",
     
     @"Collission",
     
@@ -62,8 +62,8 @@ NSString *g_patternTypeNames[LEDPatternTypeCount+1] =  {
     
     @"Solid Color",
     
-    @"Solid Rainbow",
-    @"Rainbow with spaces",
+    @"Rainbow - Non rotating",
+    @"Rainbows - with spaces",
     
     @"Blink",
     
@@ -84,7 +84,7 @@ NSString *g_patternTypeNames[LEDPatternTypeCount+1] =  {
     @"Bounce",
     @"Rainbow Fire",
     @"Lava Fire",
-    @"LEDPatternTypeBitmap",
+    @"LEDPatternTypeBitmap", // Not shown!
     @"Fade In - Fade Out",
     @"LEDPatternTypeCount" // Should be hidden
 };

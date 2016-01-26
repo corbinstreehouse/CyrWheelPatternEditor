@@ -20,25 +20,18 @@ class CDPatternItemDetailViewController: CDPatternSequencePresenterViewControlle
         _popupPatternType.removeAllItems()
         let disabledPatternTypes = LEDPatternType.nonSelectablePatternTypes
         let hiddenPatternTypes = LEDPatternType.hiddenPatternTypes
-
-        for var i: Int16 = 0; i < Int16(LEDPatternTypeCount.rawValue); i++ {
-            let type = LEDPatternType.init(i)
-            if !hiddenPatternTypes.contains(type) {
-                let name = CDPatternItemNames.nameForPatternType(type)
+        
+        // Create a sorted array of pattern types to show excluding ones we can't select
+        for patternObject in ProgrammedPatternObjectWrapper.allSortedProgrammedPatterns {
+            if !hiddenPatternTypes.contains(patternObject.patternType) {
                 
-                _popupPatternType.addItemWithTitle(name)
+                _popupPatternType.addItemWithTitle(patternObject.label)
                 let item: NSMenuItem = _popupPatternType.lastItem!
-                item.tag = Int(i)
-                item.enabled = !disabledPatternTypes.contains(type)
+                item.tag = Int(patternObject.patternType.rawValue)
+                item.enabled = !disabledPatternTypes.contains(patternObject.patternType)
             }
         }
-        // TODO: sort the array..
-        // update the UI since we changed the content
-//        if self.patternItem {
-//            popupPatternType.selectItemWithTag(self.patternItem.patternType)
-//        }
 
-        
         self.view.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
     }
 }

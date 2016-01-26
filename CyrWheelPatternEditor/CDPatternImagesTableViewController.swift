@@ -159,6 +159,27 @@ class ProgrammedPatternObjectWrapper: PatternObjectWrapper {
         super.init(label: CDPatternItemNames.nameForPatternType(patternType), image: image)
         self.patternType = patternType
     }
+    
+    private static var _allSortedProgrammedPatterns: [ProgrammedPatternObjectWrapper]!
+    static var allSortedProgrammedPatterns: [ProgrammedPatternObjectWrapper] {
+        get  {
+            if _allSortedProgrammedPatterns == nil {
+                _allSortedProgrammedPatterns = [ProgrammedPatternObjectWrapper]()
+                for rawType in LEDPatternTypeMin.rawValue...LEDPatternTypeCount.rawValue  {
+                    let patternType = LEDPatternType(rawType)
+                    let patternTypeWrapper = ProgrammedPatternObjectWrapper(patternType: patternType)
+                    let index = _allSortedProgrammedPatterns.insertionIndexOf(patternTypeWrapper) {
+                        return $0.label.localizedStandardCompare($1.label) == NSComparisonResult.OrderedAscending
+                    }
+                    
+                    _allSortedProgrammedPatterns.insert(patternTypeWrapper, atIndex: index)
+                }
+
+            }
+            return _allSortedProgrammedPatterns
+        }
+    }
+    
 
 }
 
@@ -187,16 +208,10 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
         let ignoredPatternTypes = LEDPatternType.nonSelectablePatternTypes
         
         var result = [PatternObjectWrapper]()
-        // Create a sorted array of pattern types to show
-        for rawType in LEDPatternTypeMin.rawValue...LEDPatternTypeCount.rawValue  {
-            let patternType = LEDPatternType(rawType)
-            let patternTypeWrapper = ProgrammedPatternObjectWrapper(patternType: patternType)
-            if !ignoredPatternTypes.contains(patternType) {
-                let index = result.insertionIndexOf(patternTypeWrapper) {
-                    return $0.label.localizedStandardCompare($1.label) == NSComparisonResult.OrderedAscending
-                }
-                
-                result.insert(patternTypeWrapper, atIndex: index)
+        // Create a sorted array of pattern types to show excluding ones we can't select
+        for patternObject in ProgrammedPatternObjectWrapper.allSortedProgrammedPatterns {
+            if !ignoredPatternTypes.contains(patternObject.patternType) {
+                result.append(patternObject)
             }
         }
         return result
