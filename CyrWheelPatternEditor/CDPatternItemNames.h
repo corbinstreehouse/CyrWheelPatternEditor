@@ -17,6 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-extern NSString *g_patternTypeNames[LEDPatternTypeMax+1];
+extern NSString *g_patternTypeNames[LEDPatternTypeCount+1];
 
 NS_ASSUME_NONNULL_END

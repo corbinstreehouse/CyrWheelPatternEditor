@@ -10,6 +10,7 @@
 #import "CDEncodedColorTransformer.h"
 #import "LEDPatterns.h"
 #import "CDPatternItemNames.h"
+#import "CyrWheelPatternEditor-Swift.h"
 
 @implementation CDPatternItem
 
@@ -131,6 +132,10 @@ static NSManagedObjectContext *g_currentContext = nil;
     return [NSSet setWithObject:@"patternType"];
 }
 
++ (NSSet *)keyPathsForValuesAffectingDisplayColor {
+    return [NSSet setWithObject:@"patternType"];
+}
+
 + (NSSet *)keyPathsForValuesAffectingPatternTypeNeedsPatternDuration {
     return [NSSet setWithObject:@"patternType"];
 }
@@ -139,12 +144,30 @@ static NSManagedObjectContext *g_currentContext = nil;
     return [NSSet setWithObject:@"patternType"];
 }
 
++ (NSSet *)keyPathsForValuesAffectingPatternTypeEnabled {
+    return [NSSet setWithObject:@"patternType"];
+}
+
 + (NSSet *)keyPathsForValuesAffectingDisplayName {
+    return [NSSet setWithObjects:@"patternType", @"imageFilename", nil];
+}
+
++ (NSSet *)keyPathsForValuesAffectingDisplayImage {
     return [NSSet setWithObjects:@"patternType", @"imageFilename", nil];
 }
 
 + (NSSet *)keyPathsForValuesAffectingPatternSpeed {
     return [NSSet setWithObject:@"patternDuration"];
+}
+
+@dynamic patternTypeEnabled;
+
+- (BOOL)patternTypeEnabled {
+    if (self.patternType != LEDPatternTypeBitmap && self.patternType != LEDPatternTypeImageReferencedBitmap) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (BOOL)needsColor {
@@ -162,6 +185,36 @@ static NSManagedObjectContext *g_currentContext = nil;
             return NO;
     }
 }
+
+@dynamic displayColor;
+
+- (void)setDisplayColor:(NSColor *)displayColor {
+    self.encodedColor = [CDEncodedColorTransformer intFromColor:displayColor];
+}
+
+- (NSColor *)displayColor {
+    if (self.needsColor) {
+        return [CDEncodedColorTransformer colorFromInt:self.encodedColor];
+    } else {
+        return [NSColor blackColor]; // Looks better when "disabled"
+    }
+}
+
+- (NSImage *)displayImage {
+    // Only show it if we have an image type.
+    if (self.patternType == LEDPatternTypeBitmap || self.patternType == LEDPatternTypeImageReferencedBitmap) {
+        if (self.imageFilename != nil) {
+            const NSURL *patternDir = [CDAppDelegate appDelegate].patternDirectoryURL;
+            NSURL *imageURL = [patternDir URLByAppendingPathComponent:self.imageFilename];
+            if (imageURL != nil) {
+                // TODO: Async loading needed?
+                return [[NSImage alloc] initByReferencingURL:imageURL];
+            }
+        }
+    }
+    return nil;
+}
+
 
 //- (NSMutableData *)_encodeRepAsRGB:(NSBitmapImageRep *)imageRep {
 //    NSMutableData *result = [NSMutableData new];

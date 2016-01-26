@@ -11,8 +11,12 @@
 @implementation CDPatternItemNames
 
 + (NSString *)nameForPatternType:(LEDPatternType)type {
-    return g_patternTypeNames[type];
-    
+    if (type >= 0 && type <= LEDPatternTypeCount) {
+        return g_patternTypeNames[type];
+    } else {
+        NSAssert(NO, @"bad type requested!");
+        return @"";
+    }
 }
 
 @end
@@ -20,7 +24,7 @@
 
 
 // Mapping from the type to the string we display. Yeah, not localized
-NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
+NSString *g_patternTypeNames[LEDPatternTypeCount+1] =  {
     
     @"Rotating Rainbow",
     @"Mini Rotating Rainbows",
@@ -82,8 +86,7 @@ NSString *g_patternTypeNames[LEDPatternTypeMax+1] =  {
     @"Lava Fire",
     @"LEDPatternTypeBitmap",
     @"Fade In - Fade Out",
-    
-    @"All Off"
+    @"LEDPatternTypeCount" // Should be hidden
 };
 
 

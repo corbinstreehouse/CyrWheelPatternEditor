@@ -15,18 +15,21 @@ class CDPatternItemDetailViewController: CDPatternSequencePresenterViewControlle
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        _popupPatternType.removeAllItems()
-        let ignoredPatternTypes = LEDPatternType.ignoredPatternTypes
-
+        _popupPatternType.autoenablesItems = false;
         
-        for var i: Int16 = 0; i <= Int16(LEDPatternTypeMax.rawValue); i++ {
+        _popupPatternType.removeAllItems()
+        let disabledPatternTypes = LEDPatternType.nonSelectablePatternTypes
+        let hiddenPatternTypes = LEDPatternType.hiddenPatternTypes
+
+        for var i: Int16 = 0; i < Int16(LEDPatternTypeCount.rawValue); i++ {
             let type = LEDPatternType.init(i)
-            if !ignoredPatternTypes.contains(type) {
+            if !hiddenPatternTypes.contains(type) {
                 let name = CDPatternItemNames.nameForPatternType(type)
                 
                 _popupPatternType.addItemWithTitle(name)
                 let item: NSMenuItem = _popupPatternType.lastItem!
                 item.tag = Int(i)
+                item.enabled = !disabledPatternTypes.contains(type)
             }
         }
         // TODO: sort the array..

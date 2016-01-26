@@ -61,7 +61,7 @@
 // TODO: use appkit viewDidLoad when available
 - (void)__viewDidLoad {
     [_popupPatternType removeAllItems];
-    for (NSInteger i = 0; i <= LEDPatternTypeMax; i++) {
+    for (NSInteger i = 0; i < LEDPatternTypeCount; i++) {
         [_popupPatternType addItemWithTitle:g_patternTypeNames[i]];
         NSMenuItem *item = [_popupPatternType lastItem];
         item.tag = i;

@@ -153,7 +153,7 @@ class ImagePatternObjectWrapper: PatternObjectWrapper {
 
 
 class ProgrammedPatternObjectWrapper: PatternObjectWrapper {
-    var patternType: LEDPatternType = LEDPatternTypeAllOff
+    var patternType: LEDPatternType = LEDPatternTypeCount
     init(patternType: LEDPatternType) {
         let image: NSImage? = nil; // TODO: Load the template image (or start creating it..)
         super.init(label: CDPatternItemNames.nameForPatternType(patternType), image: image)
@@ -165,26 +165,30 @@ class ProgrammedPatternObjectWrapper: PatternObjectWrapper {
 // TODO: put this somewhere else to share the code better
 extension LEDPatternType {
     
-    static var ignoredPatternTypes: [LEDPatternType] {
-        return [LEDPatternTypeMax, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
+    static var nonSelectablePatternTypes: [LEDPatternType] {
+        return [LEDPatternTypeCount, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
     }
-    
+
+    static var hiddenPatternTypes: [LEDPatternType] {
+        return [LEDPatternTypeCount, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
+    }
+
 }
 
 class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate {
 
     @IBOutlet weak var _outlineView: NSOutlineView!
     
-    private let _ignoredPatternTypes: [LEDPatternType] = [LEDPatternTypeMax, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
+    private let _ignoredPatternTypes: [LEDPatternType] = [LEDPatternTypeCount, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
     private var _rootChildren: [PatternObjectWrapper] = []
     
     private func _loadPatternTypeArray() -> [PatternObjectWrapper] {
 
-        let ignoredPatternTypes = LEDPatternType.ignoredPatternTypes
+        let ignoredPatternTypes = LEDPatternType.nonSelectablePatternTypes
         
         var result = [PatternObjectWrapper]()
         // Create a sorted array of pattern types to show
-        for rawType in LEDPatternTypeMin.rawValue...LEDPatternTypeMax.rawValue  {
+        for rawType in LEDPatternTypeMin.rawValue...LEDPatternTypeCount.rawValue  {
             let patternType = LEDPatternType(rawType)
             let patternTypeWrapper = ProgrammedPatternObjectWrapper(patternType: patternType)
             if !ignoredPatternTypes.contains(patternType) {
