@@ -1045,7 +1045,7 @@ DQ
                                                 <constraint firstAttribute="height" constant="2" id="ZU2-ui-t3u"/>
                                             </constraints>
                                             <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                            <color key="fillColor" white="0.08585885067" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="fillColor" red="0.11233674734830856" green="0.11233674734830856" blue="0.11233674734830856" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </box>
                                     </subviews>
                                     <constraints>
@@ -1622,7 +1622,7 @@ DQ
                         <splitViewItem id="Gpv-ZU-nZ9"/>
                         <splitViewItem holdingPriority="1000" id="0ER-3N-9S5"/>
                     </splitViewItems>
-                    <splitView key="splitView" dividerStyle="thin" id="F00-lN-ZYe">
+                    <splitView key="splitView" dividerStyle="thin" id="F00-lN-ZYe" customClass="CDNoWidthSplitView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="181" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </splitView>
@@ -1644,7 +1644,7 @@ DQ
                         <splitViewItem id="XvO-5c-PYh"/>
                         <splitViewItem holdingPriority="750" id="hL6-4V-zDl"/>
                     </splitViewItems>
-                    <splitView key="splitView" dividerStyle="thin" vertical="YES" id="0cQ-8I-Lp7">
+                    <splitView key="splitView" dividerStyle="thin" vertical="YES" id="0cQ-8I-Lp7" customClass="CDPatternSplitView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="577" height="309"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </splitView>
@@ -1656,7 +1656,7 @@ DQ
                 </splitViewController>
                 <customObject id="saW-xR-R76" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3026.5" y="-407.5"/>
+            <point key="canvasLocation" x="3034.5" y="-405.5"/>
         </scene>
         <!--Pattern Images Outline View Controller-->
         <scene sceneID="RIL-xi-VZJ">

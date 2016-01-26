@@ -8,7 +8,8 @@
 
 import Cocoa
 
-class CDDarkSplitView: NSSplitView {
+// I might want to make this split view resizable at some point in the future
+class CDNoWidthSplitView: NSSplitView {
 
     override var wantsUpdateLayer: Bool {
         get {
@@ -17,8 +18,7 @@ class CDDarkSplitView: NSSplitView {
     }
     
     override func updateLayer() {
-        super.updateLayer()
-        self.layer!.backgroundColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0).CGColor
+//        super.updateLayer()
     }
     
     override var dividerThickness: CGFloat {
