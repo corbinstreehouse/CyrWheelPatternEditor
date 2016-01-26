@@ -26,6 +26,75 @@ extension Array {
     }
 }
 
+// Custom row view for the header item
+class FloatingRowView: NSTableRowView {
+    
+//    override var wantsUpdateLayer: Bool {
+//        get {
+//            return true;
+//        }
+//    }
+//    
+//    override func updateLayer() {
+//        self.layer!.backgroundColor =
+//    }
+
+    override func drawRect(dirtyRect: NSRect) {
+        // TODO: something more generic/better with colors instead of hardcoding
+        let backgroundColor = NSColor(SRGBRed: 41.0/255.0, green: 41.0/255.0, blue: 41.0/255.0, alpha: 1.0)
+        backgroundColor.set()
+        NSRectFillUsingOperation(dirtyRect, NSCompositingOperation.CompositeSourceIn)
+        
+        let borderColor = NSColor(SRGBRed: 29.0/255.0, green: 29.0/255.0, blue: 29.0/255.0, alpha: 1.0)
+        borderColor.set()
+        var topRect = self.bounds
+        topRect.size.height = 2.0
+        NSRectFillUsingOperation(topRect, NSCompositingOperation.CompositeSourceIn)
+        
+        topRect.origin.y = NSMaxY(self.bounds) - 2.0
+        NSRectFillUsingOperation(topRect, NSCompositingOperation.CompositeSourceIn)
+    }
+    
+}
+
+class DarkRowView: NSTableRowView {
+//    override var interiorBackgroundStyle: NSBackgroundStyle {
+//        get {
+//            // Make the text not go dark 
+//            return NSBackgroundStyle.Dark
+//        }
+//    }
+
+//    override func updateLayer() {
+//        super.updateLayer()
+//        if self.selected && !self.emphasized {
+//            // Change the color to be a variation of the blue
+//            self.layer!.backgroundColor = NSColor.redColor().CGColor// NSColor.secondarySelectedControlColor().colorWithAlphaComponent(0.7).CGColor
+//        }
+//    }
+    override func drawSelectionInRect(dirtyRect: NSRect) {
+        var color = NSColor.alternateSelectedControlColor()
+        if !self.emphasized {
+            color = color.colorWithAlphaComponent(0.6)
+        }
+        color.set()
+        NSRectFillUsingOperation(dirtyRect, NSCompositingOperation.CompositeSourceIn)
+    }
+
+}
+
+class DarkOutlineView: NSOutlineView {
+    override func makeViewWithIdentifier(identifier: String, owner: AnyObject?) -> NSView? {
+        let result = super.makeViewWithIdentifier(identifier, owner: owner)
+        if let result = result {
+            if result.identifier == NSOutlineViewDisclosureButtonKey {
+                result.alphaValue = 0.8 // looks better... not so white
+            }
+        }
+        return result
+    }
+}
+
 
 // For binding the cell object value to and a simple model representing patterns that I can create
 class PatternObjectWrapper : NSObject {
@@ -81,6 +150,7 @@ class ImagePatternObjectWrapper: PatternObjectWrapper {
     }
     
 }
+
 
 class ProgrammedPatternObjectWrapper: PatternObjectWrapper {
     var patternType: LEDPatternType = LEDPatternTypeAllOff
@@ -157,11 +227,11 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
         let programmedPatterns = _loadPatternTypeArray()
         let programmedPatternGroupObject = HeaderPatternObjectWrapper(label: "Programmed Patterns", image: nil)
         _rootChildren = [programmedPatternGroupObject]
         _rootChildren.appendContentsOf(programmedPatterns)
-        
         
         let rootPatternImages = _loadRootPatternImages()
         if let rootImages = rootPatternImages.children {
@@ -172,6 +242,7 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
 //            _rootChildren.appendContentsOf(rootImages) // why doesn't this work??
             _rootChildren.appendContentsOf(a)
         }
+//        _outlineView.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         _outlineView.reloadData()
         _outlineView.expandItem(nil)
     }
@@ -265,6 +336,35 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     
     func outlineView(outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject? {
         return item
+    }
+    
+    
+    func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
+        if item is HeaderPatternObjectWrapper {
+            // Header item
+            return outlineView.makeViewWithIdentifier("HeaderCell", owner: nil)
+        } else if let tableColumn = tableColumn {
+            // regular item
+            return outlineView.makeViewWithIdentifier(tableColumn.identifier, owner: nil)
+        } else {
+            return nil
+        }
+    }
+    
+    func outlineView(outlineView: NSOutlineView, rowViewForItem item: AnyObject) -> NSTableRowView? {
+        if item is HeaderPatternObjectWrapper {
+            return outlineView.makeViewWithIdentifier("FloatingRowView", owner: nil) as? NSTableRowView
+        } else {
+            return outlineView.makeViewWithIdentifier("DarkRowView", owner: nil) as? NSTableRowView
+        }
+    }
+    
+    func outlineView(outlineView: NSOutlineView, heightOfRowByItem item: AnyObject) -> CGFloat {
+        if item is HeaderPatternObjectWrapper {
+            return outlineView.rowHeight + 4 // A little bigger/taller to look better w/the bold font
+        } else {
+            return outlineView.rowHeight
+        }
     }
     
     @IBAction func _outlineDoubleClick(sender: NSOutlineView) {

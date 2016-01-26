@@ -20,6 +20,7 @@
 		9D500A2518BD88E8003BD8C2 /* CDEncodedColorTransformer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */; };
 		9D62EAAF1C332C1500BFB916 /* CDPatternEditorWindowController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62EAAE1C332C1500BFB916 /* CDPatternEditorWindowController2.swift */; };
 		9D62EAB11C332C2D00BFB916 /* CDPatternEditorContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62EAB01C332C2D00BFB916 /* CDPatternEditorContentViewController.swift */; };
+		9D6408171C55C73D006D3083 /* CDDarkSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6408161C55C73D006D3083 /* CDDarkSplitView.swift */; };
 		9D683E2C1C0FF0AC0058EFA0 /* CDRolloverButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D683E2B1C0FF0AC0058EFA0 /* CDRolloverButton.swift */; };
 		9D684ABC1C128F780058EFA0 /* Patterns.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9D684ABA1C128F5F0058EFA0 /* Patterns.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9D684AC51C17E77C0058EFA0 /* CDLazyBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D684AC31C17E77C0058EFA0 /* CDLazyBitmap.cpp */; };
@@ -132,6 +133,7 @@
 		9D5706C31C3E0A7B0094D2F0 /* CDTimelineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDTimelineItem.h; sourceTree = "<group>"; };
 		9D62EAAE1C332C1500BFB916 /* CDPatternEditorWindowController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorWindowController2.swift; sourceTree = "<group>"; };
 		9D62EAB01C332C2D00BFB916 /* CDPatternEditorContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorContentViewController.swift; sourceTree = "<group>"; };
+		9D6408161C55C73D006D3083 /* CDDarkSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDDarkSplitView.swift; sourceTree = "<group>"; };
 		9D683E2B1C0FF0AC0058EFA0 /* CDRolloverButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDRolloverButton.swift; sourceTree = "<group>"; };
 		9D683E2F1C1139380058EFA0 /* CDPatternSequenceManagerShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDPatternSequenceManagerShared.h; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternSequenceManagerShared.h; sourceTree = "<group>"; };
 		9D684ABA1C128F5F0058EFA0 /* Patterns.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Patterns.framework; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 		9DFBAC041888EDFC00737C2F = {
 			isa = PBXGroup;
 			children = (
+				9D6408161C55C73D006D3083 /* CDDarkSplitView.swift */,
 				9DBB2A7118A2F18300C44C7C /* Simulator */,
 				9DFBAC161888EDFC00737C2F /* CyrWheelPatternEditor */,
 				9DFBAC3A1888EDFC00737C2F /* CyrWheelPatternEditorTests */,
@@ -568,6 +571,7 @@
 				9DCE4EC119D4F349002664D9 /* CDTimeValueTransformer.m in Sources */,
 				9D8F58FB1C1C7C7700826D8D /* SdFatUtil.cpp in Sources */,
 				9DA685B219417089003631F6 /* LEDPatterns.cpp in Sources */,
+				9D6408171C55C73D006D3083 /* CDDarkSplitView.swift in Sources */,
 				9DFBAC561888F0F600737C2F /* CDPatternEditorWindowController.mm in Sources */,
 				9D8F58FE1C1CA9CD00826D8D /* FatFile.cpp in Sources */,
 				9DA685B4194176B6003631F6 /* lib8tion.cpp in Sources */,
