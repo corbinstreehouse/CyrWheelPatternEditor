@@ -8,24 +8,13 @@
 
 import Cocoa
 
-class CDPatternEditorBottomBar: NSViewController, CDPatternSequencePresenter {
+class CDPatternEditorBottomBar: CDPatternSequencePresenterViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         
     }
-    
-    dynamic var patternSequence: CDPatternSequence! {
-        didSet {
-            for child in self.childViewControllers {
-                if var childSequenceVC = child as? CDPatternSequencePresenter {
-                    childSequenceVC.patternSequence = self.patternSequence
-                }
-            }
-        }
-    }
-    
     @IBAction func btnExportClicked(sender: AnyObject) {
         let sp = NSSavePanel()
         sp.allowedFileTypes = ["pat"]
@@ -72,8 +61,6 @@ class CDPatternEditorBottomBar: NSViewController, CDPatternSequencePresenter {
             }
         }
     }
-
-
     
     @IBAction func btnAddRemoveClicked(sender: NSSegmentedControl) {
         if sender.selectedSegment == 0 {

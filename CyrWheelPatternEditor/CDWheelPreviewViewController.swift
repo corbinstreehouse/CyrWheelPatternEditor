@@ -8,6 +8,7 @@
 
 import Cocoa
 
+// Descend from CDPatternSequencePresenterViewController?
 class CDWheelPreviewViewController: NSViewController, CDPatternSequencePresenter {
 
 //    private var _childrenObserver: CDPatternSequenceChildrenObserver?

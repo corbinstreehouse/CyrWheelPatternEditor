@@ -694,7 +694,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1iR-9z-QZV">
+                            <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1iR-9z-QZV">
                                 <rect key="frame" x="0.0" y="32" width="456" height="195"/>
                                 <clipView key="contentView" id="9MZ-01-sUL">
                                     <rect key="frame" x="1" y="1" width="454" height="193"/>
@@ -751,7 +751,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="350" id="mfu-nX-JCS"/>
                                 </constraints>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="yLc-MI-P6i">
+                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="yLc-MI-P6i">
                                     <rect key="frame" x="1" y="178" width="454" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -760,7 +760,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Nqm-Jc-Aoq">
+                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nqm-Jc-Aoq">
                                 <rect key="frame" x="14" y="0.0" width="82" height="32"/>
                                 <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Myc-zn-1om">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -779,7 +779,7 @@ Gw
                                     <binding destination="X0K-u0-bA2" name="animate" keyPath="scanning" id="dqd-Fc-azz"/>
                                 </connections>
                             </progressIndicator>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mkZ-fD-0B5">
+                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mkZ-fD-0B5">
                                 <rect key="frame" x="350" y="0.0" width="92" height="32"/>
                                 <buttonCell key="cell" type="push" title="Connect" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="CX0-du-a06">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -811,7 +811,7 @@ DQ
                 </viewController>
                 <customObject id="gtn-rk-Bat" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="942" y="218.5"/>
+            <point key="canvasLocation" x="938" y="506"/>
         </scene>
         <!--Wheel Connection Chooser View Controller-->
         <scene sceneID="gF1-cC-4t3">
@@ -891,7 +891,7 @@ DQ
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="5Ie-VR-ZAm"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="pcu-JK-i7f"/>
                                             </constraints>
-                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="aMM-Cs-Dzg">
+                                            <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="aMM-Cs-Dzg">
                                                 <rect key="frame" x="0.0" y="133" width="610" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -992,95 +992,93 @@ DQ
                 </viewController>
                 <customObject id="tD9-z3-zhi" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="921" y="797"/>
+            <point key="canvasLocation" x="909" y="857"/>
         </scene>
-        <!--View Controller-->
+        <!--Main Content View Controller-->
         <scene sceneID="slG-Pg-7qM">
             <objects>
-                <viewController id="MLg-tP-Rp1" sceneMemberID="viewController">
+                <viewController id="MLg-tP-Rp1" userLabel="Main Content View Controller" customClass="CDPatternSequencePresenterViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="B8B-mH-WId">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="928" height="569"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <box fixedFrame="YES" title="Box" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="Ahh-WV-8FV">
-                                <rect key="frame" x="-3" y="-4" width="456" height="304"/>
+                            <box title="Box" boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="Ahh-WV-8FV" userLabel="Main Background Box">
+                                <rect key="frame" x="0.0" y="0.0" width="928" height="569"/>
                                 <view key="contentView" id="B23-P9-bbk">
-                                    <rect key="frame" x="1" y="1" width="454" height="288"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="928" height="569"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <containerView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xjK-ye-TTG">
-                                            <rect key="frame" x="86" y="92" width="225" height="150"/>
+                                        <box title="Box" boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="h81-6c-cZd" userLabel="Top box">
+                                            <rect key="frame" x="0.0" y="547" width="928" height="22"/>
+                                            <view key="contentView" id="ISf-oD-CBH">
+                                                <rect key="frame" x="0.0" y="0.0" width="928" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </view>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="22" id="b9A-cg-whs"/>
+                                            </constraints>
+                                            <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                            <color key="fillColor" red="0.1450980392" green="0.1450980392" blue="0.1450980392" alpha="1" colorSpace="calibratedRGB"/>
+                                        </box>
+                                        <containerView translatesAutoresizingMaskIntoConstraints="NO" id="xjK-ye-TTG" userLabel="Bottom Bar Container View">
+                                            <rect key="frame" x="0.0" y="0.0" width="928" height="32"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="32" id="lZ6-ej-P0s"/>
+                                            </constraints>
                                             <connections>
-                                                <segue destination="CHq-4M-PKc" kind="embed" id="Kl0-lR-i0t"/>
+                                                <segue destination="2qG-zv-trm" kind="embed" id="Mnh-xd-1U7"/>
                                             </connections>
                                         </containerView>
+                                        <containerView translatesAutoresizingMaskIntoConstraints="NO" id="1nJ-a5-lfr">
+                                            <rect key="frame" x="0.0" y="32" width="928" height="515"/>
+                                            <connections>
+                                                <segue destination="QP0-L7-3HJ" kind="embed" id="6iT-3d-9kc"/>
+                                            </connections>
+                                        </containerView>
+                                        <box title="Box" boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="lBU-30-lkj" userLabel="Top line box">
+                                            <rect key="frame" x="0.0" y="545" width="928" height="2"/>
+                                            <view key="contentView" id="v5V-To-sw5">
+                                                <rect key="frame" x="0.0" y="0.0" width="928" height="2"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </view>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="2" id="ZU2-ui-t3u"/>
+                                            </constraints>
+                                            <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                            <color key="fillColor" white="0.08585885067" alpha="1" colorSpace="calibratedWhite"/>
+                                        </box>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="h81-6c-cZd" firstAttribute="top" secondItem="B23-P9-bbk" secondAttribute="top" id="0i9-Y9-637"/>
+                                        <constraint firstItem="xjK-ye-TTG" firstAttribute="top" secondItem="1nJ-a5-lfr" secondAttribute="bottom" id="8p0-F2-1xb"/>
+                                        <constraint firstItem="lBU-30-lkj" firstAttribute="leading" secondItem="B23-P9-bbk" secondAttribute="leading" id="9Gc-TF-kQx"/>
+                                        <constraint firstAttribute="trailing" secondItem="1nJ-a5-lfr" secondAttribute="trailing" id="DDk-Z7-Yd8"/>
+                                        <constraint firstAttribute="trailing" secondItem="h81-6c-cZd" secondAttribute="trailing" id="KRp-cJ-9AR"/>
+                                        <constraint firstItem="1nJ-a5-lfr" firstAttribute="top" secondItem="h81-6c-cZd" secondAttribute="bottom" id="YwF-JW-W9P"/>
+                                        <constraint firstItem="1nJ-a5-lfr" firstAttribute="leading" secondItem="B23-P9-bbk" secondAttribute="leading" id="bbQ-cd-geu"/>
+                                        <constraint firstItem="h81-6c-cZd" firstAttribute="leading" secondItem="B23-P9-bbk" secondAttribute="leading" id="d3X-Ck-S3h"/>
+                                        <constraint firstItem="xjK-ye-TTG" firstAttribute="leading" secondItem="B23-P9-bbk" secondAttribute="leading" id="dZc-WZ-19Z"/>
+                                        <constraint firstItem="lBU-30-lkj" firstAttribute="top" secondItem="h81-6c-cZd" secondAttribute="bottom" id="tnu-vm-QHi"/>
+                                        <constraint firstAttribute="trailing" secondItem="xjK-ye-TTG" secondAttribute="trailing" id="uMV-Da-sfd"/>
+                                        <constraint firstAttribute="trailing" secondItem="lBU-30-lkj" secondAttribute="trailing" id="vS4-39-lf0"/>
+                                        <constraint firstAttribute="bottom" secondItem="xjK-ye-TTG" secondAttribute="bottom" id="yCd-a1-ERe"/>
+                                    </constraints>
                                 </view>
-                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
-                                <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </box>
-                        </subviews>
-                    </view>
-                </viewController>
-                <customObject id="IpW-w2-Xs3" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1479" y="-686"/>
-        </scene>
-        <!--Main Content View-->
-        <scene sceneID="46e-YT-Pak">
-            <objects>
-                <splitViewController id="YBb-n5-rhh" userLabel="Main Content View" customClass="CDPatternSequenceSplitViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
-                    <splitViewItems>
-                        <splitViewItem holdingPriority="1000" id="mdf-sV-Bhx"/>
-                        <splitViewItem id="kg0-Ke-d6L"/>
-                        <splitViewItem id="UND-jS-I1x"/>
-                    </splitViewItems>
-                    <splitView key="splitView" dividerStyle="thin" id="ei8-gN-oEv" customClass="CDDarkSplitView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </splitView>
-                    <connections>
-                        <segue destination="EcM-ez-5Yu" kind="relationship" relationship="splitItems" id="Bt3-cH-vmX"/>
-                        <segue destination="QP0-L7-3HJ" kind="relationship" relationship="splitItems" id="xx9-vY-wrO"/>
-                        <segue destination="2qG-zv-trm" kind="relationship" relationship="splitItems" id="1d8-Kr-0DS"/>
-                    </connections>
-                </splitViewController>
-                <customObject id="ATb-r3-iwn" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1614" y="-337"/>
-        </scene>
-        <!--Window Top Bar-->
-        <scene sceneID="KNx-eb-ehh">
-            <objects>
-                <viewController id="EcM-ez-5Yu" userLabel="Window Top Bar" sceneMemberID="viewController">
-                    <view key="view" id="EQD-44-qY7">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="22"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <box title="Box" boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="G4K-YI-Brb" userLabel="Top box">
-                                <rect key="frame" x="0.0" y="0.0" width="450" height="22"/>
-                                <view key="contentView" id="QGS-1f-sSe">
-                                    <rect key="frame" x="0.0" y="0.0" width="450" height="22"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                </view>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="DwK-VF-Pg0"/>
-                                </constraints>
                                 <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                 <color key="fillColor" red="0.1450980392" green="0.1450980392" blue="0.1450980392" alpha="1" colorSpace="calibratedRGB"/>
                             </box>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="G4K-YI-Brb" secondAttribute="trailing" id="5j7-0K-cRh"/>
-                            <constraint firstAttribute="bottom" secondItem="G4K-YI-Brb" secondAttribute="bottom" id="Oss-6D-rfv"/>
-                            <constraint firstItem="G4K-YI-Brb" firstAttribute="leading" secondItem="EQD-44-qY7" secondAttribute="leading" id="pVq-Sz-KNs"/>
-                            <constraint firstItem="G4K-YI-Brb" firstAttribute="top" secondItem="EQD-44-qY7" secondAttribute="top" id="rhr-MT-2LA"/>
+                            <constraint firstItem="Ahh-WV-8FV" firstAttribute="top" secondItem="B8B-mH-WId" secondAttribute="top" id="4It-Sv-vu8"/>
+                            <constraint firstAttribute="bottom" secondItem="Ahh-WV-8FV" secondAttribute="bottom" id="5CO-JB-zkR"/>
+                            <constraint firstAttribute="trailing" secondItem="Ahh-WV-8FV" secondAttribute="trailing" id="7cJ-XF-79S"/>
+                            <constraint firstItem="Ahh-WV-8FV" firstAttribute="leading" secondItem="B8B-mH-WId" secondAttribute="leading" id="fDa-es-eFy"/>
                         </constraints>
                     </view>
                 </viewController>
-                <customObject id="11d-l6-eGA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <customObject id="IpW-w2-Xs3" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2847" y="-813"/>
+            <point key="canvasLocation" x="1615" y="-65.5"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="StI-UI-pDz">
@@ -1093,12 +1091,12 @@ DQ
                         <rect key="screenRect" x="0.0" y="0.0" width="1280" height="800"/>
                     </window>
                     <connections>
-                        <segue destination="YBb-n5-rhh" kind="relationship" relationship="window.shadowedContentViewController" id="UPP-vh-b0M"/>
+                        <segue destination="MLg-tP-Rp1" kind="relationship" relationship="window.shadowedContentViewController" id="0QB-4a-6Wl"/>
                     </connections>
                 </windowController>
                 <customObject id="GaY-PG-TOX" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1002" y="-337"/>
+            <point key="canvasLocation" x="1615" y="-631"/>
         </scene>
         <!--Wheel Connection View Controller-->
         <scene sceneID="Hx6-tK-ljq">
@@ -1460,7 +1458,7 @@ DQ
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="511" y="1294.5"/>
+            <point key="canvasLocation" x="23" y="1134.5"/>
         </scene>
         <!--Pattern Editor Bottom Bar-->
         <scene sceneID="Vtc-l8-Ugi">
@@ -1561,7 +1559,7 @@ DQ
                 </viewController>
                 <customObject id="BN8-Bp-Otf" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2331" y="649"/>
+            <point key="canvasLocation" x="1615" y="368"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tEO-OM-TnU">
@@ -1625,7 +1623,7 @@ DQ
                         <splitViewItem holdingPriority="1000" id="0ER-3N-9S5"/>
                     </splitViewItems>
                     <splitView key="splitView" dividerStyle="thin" id="F00-lN-ZYe">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="181" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </splitView>
                     <connections>
@@ -1635,7 +1633,7 @@ DQ
                 </splitViewController>
                 <customObject id="Fm9-6i-gg0" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2211" y="-187"/>
+            <point key="canvasLocation" x="2277.5" y="-70"/>
         </scene>
         <!--Pattern Sequence Split View Controller-->
         <scene sceneID="PVB-Mn-ivO">
@@ -1658,7 +1656,7 @@ DQ
                 </splitViewController>
                 <customObject id="saW-xR-R76" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3026.5" y="-415.5"/>
+            <point key="canvasLocation" x="3026.5" y="-407.5"/>
         </scene>
         <!--Pattern Images Outline View Controller-->
         <scene sceneID="RIL-xi-VZJ">
@@ -1799,7 +1797,7 @@ DQ
                 </viewController>
                 <customObject id="0DA-dP-uov" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2606" y="0.0"/>
+            <point key="canvasLocation" x="2626" y="31"/>
         </scene>
         <!--Wheel Preview View Controller-->
         <scene sceneID="l63-S3-kDm">
@@ -1907,7 +1905,7 @@ DQ
                 </viewController>
                 <customObject id="ORQ-sf-WdA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2997" y="78"/>
+            <point key="canvasLocation" x="3026" y="50"/>
         </scene>
         <!--Item Detail View-->
         <scene sceneID="DoD-NM-rRc">
@@ -2191,7 +2189,7 @@ DQ
                     </connections>
                 </arrayController>
             </objects>
-            <point key="canvasLocation" x="3371" y="135.5"/>
+            <point key="canvasLocation" x="3417" y="135.5"/>
         </scene>
         <!--Timeline View Controller-->
         <scene sceneID="4SP-PD-tuN">
@@ -2268,7 +2266,7 @@ DQ
                 </viewController>
                 <customObject id="mDA-ab-Qcf" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2780" y="460"/>
+            <point key="canvasLocation" x="2648" y="446"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="QGk-uK-6Ub">
@@ -2300,19 +2298,6 @@ DQ
                 <customObject id="P83-eD-WGh" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2016" y="1302"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="gtg-OV-OVY">
-            <objects>
-                <viewController id="CHq-4M-PKc" sceneMemberID="viewController">
-                    <view key="view" id="rOa-CF-hiC">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </view>
-                </viewController>
-                <customObject id="eYZ-dm-NTw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2031" y="-889"/>
         </scene>
     </scenes>
     <resources>

@@ -43,3 +43,29 @@ extension NSViewController {
     }
     
 }
+
+class CDPatternSequencePresenterViewController: NSViewController, CDPatternSequencePresenter {
+
+    // Push the value to children.
+    // Dynamic for bindings in some subclasses (CDPatternEditorBottomBar)
+    dynamic var patternSequence: CDPatternSequence! {
+        didSet {
+            for child in self.childViewControllers {
+                if var childSequenceVC = child as? CDPatternSequencePresenter {
+                    childSequenceVC.patternSequence = self.patternSequence
+                }
+            }
+        }
+    }
+    
+    override func addChildViewController(childViewController: NSViewController) {
+        super.addChildViewController(childViewController)
+        // Push the pattern sequence to children if available
+        if self.patternSequence != nil {
+            if var childSequenceVC = childViewController as? CDPatternSequencePresenter {
+                childSequenceVC.patternSequence = self.patternSequence
+            }
+        }
+    }
+    
+}
