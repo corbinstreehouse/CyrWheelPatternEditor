@@ -20,33 +20,6 @@
             <rect key="frame" x="0.0" y="0.0" width="793" height="60"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button verticalHuggingPriority="750" id="wfi-IY-9br">
-                    <rect key="frame" x="570" y="33" width="42" height="19"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="roundRect" title="Load" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8hn-Qd-P48">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="cellTitle"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="btnLoadImageClicked:" target="-2" id="2a0-z6-6Hk"/>
-                    </connections>
-                </button>
-                <button verticalHuggingPriority="750" id="HTC-4b-JIv">
-                    <rect key="frame" x="568" y="10" width="44" height="19"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="roundRect" title="Clear" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="auX-ks-cZB">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="cellTitle"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="btnClearImageClicked:" target="-2" id="akq-W3-tMb"/>
-                    </connections>
-                </button>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="eJL-43-cah">
-                    <rect key="frame" x="617" y="7" width="68" height="47"/>
-                    <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
-                    <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="proportionallyUpOrDown" imageFrameStyle="grayBezel" id="Aig-c5-Mnc"/>
-                </imageView>
                 <popUpButton verticalHuggingPriority="750" id="C1b-2n-0Sp">
                     <rect key="frame" x="18" y="30" width="183" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -163,16 +136,12 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
-                        <binding destination="-2" name="value" keyPath="self.patternItem.encodedColor" id="yCQ-0T-qOl">
-                            <dictionary key="options">
-                                <string key="NSValueTransformerName">CDEncodedColorTransformer</string>
-                            </dictionary>
-                        </binding>
                         <binding destination="-2" name="hidden" keyPath="self.patternItem.needsColor" id="Spw-PU-4nV">
                             <dictionary key="options">
                                 <string key="NSValueTransformerName">NSNegateBoolean</string>
                             </dictionary>
                         </binding>
+                        <binding destination="-2" name="value" keyPath="self.patternItem.displayColor" id="LFR-oS-yc7"/>
                     </connections>
                 </colorWell>
                 <button id="zYI-19-626">
@@ -199,6 +168,14 @@
                         <binding destination="-2" name="enabled" keyPath="self.patternItem.patternTypeNeedsPatternDuration" id="I31-WV-KYq"/>
                     </connections>
                 </textField>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="eJL-43-cah">
+                    <rect key="frame" x="562" y="7" width="68" height="47"/>
+                    <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
+                    <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="proportionallyUpOrDown" imageFrameStyle="grayBezel" id="Aig-c5-Mnc"/>
+                    <connections>
+                        <binding destination="-2" name="value" keyPath="patternItem.displayImage" id="mTO-pV-Hip"/>
+                    </connections>
+                </imageView>
             </subviews>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="ppZ-Jl-TT7"/>

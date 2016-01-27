@@ -694,7 +694,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1iR-9z-QZV">
+                            <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1iR-9z-QZV">
                                 <rect key="frame" x="0.0" y="32" width="456" height="195"/>
                                 <clipView key="contentView" id="9MZ-01-sUL">
                                     <rect key="frame" x="1" y="1" width="454" height="193"/>
@@ -751,7 +751,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="350" id="mfu-nX-JCS"/>
                                 </constraints>
-                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="yLc-MI-P6i">
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="yLc-MI-P6i">
                                     <rect key="frame" x="1" y="178" width="454" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -760,7 +760,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nqm-Jc-Aoq">
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Nqm-Jc-Aoq">
                                 <rect key="frame" x="14" y="0.0" width="82" height="32"/>
                                 <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Myc-zn-1om">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -779,7 +779,7 @@ Gw
                                     <binding destination="X0K-u0-bA2" name="animate" keyPath="scanning" id="dqd-Fc-azz"/>
                                 </connections>
                             </progressIndicator>
-                            <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mkZ-fD-0B5">
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mkZ-fD-0B5">
                                 <rect key="frame" x="350" y="0.0" width="92" height="32"/>
                                 <buttonCell key="cell" type="push" title="Connect" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="CX0-du-a06">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -891,7 +891,7 @@ DQ
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="5Ie-VR-ZAm"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="pcu-JK-i7f"/>
                                             </constraints>
-                                            <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="aMM-Cs-Dzg">
+                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="aMM-Cs-Dzg">
                                                 <rect key="frame" x="0.0" y="133" width="610" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -1342,7 +1342,7 @@ DQ
                                                 </subviews>
                                                 <color key="backgroundColor" red="0.1215686275" green="0.1215686275" blue="0.1215686275" alpha="1" colorSpace="calibratedRGB"/>
                                             </clipView>
-                                            <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="A2o-89-nVW">
+                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="A2o-89-nVW">
                                                 <rect key="frame" x="0.0" y="265" width="844" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -1581,8 +1581,11 @@ DQ
                                 </connections>
                             </textField>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KYO-hV-4Yi">
-                                <rect key="frame" x="0.0" y="22" width="48" height="48"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSApplicationIcon" id="cdf-IZ-D19"/>
+                                <rect key="frame" x="4" y="5" width="67" height="68"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="NSApplicationIcon" id="cdf-IZ-D19"/>
+                                <connections>
+                                    <binding destination="gYm-8t-BH8" name="value" keyPath="representedObject.displayImage" id="0pr-gz-ghm"/>
+                                </connections>
                             </imageView>
                         </subviews>
                         <constraints>
@@ -1593,6 +1596,7 @@ DQ
                     </customView>
                 </viewController>
                 <customObject id="NVO-6E-ahI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController representsSharedInstance="YES" id="Ivg-iA-SPE"/>
             </objects>
             <point key="canvasLocation" x="1877" y="935.5"/>
         </scene>
@@ -1673,7 +1677,7 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="LyL-O3-uPk" id="oSJ-F7-3Ql" customClass="DarkOutlineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="216" height="300"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="216" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" white="0.144230525" alpha="1" colorSpace="calibratedWhite"/>
@@ -1774,7 +1778,7 @@ DQ
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="pny-77-hbU"/>
                                 </constraints>
-                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="p4h-5d-287">
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="p4h-5d-287">
                                     <rect key="frame" x="0.0" y="284" width="216" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -1930,8 +1934,8 @@ DQ
                                     <menu key="menu" title="OtherViews" id="MAS-b5-zuZ"/>
                                 </popUpButtonCell>
                                 <connections>
-                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.patternTypeEnabled" id="7J0-it-H6E"/>
                                     <binding destination="heP-6G-9Ue" name="selectedTag" keyPath="selection.patternType" id="F7t-1t-wje"/>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.patternTypeEnabled" id="7J0-it-H6E"/>
                                 </connections>
                             </popUpButton>
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="inf-XG-uDG">
@@ -2046,8 +2050,8 @@ DQ
                                             <string key="NSValueTransformerName">NSIsNotNil</string>
                                         </dictionary>
                                     </binding>
-                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.needsColor" id="tvE-fJ-jNg"/>
                                     <binding destination="heP-6G-9Ue" name="value" keyPath="selection.displayColor" id="8pW-tX-7R6"/>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.needsColor" id="tvE-fJ-jNg"/>
                                 </connections>
                             </colorWell>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Vf-oI-Uvo">
@@ -2220,7 +2224,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wZJ-Op-eAi">
-                                                <rect key="frame" x="611" y="0.0" width="15" height="150"/>
+                                                <rect key="frame" x="610" y="0.0" width="16" height="150"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>

@@ -160,13 +160,13 @@ class CDTimelineItemView: CDBorderedView {
     }
 
     func _commonSetup() {
-        self.backgroundColor = TIMELINE_ITEM_FILL_COLOR
+        self.backgroundColor = CDTimelineView.fillColor
         self.cornerRadius = 4.0
         self.borderWidth = CDTimelineItemView.normalBorderWidth
     }
     
     func _updateBorderColor() {
-        self.borderColor = self.selected /*&& !self.resizing*/ ? NSColor.alternateSelectedControlColor() : CDTimelineItemBorderColor;
+        self.borderColor = self.selected /*&& !self.resizing*/ ? NSColor.alternateSelectedControlColor() : CDTimelineView.borderColor;
         self.borderWidth = self.selected || self.resizing ? CDTimelineItemView.selectionBorderWidth : CDTimelineItemView.normalBorderWidth
     }
     

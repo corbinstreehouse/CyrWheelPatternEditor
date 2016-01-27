@@ -18,16 +18,14 @@ protocol CDTimelineViewDataSource : NSObjectProtocol {
 
 let CDTimelineNoIndex: Int = -1
 
-let TOP_SPACING: CGFloat = 10.0
-let BOTTOM_SPACING: CGFloat = 10.0
-let TIMELINE_ITEM_FILL_COLOR = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
-// the border color
-let CDTimelineItemBorderColor = NSColor(SRGBRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
-
 // also see:
 //static let durationResizeWidth: CGFloat = 5
 //static let selectionBorderWidth: CGFloat = 2
 //static let normalBorderWidth: CGFloat = 1
+
+let TOP_SPACING: CGFloat = 10.0
+let BOTTOM_SPACING: CGFloat = 10.0
+
 
 
 extension NSEvent {
@@ -38,6 +36,10 @@ extension NSEvent {
 }
 
 class CDTimelineView: NSStackView {
+    static let fillColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
+    // the border color
+    static let borderColor = NSColor(SRGBRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
+    
 
     func _commonInit() {
         self.wantsLayer = true;
