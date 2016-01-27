@@ -30,17 +30,16 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         self.patternSequence.removeChildrenAtIndexes(self._timelineView.selectionIndexes)
     }
     
+    let _patternItemPBoardType = "CDPatternTableViewPBoardType"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // ONly hook this up when we have data to provide
         if self.patternSequence != nil {
             _timelineView.dataSource = self
         }
-
-//        let parentVC = self.patternSequenceProvider as! NSObject
-//        // Bind the parent to our value
-//        // TODO: unbind when done!
-//        parentVC.bind("patternSelectionIndexes", toObject: _timelineView, withKeyPath: "selectionIndexes", options: nil)
+        
+        _timelineView.registerForDraggedTypes([_patternItemPBoardType])
     }
     
     override func viewWillAppear() {
@@ -50,6 +49,71 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         parentVC.bind("patternSelectionIndexes", toObject: _timelineView, withKeyPath: "selectionIndexes", options: nil)
     }
     
+    func validateUserInterfaceItem(anItem: NSValidatedUserInterfaceItem) -> Bool {
+        if anItem.action() == Selector("copy:") || anItem.action() == Selector("cut:") {
+            return _timelineView.selectionIndexes.count > 0
+        } else if anItem.action() == Selector("paste:") {
+            let pasteboard: NSPasteboard = NSPasteboard.generalPasteboard()
+            if let types = pasteboard.types {
+                if types.contains(_patternItemPBoardType) {
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return false
+            }
+        }
+        else {
+            return false
+        }
+    }
+    
+    @IBAction func copy(sender: AnyObject) {
+        if _timelineView.selectionIndexes.count > 0 {
+            let data: NSData = _dataForItemsAtIndexes(_timelineView.selectionIndexes)
+            let pasteboard: NSPasteboard = NSPasteboard.generalPasteboard()
+            pasteboard.clearContents()
+            pasteboard.declareTypes([_patternItemPBoardType], owner: self)
+            pasteboard.setData(data, forType: _patternItemPBoardType)
+        }
+    }
+    
+    @IBAction func paste(sender: AnyObject) {
+        let pasteboard: NSPasteboard = NSPasteboard.generalPasteboard()
+        if let data = pasteboard.dataForType(_patternItemPBoardType) {
+            let index = _timelineView.selectionIndexes.count > 0 ? _timelineView.selectionIndexes.lastIndex + 1 : _timelineView.numberOfItems;
+            _insertItemsWithData(data, atStartingIndex: index)
+        }
+    }
+    
+    @IBAction func cut(sender: AnyObject) {
+        if _timelineView.selectionIndexes.count > 0 {
+            self.copy(sender)
+            self.delete(sender)
+        }
+    }
+    
+    func _dataForItemsAtIndexes(indexes: NSIndexSet) -> NSData {
+        let selectedChildren: [AnyObject] = self.patternSequence.children.objectsAtIndexes(indexes)
+        let data: NSData = NSKeyedArchiver.archivedDataWithRootObject(selectedChildren)
+        return data
+    }
+    
+    func _insertItemsWithData(data: NSData, atStartingIndex index:Int) {
+        let patternSequenceProvider = self.patternSequenceProvider
+        // The unachiver uses this context in initWithCoder:
+        CDPatternItem.setCurrentContext(patternSequenceProvider!.managedObjectContext)
+        if let newItems = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [CDPatternItem] {
+            CDPatternItem.setCurrentContext(nil)
+            
+            let targetIndexes = NSIndexSet(indexesInRange: NSRange(location: index, length: newItems.count))
+            patternSequence.insertChildren(newItems, atIndexes: targetIndexes)
+        } else {
+            // Failure message?
+            NSLog("Failed to insert items from data: %@", data)
+        }
+    }
     
     func childrenAllChanged() {
         _timelineView.reloadData()

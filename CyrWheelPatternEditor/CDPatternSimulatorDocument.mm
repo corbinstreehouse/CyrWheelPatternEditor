@@ -86,10 +86,8 @@
     // drop the filename, and use the CWPatternSequenceManager to test loading
     self.patternRunner.baseURL = [url URLByDeletingLastPathComponent];
     
-    
     // Go through and find the sequence with the given name
     NSString *fileToFind = [url lastPathComponent];
-    
     [self.patternRunner setCurrentSequenceName:fileToFind];
     
     return YES;

@@ -37,14 +37,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)newItemInContext:(NSManagedObjectContext *)context;
 
-+ (void)setCurrentContext:(NSManagedObjectContext *)context;
+// Used when unarchiving for copy/paste
++ (void)setCurrentContext:(nullable NSManagedObjectContext *)context;
 
 - (void)copyTo:(CDPatternItem *)item;
 
 @property (nonatomic) double patternSpeed; // A float value from 0.0 to 1.0 (100%) (or higher is okay) to determine the speed of which the pattern runs, which is just affects the patternDuration
 
 @property (nonatomic, copy) NSColor *displayColor;
-@property (nullable, nonatomic, copy) NSImage *displayImage;
+@property (nullable, nonatomic, readonly, copy) NSImage *displayImage;
 
 @property (nonatomic, readonly) BOOL patternTypeEnabled; // UI binding fgor certain types that can't be changed after creation
 

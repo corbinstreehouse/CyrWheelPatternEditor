@@ -31,14 +31,14 @@ extern NSString *CDPatternChildrenKey;
 
 - (void)insertObject:(CDPatternItem *)value inChildrenAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromChildrenAtIndex:(NSUInteger)idx;
-- (void)insertChildren:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)insertChildren:(NSArray<CDPatternItem *> *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeChildrenAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInChildrenAtIndex:(NSUInteger)idx withObject:(CDPatternItem *)value;
 - (void)replaceChildrenAtIndexes:(NSIndexSet *)indexes withChildren:(NSArray *)values;
 - (void)addChildrenObject:(CDPatternItem *)value;
 - (void)removeChildrenObject:(CDPatternItem *)value;
-- (void)addChildren:(NSOrderedSet *)values;
-- (void)removeChildren:(NSOrderedSet *)values;
+- (void)addChildren:(NSOrderedSet<CDPatternItem *> *)values;
+- (void)removeChildren:(NSOrderedSet<CDPatternItem *> *)values;
 
 - (BOOL)exportToURL:(NSURL *)url error:(NSError **)errorPtr;
 - (NSData *)exportAsData;
