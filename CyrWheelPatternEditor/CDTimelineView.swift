@@ -26,8 +26,6 @@ let CDTimelineNoIndex: Int = -1
 let TOP_SPACING: CGFloat = 10.0
 let BOTTOM_SPACING: CGFloat = 10.0
 
-
-
 extension NSEvent {
     var character: Int {
         let str = charactersIgnoringModifiers!.utf16
@@ -36,11 +34,15 @@ extension NSEvent {
 }
 
 class CDTimelineView: NSStackView {
-    static let fillColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
-    // the border color
-    static let borderColor = NSColor(SRGBRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
+    // TODO: better way of dealing with UI constants/appearance for the view..
+    static let itemFillColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
+    static let itemBorderColor = NSColor(SRGBRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
+    static let itemSelectedBorderColor = NSColor.alternateSelectedControlColor()
+    // I like a more subtle look for showing the first responder..
+    static let selectedBorderColor = NSColor.alternateSelectedControlColor().colorWithAlphaComponent(0.5)
     
-
+    private let _sideSpacing: CGFloat = 4.0
+    
     func _commonInit() {
         self.wantsLayer = true;
         self.orientation = .Horizontal
@@ -52,7 +54,7 @@ class CDTimelineView: NSStackView {
         self.setHuggingPriority(NSLayoutPriorityDefaultLow - 0.00001, forOrientation: NSLayoutConstraintOrientation.Vertical)
         // stack view properties
         self.spacing = 0;
-        self.edgeInsets = NSEdgeInsetsMake(TOP_SPACING, 0, BOTTOM_SPACING, 0)
+        self.edgeInsets = NSEdgeInsetsMake(TOP_SPACING, _sideSpacing, BOTTOM_SPACING, _sideSpacing)
         
         self.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
     }
@@ -92,12 +94,11 @@ class CDTimelineView: NSStackView {
         
     }
     
-    // MARK: private stuff
     func _doWorkToChangeSelection(work: () -> Void) {
         self.willChangeValueForKey("selectionIndexes")
         work()
         self.didChangeValueForKey("selectionIndexes")
-        
+        self.needsDisplay = true
     }
     
     func _removeAllTimelineItemViews() {
@@ -260,12 +261,32 @@ class CDTimelineView: NSStackView {
     }
     
     override func updateLayer() {
-//        guard let layer = self.layer else {
-//            return;
-//        }
-//        layer.backgroundColor = NSColor.clearColor();
-//        layer.borderColor = NSColor.grayColor().CGColor
-//        layer.borderWidth = 2.0
+        guard let layer = self.layer else {
+            return;
+        }
+        if _isFirstResponder && self.selectionIndexes.count == 0 {
+            layer.borderWidth = 2.0
+            layer.cornerRadius = 2.0
+            layer.borderColor = CDTimelineView.selectedBorderColor.CGColor
+        } else {
+            layer.borderWidth = 0.0
+        }
+    }
+    
+    private var _isFirstResponder: Bool {
+        return self.window?.firstResponder == self
+    }
+    
+    override func becomeFirstResponder() -> Bool {
+        let r = super.becomeFirstResponder()
+        self.needsDisplay = true
+        return r
+    }
+    
+    override func resignFirstResponder() -> Bool {
+        let r = super.resignFirstResponder()
+        self.needsDisplay = true
+        return r
     }
     
     func _resetAnchorRow() {
@@ -315,6 +336,14 @@ class CDTimelineView: NSStackView {
     
     var _shouldUpdateAnchorRow = true
     var _selectionIndexes: NSIndexSet = NSIndexSet()
+    
+    var primaryIndex: Int? {
+//        if let r = _anchorRow {
+//            NSAssert(_selectionIndexes.containsIndex(r), "validation")
+//        }
+        return _anchorRow
+    }
+    
     dynamic var selectionIndexes: NSIndexSet {
         set(v) {
             if (!_selectionIndexes.isEqualToIndexSet(v)) {
@@ -333,6 +362,7 @@ class CDTimelineView: NSStackView {
                 if !_settingViewBeingResized && v.count != 0 {
                     assignViewBeingResized(nil)
                 }
+                self.needsDisplay = true
             }
         }
         get {
