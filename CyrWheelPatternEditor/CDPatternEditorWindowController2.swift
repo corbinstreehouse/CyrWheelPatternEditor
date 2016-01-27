@@ -18,9 +18,9 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
         // TODO: better color management..
         // Agh..the dark appearance makes this not work! this line is basically pointless
         window.backgroundColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
-//        window.titleVisibility = NSWindowTitleVisibility.Hidden
         window.titlebarAppearsTransparent = true
         window.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+        // I don't want the content to use "vibrant" controls except in particular UI pieces, so I set the appearance to vibrantDark on specific UI view parents
         window.contentView!.appearance = NSAppearance(named: NSAppearanceNameAqua)
         window.delegate = self
         _documentChanged();

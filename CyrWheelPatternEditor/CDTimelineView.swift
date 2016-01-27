@@ -16,6 +16,21 @@ protocol CDTimelineViewDataSource : NSObjectProtocol {
     optional func timelineView(timelineView: CDTimelineView, makeViewControllerAtIndex: Int) -> NSViewController
 }
 
+protocol CDTimelineViewDraggingSourceDelegate {
+
+    func timelineView(timelineView: CDTimelineView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting?
+
+
+    /* Dragging Source Support - Optional. Implement this method to know when the dragging session is about to begin and to potentially modify the dragging session.'rowIndexes' are the row indexes being dragged, excluding rows that were not dragged due to tableView:pasteboardWriterForRow: returning nil. The order will directly match the pasteboard writer array used to begin the dragging session with [NSView beginDraggingSessionWithItems:event:source]. Hence, the order is deterministic, and can be used in -tableView:acceptDrop:row:dropOperation: when enumerating the NSDraggingInfo's pasteboard classes.
+    */
+    func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet)
+    
+    /* Dragging Source Support - Optional. Implement this method to know when the dragging session has ended. This delegate method can be used to know when the dragging source operation ended at a specific location, such as the trash (by checking for an operation of NSDragOperationDelete).
+    */
+    func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation)
+    
+}
+
 let CDTimelineNoIndex: Int = -1
 
 // also see:
@@ -33,7 +48,18 @@ extension NSEvent {
     }
 }
 
-class CDTimelineView: NSStackView {
+extension NSView {
+    func screenshotAsImage() -> NSImage {
+        let bounds = self.bounds
+        let imageRep = self.bitmapImageRepForCachingDisplayInRect(bounds)!
+        self.cacheDisplayInRect(bounds, toBitmapImageRep: imageRep)
+        let image = NSImage(size: imageRep.size)
+        image.addRepresentation(imageRep)
+        return image
+    }
+}
+
+class CDTimelineView: NSStackView, NSDraggingSource {
     // TODO: better way of dealing with UI constants/appearance for the view..
     static let itemFillColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
     static let itemBorderColor = NSColor(SRGBRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
@@ -42,7 +68,8 @@ class CDTimelineView: NSStackView {
     static let selectedBorderColor = NSColor.alternateSelectedControlColor().colorWithAlphaComponent(0.5)
     
     private let _sideSpacing: CGFloat = 4.0
-    
+    private let _dragThreshold: CGFloat = 5
+
     func _commonInit() {
         self.wantsLayer = true;
         self.orientation = .Horizontal
@@ -391,16 +418,22 @@ class CDTimelineView: NSStackView {
 
     // selection is based off this row
     var _anchorRow: Int?
+    
+    private func _hitIndexForEvent(theEvent: NSEvent) -> Int? {
+        let hitLocation = theEvent.locationInView(self)
+        let hitView = self.hitTest(hitLocation)
+        return self.indexOfView(hitView)
+    }
 
     // return the last hit
-    func processMouseEvent(theEvent: NSEvent) {
+    private func _processMouseEvent(theEvent: NSEvent) {
         if theEvent.type != .LeftMouseDown {
             return
         }
         
-        let hitLocation = theEvent.locationInView(self)
-        let hitView = self.hitTest(hitLocation)
-        let hitIndex = self.indexOfView(hitView)
+//        let hitLocation = theEvent.locationInView(self)
+//        let hitView = self.hitTest(hitLocation)
+        let hitIndex = _hitIndexForEvent(theEvent)
         let newSelectedRows = NSMutableIndexSet()
         var newAnchorRow: Int? = nil
         
@@ -447,18 +480,124 @@ class CDTimelineView: NSStackView {
         assignViewBeingResized(nil) // drop it..
     }
     
+    
+    private func _shouldDragBeginWithEvent(event: NSEvent) -> Bool {
+        // track the mouse a bit to see if we are dragging vs selecting.
+        guard let window = self.window else { return false }
+        var shouldStartDrag: Bool = false
+        if event.clickCount == 1 {
+            let startingPoint = event.locationInWindow
+            
+            window.trackEventsMatchingMask([NSEventMask.LeftMouseUpMask, NSEventMask.LeftMouseDraggedMask], timeout: NSEventDurationForever, mode: NSEventTrackingRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+                
+                switch event.type {
+                case NSEventType.LeftMouseDragged:
+                    let currentPoint = event.locationInWindow
+                    if abs(currentPoint.x - startingPoint.x) > self._dragThreshold || abs(currentPoint.y - startingPoint.y) > self._dragThreshold {
+                        // start a drag!
+                        shouldStartDrag = true
+                        stop.memory = true;
+                    }
+                case NSEventType.LeftMouseUp:
+                    // Didn't do a drag; repost this event (and maybe the drags? probably not needed...)
+                    NSApp.postEvent(event, atStart: true)
+                    stop.memory = true
+                default:
+                    break
+                }
+            })
+        }
+        
+        return shouldStartDrag
+    }
+    
+    private func _makeDraggingItemForIndex(index: Int, pasteboardWriter: NSPasteboardWriting) -> NSDraggingItem {
+        let draggingItem = NSDraggingItem(pasteboardWriter: pasteboardWriter)
+        draggingItem.imageComponentsProvider = {
+            let view = self.views[index]
+
+            let component = NSDraggingImageComponent(key: NSDraggingImageComponentIconKey)
+            component.contents = view.screenshotAsImage()
+            component.frame = self.convertRect(view.bounds, fromView: view)
+
+            return [component]
+        }
+        return draggingItem
+    }
+    
+    private func _startDraggingSessionWithEvent(event: NSEvent, indexes: NSIndexSet, hitIndex: Int) -> Bool {
+        guard let draggingSourceDelegate = draggingSourceDelegate else { return false }
+        // Create pasteboard writers
+        self.draggedIndexes = indexes // set them..
+        let mutableIndexes = NSMutableIndexSet(indexSet: indexes)
+        
+        var leaderIndex: Int? = hitIndex
+        var items = [NSDraggingItem]()
+        for index in indexes {
+            if let writer = draggingSourceDelegate.timelineView(self, pasteboardWriterForIndex: index) {
+                let draggingItem = _makeDraggingItemForIndex(index, pasteboardWriter: writer)
+                items.append(draggingItem)
+            } else {
+                // not being dragged if we didn't get a writer
+                mutableIndexes.removeIndex(index)
+                if leaderIndex == index {
+                    leaderIndex = nil
+                } else if leaderIndex != nil && index < leaderIndex {
+                    leaderIndex = leaderIndex! - 1
+                }
+            }
+        }
+        
+        // If we have something, try to do it
+        if items.count > 0 {
+            self.draggedIndexes = mutableIndexes;
+            let session = self.beginDraggingSessionWithItems(items, event: event, source: self)
+            if let leaderIndex = leaderIndex {
+                session.draggingLeaderIndex = leaderIndex
+            }
+            return true
+        } else {
+            self.draggedIndexes = nil // drop them.. we didn't do it
+            return false
+        }
+    }
+    
+    // returns true if it did a drag
+    private func _attemptDragWithEvent(event: NSEvent) -> Bool {
+        var result: Bool = false
+        if draggingSourceDelegate != nil {
+            let hitIndex = _hitIndexForEvent(event)
+            if let hitIndex = hitIndex {
+                if _shouldDragBeginWithEvent(event) {
+                    // drag everything if it was hit in a selection
+                    if self.selectionIndexes.containsIndex(hitIndex) {
+                        result = _startDraggingSessionWithEvent(event, indexes: self.selectionIndexes, hitIndex: hitIndex)
+                    } else {
+                        // drag just that one row
+                        result = _startDraggingSessionWithEvent(event, indexes: NSIndexSet(index: hitIndex), hitIndex: hitIndex)
+                    }
+                    
+                }
+            }
+        }
+        return result
+    }
+    
     override func mouseDown(theEvent: NSEvent) {
         if self.acceptsFirstResponder {
             self.window?.makeFirstResponder(self)
         }
         
+        // First, try to drag
+        if _attemptDragWithEvent(theEvent) {
+            return;
+        }
+        
         _shouldUpdateAnchorRow = false
         
-//        var lastHitIndex = processMouseEvent(theEvent, lastHitIndex: nil)
+        self.window?.trackEventsMatchingMask([NSEventMask.LeftMouseDraggedMask, NSEventMask.LeftMouseUpMask], timeout: NSEventDurationForever, mode: NSEventTrackingRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
         
-        self.window?.trackEventsMatchingMask([NSEventMask.LeftMouseDraggedMask, NSEventMask.LeftMouseUpMask], timeout: NSEventDurationForever, mode: NSDefaultRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
-        
-            self.processMouseEvent(theEvent)
+            self._processMouseEvent(theEvent)
             if event.type == .LeftMouseUp {
                 stop.memory = true
             }
@@ -554,23 +693,59 @@ class CDTimelineView: NSStackView {
         }
     }
     
-//    override func hitTest(aPoint: NSPoint) -> NSView? {
-//        var hitView = super.hitTest(aPoint);
-//        // push hits on the left edge of the non-0 view to to the prior one to resize it..
-//        if let reallyHitView = hitView as? CDTimelineItemView {
-//            if let index = self.views.indexOf(reallyHitView) {
-//                if index > 0 {
-//                    // did we hit the left of it?
-//                    let resizeLeftRect = self.convertRect(reallyHitView.leftSideResizeRect(), fromView: reallyHitView)
-//                    if NSPointInRect(aPoint, resizeLeftRect) {
-//                        // REturn the view to our left.
-//                        hitView = self.views[index - 1]
-//                    }
-//                }
-//            }
-//        }
-//        return hitView;
-//    }
+    var draggingSourceDelegate: CDTimelineViewDraggingSourceDelegate?
+    
+    
+    // MARK: NSDraggingSource protocol implementation
+    func draggingSession(session: NSDraggingSession, sourceOperationMaskForDraggingContext context: NSDraggingContext) -> NSDragOperation {
+        // TODO: move to delegate when needed
+        if context == NSDraggingContext.WithinApplication {
+            return NSDragOperation.Every
+        } else {
+            // TODO: maybe allow dropping images on it??
+            return NSDragOperation.None
+        }
+    }
+    
+    var draggedIndexes: NSIndexSet? // non nil when we are dragging
+    
+    private func _fadeDraggedIndexesToValue(value: CGFloat) {
+        // Fade out all the dragged items a bit..
+        if let draggedIndexes = self.draggedIndexes {
+            NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext) -> Void in
+                context.allowsImplicitAnimation = true
+                for index in draggedIndexes {
+                    let view = self.views[index]
+                    view.alphaValue = value
+                }
+                
+                }, completionHandler: nil)
+        }
+    }
+    
+    func draggingSession(session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint) {
+        if let draggingSourceDelegate = draggingSourceDelegate {
+            draggingSourceDelegate.timelineView(self, draggingSession: session, willBeginAtPoint: screenPoint, forIndexes: self.draggedIndexes!)
+        }
+        _fadeDraggedIndexesToValue(0.5)
+    }
+
+    func draggingSession(session: NSDraggingSession, movedToPoint screenPoint: NSPoint) {
+        
+    }
+    
+    func draggingSession(session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
+        if let draggingSourceDelegate = draggingSourceDelegate {
+            draggingSourceDelegate.timelineView(self, draggingSession: session, endedAtPoint: screenPoint, operation: operation)
+        }
+        _fadeDraggedIndexesToValue(1.0)
+        // drop the indexes at this point
+        self.draggedIndexes = nil
+    }
+    
+    func ignoreModifierKeysForDraggingSession(session: NSDraggingSession) -> Bool {
+        return false
+    }
     
 
 }

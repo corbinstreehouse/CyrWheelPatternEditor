@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDelegate, CDTimelineViewDataSource, CDPatternSequencePresenter {
+class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDelegate, CDTimelineViewDataSource, CDPatternSequencePresenter, CDTimelineViewDraggingSourceDelegate {
 
     @IBOutlet weak var _timelineView: CDTimelineView!
     
@@ -22,6 +22,7 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
             if let patternSequence = self.patternSequence {
                 _childrenObserver = CDPatternSequenceChildrenObserver(patternSequence: patternSequence, delegate: self)
                 _timelineView.dataSource = self
+                _timelineView.draggingSourceDelegate = self
             }
         }
     }
@@ -160,5 +161,18 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         return result
     }
     
+
+    func timelineView(timelineView: CDTimelineView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting? {
+        return NSPasteboardItem() // dummy item
+    }
     
+    
+    func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {
+        
+    }
+    
+    func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
+        
+    }
+
 }
