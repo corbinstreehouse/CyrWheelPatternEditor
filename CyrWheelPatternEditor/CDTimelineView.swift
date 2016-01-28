@@ -17,17 +17,14 @@ protocol CDTimelineViewDataSource : NSObjectProtocol {
 }
 
 protocol CDTimelineViewDraggingSourceDelegate {
-
     func timelineView(timelineView: CDTimelineView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting?
-
-
-    /* Dragging Source Support - Optional. Implement this method to know when the dragging session is about to begin and to potentially modify the dragging session.'rowIndexes' are the row indexes being dragged, excluding rows that were not dragged due to tableView:pasteboardWriterForRow: returning nil. The order will directly match the pasteboard writer array used to begin the dragging session with [NSView beginDraggingSessionWithItems:event:source]. Hence, the order is deterministic, and can be used in -tableView:acceptDrop:row:dropOperation: when enumerating the NSDraggingInfo's pasteboard classes.
-    */
     func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet)
-    
-    /* Dragging Source Support - Optional. Implement this method to know when the dragging session has ended. This delegate method can be used to know when the dragging source operation ended at a specific location, such as the trash (by checking for an operation of NSDragOperationDelete).
-    */
     func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation)
+}
+
+protocol CDTimelineViewDraggingDestinationDelegate {
+    func timelineView(timelineView: CDTimelineView, updateDraggingInfo: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation
+    func timelineView(timelineView: CDTimelineView, performDragOperation: NSDraggingInfo, insertionIndex: Int?) -> Bool
     
 }
 
@@ -66,6 +63,7 @@ class CDTimelineView: NSStackView, NSDraggingSource {
     static let itemSelectedBorderColor = NSColor.alternateSelectedControlColor()
     // I like a more subtle look for showing the first responder..
     static let selectedBorderColor = NSColor.alternateSelectedControlColor().colorWithAlphaComponent(0.5)
+    static let draggingInsertionColor = NSColor.greenColor() // TODO: color??
     
     private let _sideSpacing: CGFloat = 4.0
     private let _dragThreshold: CGFloat = 5
@@ -199,6 +197,12 @@ class CDTimelineView: NSStackView, NSDraggingSource {
             let mutableIndexes = NSMutableIndexSet(indexSet: self._selectionIndexes)
             mutableIndexes.shiftIndexesStartingAtIndex(index, by: 1)
             self._selectionIndexes = mutableIndexes;
+            
+            if let draggedIndexes = self.draggedIndexes {
+                let mutableIndexes = NSMutableIndexSet(indexSet: draggedIndexes)
+                mutableIndexes.shiftIndexesStartingAtIndex(index, by: 1)
+                self.draggedIndexes = mutableIndexes
+            }
         }
     }
     
@@ -216,6 +220,12 @@ class CDTimelineView: NSStackView, NSDraggingSource {
                 } else {
                     self._anchorRow = nil
                 }
+            }
+            
+            if let draggedIndexes = self.draggedIndexes {
+                let mutableIndexes = NSMutableIndexSet(indexSet: draggedIndexes)
+                mutableIndexes.removeIndex(index)
+                self.draggedIndexes = mutableIndexes
             }
         }
     }
@@ -397,7 +407,7 @@ class CDTimelineView: NSStackView, NSDraggingSource {
         }
     }
     
-    func indexOfView(view: NSView?) -> Int? {
+    internal func indexOfView(view: NSView?) -> Int? {
         var itemView: CDTimelineItemView? = nil
         var localView: NSView? = view
         while localView != nil {
@@ -422,7 +432,7 @@ class CDTimelineView: NSStackView, NSDraggingSource {
     private func _hitIndexForEvent(theEvent: NSEvent) -> Int? {
         let hitLocation = theEvent.locationInView(self)
         let hitView = self.hitTest(hitLocation)
-        return self.indexOfView(hitView)
+        return indexOfView(hitView)
     }
 
     // return the last hit
@@ -747,6 +757,184 @@ class CDTimelineView: NSStackView, NSDraggingSource {
         return false
     }
     
+    private func _makeDraggingInsertionViewWithFrame(frame: NSRect) -> NSView {
+        let result = NSView(frame: frame)
+        result.wantsLayer = true
+        result.layer!.backgroundColor = CDTimelineView.draggingInsertionColor.CGColor
+        result.layerContentsRedrawPolicy = .Never
+        return result
+    }
+    
+    private let _insertionDividerWidth: CGFloat = 2.0
+    private func _draggingInsertionViewFrameForIndex(index: Int) -> NSRect {
+        var result: NSRect
+        let viewCount = self.views.count
+        if index < viewCount {
+            result = self.views[index].frame
+            result.origin.x -= _insertionDividerWidth/2.0
+            result.size.width = _insertionDividerWidth
+        } else if viewCount > 0 {
+            assert(index == viewCount, "index check")
+            // Past the last view
+            result = self.views[viewCount-1].frame
+            result.origin.x += _insertionDividerWidth/2.0
+            result.size.width = _insertionDividerWidth
+        } else {
+            // no views...at the start..
+            assert(index == 0, "only start should work")
+            result = self.bounds
+            
+            result.origin.x += self.edgeInsets.left
+            result.origin.y += self.edgeInsets.top
+            result.size.width = _insertionDividerWidth;
+            result.size.height = NSHeight(result) - (self.edgeInsets.top + self.edgeInsets.bottom)
+        }
+        
+        return result;
+    }
+    
+    private var _draggingInsertionPointView: NSView?
+    private func _updateDraggingInsertionPointView() {
+        if let index = self.draggingInsertIndex {
+            let insertionFrame = _draggingInsertionViewFrameForIndex(index);
+            if let v = _draggingInsertionPointView {
+                // Just update the frame
+                v.frame = insertionFrame
+            } else {
+                // create it and add it
+                let v = _makeDraggingInsertionViewWithFrame(insertionFrame)
+                self.addSubview(v)
+                _draggingInsertionPointView = v;
+            }
+        } else {
+            if let v = _draggingInsertionPointView {
+                v.removeFromSuperview()
+                _draggingInsertionPointView = nil;
+            }
+        }
+    }
+    
 
+    var draggingDestinationDelegate: CDTimelineViewDraggingDestinationDelegate?
+    
+    var draggingInsertIndex: Int?  {
+        didSet {
+            // Add a view for the insertion point
+            _updateDraggingInsertionPointView()
+        }
+    }
+    
+    private func _updateDraggingDestinationState(draggingInfo: NSDraggingInfo) -> NSDragOperation {
+        let point = self.convertPoint(draggingInfo.draggingLocation(), fromView: nil)
+        var result = NSDragOperation.None
+        var otherIndexToTry: Int?
+        if let viewAtPoint = self.hitTest(point) {
+            if viewAtPoint == self {
+                // If we didn't hit a child view and instead hit us, find out where in us we are for th einsert
+                // First, none check
+                if self.views.count == 0 {
+                    self.draggingInsertIndex = 0
+                    result = NSDragOperation.Every
+                } else {
+                    // Make sure we are before or after the first view, and not above another one..which isn't going to work
+                    if point.x <= NSMinX(self.views[0].frame) {
+                        self.draggingInsertIndex = 0
+                        result = NSDragOperation.Every
+                    } else if point.x >= NSMaxX(self.views.last!.frame) {
+                        self.draggingInsertIndex = self.views.count // Past it
+                        result = NSDragOperation.Every
+                    }
+                }
+                
+            } else if let hitIndex = indexOfView(viewAtPoint) {
+                // Find out what view we hit and how far we are in it in order to do an insert before or after it.
+                let hitView = self.views[hitIndex]
+                let pointInHitView = hitView.convertPoint(draggingInfo.draggingLocation(), fromView: nil)
+                let halfWidth = hitView.bounds.size.width / 2.0
+                if pointInHitView.x <= halfWidth {
+                    // Before it, which is it's index itself for the insertion point
+                    self.draggingInsertIndex = hitIndex
+                    // And if this doesn't work, try otherIndexToTry..
+                    otherIndexToTry = hitIndex + 1
+                } else {
+                    // After it
+                    self.draggingInsertIndex = hitIndex + 1;
+                    otherIndexToTry = hitIndex
+                }
+                result = NSDragOperation.Every
+            } else {
+                // Hit something else? what???
+            }
+        }
+        
+        // Filter through the delegate
+        if let d = self.draggingDestinationDelegate {
+            result = d.timelineView(self, updateDraggingInfo: draggingInfo, insertionIndex: self.draggingInsertIndex)
+            // If the delegate doesn't accept, implicitlely clear the drop point
+            if result == .None {
+                // If we have another index, try again..
+                if let otherIndexToTry = otherIndexToTry {
+                    self.draggingInsertIndex = otherIndexToTry
+                    result = d.timelineView(self, updateDraggingInfo: draggingInfo, insertionIndex: self.draggingInsertIndex)
+                }
+                
+                if result == .None {
+                    self.draggingInsertIndex = nil
+                }
+            }
+        }
+        
+        return result
+        
+    }
+    
+    private func _clearDraggingDestinationState() {
+        self.draggingInsertIndex = nil
+    }
+    
+    // MARK: NSDraggingDestination protocol implementation..
+    override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
+        return _updateDraggingDestinationState(sender)
+    }
+    
+    override func draggingUpdated(sender: NSDraggingInfo) -> NSDragOperation {
+        return _updateDraggingDestinationState(sender)
+    }
+    
+    override func draggingExited(sender: NSDraggingInfo?) {
+        _clearDraggingDestinationState()
+    }
+    
+    override func prepareForDragOperation(sender: NSDraggingInfo) -> Bool {
+        return true
+    }
+    
+    override func performDragOperation(sender: NSDraggingInfo) -> Bool {
+        // I don't think we need a _updateDraggingDestinationState(sender) call..
+        if let d = self.draggingDestinationDelegate {
+            if d.timelineView(self, performDragOperation: sender, insertionIndex: self.draggingInsertIndex) {
+                return true
+            } else {
+                // we don't get a conclude??
+                _clearDraggingDestinationState();
+                return false
+            }
+        } else {
+            _clearDraggingDestinationState();
+            return false
+        }
+    }
+    
+    override func concludeDragOperation(sender: NSDraggingInfo?) {
+        _clearDraggingDestinationState()
+    }
+//    func draggingEnded(sender: NSDraggingInfo?) {
+//        
+//    }
+    override func wantsPeriodicDraggingUpdates() -> Bool {
+        return true
+    }
+
+    
 }
 

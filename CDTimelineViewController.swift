@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDelegate, CDTimelineViewDataSource, CDPatternSequencePresenter, CDTimelineViewDraggingSourceDelegate {
+class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDelegate, CDTimelineViewDataSource, CDPatternSequencePresenter, CDTimelineViewDraggingSourceDelegate, CDTimelineViewDraggingDestinationDelegate {
 
     @IBOutlet weak var _timelineView: CDTimelineView!
     
@@ -23,6 +23,7 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
                 _childrenObserver = CDPatternSequenceChildrenObserver(patternSequence: patternSequence, delegate: self)
                 _timelineView.dataSource = self
                 _timelineView.draggingSourceDelegate = self
+                _timelineView.draggingDestinationDelegate = self;
             }
         }
     }
@@ -168,11 +169,66 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
     
     
     func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {
-        
+        session.draggingPasteboard.declareTypes([_patternItemPBoardType], owner: self)
     }
     
     func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
         
     }
-
+    
+    // Dragging destination
+    func timelineView(timelineView: CDTimelineView, updateDraggingInfo info: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation {
+        guard let index = insertionIndex else { return .None }
+        // If we are the source, then don't allow a move before or after the index being dragged (it doesn't make sense), unless it is a copy
+        let sourceAsTV = info.draggingSource() as? CDTimelineView
+        if sourceAsTV == timelineView {
+            if info.draggingSourceOperationMask() == .Copy {
+                return .Copy
+            } else {
+                // We can only move if we aren't moving before or after a dragged index
+                if let draggedIndexes = timelineView.draggedIndexes {
+                    if draggedIndexes.containsIndex(index) || draggedIndexes.containsIndex(index-1) {
+                        return .None
+                    } else {
+                        return .Move
+                    }
+                } else {
+                    return .None; // bad?
+                }
+            }
+        } else {
+            // other inserts..
+        }
+        return .None
+    }
+    
+    func timelineView(timelineView: CDTimelineView, performDragOperation info: NSDraggingInfo, insertionIndex: Int?) -> Bool {
+        guard let insertionIndex = insertionIndex else { return false }
+        
+        // Do it!
+        // TODO: begin updates/endupdates and animations.. and animate the drop target..
+        let sourceAsTV = info.draggingSource() as? CDTimelineView
+        if sourceAsTV == timelineView {
+            let draggedIndexes = _timelineView.draggedIndexes!
+            if info.draggingSourceOperationMask() == .Copy {
+                let data: NSData = _dataForItemsAtIndexes(draggedIndexes)
+                _insertItemsWithData(data, atStartingIndex: insertionIndex)
+            } else {
+                let childrenToMove: [CDPatternItem] = patternSequence.children.objectsAtIndexes(draggedIndexes) as! [CDPatternItem]
+                
+                patternSequence.removeChildrenAtIndexes(draggedIndexes)
+                let targetIndexes: NSMutableIndexSet = NSMutableIndexSet()
+                
+                let modifiedStartingRow: Int = insertionIndex - draggedIndexes.countOfIndexesInRange(NSRange(location: 0, length: insertionIndex))
+                for var r = modifiedStartingRow; r < modifiedStartingRow + childrenToMove.count; r++ {
+                    targetIndexes.addIndex(r)
+                }
+                patternSequence.insertChildren(childrenToMove, atIndexes: targetIndexes)
+            }
+            
+            return true
+        } else {
+            return false
+        }
+    }
 }
