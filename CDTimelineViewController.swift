@@ -32,7 +32,7 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         self.patternSequence.removeChildrenAtIndexes(self._timelineView.selectionIndexes)
     }
     
-    let _patternItemPBoardType = "CDPatternTableViewPBoardType"
+    private let _patternItemPBoardType = CDPatternItem.pasteboardType()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,14 +107,13 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         // The unachiver uses this context in initWithCoder:
         CDPatternItem.setCurrentContext(patternSequenceProvider!.managedObjectContext)
         if let newItems = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [CDPatternItem] {
-            CDPatternItem.setCurrentContext(nil)
-            
             let targetIndexes = NSIndexSet(indexesInRange: NSRange(location: index, length: newItems.count))
             patternSequence.insertChildren(newItems, atIndexes: targetIndexes)
         } else {
             // Failure message?
             NSLog("Failed to insert items from data: %@", data)
         }
+        CDPatternItem.setCurrentContext(nil)
     }
     
     func childrenAllChanged() {
@@ -164,12 +163,14 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
     
 
     func timelineView(timelineView: CDTimelineView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting? {
-        return NSPasteboardItem() // dummy item
+        let item = self.patternSequence.children[index] as! CDPatternItem
+        return item
     }
     
-    
     func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {
-        session.draggingPasteboard.declareTypes([_patternItemPBoardType], owner: self)
+        
+        
+        
     }
     
     func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
@@ -197,7 +198,12 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
                 }
             }
         } else {
-            // other inserts..
+            // other inserts as a copy if we have the right type
+            if let types = info.draggingPasteboard().types {
+                if types.contains(_patternItemPBoardType) {
+                    return .Copy
+                }
+            }
         }
         return .None
     }
@@ -214,6 +220,8 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
                 let data: NSData = _dataForItemsAtIndexes(draggedIndexes)
                 _insertItemsWithData(data, atStartingIndex: insertionIndex)
             } else {
+                let shouldSelectItems: Bool = draggedIndexes.isEqualToIndexSet(timelineView.selectionIndexes)
+                
                 let childrenToMove: [CDPatternItem] = patternSequence.children.objectsAtIndexes(draggedIndexes) as! [CDPatternItem]
                 
                 patternSequence.removeChildrenAtIndexes(draggedIndexes)
@@ -224,11 +232,26 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
                     targetIndexes.addIndex(r)
                 }
                 patternSequence.insertChildren(childrenToMove, atIndexes: targetIndexes)
+                
+                if shouldSelectItems {
+                    timelineView.selectionIndexes = targetIndexes
+                }
             }
             
             return true
         } else {
-            return false
+            let result: Bool = false
+            CDPatternItem.setCurrentContext(patternSequenceProvider!.managedObjectContext)
+            
+            var childIndex = UInt(insertionIndex)
+
+            info.enumerateDraggingItemsWithOptions([], forView: timelineView, classes: [CDPatternItem.self], searchOptions: [:], usingBlock: { (item: NSDraggingItem, index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+                let patternItem = item.item as! CDPatternItem
+                self.patternSequence.insertObject(patternItem, inChildrenAtIndex: childIndex)
+                childIndex++
+            })
+            CDPatternItem.setCurrentContext(nil)
+            return result
         }
     }
 }

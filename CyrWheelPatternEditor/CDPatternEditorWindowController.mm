@@ -18,8 +18,6 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "CyrWheelPatternEditor-Swift.h"
 
-static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
-
 @interface CDPatternEditorWindowController ()<NSTableViewDataSource, NSTableViewDelegate> {
 @private
     NSMutableArray *_patternViewControllers;
@@ -123,7 +121,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
     [self._patternSequence addObserver:self forKeyPath:CDPatternChildrenKey options:0 context:nil];
     
     [_tableView setDraggingSourceOperationMask:NSDragOperationEvery forLocal:YES];
-    [_tableView registerForDraggedTypes:[NSArray arrayWithObjects:CDPatternTableViewPBoardType, nil]];
+    [_tableView registerForDraggedTypes:[NSArray arrayWithObjects:[CDPatternItem pasteboardType], nil]];
     [self _setupSimView];
 }
 
@@ -304,7 +302,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
         return self.tableView.selectedRowIndexes.count > 0;
     } else if (anItem.action == @selector(paste:)) {
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-        if ([pasteboard.types containsObject:CDPatternTableViewPBoardType]) {
+        if ([pasteboard.types containsObject:[CDPatternItem pasteboardType]]) {
             return YES;
         } else {
             return NO;
@@ -323,8 +321,8 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
         NSData *data = [self _dataForItemsAtIndexes:self.tableView.selectedRowIndexes];
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
         [pasteboard clearContents];
-        [pasteboard declareTypes:@[CDPatternTableViewPBoardType] owner:self];
-        [pasteboard setData:data forType:CDPatternTableViewPBoardType];
+        [pasteboard declareTypes:@[[CDPatternItem pasteboardType]] owner:self];
+        [pasteboard setData:data forType:[CDPatternItem pasteboardType]];
     }
 }
 
@@ -348,7 +346,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 
 - (IBAction)paste:(id)sender {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
-    NSData *data = [pasteboard dataForType:CDPatternTableViewPBoardType];
+    NSData *data = [pasteboard dataForType:[CDPatternItem pasteboardType]];
     if (data) {
         NSInteger row = self.tableView.selectedRow;
         if (row == -1) {
@@ -388,7 +386,7 @@ static NSString *CDPatternTableViewPBoardType = @"CDPatternTableViewPBoardType";
 
 - (void)tableView:(NSTableView *)tableView draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint forRowIndexes:(NSIndexSet *)rowIndexes {
     _draggedRowIndexes = rowIndexes;
-    [session.draggingPasteboard declareTypes:@[CDPatternTableViewPBoardType] owner:self];
+    [session.draggingPasteboard declareTypes:@[[CDPatternItem pasteboardType]] owner:self];
 }
 
 - (NSDragOperation)tableView:(NSTableView *)tableView validateDrop:(id<NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)dropOperation {

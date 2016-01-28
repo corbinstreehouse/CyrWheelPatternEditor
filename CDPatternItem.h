@@ -16,6 +16,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class NSPasteboard;
+
 @interface CDPatternItem : NSManagedObject<NSPasteboardWriting, NSPasteboardReading, NSCoding, CDTimelineItem>
 
 @property (nullable, nonatomic, copy) NSString *imageFilename; // The relative filename
@@ -40,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 // Used when unarchiving for copy/paste
 + (void)setCurrentContext:(nullable NSManagedObjectContext *)context;
 
++ (NSString *)pasteboardType;
+
 - (void)copyTo:(CDPatternItem *)item;
 
 @property (nonatomic) double patternSpeed; // A float value from 0.0 to 1.0 (100%) (or higher is okay) to determine the speed of which the pattern runs, which is just affects the patternDuration
@@ -49,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) BOOL patternTypeEnabled; // UI binding fgor certain types that can't be changed after creation
 
-@end 
+@end
+
 
 NS_ASSUME_NONNULL_END

@@ -71,6 +71,10 @@ static NSManagedObjectContext *g_currentContext = nil;
     return [NSKeyedArchiver archivedDataWithRootObject:self];
 }
 
+- (NSPasteboardWritingOptions)writingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
+    return NSPasteboardWritingPromised;
+}
+
 + (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
     return @[PATTERN_ITEM_PASTEBOARD_TYPE];
 }
@@ -360,5 +364,8 @@ static double _speedRangeForPatternType(LEDPatternType type) {
     return LEDPatterns::PatternNeedsDuration(self.patternType);
 }
 
++ (NSString *)pasteboardType {
+    return PATTERN_ITEM_PASTEBOARD_TYPE;
+}
 
 @end
