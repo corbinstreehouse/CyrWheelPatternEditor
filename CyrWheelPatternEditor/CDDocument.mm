@@ -7,7 +7,6 @@
 //
 
 #import "CDDocument.h"
-#import "CDPatternEditorWindowController.h"
 #import "CDPatternSimulatorWindowController.h"
 #import "CyrWheelPatternEditor-Swift.h"
 
@@ -165,10 +164,7 @@ NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
     if ([[self fileType] isEqualToString:CDCompiledSequenceTypeName]) {
         wc = [CDPatternSimulatorWindowController new];
     } else {
-        wc = [CDPatternEditorWindowController new];
-        
-        NSWindowController *wc2 = [((CDAppDelegate *)NSApp.delegate).mainStoryboard instantiateControllerWithIdentifier:@"CDPatternEditorWindowController2"];
-        [self addWindowController:wc2];
+        wc = [((CDAppDelegate *)NSApp.delegate).mainStoryboard instantiateControllerWithIdentifier:@"CDPatternEditorWindowController2"];
     }
     [self addWindowController:wc];
     
