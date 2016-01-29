@@ -108,16 +108,28 @@ NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
     return _patternSequence;
 }
 
-- (CDPatternItem *)addNewPatternItem {
+- (CDPatternItem *)makeTemporaryPatternItem {
     CDPatternItem *patternItem = [CDPatternItem newItemInContext:self.managedObjectContext];
     // copy the last item, if we had one
     if (self.patternSequence.children.count > 0) {
         CDPatternItem *lastPatternItem = self.patternSequence.children.lastObject;
         [lastPatternItem copyTo:patternItem];
     }
-    
-    [self.patternSequence insertObject:patternItem inChildrenAtIndex:self.patternSequence.children.count];
     return patternItem;
+}
+
+- (void)removeTemporaryPatternItem:(CDPatternItem *)item {
+    [self.managedObjectContext deleteObject:item];
+}
+
+- (CDPatternItem *)addNewPatternItem {
+    CDPatternItem *patternItem = [self makeTemporaryPatternItem]; // We make it permenant
+    [self addPatternItemToChildren:patternItem];
+    return patternItem;
+}
+
+- (void)addPatternItemToChildren:(CDPatternItem *)patternItem {
+    [self.patternSequence insertObject:patternItem inChildrenAtIndex:self.patternSequence.children.count];
 }
 
 - (void)removePatternItemsAtIndexes:(NSIndexSet *)indexesToDelete {

@@ -237,21 +237,16 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
                     timelineView.selectionIndexes = targetIndexes
                 }
             }
-            
-            return true
         } else {
-            let result: Bool = false
             CDPatternItem.setCurrentContext(patternSequenceProvider!.managedObjectContext)
-            
             var childIndex = UInt(insertionIndex)
-
             info.enumerateDraggingItemsWithOptions([], forView: timelineView, classes: [CDPatternItem.self], searchOptions: [:], usingBlock: { (item: NSDraggingItem, index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
                 let patternItem = item.item as! CDPatternItem
                 self.patternSequence.insertObject(patternItem, inChildrenAtIndex: childIndex)
                 childIndex++
             })
             CDPatternItem.setCurrentContext(nil)
-            return result
         }
+        return true
     }
 }

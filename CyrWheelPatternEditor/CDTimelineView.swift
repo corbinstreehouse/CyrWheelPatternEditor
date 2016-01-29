@@ -777,7 +777,8 @@ class CDTimelineView: NSStackView, NSDraggingSource {
             assert(index == viewCount, "index check")
             // Past the last view
             result = self.views[viewCount-1].frame
-            result.origin.x += _insertionDividerWidth/2.0
+            result.origin.x = NSMaxX(result)
+            result.origin.x -= _insertionDividerWidth/2.0
             result.size.width = _insertionDividerWidth
         } else {
             // no views...at the start..
