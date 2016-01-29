@@ -25,10 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) double duration; // in seconds
 @property (nonatomic) uint32_t encodedColor;
 @property (nonatomic) CDPatternEndCondition patternEndCondition;
-@property (nonatomic) int16_t shouldSetBrightnessByRotationalVelocity;
+@property (nonatomic) uint32_t shouldSetBrightnessByRotationalVelocity; // Move to options in some way?
 
 @property (nonatomic) double patternDuration; // in seconds; only needs to be set if patternTypeNeedsPatternDuration = YES
-@property (nonatomic) uint32_t /*LEDPatternOptions*/ patternOptions; // 32-bit
+@property (nonatomic) uint32_t/*LEDPatternOptions*/ patternOptions; // 32-bit struct (for now..)
 
 @property (nonatomic, readonly) BOOL durationEnabled; // synthesized for bindings
 @property (nonatomic, readonly) BOOL needsColor; // synthesized for bindings

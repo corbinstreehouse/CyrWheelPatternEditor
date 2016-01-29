@@ -112,6 +112,7 @@
 		9D1612EB1C3CB0AD00B7A890 /* CDPatternRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternRunner.h; path = CyrWheelPatternEditor/CDPatternRunner.h; sourceTree = "<group>"; };
 		9D1612EC1C3CB0AD00B7A890 /* CDPatternRunner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CDPatternRunner.mm; path = CyrWheelPatternEditor/CDPatternRunner.mm; sourceTree = "<group>"; };
 		9D18071D1C2287A000B80DDC /* EEPROM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EEPROM.h; path = ArduinoWrappers/EEPROM.h; sourceTree = "<group>"; };
+		9D1CFBCE1C5BEDB6008694E7 /* CDDocument5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CDDocument5.xcdatamodel; sourceTree = "<group>"; };
 		9D1E1AE61C2DA292002BD920 /* CDTimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDTimelineView.swift; sourceTree = "<group>"; };
 		9D211A1B1C3A1DA4006A75FC /* LEDPatternType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LEDPatternType.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatternType.h; sourceTree = "<group>"; };
 		9D211A1C1C3A438A006A75FC /* CDPatternItemNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPatternItemNames.h; sourceTree = "<group>"; };
@@ -863,12 +864,13 @@
 		9DFBAC2B1888EDFC00737C2F /* CDDocument.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				9D1CFBCE1C5BEDB6008694E7 /* CDDocument5.xcdatamodel */,
 				9DBB9C2A1C4F578900E2D0E7 /* CDDocument4.xcdatamodel */,
 				9DCE4EBC19D3B01B002664D9 /* CDDocument3.xcdatamodel */,
 				9DD394D8191EDE3000B77A4F /* CDDocument2.xcdatamodel */,
 				9DFBAC2C1888EDFC00737C2F /* CDDocument.xcdatamodel */,
 			);
-			currentVersion = 9DBB9C2A1C4F578900E2D0E7 /* CDDocument4.xcdatamodel */;
+			currentVersion = 9D1CFBCE1C5BEDB6008694E7 /* CDDocument5.xcdatamodel */;
 			path = CDDocument.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

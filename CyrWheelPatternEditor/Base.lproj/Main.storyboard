@@ -751,7 +751,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="350" id="mfu-nX-JCS"/>
                                 </constraints>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="yLc-MI-P6i">
+                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="yLc-MI-P6i">
                                     <rect key="frame" x="1" y="178" width="454" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -891,7 +891,7 @@ DQ
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="5Ie-VR-ZAm"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="pcu-JK-i7f"/>
                                             </constraints>
-                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="aMM-Cs-Dzg">
+                                            <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="aMM-Cs-Dzg">
                                                 <rect key="frame" x="0.0" y="133" width="610" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -1778,7 +1778,7 @@ DQ
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="pny-77-hbU"/>
                                 </constraints>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="p4h-5d-287">
+                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="p4h-5d-287">
                                     <rect key="frame" x="0.0" y="284" width="216" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -2224,7 +2224,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wZJ-Op-eAi">
-                                                <rect key="frame" x="610" y="0.0" width="16" height="150"/>
+                                                <rect key="frame" x="611" y="0.0" width="15" height="150"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
