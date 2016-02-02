@@ -381,17 +381,10 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             // After initial response, start sending the file.....if we  need toooo
 //            sendMoreData();
         }
-
     }
 
-    
     // MARK: ---------------------------
 
-    
-    
-    
-    
-    
     private var _sequenceListData: NSMutableData? // Valid when we are loading the data
     private func _addDataToSequenceList(data: NSData?) {
         // Consdier done when we get nil data (or some other marker..)
