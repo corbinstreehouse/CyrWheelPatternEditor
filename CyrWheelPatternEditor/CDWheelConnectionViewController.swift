@@ -124,8 +124,8 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     var _wheelChooserViewController: CDWheelConnectionChooserViewController?
     
     func startScanning() {
-        let services = [CBUUID(string: kLEDWheelServiceUUID)]
-//        let services: [CBUUID] = [] // scan's for everything!!
+//        let services = [CBUUID(string: kLEDWheelServiceUUID)]
+        let services: [CBUUID] = [] // scan's for everything!!
         centralManager.scanForPeripheralsWithServices(services, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
     }
     
