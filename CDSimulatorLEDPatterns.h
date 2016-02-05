@@ -16,9 +16,8 @@
 class CDSimulatorLEDPatterns : public LEDPatterns {
 private:
     CDCyrWheelView *m_cyrWheelView;
-protected:
-    virtual void internalShow();
 public:
+    virtual void internalShow();
     virtual void setBrightness(uint8_t brightness) { /* ignored */ }
     uint8_t getBrightness() { return 128; };
     
