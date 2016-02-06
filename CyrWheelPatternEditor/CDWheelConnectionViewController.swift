@@ -43,6 +43,8 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     @IBOutlet weak var _brightnessContainerView: NSView!
     @IBOutlet weak var _brightnessMenuItem: NSMenuItem!
     @IBOutlet weak var _playButton: CDRolloverButton!
+
+    @IBOutlet weak var _middleBox: NSBox!
     
     // state restoration
     override class func restorableStateKeyPaths() -> [String] {
@@ -65,6 +67,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         // The title color for the placeholder is terrible with bindings... control it
         let placeHolderAttributes =  [NSForegroundColorAttributeName : _titleTextField.textColor!]
         _titleTextField.placeholderAttributedString = NSAttributedString(string: "Connecting...", attributes: placeHolderAttributes)
+        _middleBox.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         _updatePlayButton()
     }
     

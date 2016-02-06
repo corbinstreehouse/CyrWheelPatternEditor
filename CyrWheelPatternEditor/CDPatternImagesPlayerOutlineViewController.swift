@@ -35,14 +35,15 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     func outlineViewSelectionDidChange(notification: NSNotification) {
         _updateButtonState()
         // Setup a temporary represention to play in the simulator..
-        _updateTemporaryPatternSequence()
+        _updatePreview()
     }
 
     // Set by a parent to another thing that is doing the running
     var patternRunner: CDPatternRunner?
     
-    private func _updateTemporaryPatternSequence() {
-        guard let item = _getPlayableItemAtRow(_outlineView.selectedRow) else { patternRunner?.setBlackAndPause(); return }
+    private func _updatePreview() {
+        guard shouldShowPreview else { _clearPreview(); return }
+        guard let item = _getPlayableItemAtRow(_outlineView.selectedRow) else { _clearPreview(); return }
         
         switch item {
         case let programmedItem as ProgrammedPatternObjectWrapper:
@@ -104,9 +105,42 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
+    private func _playSelectedItem() {
+        if let item = _getPlayableItemAtRow(_outlineView.selectedRow) {
+            _playItem(item)
+        }
+    }
+    
+    private func _clearPreview() {
+        patternRunner?.setBlackAndPause()
+    }
+    
     @IBAction func patternPlay(sender: AnyObject?) {
         if let item = _getPlayableItemAtRow(_outlineView.selectedRow) {
             _playItem(item)
+        }
+    }
+    
+    var detailViewController: CDWheelPlayerDetailViewController! {
+        didSet {
+            // Bind some of the UI to us
+            self.bind("shouldShowPreview", toObject: detailViewController.chkbxShowPreview, withKeyPath: "cell.state", options: nil)
+            self.bind("shouldAutoPlayOnWheel", toObject: detailViewController.chkbxAutoPlayOnWheel, withKeyPath: "cell.state", options: nil)
+            detailViewController.btnPlayOnWheel.cell!.bind("enabled", toObject: self, withKeyPath: "patternPlayEnabled", options: nil)
+        }
+    }
+    
+    dynamic var shouldShowPreview: Bool = true {
+        didSet {
+            _updatePreview()
+        }
+    }
+    
+    dynamic var shouldAutoPlayOnWheel: Bool = true {
+        didSet {
+            if shouldAutoPlayOnWheel {
+                _playSelectedItem()
+            }
         }
     }
     

@@ -16,11 +16,11 @@ class CDWheelPlayerSplitViewController: NSSplitViewController {
 
         // Sort of hacky, but hook up our two children together.. i wish we could link to children from IB..
         let leftChild: CDPatternImagesPlayerOutlineViewController = self.childViewControllers[0] as! CDPatternImagesPlayerOutlineViewController
-        let rightChild: CDWheelPreviewViewController = self.childViewControllers[1] as! CDWheelPreviewViewController
-        leftChild.patternRunner = rightChild.patternRunner
-        
-        // Set initial sizes..
-
+        let middleChild: CDWheelPreviewViewController = self.childViewControllers[1] as! CDWheelPreviewViewController
+        let rightChild: CDWheelPlayerDetailViewController = self.childViewControllers[2] as! CDWheelPlayerDetailViewController
+        // The middle controls the runner..really I should push ownership of it to a parent or something..
+        leftChild.patternRunner = middleChild.patternRunner
+        leftChild.detailViewController = rightChild;
     }
     
     
