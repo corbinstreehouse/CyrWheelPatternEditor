@@ -154,6 +154,7 @@ class ImagePatternObjectWrapper: PatternObjectWrapper {
 
 class ProgrammedPatternObjectWrapper: PatternObjectWrapper {
     var patternType: LEDPatternType = LEDPatternTypeCount
+    var color: NSColor?
     init(patternType: LEDPatternType) {
         let image: NSImage? = nil; // TODO: Load the template image (or start creating it..)
         super.init(label: CDPatternItemNames.nameForPatternType(patternType), image: image)

@@ -33,9 +33,10 @@ let gPatternEditorErrorDomain: String = "PatternEditorErrorDomain"
 let gPatternFilenameExtension: String = "pat"
 
 class CDWheelConnection: NSObject, CBPeripheralDelegate {
-    let uartServiceUUID = CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E") // From AdaFruit's docs
-    let uartTransmitCharacteristicUUID = CBUUID(string: "6E400002-B5A3-F393-E0A9-E50E24DCCA9E") // Write/transmit characteristic UUID
-    let uartReceiveCharacteristicUUID = CBUUID(string: "6E400003-B5A3-F393-E0A9-E50E24DCCA9E") // Read/receive (via notify) characteristic UUID
+    private let uartServiceUUID = CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E") // From AdaFruit's docs
+    private let wheelServiceUUID = CBUUID(string: kLEDWheelServiceUUID)
+    private let uartTransmitCharacteristicUUID = CBUUID(string: "6E400002-B5A3-F393-E0A9-E50E24DCCA9E") // Write/transmit characteristic UUID
+    private let uartReceiveCharacteristicUUID = CBUUID(string: "6E400003-B5A3-F393-E0A9-E50E24DCCA9E") // Read/receive (via notify) characteristic UUID
     
     
     internal var peripheral: CBPeripheral
@@ -45,7 +46,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
 //    private var _commandCharacteristic: CBCharacteristic?
     private var _getSequencesCharacteristic: CBCharacteristic?
     
-    private var _deleteSequenceCharacteristic: CBCharacteristic?
+//    private var _deleteSequenceCharacteristic: CBCharacteristic?
     private var _brightnessReadCharacteristic: CBCharacteristic?
     
     // uart stuff
@@ -61,7 +62,8 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         peripheral.delegate = self;
         
         // corbin - scanning for everything with nil
-        let services = [CBUUID(string: kLEDWheelServiceUUID), uartServiceUUID]
+        // We use the wheel service and uart service
+        let services = [wheelServiceUUID, uartServiceUUID]
         peripheral.discoverServices(services)
         
         if let name = peripheral.name {
@@ -81,7 +83,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         }
     }
     
-    internal func _writeWheelUARTCommand(uartCommand: CDWheelUARTCommand, with16BitValue rawValueC: Int16) {
+    private func _writeWheelUARTCommand(uartCommand: CDWheelUARTCommand, with16BitValue rawValueC: Int16) {
         if let uartChar = _uartTransmitCharacteristic {
             // Write the command as an 8-bit value..
             var uartCommand: Int8 = uartCommand.rawValue
@@ -91,9 +93,36 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             var rawValue: Int16 = rawValueC
             data.appendBytes(&rawValue, length: sizeofValue(rawValue))
             
+            // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
             peripheral.writeValue(data, forCharacteristic: uartChar, type: CBCharacteristicWriteType.WithResponse)
         }
     }
+
+    internal func setDynamicPatternType(patternType: LEDPatternType, color: CRGB, duration: UInt32) {
+        if let uartChar = _uartTransmitCharacteristic {
+            // Write the command as an 8-bit value..
+            var uartCommand: Int8 = CDWheelUARTCommandPlayProgrammedPattern.rawValue
+            // the uartCommand, followed by the value..
+            let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
+
+            // pattern type
+            var rawPatternValue: Int32 = patternType.rawValue
+            data.appendBytes(&rawPatternValue, length: sizeofValue(rawPatternValue))
+
+            // duration
+            var rawDuration: UInt32 = duration;
+            data.appendBytes(&rawDuration, length: sizeofValue(rawDuration))
+            
+            // color
+            var rawColor: CRGB = color
+            data.appendBytes(&rawColor, length: sizeofValue(rawColor))
+            
+            // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
+            peripheral.writeValue(data, forCharacteristic: uartChar, type: CBCharacteristicWriteType.WithResponse)
+        }
+    }
+    
+    
     
     internal var commandEnabled: Bool = false;
     internal func sendCommand(command: CDWheelCommand) {
@@ -260,7 +289,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?) {
         for service: CBService in peripheral.services! {
             debugPrint("found service: \(service.UUID)")
-            if (service.UUID.isEqual(CBUUID(string: kLEDWheelServiceUUID))) {
+            if (service.UUID.isEqual(wheelServiceUUID)) {
                 _cyrWheelService = service;
                 debugPrint("found CYR wheel service: \(service.UUID)")
                 // Request the characteristics right away so we can get values and represent our current state
@@ -294,13 +323,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 _commandCharacteristic = characteristic
                 commandEnabled = true;
             } else */
-            if uuid.isEqual(CBUUID(string: kLEDWheelCharGetSequencesUUID)) {
-                _getSequencesCharacteristic = characteristic
-                // Request the sequences right when we find the characteristic
-                peripheral.setNotifyValue(true, forCharacteristic: characteristic)
-            } else if (uuid.isEqual(CBUUID(string: kLEDWheelDeleteCharacteristicUUID))) {
-                _deleteSequenceCharacteristic = characteristic
-            } else if (uuid.isEqual(CBUUID(string: kLEDWheelBrightnessCharacteristicReadUUID))) {
+            if (uuid.isEqual(CBUUID(string: kLEDWheelBrightnessCharacteristicReadUUID))) {
                 _brightnessReadCharacteristic = characteristic;
                 if let data = characteristic.value {
                     _updateBrightnessFromData(data);
@@ -314,6 +337,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 watchChar();
             } else if (uuid.isEqual(uartTransmitCharacteristicUUID)) {
                 _uartTransmitCharacteristic = characteristic;
+                commandEnabled = true;
             } else if (uuid.isEqual(_uartRecieveCharacteristic)) {
                 _uartRecieveCharacteristic = characteristic;
             }
@@ -404,24 +428,26 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     
 //    public func enumerateObjectsUsingBlock(block: (AnyObject, Int, UnsafeMutablePointer<ObjCBool>) -> Void)
-    internal func deleteFilenamesAtIndexes(indexes: NSIndexSet, didCompleteHandler: (succeeded: Bool) -> Void) {
-        // TODO: what is the limit of the bytes I can send at one time?
-        let data: NSMutableData = NSMutableData()
-        
-        for var index = indexes.firstIndex; index != NSNotFound; index = indexes.indexGreaterThanIndex(index) {
-            // Send 16-bit indexes
-            var indexAs16Bit: Int16 = Int16(index).littleEndian;
-            data.appendBytes(&indexAs16Bit, length: sizeof(Int16))
-        }
-            
-        peripheral.writeValue(data, forCharacteristic: _deleteSequenceCharacteristic!, type: CBCharacteristicWriteType.WithResponse)
+//    internal func deleteFilenamesAtIndexes(indexes: NSIndexSet, didCompleteHandler: (succeeded: Bool) -> Void) {
+//        // TODO: what is the limit of the bytes I can send at one time?
+//        let data: NSMutableData = NSMutableData()
+//        
+//        for var index = indexes.firstIndex; index != NSNotFound; index = indexes.indexGreaterThanIndex(index) {
+//            // Send 16-bit indexes
+//            var indexAs16Bit: Int16 = Int16(index).littleEndian;
+//            data.appendBytes(&indexAs16Bit, length: sizeof(Int16))
+//        }
+//            
+//        peripheral.writeValue(data, forCharacteristic: _deleteSequenceCharacteristic!, type: CBCharacteristicWriteType.WithResponse)
+//    
+//    }
     
-    }
-    
+    // not used..
     private func _addSequenceFilename(filename: String) {
         sequenceFilenames.append(filename)
     }
     
+    // not used..
     private func _parseSequenceListData() {
         let data = _sequenceListData!
         if let dataAsString = String(data: data, encoding: NSUTF8StringEncoding) {
@@ -456,11 +482,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
 /*        if uuid.isEqual(CBUUID(string: kLEDWheelCharSendCommandUUID)) {
             return "Wheel CommandCharacteristic"
         } else */
-        if uuid.isEqual(CBUUID(string: kLEDWheelCharGetSequencesUUID)) {
-            return "Get SequencesCharacteristic"
-        } else if (uuid.isEqual(CBUUID(string: kLEDWheelDeleteCharacteristicUUID))) {
-            return "Delete Characteristic"
-        } else if (uuid.isEqual(CBUUID(string: kLEDWheelBrightnessCharacteristicReadUUID))) {
+        if (uuid.isEqual(CBUUID(string: kLEDWheelBrightnessCharacteristicReadUUID))) {
             return "Brightness READ Characteristic"
         }  else if (uuid.isEqual(CBUUID(string: kLEDWheelCharGetWheelStateUUID))) {
             return "Get State Characteristic"

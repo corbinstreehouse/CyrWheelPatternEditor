@@ -21,6 +21,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     dynamic var connectedWheel: CDWheelConnection? = nil {
         didSet {
+            playerController?.connectedWheel = connectedWheel
             _updatePlayButton()
         }
     }
@@ -32,7 +33,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
 
     // outlets
-    @IBOutlet weak var _sequencesTableView: NSTableView!
     @IBOutlet weak var _titleTextField: NSTextField!
     @IBOutlet weak var _brightnessContainerView: NSView!
     @IBOutlet weak var _brightnessMenuItem: NSMenuItem!
@@ -124,8 +124,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     var _wheelChooserViewController: CDWheelConnectionChooserViewController?
     
     func startScanning() {
-//        let services = [CBUUID(string: kLEDWheelServiceUUID)]
-        let services: [CBUUID] = [] // scan's for everything!!
+        let services = [CBUUID(string: kLEDWheelServiceUUID)]
         centralManager.scanForPeripheralsWithServices(services, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
     }
     
@@ -251,18 +250,13 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     dynamic var _addSequenceEnabled: Bool = false // for bindings
     dynamic var _removeSequencesEnabled: Bool = false;
 
-    private func _doRemoveSelectedRows() {
-        _removeSequencesAtIndexes(_sequencesTableView.selectedRowIndexes)
-    }
-
-
     @IBAction func btnAddSequenceClicked(sender: NSButton) {
         _doAddWithOpenPanel()
     }
     
     
     @IBAction func btnRemoveSelectedSequencesClicked(sender: NSButton) {
-        _doRemoveSelectedRows()
+        // TODO...
     }
     
     func checkBluetoothState() {
@@ -326,9 +320,16 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    @IBAction func btnDoTest(sender: AnyObject) {
-        connectedWheel?.doTest()    
+    private var playerController: CDPatternImagesPlayerOutlineViewController?
+    
+    override func prepareForSegue(segue: NSStoryboardSegue, sender: AnyObject?) {
+        playerController = segue.destinationController as? CDPatternImagesPlayerOutlineViewController
+        playerController!.connectedWheel = connectedWheel;
     }
+    
+//    @IBAction func btnDoTest(sender: AnyObject) {
+//        connectedWheel?.doTest()    
+//    }
     
     func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
         print("didConnect to ", peripheral)
@@ -338,6 +339,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
             lastConnectedWheelUUID = peripheral.identifier
         } else if connectedWheel?.peripheral == peripheral {
             _updateIsConnectingToWheel();
+            _updatePlayButton() // Refresh that state too
         }
         
         // Stop scanning once we are connected to something
@@ -370,11 +372,11 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     func _updateButtons() {
         _addSequenceEnabled = connectedWheel != nil && connectedWheel!.sequenceFilenames.count > 0
-        _removeSequencesEnabled = _sequencesTableView.selectedRow != -1
+//        _removeSequencesEnabled = _sequencesTableView.selectedRow != -1
     }
     
     func _sequenceFilenamesChanged() {
-        _sequencesTableView.reloadData()
+//        _sequencesTableView.reloadData()
         _updateButtons()
     }
 
@@ -382,7 +384,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     // complete reload or new values
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String]) {
-        _sequencesTableView.reloadData()
+//        _sequencesTableView.reloadData()
     }
     
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeState wheelState: CDWheelState) {
@@ -428,19 +430,19 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
     func tableViewSelectionDidChange(notification: NSNotification) {
-        _removeSequencesEnabled = _sequencesTableView.selectedRow != -1
+//        _removeSequencesEnabled = _sequencesTableView.selectedRow != -1
     }
     
     func _removeSequencesAtIndexes(indexes: NSIndexSet) {
         // TODO: Remove them right away from our visual representation. If we failed to really remove them, we add them back in..
-        connectedWheel?.deleteFilenamesAtIndexes(indexes, didCompleteHandler: { (succeeded: Bool) -> Void in
-            if (succeeded) {
-                self._sequencesTableView.removeRowsAtIndexes(indexes, withAnimation: NSTableViewAnimationOptions.EffectFade)
-                self._updateButtons()
-            } else {
-                // TODO: present some error..
-            }
-        })
+//        connectedWheel?.deleteFilenamesAtIndexes(indexes, didCompleteHandler: { (succeeded: Bool) -> Void in
+//            if (succeeded) {
+//                self._sequencesTableView.removeRowsAtIndexes(indexes, withAnimation: NSTableViewAnimationOptions.EffectFade)
+//                self._updateButtons()
+//            } else {
+//                // TODO: present some error..
+//            }
+//        })
     }
 
     // row actions from the sequences table
@@ -450,10 +452,10 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     // NOTE: not used..
     @IBAction func btnRemoveSequenceClicked(sender: NSButton) {
-        let row = _sequencesTableView.rowForView(sender)
-        if row != -1 {
-            _removeSequencesAtIndexes(NSIndexSet(index: row))
-        }
+//        let row = _sequencesTableView.rowForView(sender)
+//        if row != -1 {
+//            _removeSequencesAtIndexes(NSIndexSet(index: row))
+//        }
     }
     
 }
