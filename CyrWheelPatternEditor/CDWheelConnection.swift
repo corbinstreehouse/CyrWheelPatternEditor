@@ -83,46 +83,139 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         }
     }
     
+    let _dataChunkSize = 20 // I think this is a limit of the peripheral
+    private var _dataToSend: NSData? = nil;
+    private var _dataOffset: Int = 0;
+    private var _nextDataToSend: NSMutableData?
+    private var _writeCounter = 0; // for debugging mainly
+
+    // Send the UART data, chunking as necessary, and requesting a response after the last chunk is sent... (maybe?)
+    private func _startSendingUARTData(data: NSData) {
+        if _dataToSend == nil {
+            if data.length <= _dataChunkSize {
+                // All of it goes in one chunk
+                peripheral.writeValue(data, forCharacteristic: _uartTransmitCharacteristic!, type: CBCharacteristicWriteType.WithResponse)
+            } else {
+                // Chunk it
+                _dataOffset = 0
+                _writeCounter = 0;
+                _dataToSend = data
+                _sendUARTDataChunk()
+            }
+        } else {
+            // queue the data up...or we drop it?
+            if _nextDataToSend == nil {
+                _nextDataToSend = NSMutableData()
+            }
+            if let nextData = _nextDataToSend {
+                nextData.appendData(data)
+            }
+        }
+    }
+    
+    private func _doneSendingData() {
+        _dataToSend = nil // done
+        // If we have more queued data, start it
+        if let nextData = _nextDataToSend {
+            _startSendingUARTData(nextData)
+        }
+    }
+    
+    private func _sendMoreUARTDataIfNeededAfterDelay() {
+        guard let data = _dataToSend else { return }
+        let nowDataLeft = data.length - _dataOffset;
+        if (nowDataLeft > 0) {
+            let delay: Int64 = Int64(NSEC_PER_MSEC)*2 // At about 4ns, it starts to get slower on the recieving end.
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), { () -> Void in
+                self._sendUARTDataChunk();
+            })
+        } else {
+            _doneSendingData()
+        }
+    }
+    
+    private func _sendUARTDataChunk() {
+        guard let data = _dataToSend else { return }
+        let dataLeft = data.length - _dataOffset;
+        if dataLeft > 0 {
+            let amountToSend = min(dataLeft, _dataChunkSize)
+            let subData: NSData = data.subdataWithRange(NSMakeRange(_dataOffset, amountToSend))
+            _dataOffset += subData.length
+            // CBCharacteristicWriteType.WithResponse vs without
+            peripheral.writeValue(subData, forCharacteristic: _uartTransmitCharacteristic!, type: CBCharacteristicWriteType.WithoutResponse)
+//            NSLog("write: %d, %d, _dataOffset %d, total: %d", _writeCounter++, amountToSend, _dataOffset, data.length);
+            _sendMoreUARTDataIfNeededAfterDelay();
+        } else {
+            _doneSendingData()
+        }
+    }
+
+    
     private func _writeWheelUARTCommand(uartCommand: CDWheelUARTCommand, with16BitValue rawValueC: Int16) {
-        if let uartChar = _uartTransmitCharacteristic {
-            // Write the command as an 8-bit value..
-            var uartCommand: Int8 = uartCommand.rawValue
-            // the uartCommand, followed by the value..
-            let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
-            
-            var rawValue: Int16 = rawValueC
-            data.appendBytes(&rawValue, length: sizeofValue(rawValue))
-            
-            // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
-            peripheral.writeValue(data, forCharacteristic: uartChar, type: CBCharacteristicWriteType.WithResponse)
-        }
+        // Write the command as an 8-bit value..
+        var uartCommand: Int8 = uartCommand.rawValue
+        // the uartCommand, followed by the value..
+        let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
+        
+        var rawValue: Int16 = rawValueC
+        data.appendBytes(&rawValue, length: sizeofValue(rawValue))
+        
+        // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
+        _startSendingUARTData(data)
     }
-
+    
     internal func setDynamicPatternType(patternType: LEDPatternType, color: CRGB, duration: UInt32) {
-        if let uartChar = _uartTransmitCharacteristic {
-            // Write the command as an 8-bit value..
-            var uartCommand: Int8 = CDWheelUARTCommandPlayProgrammedPattern.rawValue
-            // the uartCommand, followed by the value..
-            let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
+        // Write the command as an 8-bit value..
+        var uartCommand: Int8 = CDWheelUARTCommandPlayProgrammedPattern.rawValue
+        // the uartCommand, followed by the value..
+        let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
 
-            // pattern type
-            var rawPatternValue: Int32 = patternType.rawValue
-            data.appendBytes(&rawPatternValue, length: sizeofValue(rawPatternValue))
+        // pattern type
+        var rawPatternValue: Int32 = patternType.rawValue
+        data.appendBytes(&rawPatternValue, length: sizeofValue(rawPatternValue))
 
-            // duration
-            var rawDuration: UInt32 = duration;
-            data.appendBytes(&rawDuration, length: sizeofValue(rawDuration))
-            
-            // color
-            var rawColor: CRGB = color
-            data.appendBytes(&rawColor, length: sizeofValue(rawColor))
-            
-            // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
-            peripheral.writeValue(data, forCharacteristic: uartChar, type: CBCharacteristicWriteType.WithResponse)
-        }
+        // duration
+        var rawDuration: UInt32 = duration;
+        data.appendBytes(&rawDuration, length: sizeofValue(rawDuration))
+        
+        // color
+        var rawColor: CRGB = color
+        data.appendBytes(&rawColor, length: sizeofValue(rawColor))
+        
+        // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
+        _startSendingUARTData(data)
     }
     
     
+    internal func setDynamicImagePattern(filename: String, duration: UInt32) {
+        // Write the command as an 8-bit value..
+        var uartCommand: Int8 = CDWheelUARTCommandPlayImagePattern.rawValue
+        // the uartCommand, followed by the value..
+        let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
+        
+        // duration
+        var rawDuration: UInt32 = duration;
+        data.appendBytes(&rawDuration, length: sizeofValue(rawDuration))
+        
+        // LEDBitmapPatternOptions
+        var rawOptions: LEDBitmapPatternOptions = LEDBitmapPatternOptions()
+        assert(sizeofValue(rawOptions) == 4)
+        data.appendBytes(&rawOptions, length: sizeofValue(rawOptions))
+        
+        // Includes NULL term in size (for better or worse)
+        let filenameUTF8 = filename.nulTerminatedUTF8
+        var sizeValue: UInt32 = UInt32(filenameUTF8.count)
+        data.appendBytes(&sizeValue, length: sizeofValue(sizeValue))
+
+        let filenameLength = filenameUTF8.count; // null terminator
+        filename.withCString { (p: UnsafePointer<Int8>) in
+            // filename, including null terminator
+            data.appendBytes(p, length: filenameLength)
+        }
+        
+        // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
+        _startSendingUARTData(data)
+    }
     
     internal var commandEnabled: Bool = false;
     internal func sendCommand(command: CDWheelCommand) {
@@ -344,30 +437,32 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         }
     }
     
-    private var _dataToSend: NSData? = nil;
-    private var _dataOffset: Int = 0;
-    let _dataChunkSize = 20 // I think this is a limit of the peripheral
-    var _i = 0;
-    
-    func doTest() {
-        if (_uartTransmitCharacteristic == nil) {
-            NSLog("NO _uartTransmitCharacteristic!!");
-            return
-        }
-        // send 20 bytes at a time..ugh!
-        _dataToSend = NSData(contentsOfFile: "/corbin/Desktop/testing.txt")
-
-        // 20 bytes max..ugh...
-        // send the size..then the next packets follow
-        _writeInt32Value(Int32(_dataToSend!.length).littleEndian, forCharacteristic: _uartTransmitCharacteristic!)
-        
-        _dataOffset = 0;
-        _i=0;
-//        let subData: NSData = _dataToSend!.subdataWithRange(NSMakeRange(_dataOffset, _dataChunkSize))
-//        NSLog("sending %@, length: %d", _dataToSend!, subData.length);
-//        _dataOffset += subData.length
-//        peripheral.writeValue(subData, forCharacteristic: _uartTransmitCharacteristic!, type: CBCharacteristicWriteType.WithResponse)
-    }
+//    var _i = 0;
+//    
+//    // speed test
+//    func doTest() {
+//        if (_sendingData) {
+//            NSLog("sending data already")
+//            return;
+//        }
+//        if (_uartTransmitCharacteristic == nil) {
+//            NSLog("NO _uartTransmitCharacteristic!!");
+//            return
+//        }
+//        // send 20 bytes at a time..ugh!
+//        _dataToSend = NSData(contentsOfFile: "/corbin/Desktop/testing.txt")
+//
+//        // 20 bytes max..ugh...
+//        // send the size..then the next packets follow
+//        _writeInt32Value(Int32(_dataToSend!.length).littleEndian, forCharacteristic: _uartTransmitCharacteristic!)
+//        
+//        _dataOffset = 0;
+//        _i=0;
+////        let subData: NSData = _dataToSend!.subdataWithRange(NSMakeRange(_dataOffset, _dataChunkSize))
+////        NSLog("sending %@, length: %d", _dataToSend!, subData.length);
+////        _dataOffset += subData.length
+////        peripheral.writeValue(subData, forCharacteristic: _uartTransmitCharacteristic!, type: CBCharacteristicWriteType.WithResponse)
+//    }
     
     func peripheralDidUpdateName(peripheral: CBPeripheral) {
         if let name = peripheral.name {
@@ -377,28 +472,28 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         }
     }
     
-    func sendMoreDataIfNeededAfterDelay() {
-        let nowDataLeft = _dataToSend!.length - _dataOffset;
-        if (nowDataLeft > 0) {
-            let delay: Int64 = Int64(NSEC_PER_MSEC)*2 // At about 4ns, it starts to get slower on the recieving end.
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), { () -> Void in
-                self.sendMoreData();
-            })
-        }
-    }
-    
-    func sendMoreData() {
-        let dataLeft = _dataToSend!.length - _dataOffset;
-        if dataLeft > 0 {
-            let amountToSend = min(dataLeft, _dataChunkSize)
-            let subData: NSData = _dataToSend!.subdataWithRange(NSMakeRange(_dataOffset, amountToSend))
-            _dataOffset += subData.length
-            // CBCharacteristicWriteType.WithResponse vs without
-            peripheral.writeValue(subData, forCharacteristic: _uartTransmitCharacteristic!, type: CBCharacteristicWriteType.WithoutResponse)
-            NSLog("write: %d, %d, left %d", _i++, amountToSend, _dataOffset);
-            sendMoreDataIfNeededAfterDelay();
-        }
-    }
+//    func sendMoreDataIfNeededAfterDelay() {
+//        let nowDataLeft = _dataToSend!.length - _dataOffset;
+//        if (nowDataLeft > 0) {
+//            let delay: Int64 = Int64(NSEC_PER_MSEC)*2 // At about 4ns, it starts to get slower on the recieving end.
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), { () -> Void in
+//                self.sendMoreData();
+//            })
+//        }
+//    }
+//    
+//    func sendMoreData() {
+//        let dataLeft = _dataToSend!.length - _dataOffset;
+//        if dataLeft > 0 {
+//            let amountToSend = min(dataLeft, _dataChunkSize)
+//            let subData: NSData = _dataToSend!.subdataWithRange(NSMakeRange(_dataOffset, amountToSend))
+//            _dataOffset += subData.length
+//            // CBCharacteristicWriteType.WithResponse vs without
+//            peripheral.writeValue(subData, forCharacteristic: _uartTransmitCharacteristic!, type: CBCharacteristicWriteType.WithoutResponse)
+//            NSLog("write: %d, %d, left %d", _i++, amountToSend, _dataOffset);
+//            sendMoreDataIfNeededAfterDelay();
+//        }
+//    }
 
     func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         if characteristic == _uartTransmitCharacteristic {

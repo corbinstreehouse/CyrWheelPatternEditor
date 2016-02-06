@@ -13,11 +13,14 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     override func viewDidLoad() {
         super.viewDidLoad()
         _outlineView.allowsMultipleSelection = false
+        _updateButtonState()
     }
     
     dynamic var connectedWheel: CDWheelConnection? = nil {
         didSet {
-            _updateButtonState();
+            if self.viewLoaded {
+                _updateButtonState();
+            }
         }
     }
 
@@ -93,6 +96,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             patternPriorEnabled = false
             patternPlayEnabled = false
         }
+        _outlineView.enabled = connectedWheel != nil
     }
     
     private func _playItem(item: PatternObjectWrapper) {
@@ -113,8 +117,8 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             
             connectedWheel!.setDynamicPatternType(programmedItem.patternType, color: rgbColor, duration: duration)
         case let imageItem as ImagePatternObjectWrapper:
+            connectedWheel!.setDynamicImagePattern(imageItem.relativeFilename, duration: 32) // TODO: duration customization..
             break
-            
         default: break
             
         }

@@ -332,7 +332,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
 //    }
     
     func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
-        print("didConnect to ", peripheral)
         if connectedWheel == nil {
             connectedWheel = CDWheelConnection(peripheral: peripheral);
             connectedWheel!.delegate = self;
