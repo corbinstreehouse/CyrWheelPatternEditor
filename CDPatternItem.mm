@@ -301,23 +301,24 @@ static double _maxPatternDurationForPatternType(LEDPatternType type) {
 static double _speedRangeForPatternType(LEDPatternType type) {
     return _maxPatternDurationForPatternType(type) - _minPatternDurationForPatternType(type);
 }
-
 #define A (-6.0)
-- (void)setPatternSpeed:(double)patternSpeed {
+
+// In seconds
+NSTimeInterval _CDPatternDurationForPatternSpeed(double patternSpeed, LEDPatternType patternType) {
     // Faster speed means a shorter duration
     if (patternSpeed <= 0) {
         // Slow speed means longest time..
-        self.patternDuration = _maxPatternDurationForPatternType(self.patternType);
+        return _maxPatternDurationForPatternType(patternType);
     } else if (patternSpeed >= 1.0) {
         // Linearly process the extra speed down to 0??
-        self.patternDuration = _minPatternDurationForPatternType(self.patternType);
+        return _minPatternDurationForPatternType(patternType);
     } else {
         double percentage;
-        double speedRange = _speedRangeForPatternType(self.patternType);
+        double speedRange = _speedRangeForPatternType(patternType);
         if (speedRange < 1.0) {
             // quadratic
             //    y=(x-1)^2
-    //        double percentage = (patternSpeed-1)*(patternSpeed-1); // gives a percentage value
+            //        double percentage = (patternSpeed-1)*(patternSpeed-1); // gives a percentage value
             // y = e^(-4x)
             percentage = exp(A*patternSpeed);
         } else {
@@ -325,8 +326,16 @@ static double _speedRangeForPatternType(LEDPatternType type) {
             percentage = 1.0 - patternSpeed;
         }
         // add in the min
-        self.patternDuration = _minPatternDurationForPatternType(self.patternType) + percentage * speedRange;
+        return _minPatternDurationForPatternType(patternType) + percentage * speedRange;
     }
+}
+
+uint32_t _CDPatternDurationFromTimeInterval(NSTimeInterval patternDuration) {
+    return round(patternDuration * 1000);
+}
+
+- (void)setPatternSpeed:(double)patternSpeed {
+    self.patternDuration = _CDPatternDurationForPatternSpeed(patternSpeed, self.patternType);
 }
 
 - (double)patternSpeed {

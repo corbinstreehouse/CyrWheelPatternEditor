@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewController {
+class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewController, CDWheelConnectionPresenter {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,14 +25,43 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     }
 
     @IBAction func _outlineDoubleClick(sender: NSOutlineView) {
-        if let item = _getPlayableItemAtRow(_outlineView.selectedRow) {
-            _playItem(item)
+        if connectedWheel != nil {
+            if let item = _getPlayableItemAtRow(_outlineView.selectedRow) {
+                _playItem(item)
+            }
         }
     }
     
     func outlineViewSelectionDidChange(notification: NSNotification) {
         _updateButtonState()
+        // Setup a temporary represention to play in the simulator..
+        _updateTemporaryPatternSequence()
     }
+
+    // Set by a parent to another thing that is doing the running
+    var patternRunner: CDPatternRunner?
+    
+    private func _updateTemporaryPatternSequence() {
+        guard let item = _getPlayableItemAtRow(_outlineView.selectedRow) else { patternRunner?.setBlackAndPause(); return }
+        
+        switch item {
+        case let programmedItem as ProgrammedPatternObjectWrapper:
+            // TODO: speed...
+            let color = programmedItem.color != nil ? programmedItem.color! : NSColor.redColor()
+            patternRunner?.loadDynamicPatternType(programmedItem.patternType, patternSpeed: 0.6, patternColor: color)
+            patternRunner?.play()
+            break
+        case let imageItem as ImagePatternObjectWrapper:
+            // TODO: speed...
+            patternRunner?.loadDynamicBitmapPatternTypeWithFilename(imageItem.relativeFilename, patternSpeed: 0.6)
+            patternRunner?.play()
+            break
+        default:
+            break
+            
+        }
+    }
+    
     
     // Button actions
     @IBAction func patternNext(sender: AnyObject?) {
@@ -96,7 +125,6 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             patternPriorEnabled = false
             patternPlayEnabled = false
         }
-        _outlineView.enabled = connectedWheel != nil
     }
     
     private func _playItem(item: PatternObjectWrapper) {

@@ -1160,7 +1160,7 @@ DQ
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="150" id="GYr-dL-2IY"/>
                                             </constraints>
                                             <connections>
-                                                <segue destination="ikO-88-XKn" kind="embed" id="rdB-gZ-16S"/>
+                                                <segue destination="ZU7-R4-fod" kind="embed" id="LCA-jA-Z6q"/>
                                             </connections>
                                         </containerView>
                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BHH-Qp-mVG">
@@ -1185,17 +1185,17 @@ DQ
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                         <connections>
+                                                            <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="8de-uq-6wh">
+                                                                <dictionary key="options">
+                                                                    <string key="NSValueTransformerName">NSIsNotNil</string>
+                                                                </dictionary>
+                                                            </binding>
                                                             <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection.needsColor" previousBinding="8de-uq-6wh" id="mIv-Ej-4mR">
                                                                 <dictionary key="options">
                                                                     <integer key="NSMultipleValuesPlaceholder" value="-1"/>
                                                                     <integer key="NSNoSelectionPlaceholder" value="-1"/>
                                                                     <integer key="NSNotApplicablePlaceholder" value="-1"/>
                                                                     <integer key="NSNullPlaceholder" value="-1"/>
-                                                                </dictionary>
-                                                            </binding>
-                                                            <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="8de-uq-6wh">
-                                                                <dictionary key="options">
-                                                                    <string key="NSValueTransformerName">NSIsNotNil</string>
                                                                 </dictionary>
                                                             </binding>
                                                         </connections>
@@ -1262,8 +1262,8 @@ DQ
                                                         <rect key="frame" x="262" y="40" width="182" height="20"/>
                                                         <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="AC6-bv-QPR"/>
                                                         <connections>
-                                                            <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.patternSpeedEnabled" id="ska-GO-bPx"/>
                                                             <binding destination="heP-6G-9Ue" name="value" keyPath="selection.patternSpeed" id="Xp7-Ng-Bxs"/>
+                                                            <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.patternSpeedEnabled" id="ska-GO-bPx"/>
                                                         </connections>
                                                     </slider>
                                                     <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NGF-29-V1d">
@@ -1298,8 +1298,8 @@ DQ
                                                                     <string key="NSValueTransformerName">NSIsNotNil</string>
                                                                 </dictionary>
                                                             </binding>
-                                                            <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.needsColor" id="DnA-CX-tVf"/>
                                                             <binding destination="heP-6G-9Ue" name="value" keyPath="selection.displayColor" id="Rg5-OP-Hst"/>
+                                                            <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.needsColor" id="DnA-CX-tVf"/>
                                                         </connections>
                                                     </colorWell>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eWN-aC-mFP">
@@ -1321,8 +1321,8 @@ DQ
                                                         <rect key="frame" x="604" y="12" width="182" height="20"/>
                                                         <sliderCell key="cell" alignment="left" maxValue="1" doubleValue="0.1915518245341615" tickMarkPosition="above" sliderType="linear" id="dk6-t5-JVQ"/>
                                                         <connections>
-                                                            <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.patternSpeedEnabled" id="gfm-jc-A2U"/>
                                                             <binding destination="heP-6G-9Ue" name="value" keyPath="selection.patternSpeed" id="Ysk-Zd-f7U"/>
+                                                            <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.patternSpeedEnabled" id="gfm-jc-A2U"/>
                                                         </connections>
                                                     </slider>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Ep-QT-ccv">
@@ -1877,7 +1877,7 @@ DQ
                 </viewController>
                 <customObject id="ORQ-sf-WdA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3026" y="50"/>
+            <point key="canvasLocation" x="3026" y="66"/>
         </scene>
         <!--Item Detail View-->
         <scene sceneID="DoD-NM-rRc">
@@ -2192,7 +2192,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wZJ-Op-eAi">
-                                                <rect key="frame" x="610" y="0.0" width="16" height="150"/>
+                                                <rect key="frame" x="611" y="0.0" width="15" height="150"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
@@ -2262,23 +2262,23 @@ DQ
             <objects>
                 <viewController id="ikO-88-XKn" customClass="CDPatternImagesPlayerOutlineViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="zZ0-0o-ixA" userLabel="Container View">
-                        <rect key="frame" x="0.0" y="0.0" width="829" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="317" height="310"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="21" horizontalPageScroll="10" verticalLineScroll="21" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RjE-5b-kyY">
-                                <rect key="frame" x="0.0" y="0.0" width="829" height="267"/>
+                                <rect key="frame" x="0.0" y="0.0" width="317" height="277"/>
                                 <clipView key="contentView" id="9kS-n7-4Mo">
-                                    <rect key="frame" x="0.0" y="0.0" width="829" height="267"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="317" height="277"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="rdk-a7-1px" id="MMI-21-fjJ" customClass="DarkOutlineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="829" height="267"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="317" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" white="0.144230525" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn width="826" minWidth="40" maxWidth="1000" id="rdk-a7-1px">
+                                                <tableColumn width="314" minWidth="40" maxWidth="1000" id="rdk-a7-1px">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -2292,7 +2292,7 @@ DQ
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView id="mQ9-Rh-3ca">
-                                                            <rect key="frame" x="1" y="1" width="826" height="17"/>
+                                                            <rect key="frame" x="1" y="1" width="314" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xGA-Lc-8DE">
@@ -2326,10 +2326,10 @@ DQ
                                                             </connections>
                                                         </tableCellView>
                                                         <tableCellView identifier="HeaderCell" id="dqW-og-0Cn">
-                                                            <rect key="frame" x="1" y="20" width="826" height="17"/>
+                                                            <rect key="frame" x="1" y="20" width="314" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textField identifier="GroupRowCell" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4N2-23-ThO">
+                                                                <textField identifier="GroupRowCell" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4N2-23-ThO">
                                                                     <rect key="frame" x="0.0" y="1" width="828" height="17"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Group Row" id="dI9-ZN-360">
                                                                         <font key="font" metaFont="systemSemibold" size="13"/>
@@ -2351,11 +2351,11 @@ DQ
                                                             </connections>
                                                         </tableCellView>
                                                         <customView identifier="FloatingRowView" id="Rxl-8X-WVk" customClass="FloatingRowView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                                            <rect key="frame" x="1" y="39" width="826" height="19"/>
+                                                            <rect key="frame" x="1" y="39" width="314" height="19"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         </customView>
                                                         <customView identifier="DarkRowView" id="GBc-Zv-70g" customClass="DarkRowView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                                            <rect key="frame" x="1" y="60" width="826" height="19"/>
+                                                            <rect key="frame" x="1" y="60" width="314" height="19"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         </customView>
                                                     </prototypeCellViews>
@@ -2374,7 +2374,7 @@ DQ
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="n5W-HG-7j8"/>
                                 </constraints>
                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Jha-pR-CS0">
-                                    <rect key="frame" x="0.0" y="284" width="370" height="16"/>
+                                    <rect key="frame" x="0.0" y="251" width="339" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="cAF-X7-w1u">
@@ -2382,16 +2382,20 @@ DQ
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fc2-69-58f">
-                                <rect key="frame" x="6" y="271" width="140" height="21"/>
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Fc2-69-58f">
+                                <rect key="frame" x="6" y="281" width="140" height="21"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Available Patterns" id="7Ez-c8-vhZ">
                                     <font key="font" metaFont="system" size="17"/>
                                     <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rDD-Al-8o3" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                <rect key="frame" x="184" y="273" width="18" height="18"/>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rDD-Al-8o3" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                <rect key="frame" x="184" y="283" width="18" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="18" id="BV0-K3-9WH"/>
+                                    <constraint firstAttribute="width" constant="18" id="RBK-cc-3lr"/>
+                                </constraints>
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="play" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="Ghg-n5-s1Z" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -2401,8 +2405,12 @@ DQ
                                     <binding destination="ikO-88-XKn" name="enabled" keyPath="patternPlayEnabled" id="Ghq-ZQ-RR1"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="htK-fY-Z2O" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                <rect key="frame" x="210" y="273" width="18" height="18"/>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="htK-fY-Z2O" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                <rect key="frame" x="210" y="283" width="18" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="18" id="M08-Fv-BaM"/>
+                                    <constraint firstAttribute="width" constant="18" id="flC-nR-tp6"/>
+                                </constraints>
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="fastforward" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="KUt-oC-qOJ" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -2412,8 +2420,12 @@ DQ
                                     <binding destination="ikO-88-XKn" name="enabled" keyPath="patternNextEnabled" id="LmW-WI-ZsG"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wFm-LW-LNc" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                <rect key="frame" x="158" y="273" width="18" height="18"/>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wFm-LW-LNc" userLabel="Rewind Rollover Button" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                <rect key="frame" x="158" y="283" width="18" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="18" id="1BA-7z-Uqc"/>
+                                    <constraint firstAttribute="width" constant="18" id="Juw-Gg-tug"/>
+                                </constraints>
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="rewind" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="fSe-GV-vVU" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -2424,7 +2436,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sMu-wQ-6xE" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                <rect key="frame" x="782" y="272" width="18" height="18"/>
+                                <rect key="frame" x="270" y="282" width="18" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="18" id="oFZ-sr-8UF"/>
                                     <constraint firstAttribute="height" constant="18" id="zfg-s8-yZ3"/>
@@ -2438,7 +2450,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dy9-PI-7SA" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                <rect key="frame" x="804" y="272" width="18" height="18"/>
+                                <rect key="frame" x="292" y="282" width="18" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="18" id="5X0-k4-48G"/>
                                     <constraint firstAttribute="height" constant="18" id="8vA-mb-CHR"/>
@@ -2452,9 +2464,9 @@ DQ
                                 </connections>
                             </button>
                             <box title="Box" boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="t7d-5i-lLt" userLabel="bottom box line">
-                                <rect key="frame" x="0.0" y="265" width="829" height="2"/>
+                                <rect key="frame" x="0.0" y="275" width="317" height="2"/>
                                 <view key="contentView" id="nTa-em-Bjm">
-                                    <rect key="frame" x="0.0" y="0.0" width="829" height="2"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="317" height="2"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                                 <constraints>
@@ -2465,10 +2477,16 @@ DQ
                             </box>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="sMu-wQ-6xE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="htK-fY-Z2O" secondAttribute="trailing" constant="5" id="2ZO-NO-oVo"/>
                             <constraint firstAttribute="trailing" secondItem="dy9-PI-7SA" secondAttribute="trailing" constant="7" id="4b8-YH-J2x"/>
                             <constraint firstItem="dy9-PI-7SA" firstAttribute="leading" secondItem="sMu-wQ-6xE" secondAttribute="trailing" constant="4" id="8mh-BD-OPq"/>
                             <constraint firstItem="dy9-PI-7SA" firstAttribute="bottom" secondItem="sMu-wQ-6xE" secondAttribute="bottom" id="Egh-ra-pbn"/>
+                            <constraint firstItem="rDD-Al-8o3" firstAttribute="bottom" secondItem="wFm-LW-LNc" secondAttribute="bottom" id="Li1-uu-BcI"/>
+                            <constraint firstItem="t7d-5i-lLt" firstAttribute="top" secondItem="Fc2-69-58f" secondAttribute="bottom" constant="4" id="Mbd-VR-eRu"/>
+                            <constraint firstItem="htK-fY-Z2O" firstAttribute="bottom" secondItem="wFm-LW-LNc" secondAttribute="bottom" id="NWJ-W2-KKf"/>
+                            <constraint firstItem="Fc2-69-58f" firstAttribute="leading" secondItem="zZ0-0o-ixA" secondAttribute="leading" constant="8" id="RWd-v4-5Ss"/>
                             <constraint firstItem="RjE-5b-kyY" firstAttribute="leading" secondItem="zZ0-0o-ixA" secondAttribute="leading" id="Rxg-2F-ZTb"/>
+                            <constraint firstItem="rDD-Al-8o3" firstAttribute="leading" secondItem="wFm-LW-LNc" secondAttribute="trailing" constant="8" id="Teu-zS-NK5"/>
                             <constraint firstItem="t7d-5i-lLt" firstAttribute="top" secondItem="zZ0-0o-ixA" secondAttribute="top" constant="33" id="bCH-kO-mnP"/>
                             <constraint firstItem="RjE-5b-kyY" firstAttribute="top" secondItem="t7d-5i-lLt" secondAttribute="bottom" constant="-2" id="bmb-dO-z5Q"/>
                             <constraint firstAttribute="trailing" secondItem="RjE-5b-kyY" secondAttribute="trailing" id="fWR-w8-Kn1"/>
@@ -2476,6 +2494,9 @@ DQ
                             <constraint firstItem="t7d-5i-lLt" firstAttribute="top" secondItem="dy9-PI-7SA" secondAttribute="bottom" constant="5" id="hbb-b8-x7Q"/>
                             <constraint firstItem="t7d-5i-lLt" firstAttribute="leading" secondItem="zZ0-0o-ixA" secondAttribute="leading" id="keB-xK-pcF"/>
                             <constraint firstAttribute="trailing" secondItem="t7d-5i-lLt" secondAttribute="trailing" id="laM-et-nu8"/>
+                            <constraint firstItem="t7d-5i-lLt" firstAttribute="top" secondItem="wFm-LW-LNc" secondAttribute="bottom" constant="6" id="mBO-wr-BE8"/>
+                            <constraint firstItem="htK-fY-Z2O" firstAttribute="leading" secondItem="rDD-Al-8o3" secondAttribute="trailing" constant="8" id="p0W-rO-R2g"/>
+                            <constraint firstItem="wFm-LW-LNc" firstAttribute="leading" secondItem="Fc2-69-58f" secondAttribute="trailing" constant="14" id="wjN-9i-tUC"/>
                         </constraints>
                     </view>
                     <connections>
@@ -2485,7 +2506,96 @@ DQ
                 <customObject id="hzd-Os-EUV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="x7G-fz-sgr"/>
             </objects>
-            <point key="canvasLocation" x="17.5" y="1641"/>
+            <point key="canvasLocation" x="230.5" y="2002"/>
+        </scene>
+        <!--Wheel Player Split View Controller-->
+        <scene sceneID="yYH-rw-fIU">
+            <objects>
+                <splitViewController id="ZU7-R4-fod" customClass="CDWheelPlayerSplitViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
+                    <splitViewItems>
+                        <splitViewItem holdingPriority="260" id="LlX-41-Mcb"/>
+                        <splitViewItem id="i32-Sg-W5N"/>
+                    </splitViewItems>
+                    <splitView key="splitView" dividerStyle="thin" vertical="YES" id="twz-os-BsS">
+                        <rect key="frame" x="0.0" y="0.0" width="648" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </splitView>
+                    <connections>
+                        <segue destination="ikO-88-XKn" kind="relationship" relationship="splitItems" id="cgx-6i-trU"/>
+                        <segue destination="wyO-Ym-AFh" kind="relationship" relationship="splitItems" id="hLj-0G-JSA"/>
+                    </connections>
+                </splitViewController>
+                <customObject id="AXO-KW-CF8" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="396" y="1598"/>
+        </scene>
+        <!--Wheel Preview View Controller-->
+        <scene sceneID="TqT-Ju-RT3">
+            <objects>
+                <viewController id="wyO-Ym-AFh" customClass="CDWheelPreviewViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="33N-Lx-koi">
+                        <rect key="frame" x="0.0" y="0.0" width="518" height="338"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="Utd-3g-q71" customClass="CDCyrWheelView">
+                                <rect key="frame" x="0.0" y="43" width="518" height="295"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="sLP-c9-iyk"/>
+                                </constraints>
+                            </customView>
+                            <box autoresizesSubviews="NO" title="Box" boxType="custom" borderType="none" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="sqV-Eb-5VO">
+                                <rect key="frame" x="0.0" y="0.0" width="518" height="43"/>
+                                <view key="contentView" id="VrS-oa-pFH">
+                                    <rect key="frame" x="0.0" y="0.0" width="518" height="43"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="pwe-9q-9wc" userLabel="Button container view">
+                                            <rect key="frame" x="111" y="2" width="296" height="39"/>
+                                            <subviews>
+                                                <button verticalHuggingPriority="750" fixedFrame="YES" tag="10" translatesAutoresizingMaskIntoConstraints="NO" id="VJ4-hv-tgo" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                    <rect key="frame" x="125" y="0.0" width="48" height="39"/>
+                                                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="play" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="xgu-qz-IGS" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                    </buttonCell>
+                                                    <connections>
+                                                        <action selector="btnPlayPauseClicked:" target="wyO-Ym-AFh" id="6FE-n6-w46"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="39" id="Djo-p3-Epl"/>
+                                                <constraint firstAttribute="width" constant="296" id="Ifj-OJ-WaG"/>
+                                            </constraints>
+                                        </customView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="pwe-9q-9wc" firstAttribute="centerX" secondItem="VrS-oa-pFH" secondAttribute="centerX" id="EZg-cV-2on"/>
+                                        <constraint firstItem="pwe-9q-9wc" firstAttribute="centerY" secondItem="VrS-oa-pFH" secondAttribute="centerY" id="JtW-lg-LUB"/>
+                                    </constraints>
+                                </view>
+                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                <color key="fillColor" red="0.19215686269999999" green="0.19215686269999999" blue="0.19215686269999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </box>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Utd-3g-q71" secondAttribute="bottom" constant="43" id="2yT-0U-gHT"/>
+                            <constraint firstAttribute="bottom" secondItem="sqV-Eb-5VO" secondAttribute="bottom" id="6j4-8V-GGw"/>
+                            <constraint firstItem="Utd-3g-q71" firstAttribute="top" secondItem="33N-Lx-koi" secondAttribute="top" id="9If-GM-Lqo"/>
+                            <constraint firstItem="sqV-Eb-5VO" firstAttribute="leading" secondItem="33N-Lx-koi" secondAttribute="leading" id="G1b-0p-y4u"/>
+                            <constraint firstAttribute="trailing" secondItem="sqV-Eb-5VO" secondAttribute="trailing" id="Gub-DN-vBY"/>
+                            <constraint firstItem="Utd-3g-q71" firstAttribute="leading" secondItem="33N-Lx-koi" secondAttribute="leading" id="Suk-Df-h02"/>
+                            <constraint firstItem="sqV-Eb-5VO" firstAttribute="top" secondItem="Utd-3g-q71" secondAttribute="bottom" id="iKk-Rs-QRy"/>
+                            <constraint firstAttribute="trailing" secondItem="Utd-3g-q71" secondAttribute="trailing" id="kah-Eg-VUs"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="_cyrWheelView" destination="Utd-3g-q71" id="1vo-pE-PhE"/>
+                    </connections>
+                </viewController>
+                <customObject id="yB6-68-zz7" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="689" y="2016"/>
         </scene>
     </scenes>
     <resources>

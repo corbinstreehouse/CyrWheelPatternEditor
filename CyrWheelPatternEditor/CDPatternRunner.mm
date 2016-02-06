@@ -23,6 +23,7 @@
     NSManagedObjectContext *_context;
     NSPersistentStoreCoordinator *_coordinator;
 }
+@property (nullable) CDPatternSequence *currentPatternSequence; // Not settable from outside (TODO: make readonly here)
 @end
 
 
@@ -246,6 +247,26 @@ static NSMutableSet *g_runningPatterns = [NSMutableSet set];
     fileInMemory.setData(data);
     _sequenceManager.loadSequenceInMemoryFromFatFile(&fileInMemory);
     fileInMemory.close();
+}
+
+- (void)loadDynamicPatternType:(LEDPatternType)type patternSpeed:(CGFloat)speed patternColor:(NSColor *)color {
+    color = [color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
+    CRGB rgbColor = CRGB(round(color.redComponent*255), round(color.greenComponent *255), round(color.blueComponent*255));
+    NSTimeInterval patternDurationInS = _CDPatternDurationForPatternSpeed(speed, type);
+    uint32_t patternDuration = _CDPatternDurationFromTimeInterval(patternDurationInS);
+    _sequenceManager.setDynamicPatternType(type, patternDuration, rgbColor);
+}
+
+- (void)loadDynamicBitmapPatternTypeWithFilename:(NSString *)filename patternSpeed:(CGFloat)speed{
+    NSTimeInterval patternDurationInS = _CDPatternDurationForPatternSpeed(speed, LEDPatternTypeBitmap);
+    uint32_t patternDuration = _CDPatternDurationFromTimeInterval(patternDurationInS);
+    _sequenceManager.setDynamicBitmapPatternType(filename.UTF8String, patternDuration, LEDPatternOptions());
+}
+
+- (void)setBlackAndPause {
+    [self loadDynamicPatternType:LEDPatternTypeSolidColor patternSpeed:100 patternColor:NSColor.blackColor];
+    _sequenceManager.process(); // forces an update of the colors
+    [self pause];
 }
 
 - (void)_loadCurrentSequence {

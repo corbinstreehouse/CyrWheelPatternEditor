@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) CDPatternEndCondition patternEndCondition;
 @property (nonatomic) uint32_t shouldSetBrightnessByRotationalVelocity; // Move to options in some way?
 
-@property (nonatomic) double patternDuration; // in seconds; only needs to be set if patternTypeNeedsPatternDuration = YES
+@property (nonatomic) double patternDuration; // in seconds; only needs to be set if patternTypeNeedsPatternDuration = YES. aka: NSTimeInterval
 @property (nonatomic) uint32_t/*LEDPatternOptions*/ patternOptions; // 32-bit struct (for now..)
 
 @property (nonatomic, readonly) BOOL durationEnabled; // synthesized for bindings
@@ -55,5 +55,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// In seconds
+NSTimeInterval _CDPatternDurationForPatternSpeed(double patternSpeed, LEDPatternType patternType);
+
+// In ms as a uint32
+uint32_t _CDPatternDurationFromTimeInterval(NSTimeInterval timeInterval);
 
 NS_ASSUME_NONNULL_END

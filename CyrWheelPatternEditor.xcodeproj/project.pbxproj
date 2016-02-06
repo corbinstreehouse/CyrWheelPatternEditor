@@ -27,6 +27,7 @@
 		9D7995C71C537DB8008D5818 /* CDPatternImagesOutlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7995C61C537DB8008D5818 /* CDPatternImagesOutlineViewController.swift */; };
 		9D84FEB71C643CD8004165A9 /* CDPatternImagesEditorOutlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84FEB61C643CD8004165A9 /* CDPatternImagesEditorOutlineViewController.swift */; };
 		9D84FEB91C643DFA004165A9 /* CDPatternImagesPlayerOutlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84FEB81C643DFA004165A9 /* CDPatternImagesPlayerOutlineViewController.swift */; };
+		9D84FEBD1C65AF52004165A9 /* CDWheelPlayerSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D84FEBC1C65AF52004165A9 /* CDWheelPlayerSplitViewController.swift */; };
 		9D8F58F91C1C7C3D00826D8D /* SdFat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D8F58F41C1C7C3D00826D8D /* SdFat.cpp */; };
 		9D8F58FB1C1C7C7700826D8D /* SdFatUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D8F58FA1C1C7C7700826D8D /* SdFatUtil.cpp */; };
 		9D8F58FE1C1CA9CD00826D8D /* FatFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D8F58FC1C1CA9CD00826D8D /* FatFile.cpp */; };
@@ -144,6 +145,7 @@
 		9D7F8C4B1A11B4DB009785C0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		9D84FEB61C643CD8004165A9 /* CDPatternImagesEditorOutlineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternImagesEditorOutlineViewController.swift; sourceTree = "<group>"; };
 		9D84FEB81C643DFA004165A9 /* CDPatternImagesPlayerOutlineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternImagesPlayerOutlineViewController.swift; sourceTree = "<group>"; };
+		9D84FEBC1C65AF52004165A9 /* CDWheelPlayerSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDWheelPlayerSplitViewController.swift; sourceTree = "<group>"; };
 		9D8F58F41C1C7C3D00826D8D /* SdFat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = SdFat.cpp; path = ArduinoWrappers/SdFat.cpp; sourceTree = "<group>"; };
 		9D8F58F51C1C7C3D00826D8D /* SdFat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SdFat.h; path = ArduinoWrappers/SdFat.h; sourceTree = "<group>"; };
 		9D8F58F61C1C7C3D00826D8D /* SdFatUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SdFatUtil.h; path = ArduinoWrappers/SdFatUtil.h; sourceTree = "<group>"; };
@@ -371,6 +373,7 @@
 				9D84FEB61C643CD8004165A9 /* CDPatternImagesEditorOutlineViewController.swift */,
 				9D84FEB81C643DFA004165A9 /* CDPatternImagesPlayerOutlineViewController.swift */,
 				9D0EF1C81BFEE1BD002C687E /* CDWheelConnectionViewController.swift */,
+				9D84FEBC1C65AF52004165A9 /* CDWheelPlayerSplitViewController.swift */,
 				9D9775821C0223E3002D78EE /* CDWheelConnection.swift */,
 				9DD0BFAC1C4F1DBB00C1DA43 /* CDPatternEditorBottomBar.swift */,
 				9DD0BFAE1C4F2F1B00C1DA43 /* CDPatternSequenceProtocols.swift */,
@@ -580,6 +583,7 @@
 				9D211A1E1C3A438A006A75FC /* CDPatternItemNames.m in Sources */,
 				9DBD804A189C9FB200A6A067 /* CDPatternDataToImageTransformer.mm in Sources */,
 				9D931EB01C33B4B70065222F /* CDTimelineViewController.swift in Sources */,
+				9D84FEBD1C65AF52004165A9 /* CDWheelPlayerSplitViewController.swift in Sources */,
 				9D931EB41C35D0B80065222F /* CDPatternSequenceSplitViewController.swift in Sources */,
 				9DBD8040189B525300A6A067 /* CDPatternItemViewController.mm in Sources */,
 				9DD394D6191EB2FD00B77A4F /* CDOrientation.cpp in Sources */,

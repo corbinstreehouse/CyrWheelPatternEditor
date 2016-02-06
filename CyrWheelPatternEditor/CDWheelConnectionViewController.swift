@@ -15,14 +15,20 @@ extension CDWheelCommand {
     }
 }
 
-class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegate, CDWheelConnectionDelegate, NSTableViewDelegate, NSTableViewDataSource {
+
+protocol CDWheelConnectionPresenter {
+    var connectedWheel: CDWheelConnection? { get set }
+}
+
+
+class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegate, CDWheelConnectionDelegate, NSTableViewDelegate, NSTableViewDataSource, CDWheelConnectionPresenter {
 
     lazy var centralManager: CBCentralManager = CBCentralManager(delegate: self, queue: nil)
     
     dynamic var connectedWheel: CDWheelConnection? = nil {
         didSet {
-            playerController?.connectedWheel = connectedWheel
             _updatePlayButton()
+            _pushConnectedWheelToChildren()
         }
     }
     lazy var _discoveredPeripherals: [CBPeripheral] = []
@@ -320,11 +326,31 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    private var playerController: CDPatternImagesPlayerOutlineViewController?
+//    private var playerController: CDPatternImagesPlayerOutlineViewController?
+//    override func prepareForSegue(segue: NSStoryboardSegue, sender: AnyObject?) {
+//        playerController = segue.destinationController as? CDPatternImagesPlayerOutlineViewController
+//        playerController!.connectedWheel = connectedWheel;
+//    }
     
-    override func prepareForSegue(segue: NSStoryboardSegue, sender: AnyObject?) {
-        playerController = segue.destinationController as? CDPatternImagesPlayerOutlineViewController
-        playerController!.connectedWheel = connectedWheel;
+    override func addChildViewController(childViewController: NSViewController) {
+        super.addChildViewController(childViewController)
+        _pushConnectedWheelToChildren()
+    }
+
+    private func _pushConnectedWheelToChildrenFromViewController(viewController: NSViewController) {
+        if var presenter = viewController as? CDWheelConnectionPresenter {
+            presenter.connectedWheel = connectedWheel
+        }
+        for child in viewController.childViewControllers {
+            _pushConnectedWheelToChildrenFromViewController(child)
+        }
+    }
+
+    
+    private func _pushConnectedWheelToChildren() {
+        for child in self.childViewControllers {
+            _pushConnectedWheelToChildrenFromViewController(child)
+        }
     }
     
 //    @IBAction func btnDoTest(sender: AnyObject) {

@@ -8,10 +8,8 @@
 
 import Cocoa
 
-// Descend from CDPatternSequencePresenterViewController?
 class CDWheelPreviewViewController: NSViewController, CDPatternSequencePresenter {
 
-//    private var _childrenObserver: CDPatternSequenceChildrenObserver?
     private var _patternRunner: CDPatternRunner!
     
     override func viewDidLoad() {
@@ -20,6 +18,20 @@ class CDWheelPreviewViewController: NSViewController, CDPatternSequencePresenter
         _patternRunner = CDPatternRunner(patternDirectoryURL: delegate.patternDirectoryURL)
         _patternRunner.setCyrWheelView(_cyrWheelView)
         _reloadSequence()
+    }
+
+//    internal func loadDynamicPatternType(type: LEDPatternType, patternSpeed: CGFloat, patternColor: NSColor) {
+//        _patternRunner.loadDynamicPatternType(type, patternSpeed: patternSpeed, patternColor: patternColor)
+//    }
+//
+//    internal func loadDynamicBitmapPatternTypeWithFilename(filename: String, patternSpeed: CGFloat) {
+//        _patternRunner.loadDynamicBitmapPatternTypeWithFilename(filename, patternSpeed: patternSpeed);
+//    }
+    
+    var patternRunner: CDPatternRunner {
+        get {
+            return _patternRunner;
+        }
     }
 
     @IBOutlet weak var _cyrWheelView: CDCyrWheelView!
@@ -49,33 +61,36 @@ class CDWheelPreviewViewController: NSViewController, CDPatternSequencePresenter
     }
     
     func _startObservingChanges() {
-        
-        let context: NSManagedObjectContext = self.patternSequenceProvider!.managedObjectContext
-        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextObjectsDidChangeNotification, object: context, queue: nil) { note in
-            
-            /*
-            if let updated = note.userInfo?[NSUpdatedObjectsKey] where updated.count > 0 {
-                print("updated: \(updated)")
+        // patternSequenceProvider is optional
+        if let provider = self.patternSequenceProvider {
+            let context: NSManagedObjectContext = provider.managedObjectContext
+            NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextObjectsDidChangeNotification, object: context, queue: nil) { note in
+                
+                /*
+                if let updated = note.userInfo?[NSUpdatedObjectsKey] where updated.count > 0 {
+                    print("updated: \(updated)")
+                }
+                
+                if let deleted = note.userInfo?[NSDeletedObjectsKey] where deleted.count > 0 {
+                    print("deleted: \(deleted)")
+                }
+                
+                if let inserted = note.userInfo?[NSInsertedObjectsKey] where inserted.count > 0 {
+                    print("inserted: \(inserted)")
+                }
+                if let inserted = note.userInfo?[NSRefreshedObjectsKey] where inserted.count > 0 {
+                    print("inserted: \(inserted)")
+                }
+                if let inserted = note.userInfo?[NSInvalidatedObjectsKey] where inserted.count > 0 {
+                    print("inserted: \(inserted)")
+                }
+                */
+                self._reloadSequence()
             }
-            
-            if let deleted = note.userInfo?[NSDeletedObjectsKey] where deleted.count > 0 {
-                print("deleted: \(deleted)")
-            }
-            
-            if let inserted = note.userInfo?[NSInsertedObjectsKey] where inserted.count > 0 {
-                print("inserted: \(inserted)")
-            }
-            if let inserted = note.userInfo?[NSRefreshedObjectsKey] where inserted.count > 0 {
-                print("inserted: \(inserted)")
-            }
-            if let inserted = note.userInfo?[NSInvalidatedObjectsKey] where inserted.count > 0 {
-                print("inserted: \(inserted)")
-            }
-            */
-            self._reloadSequence()
         }
     }
     
+    // optional...
     var patternSequence: CDPatternSequence! {
         didSet {
             // Load the sequence and start watching for changes.
