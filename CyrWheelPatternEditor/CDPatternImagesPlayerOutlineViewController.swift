@@ -13,6 +13,14 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let defs = NSUserDefaults.standardUserDefaults()
+        if defs.valueForKey("shouldShowPreview") != nil {
+            shouldShowPreview = defs.boolForKey("shouldShowPreview")
+        }
+        if defs.valueForKey("shouldAutoPlayOnWheel") != nil {
+            shouldAutoPlayOnWheel = defs.boolForKey("shouldAutoPlayOnWheel")
+        }
+        
         _outlineView.allowsMultipleSelection = false
         _updateButtonState()
     }
@@ -80,7 +88,6 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             break
         default:
             break
-            
         }
     }
     
@@ -149,7 +156,9 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     var detailViewController: CDWheelPlayerDetailViewController! {
         didSet {
             // Bind some of the UI to us
+            detailViewController.chkbxShowPreview.state = shouldShowPreview ? 1 : 0
             self.bind("shouldShowPreview", toObject: detailViewController.chkbxShowPreview, withKeyPath: "cell.state", options: nil)
+            detailViewController.chkbxAutoPlayOnWheel.state = shouldAutoPlayOnWheel ? 1 : 0
             self.bind("shouldAutoPlayOnWheel", toObject: detailViewController.chkbxAutoPlayOnWheel, withKeyPath: "cell.state", options: nil)
             detailViewController.btnPlayOnWheel.cell!.bind("enabled", toObject: self, withKeyPath: "patternPlayEnabled", options: nil)
             detailViewController.btnPlayOnWheel.target = self
@@ -161,6 +170,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     dynamic var shouldShowPreview: Bool = true {
         didSet {
             _updatePreview()
+            NSUserDefaults.standardUserDefaults().setBool(shouldShowPreview, forKey: "shouldShowPreview")
         }
     }
     
@@ -169,6 +179,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             if shouldAutoPlayOnWheel {
                 _playSelectedItem()
             }
+            NSUserDefaults.standardUserDefaults().setBool(shouldAutoPlayOnWheel, forKey: "shouldAutoPlayOnWheel")
         }
     }
     

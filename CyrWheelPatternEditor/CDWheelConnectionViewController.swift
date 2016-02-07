@@ -419,8 +419,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
     func patternItemSpeedChanged(item: CDPatternItemHeaderWrapper) {
-        // TODO: set the speed!
-        debugPrint("set speed")
+        connectedWheel?.setCurrentPatternDuration(CDPatternDurationForPatternSpeed(item.speed, item.patternType))
     }
     
     func patternItemColorChanged(item: CDPatternItemHeaderWrapper) {

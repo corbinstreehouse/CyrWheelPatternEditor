@@ -187,6 +187,21 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
         _startSendingUARTData(data)
     }
+
+    private func _writeWheelUARTCommand(uartCommand: CDWheelUARTCommand, with32BitValue rawValueC: UInt32) {
+        DLog("_writeWheelUARTCommand32")
+        // Write the command as an 8-bit value..
+        var uartCommand: Int8 = uartCommand.rawValue
+        // the uartCommand, followed by the value..
+        let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
+        
+        if var rawValue: UInt32 = rawValueC {
+            data.appendBytes(&rawValue, length: sizeofValue(rawValue))
+        }
+        
+        // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
+        _startSendingUARTData(data)
+    }
     
     internal func setDynamicPatternType(patternType: LEDPatternType, color: CRGB, duration: UInt32) {
         // Write the command as an 8-bit value..
@@ -355,6 +370,10 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
 //        if !_internalUpdate && _brightnessWriteCharacteristic != nil {
 //            _writeInt16Value(Int16(brightness), forCharacteristic: _brightnessWriteCharacteristic!)
 //        }
+    }
+    
+    func setCurrentPatternDuration(duration: UInt32) {
+        _writeWheelUARTCommand(CDWheelUARTCommandSetCurrentPatternSpeed, with32BitValue: duration);
     }
     
     private func _getInt16FromData(value: NSData) -> Int16 {

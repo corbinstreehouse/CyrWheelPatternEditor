@@ -271,7 +271,7 @@ BOOL CDPatternTypeNeedsColor(LEDPatternType patternType) {
 @dynamic patternSpeed;
 
 
-static double _minPatternDurationForPatternType(LEDPatternType type) {
+static double _minPatternTimeIntervalForPatternType(LEDPatternType type) {
     switch (type) {
         case LEDPatternTypeImageReferencedBitmap:
         case LEDPatternTypeBitmap: {
@@ -288,7 +288,7 @@ static double _minPatternDurationForPatternType(LEDPatternType type) {
     }
 }
 
-static double _maxPatternDurationForPatternType(LEDPatternType type) {
+static double _maxPatternTimeIntervalForPatternType(LEDPatternType type) {
     switch (type) {
         case LEDPatternTypeImageReferencedBitmap:
         case LEDPatternTypeBitmap: {
@@ -303,7 +303,7 @@ static double _maxPatternDurationForPatternType(LEDPatternType type) {
 }
 
 static double _speedRangeForPatternType(LEDPatternType type) {
-    return _maxPatternDurationForPatternType(type) - _minPatternDurationForPatternType(type);
+    return _maxPatternTimeIntervalForPatternType(type) - _minPatternTimeIntervalForPatternType(type);
 }
 #define A (-6.0)
 
@@ -312,10 +312,10 @@ NSTimeInterval CDPatternTimeIntervalForPatternSpeed(double patternSpeed, LEDPatt
     // Faster speed means a shorter duration
     if (patternSpeed <= 0) {
         // Slow speed means longest time..
-        return _maxPatternDurationForPatternType(patternType);
+        return _maxPatternTimeIntervalForPatternType(patternType);
     } else if (patternSpeed >= 1.0) {
         // Linearly process the extra speed down to 0??
-        return _minPatternDurationForPatternType(patternType);
+        return _minPatternTimeIntervalForPatternType(patternType);
     } else {
         double percentage;
         double speedRange = _speedRangeForPatternType(patternType);
@@ -330,7 +330,7 @@ NSTimeInterval CDPatternTimeIntervalForPatternSpeed(double patternSpeed, LEDPatt
             percentage = 1.0 - patternSpeed;
         }
         // add in the min
-        return _minPatternDurationForPatternType(patternType) + percentage * speedRange;
+        return _minPatternTimeIntervalForPatternType(patternType) + percentage * speedRange;
     }
 }
 
@@ -346,25 +346,26 @@ uint32_t CDPatternDurationForPatternSpeed(double patternSpeed, LEDPatternType pa
     return CDPatternDurationFromTimeInterval(CDPatternTimeIntervalForPatternSpeed(patternSpeed, patternType));
 }
 
-double CDPatternItemGetSpeedFromDuration(uint32_t patternDuration, LEDPatternType patternType) {
+double CDPatternItemGetSpeedFromDuration(uint32_t patternDurationX, LEDPatternType patternType) {
+    NSTimeInterval patternTimeInterval = CDPatternTimeIntervalForDuration(patternDurationX);
     // Long duration is a slow speed
-    if (patternDuration >= _maxPatternDurationForPatternType(patternType)) {
+    if (patternTimeInterval >= _maxPatternTimeIntervalForPatternType(patternType)) {
         return 0;
     }
     // Short duration is the fastest speed
-    if (patternDuration <= _minPatternDurationForPatternType(patternType)) {
+    if (patternTimeInterval <= _minPatternTimeIntervalForPatternType(patternType)) {
         return 1.0;
     }
     
     // Somewhere in the middle.... quadratic function, do the inverse of: y=(x-1)^2: x = sqrt(y) + 1
-    double baseDuration = patternDuration - _minPatternDurationForPatternType(patternType);
+    double baseDuration = patternTimeInterval - _minPatternTimeIntervalForPatternType(patternType);
     
     double percentage;
     double speedRange = _speedRangeForPatternType(patternType);
     if (speedRange < 1.0) {
         percentage = log(baseDuration) / A;
     } else {
-        percentage = patternDuration / speedRange;
+        percentage = patternTimeInterval / speedRange;
         percentage = 1.0 - percentage;
     }
     return percentage;
