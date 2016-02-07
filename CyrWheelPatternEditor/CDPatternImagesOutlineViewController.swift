@@ -98,6 +98,9 @@ class ProgrammedPatternObjectWrapper: CDPatternItemHeaderWrapper {
     init(patternType: LEDPatternType) {
         super.init(label: CDPatternItemNames.nameForPatternType(patternType))
         self.patternType = patternType
+        if self.colorEnabled {
+            self.color = NSColor.redColor() // better default...
+        }
     }
     
     private static var _allSortedProgrammedPatterns: [ProgrammedPatternObjectWrapper]!

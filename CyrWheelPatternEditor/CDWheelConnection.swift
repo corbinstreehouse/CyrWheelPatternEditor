@@ -30,6 +30,14 @@ protocol CDWheelConnectionDelegate {
 //    }	
 //}
 
+let BT_DEBUG = 0
+func DLog(format: String, _ args: CVarArgType...) {
+    #if BT_DEBUG
+    NSLog(format, __VA_ARGS__)
+    #endif
+}
+
+
 let gPatternEditorErrorDomain: String = "PatternEditorErrorDomain"
 let gPatternFilenameExtension: String = "pat"
 
@@ -43,10 +51,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     
     private var _cyrWheelService: CBService? // do i need to hold onto this??
     private var _stateCharacteristic: CBCharacteristic?
-//    private var _commandCharacteristic: CBCharacteristic?
-//    private var _getSequencesCharacteristic: CBCharacteristic?
-    
-//    private var _deleteSequenceCharacteristic: CBCharacteristic?
+
     private var _brightnessReadCharacteristic: CBCharacteristic?
     
     // uart stuff
@@ -156,7 +161,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 _dataOffset += subData.length
                 // CBCharacteristicWriteType.WithResponse vs without
                 peripheral.writeValue(subData, forCharacteristic: transmitChar, type: CBCharacteristicWriteType.WithoutResponse)
-    //            NSLog("write: %d, %d, _dataOffset %d, total: %d", _writeCounter++, amountToSend, _dataOffset, data.length);
+    //            DLog("write: %d, %d, _dataOffset %d, total: %d", _writeCounter++, amountToSend, _dataOffset, data.length);
                 _sendMoreUARTDataIfNeededAfterDelay();
             } else {
                 _doneSendingData()
@@ -169,6 +174,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
 
     private func _writeWheelUARTCommand(uartCommand: CDWheelUARTCommand, with16BitValue rawValueC: Int16? = nil) {
+        DLog("_writeWheelUARTCommand")
         // Write the command as an 8-bit value..
         var uartCommand: Int8 = uartCommand.rawValue
         // the uartCommand, followed by the value..
@@ -397,10 +403,9 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     
     func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?) {
         for service: CBService in peripheral.services! {
-            debugPrint("found service: \(service.UUID)")
+            DLog("found service: %@, service.UUID")
             if (service.UUID.isEqual(wheelServiceUUID)) {
                 _cyrWheelService = service;
-                debugPrint("found CYR wheel service: \(service.UUID)")
                 // Request the characteristics right away so we can get values and represent our current state
                 peripheral.discoverCharacteristics(nil, forService: service);
             } else if (service.UUID.isEqual(uartServiceUUID)) {
@@ -408,18 +413,18 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             }
         }
         if _cyrWheelService == nil {
-            debugPrint("FAILED to find cyr wheel service")
+            DLog("FAILED to find cyr wheel service")
         }
     }
     
     
     func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
-        debugPrint("characteristics found for service", service)
+        DLog("characteristics found for service", service)
         if service.characteristics == nil {
             return;
         }
         for characteristic: CBCharacteristic in service.characteristics! {
-            debugPrint("charactaristic",  stringFromUUID(characteristic.UUID))
+            DLog("charactaristic",  stringFromUUID(characteristic.UUID))
             
             func watchChar() {
                 peripheral.setNotifyValue(true, forCharacteristic: characteristic)
@@ -582,7 +587,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
 //    }
     
     func peripheral(peripheral: CBPeripheral, didUpdateNotificationStateForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-        debugPrint("didUpdateNotify for characteristic: \(stringFromUUID(characteristic.UUID))")
+        DLog("didUpdateNotify for characteristic: %@", stringFromUUID(characteristic.UUID))
         // We have to wait until we did update the notification state before we can request status...otherwise we loose "packets"
         if characteristic == _uartRecieveCharacteristic {
             _updateCurrentPatternItem()
@@ -608,19 +613,17 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     private var _dataToReceive: NSMutableData? = nil;
     private var _dataRecieveCommand: CDWheelUARTRecieveCommand = CDWheelUARTRecieveCommandInvalid
 
-    private func _recieveUARTData(data: NSData) {
+    private func _recieveIncomingUARTData(data: NSData) {
+        DLog("_recieveIncomingUARTData: %@", data)
+        _timeoutTimerMaker++
         // Append to _dataToReceive and attempt to process
         if _dataToReceive == nil {
-            // First time
+            // First time; create the mutable data, and find out what we are processing
             _dataToReceive = NSMutableData()
             _dataToReceive!.appendData(data)
             // First time in, we have to see what we are going to process to know when we are done...
             _dataRecieveCommand = CDWheelUARTRecieveCommandInvalid
             _dataToReceive!.getBytes(&_dataRecieveCommand, length: sizeofValue(_dataRecieveCommand))
-            // If it is invalid...we don't process it (I was getting a bad packet from something..)
-            
-            
-            NSLog("value got: %d", _dataRecieveCommand.rawValue)
         } else {
             _dataToReceive!.appendData(data)
         }
@@ -632,6 +635,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         switch (_dataRecieveCommand) {
         case CDWheelUARTRecieveCommandInvalid:
             // Done.. error state...
+            NSLog("Invalid command, data: %@", data);
             _dataToReceive = nil;
         case CDWheelUARTRecieveCommandCurrentPatternInfo:
             _processPatternInfoData(data)
@@ -644,8 +648,43 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         }
     }
     
+    // timeouts..
+    var _timeoutTimerMaker = 0
+    private func _startProcessDataResetTimer() {
+        _timeoutTimerMaker++
+        let localTimer = _timeoutTimerMaker;
+        let delay: Int64 = Int64(NSEC_PER_SEC)*1 // 1 seconds
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), { () -> Void in
+            if localTimer == self._timeoutTimerMaker {
+                if self._dataToReceive != nil {
+                    DLog("Timeout for UART data recieve: %@", self._dataToReceive!)
+                    self._dataToReceive = nil; // drop our data
+                }
+            } else {
+                // Cancelled
+            }
+        })
+    }
+    
+    private func _doneUARTDataAtOffset(offset: Int) {
+        if let data = _dataToReceive {
+            if data.length > offset {
+                // we have more UART data to process; trim down and process
+                let subData = data.subdataWithRange(NSRange(location: offset, length: data.length-offset))
+                DLog(" -- more data: %@", subData)
+                _dataToReceive = nil
+                _recieveIncomingUARTData(subData) // Start again
+            } else {
+                // Done!
+                _dataToReceive = nil
+            }
+        }
+    }
+    
+    
     private func _processPatternInfoData(data: NSData) {
-        NSLog("_processPatternInfoData")
+        // If it is invalid...we don't process it (I was getting a bad packet from something..)
+        DLog("_processPatternInfoData (data.length: %d): %@, subData:%@", data.length, data, data.subdataWithRange(NSRange(location: 1, length: data.length-1)))
         var dataOffset = sizeof(CDWheelUARTRecieveCommand) // start past the command
         var dataAvailable = data.length - dataOffset
         // Keep repeating our reads until we have enough data to do all the work..
@@ -657,20 +696,34 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             dataOffset += sizeofValue(patternItemHeader)
             dataAvailable -= sizeofValue(patternItemHeader)
             
+            // Validate our header...if we are invalid, we stop right away
+            if patternItemHeader.patternType.rawValue > LEDPatternTypeCount.rawValue || patternItemHeader.patternType.rawValue < 0 {
+                _doneUARTDataAtOffset(data.length)
+                NSLog("BAD PATTERN: %d, subData: %@", patternItemHeader.patternType.rawValue, data.subdataWithRange(NSRange(location:sizeof(CDWheelUARTRecieveCommand), length:data.length-1)))
+                return; // ugly,.
+            }
+            
+            
             // Does it have a filename? if so, wait for it..
             // Stupid thunk... 
-            let filenameLength = Int(CDPatternItemHeaderGetFilenameLength(&patternItemHeader))
+            // Add one for the expected NULL terminator
+            var filenameLength = Int(CDPatternItemHeaderGetFilenameLength(&patternItemHeader))
             if filenameLength > 0 {
-                if dataAvailable >= (filenameLength + 1) {
+                // Account for the null terminator
+                filenameLength += 1
+                if dataAvailable >= filenameLength {
                     // read in the filename and we are done!
+                    // Note: string needs it to NOT be NULL terminated for the length
                     let stringData = data.subdataWithRange(NSRange(location: dataOffset, length: filenameLength))
                     self.currentPatternItemFilename = NSString(data: stringData, encoding: NSUTF8StringEncoding) as String!
-                    _dataToReceive = nil;
-                    NSLog("got filename: %@", self.currentPatternItemFilename!)
+                    DLog("got filename: %@", self.currentPatternItemFilename!)
                     self.currentPatternItem = patternItemHeader
+                    dataOffset += filenameLength
+                    _doneUARTDataAtOffset(dataOffset)
                 } else {
                     // not done..
-                    NSLog("...waiting..");
+                    DLog("......filename waiting, dataAvailable: %d, expectedSize: %d", dataAvailable, filenameLength+1);
+                    _startProcessDataResetTimer();
                 }
             } else {
                 // done!
@@ -681,11 +734,11 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 } else {
                     self.currentPatternItem = nil;
                 }
-                _dataToReceive = nil; // marker that we are done
+                _doneUARTDataAtOffset(dataOffset)
             }
         } else {
-            NSLog("......waiting..");
-
+            DLog("......waiting, dataAvailable: %d, expectedSize: %d", dataAvailable, expectedSize);
+            _startProcessDataResetTimer();
         }
     }
     
@@ -706,7 +759,9 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             }
         } else if characteristic == _uartRecieveCharacteristic {
             if let data = characteristic.value {
-                _recieveUARTData(data)
+                _recieveIncomingUARTData(data)
+            } else {
+                DLog("NO _uartRecieveCharacteristic data??");
             }
         }
     }

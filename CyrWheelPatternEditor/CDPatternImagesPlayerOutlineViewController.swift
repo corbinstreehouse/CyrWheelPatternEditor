@@ -33,12 +33,25 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
+    private var _playTimer: NSTimer? = nil
+    func _playSelectedItemAfterSlightDelay() {
+        if let timer = _playTimer {
+            timer.invalidate()
+        }
+        _playTimer = NSTimer.scheduledTimerWithTimeInterval(0.3, target: self, selector: Selector("_playTimerFired:"), userInfo: nil, repeats: false)
+    }
+    func _playTimerFired(sender: AnyObject?) {
+        _playSelectedItem()
+        _playTimer = nil
+    }
+    
     func _updateAllStateForSelectionChanged() {
         _updateButtonState()
         // Setup a temporary represention to play in the simulator..
         _updatePreview()
         if shouldAutoPlayOnWheel {
-            _playSelectedItem()
+            // Process on a slight delay when from a selection change to avoid pounding the BLTE and making it being unable to keep up..
+            _playSelectedItemAfterSlightDelay()
         }
 
         // Bindings will update based on this..
