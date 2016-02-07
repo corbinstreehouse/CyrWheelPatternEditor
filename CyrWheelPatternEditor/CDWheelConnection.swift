@@ -11,8 +11,9 @@ import CoreBluetooth
 
 protocol CDWheelConnectionDelegate {
     // complete reload or new values
-    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String])
+//    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String])
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeState: CDWheelState)
+    func wheelConnection(wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?)
     // adding values
 //    func wheelConnection(wheelConnection: CDWheelConnection, didAddFilenames filenmames: String, atIndexes indexesAdded: NSIndexSet);
     // removing values
@@ -38,13 +39,12 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     private let uartTransmitCharacteristicUUID = CBUUID(string: "6E400002-B5A3-F393-E0A9-E50E24DCCA9E") // Write/transmit characteristic UUID
     private let uartReceiveCharacteristicUUID = CBUUID(string: "6E400003-B5A3-F393-E0A9-E50E24DCCA9E") // Read/receive (via notify) characteristic UUID
     
-    
     internal var peripheral: CBPeripheral
     
     private var _cyrWheelService: CBService? // do i need to hold onto this??
     private var _stateCharacteristic: CBCharacteristic?
 //    private var _commandCharacteristic: CBCharacteristic?
-    private var _getSequencesCharacteristic: CBCharacteristic?
+//    private var _getSequencesCharacteristic: CBCharacteristic?
     
 //    private var _deleteSequenceCharacteristic: CBCharacteristic?
     private var _brightnessReadCharacteristic: CBCharacteristic?
@@ -71,18 +71,26 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         }
     }
     
+    
+    // NULL if not loaded, not set, or not available
+    var currentPatternItem: CDPatternItemHeader? {
+        didSet {
+            delegate?.wheelConnection(self, didChangePatternItem: currentPatternItem, patternItemFilename: currentPatternItemFilename)
+        }
+    }
+    // set before the item..
+    var currentPatternItemFilename: String?
+    
     // Internal API
-
-    internal var sequenceFilenames: [String] = []
+    internal var sequenceFilenames: [String] = [] // TODO: remove this..not used anymore..
     
     var wheelState: CDWheelState = CDWheelStatePaused {
         didSet {
-            if let d = delegate {
-                d.wheelConnection(self, didChangeState: wheelState);
-            }
+            delegate?.wheelConnection(self, didChangeState: wheelState);
         }
     }
     
+    // Data sending
     let _dataChunkSize = 20 // I think this is a limit of the peripheral
     private var _dataToSend: NSData? = nil;
     private var _dataOffset: Int = 0;
@@ -91,25 +99,29 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
 
     // Send the UART data, chunking as necessary, and requesting a response after the last chunk is sent... (maybe?)
     private func _startSendingUARTData(data: NSData) {
-        if _dataToSend == nil {
-            if data.length <= _dataChunkSize {
-                // All of it goes in one chunk
-                peripheral.writeValue(data, forCharacteristic: _uartTransmitCharacteristic!, type: CBCharacteristicWriteType.WithResponse)
+        if let transmitChar = _uartTransmitCharacteristic {
+            if _dataToSend == nil {
+                if data.length <= _dataChunkSize {
+                    // All of it goes in one chunk
+                    peripheral.writeValue(data, forCharacteristic: transmitChar, type: CBCharacteristicWriteType.WithResponse)
+                } else {
+                    // Chunk it
+                    _dataOffset = 0
+                    _writeCounter = 0;
+                    _dataToSend = data
+                    _sendUARTDataChunk()
+                }
             } else {
-                // Chunk it
-                _dataOffset = 0
-                _writeCounter = 0;
-                _dataToSend = data
-                _sendUARTDataChunk()
+                // queue the data up...or we drop it?
+                if _nextDataToSend == nil {
+                    _nextDataToSend = NSMutableData()
+                }
+                if let nextData = _nextDataToSend {
+                    nextData.appendData(data)
+                }
             }
         } else {
-            // queue the data up...or we drop it?
-            if _nextDataToSend == nil {
-                _nextDataToSend = NSMutableData()
-            }
-            if let nextData = _nextDataToSend {
-                nextData.appendData(data)
-            }
+            // Not yet connected...
         }
     }
     
@@ -136,29 +148,35 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     
     private func _sendUARTDataChunk() {
         guard let data = _dataToSend else { return }
-        let dataLeft = data.length - _dataOffset;
-        if dataLeft > 0 {
-            let amountToSend = min(dataLeft, _dataChunkSize)
-            let subData: NSData = data.subdataWithRange(NSMakeRange(_dataOffset, amountToSend))
-            _dataOffset += subData.length
-            // CBCharacteristicWriteType.WithResponse vs without
-            peripheral.writeValue(subData, forCharacteristic: _uartTransmitCharacteristic!, type: CBCharacteristicWriteType.WithoutResponse)
-//            NSLog("write: %d, %d, _dataOffset %d, total: %d", _writeCounter++, amountToSend, _dataOffset, data.length);
-            _sendMoreUARTDataIfNeededAfterDelay();
+        if let transmitChar = _uartTransmitCharacteristic {
+            let dataLeft = data.length - _dataOffset;
+            if dataLeft > 0 {
+                let amountToSend = min(dataLeft, _dataChunkSize)
+                let subData: NSData = data.subdataWithRange(NSMakeRange(_dataOffset, amountToSend))
+                _dataOffset += subData.length
+                // CBCharacteristicWriteType.WithResponse vs without
+                peripheral.writeValue(subData, forCharacteristic: transmitChar, type: CBCharacteristicWriteType.WithoutResponse)
+    //            NSLog("write: %d, %d, _dataOffset %d, total: %d", _writeCounter++, amountToSend, _dataOffset, data.length);
+                _sendMoreUARTDataIfNeededAfterDelay();
+            } else {
+                _doneSendingData()
+            }
         } else {
+            // conneciton dropped while sending data..
+            _nextDataToSend = nil // drop the queued datta too
             _doneSendingData()
         }
     }
 
-    
-    private func _writeWheelUARTCommand(uartCommand: CDWheelUARTCommand, with16BitValue rawValueC: Int16) {
+    private func _writeWheelUARTCommand(uartCommand: CDWheelUARTCommand, with16BitValue rawValueC: Int16? = nil) {
         // Write the command as an 8-bit value..
         var uartCommand: Int8 = uartCommand.rawValue
         // the uartCommand, followed by the value..
         let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
         
-        var rawValue: Int16 = rawValueC
-        data.appendBytes(&rawValue, length: sizeofValue(rawValue))
+        if var rawValue: Int16 = rawValueC {
+            data.appendBytes(&rawValue, length: sizeofValue(rawValue))
+        }
         
         // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
         _startSendingUARTData(data)
@@ -307,7 +325,6 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             _updateWheelBrightnessIfNeeded()
         }
         // I don't know why these didn't work w/bindings...but oh well..
-        
 //        willSet(newBrightness) {
 //            assert(newBrightness >= 0 && newBrightness <= 255, "Brightness can be from 0 to 255")
 //        }
@@ -329,7 +346,6 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             _writeWheelUARTCommand(CDWheelUARTCommandSetBrightness, with16BitValue: Int16(_brightness));
         }
         // better way, when we can write chars
-//        
 //        if !_internalUpdate && _brightnessWriteCharacteristic != nil {
 //            _writeInt16Value(Int16(brightness), forCharacteristic: _brightnessWriteCharacteristic!)
 //        }
@@ -412,10 +428,6 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             
             let uuid = characteristic.UUID;
             
-            /*if uuid.isEqual(CBUUID(string: kLEDWheelCharSendCommandUUID)) {
-                _commandCharacteristic = characteristic
-                commandEnabled = true;
-            } else */
             if (uuid.isEqual(CBUUID(string: kLEDWheelBrightnessCharacteristicReadUUID))) {
                 _brightnessReadCharacteristic = characteristic;
                 if let data = characteristic.value {
@@ -431,9 +443,17 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             } else if (uuid.isEqual(uartTransmitCharacteristicUUID)) {
                 _uartTransmitCharacteristic = characteristic;
                 commandEnabled = true;
-            } else if (uuid.isEqual(_uartRecieveCharacteristic)) {
+            } else if (uuid.isEqual(uartReceiveCharacteristicUUID)) {
                 _uartRecieveCharacteristic = characteristic;
+                watchChar();
             }
+        }
+    }
+    
+    private func _updateCurrentPatternItem() {
+        // Only can do this if the chars are valid
+        if _uartTransmitCharacteristic != nil && _uartRecieveCharacteristic != nil {
+            _writeWheelUARTCommand(CDWheelUARTCommandRequestPatternInfo)
         }
     }
     
@@ -504,23 +524,23 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
 
     // MARK: ---------------------------
 
-    private var _sequenceListData: NSMutableData? // Valid when we are loading the data
-    private func _addDataToSequenceList(data: NSData?) {
-        // Consdier done when we get nil data (or some other marker..)
-        let isDone = data == nil
-        if !isDone {
-            if _sequenceListData == nil {
-                _sequenceListData = NSMutableData()
-            }
-            _sequenceListData!.appendData(data!)
-        }
-        
-        if (isDone) {
-            peripheral.setNotifyValue(false, forCharacteristic: _getSequencesCharacteristic!)
-            _parseSequenceListData();
-        }
-        
-    }
+//    private var _sequenceListData: NSMutableData? // Valid when we are loading the data
+//    private func _addDataToSequenceList(data: NSData?) {
+//        // Consdier done when we get nil data (or some other marker..)
+//        let isDone = data == nil
+//        if !isDone {
+//            if _sequenceListData == nil {
+//                _sequenceListData = NSMutableData()
+//            }
+//            _sequenceListData!.appendData(data!)
+//        }
+//        
+//        if (isDone) {
+//            peripheral.setNotifyValue(false, forCharacteristic: _getSequencesCharacteristic!)
+//            _parseSequenceListData();
+//        }
+//        
+//    }
     
 //    public func enumerateObjectsUsingBlock(block: (AnyObject, Int, UnsafeMutablePointer<ObjCBool>) -> Void)
 //    internal func deleteFilenamesAtIndexes(indexes: NSIndexSet, didCompleteHandler: (succeeded: Bool) -> Void) {
@@ -537,39 +557,35 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
 //    
 //    }
     
-    // not used..
-    private func _addSequenceFilename(filename: String) {
-        sequenceFilenames.append(filename)
-    }
+//    // not used..
+//    private func _addSequenceFilename(filename: String) {
+//        sequenceFilenames.append(filename)
+//    }
+//    
+//    // not used..
+//    private func _parseSequenceListData() {
+//        let data = _sequenceListData!
+//        if let dataAsString = String(data: data, encoding: NSUTF8StringEncoding) {
+//            var done = false
+//            repeat {
+//                if let range = dataAsString.rangeOfCharacterFromSet(NSCharacterSet.newlineCharacterSet()) {
+//                    let filename = dataAsString.substringToIndex(range.startIndex)
+//                    _addSequenceFilename(filename)
+//                } else {
+//                    done = true
+//                }
+//            } while !done;
+//        }
+//        
+//        delegate?.wheelConnection(self, didChangeSequenceFilenames: sequenceFilenames)
+//        _sequenceListData = nil // done with it
+//    }
     
-    // not used..
-    private func _parseSequenceListData() {
-        let data = _sequenceListData!
-        if let dataAsString = String(data: data, encoding: NSUTF8StringEncoding) {
-            var done = false
-            repeat {
-                if let range = dataAsString.rangeOfCharacterFromSet(NSCharacterSet.newlineCharacterSet()) {
-                    let filename = dataAsString.substringToIndex(range.startIndex)
-                    _addSequenceFilename(filename)
-                } else {
-                    done = true
-                }
-            } while !done;
-        }
-        
-        delegate?.wheelConnection(self, didChangeSequenceFilenames: sequenceFilenames)
-        _sequenceListData = nil // done with it
-    }
-    
-    // Sequences loading
     func peripheral(peripheral: CBPeripheral, didUpdateNotificationStateForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         debugPrint("didUpdateNotify for characteristic: \(stringFromUUID(characteristic.UUID))")
-        if (characteristic == _getSequencesCharacteristic) {
-            if (characteristic.isNotifying) {
-                debugPrint("sequence data read start")
-            } else {
-                debugPrint("sequence data read end")
-            }
+        // We have to wait until we did update the notification state before we can request status...otherwise we loose "packets"
+        if characteristic == _uartRecieveCharacteristic {
+            _updateCurrentPatternItem()
         }
     }
     
@@ -587,7 +603,97 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             return uuid.description
         }
     }
+    
+    // Data receiving
+    private var _dataToReceive: NSMutableData? = nil;
+    private var _dataRecieveCommand: CDWheelUARTRecieveCommand = CDWheelUARTRecieveCommandInvalid
 
+    private func _recieveUARTData(data: NSData) {
+        // Append to _dataToReceive and attempt to process
+        if _dataToReceive == nil {
+            // First time
+            _dataToReceive = NSMutableData()
+            _dataToReceive!.appendData(data)
+            // First time in, we have to see what we are going to process to know when we are done...
+            _dataRecieveCommand = CDWheelUARTRecieveCommandInvalid
+            _dataToReceive!.getBytes(&_dataRecieveCommand, length: sizeofValue(_dataRecieveCommand))
+            // If it is invalid...we don't process it (I was getting a bad packet from something..)
+            
+            
+            NSLog("value got: %d", _dataRecieveCommand.rawValue)
+        } else {
+            _dataToReceive!.appendData(data)
+        }
+        
+        _processUARTRecieveData(_dataToReceive!)
+    }
+    
+    private func _processUARTRecieveData(data: NSData) {
+        switch (_dataRecieveCommand) {
+        case CDWheelUARTRecieveCommandInvalid:
+            // Done.. error state...
+            _dataToReceive = nil;
+        case CDWheelUARTRecieveCommandCurrentPatternInfo:
+            _processPatternInfoData(data)
+            break
+        default:
+            // An invalid value...
+            NSLog("Invalid UART data: %@", data);
+            _dataToReceive = nil;
+            break
+        }
+    }
+    
+    private func _processPatternInfoData(data: NSData) {
+        NSLog("_processPatternInfoData")
+        var dataOffset = sizeof(CDWheelUARTRecieveCommand) // start past the command
+        var dataAvailable = data.length - dataOffset
+        // Keep repeating our reads until we have enough data to do all the work..
+        let expectedSize = sizeof(CDPatternItemHeader)
+        if (dataAvailable >= expectedSize) {
+            // Read in the header
+            var patternItemHeader = CDPatternItemHeader()
+            data.getBytes(&patternItemHeader, range: NSRange(location: dataOffset, length: sizeofValue(patternItemHeader)))
+            dataOffset += sizeofValue(patternItemHeader)
+            dataAvailable -= sizeofValue(patternItemHeader)
+            
+            // Does it have a filename? if so, wait for it..
+            // Stupid thunk... 
+            let test = CDPatternItemHeaderGetFilenameLength(patternItemHeader)
+
+            
+            print(test)
+            let filenameLength = Int(CDPatternItemHeaderGetFilenameLength(patternItemHeader))
+            if filenameLength > 0 {
+                if dataAvailable >= (filenameLength + 1) {
+                    // read in the filename and we are done!
+                    let stringData = data.subdataWithRange(NSRange(location: dataOffset, length: filenameLength))
+                    let s = NSString(data: stringData, encoding: NSUTF8StringEncoding)
+                    self.currentPatternItemFilename = String(s)
+                    _dataToReceive = nil;
+                    NSLog("got filename: %@", self.currentPatternItemFilename!)
+                    self.currentPatternItem = patternItemHeader
+                } else {
+                    // not done..
+                    NSLog("...waiting..");
+                }
+            } else {
+                // done!
+                self.currentPatternItemFilename = nil
+                // Translate an invalidate item to NULL
+                if patternItemHeader.patternType != LEDPatternTypeCount {
+                    self.currentPatternItem = patternItemHeader
+                } else {
+                    self.currentPatternItem = nil;
+                }
+                _dataToReceive = nil; // marker that we are done
+            }
+        } else {
+            NSLog("......waiting..");
+
+        }
+    }
+    
     func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         if error != nil {
             // TODO: present the error...make sure they aren't piling up
@@ -595,15 +701,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             return;
         }
         
-        if characteristic.value != nil {
-            let charValueAsString = String(data: characteristic.value!, encoding: NSUTF8StringEncoding)
-            debugPrint("didUpdateValueforChar:\(stringFromUUID(characteristic.UUID)) value:\(characteristic.value) charValueAsString: '\(charValueAsString)'")
-        }
-        
-        
-        if characteristic == _getSequencesCharacteristic {
-            _addDataToSequenceList(characteristic.value)
-        } else if (characteristic == _brightnessReadCharacteristic) {
+        if (characteristic == _brightnessReadCharacteristic) {
             if let data = characteristic.value {
                 _updateBrightnessFromData(data)
             }
@@ -611,11 +709,12 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             if let data = characteristic.value {
                 self.wheelState = CDWheelState(_getInt16FromData(data));
             }
+        } else if characteristic == _uartRecieveCharacteristic {
+            if let data = characteristic.value {
+                _recieveUARTData(data)
+            }
         }
     }
-    
-    
-    
     
 
 }

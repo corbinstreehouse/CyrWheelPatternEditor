@@ -12,3 +12,4 @@
 #import "CDTimelineItem.h"
 #import "CDPatternItem.h"
 #import "CDDocument.h"
+#import "CDEncodedColorTransformer.h"

@@ -8,6 +8,7 @@
 
 import Cocoa
 
+
 class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewController, CDWheelConnectionPresenter {
 
     override func viewDidLoad() {
@@ -32,10 +33,20 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    func outlineViewSelectionDidChange(notification: NSNotification) {
+    func _updateAllStateForSelectionChanged() {
         _updateButtonState()
         // Setup a temporary represention to play in the simulator..
         _updatePreview()
+        if shouldAutoPlayOnWheel {
+            _playSelectedItem()
+        }
+
+        // Bindings will update based on this..
+        detailViewController.representedObject = _outlineView.selectedItem
+    }
+    
+    func outlineViewSelectionDidChange(notification: NSNotification) {
+        _updateAllStateForSelectionChanged()
     }
 
     // Set by a parent to another thing that is doing the running
@@ -47,14 +58,11 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         
         switch item {
         case let programmedItem as ProgrammedPatternObjectWrapper:
-            // TODO: speed...
-            let color = programmedItem.color != nil ? programmedItem.color! : NSColor.redColor()
-            patternRunner?.loadDynamicPatternType(programmedItem.patternType, patternSpeed: 0.6, patternColor: color)
+            patternRunner?.loadDynamicPatternType(programmedItem.patternType, patternSpeed: programmedItem.speed, patternColor: programmedItem.color)
             patternRunner?.play()
             break
         case let imageItem as ImagePatternObjectWrapper:
-            // TODO: speed...
-            patternRunner?.loadDynamicBitmapPatternTypeWithFilename(imageItem.relativeFilename, patternSpeed: 0.6)
+            patternRunner?.loadDynamicBitmapPatternTypeWithFilename(imageItem.relativeFilename, patternSpeed: imageItem.speed)
             patternRunner?.play()
             break
         default:
@@ -63,6 +71,16 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
+    private func _selectAndAttemptToPlayAtRow(selectedRow: Int) -> Bool {
+        if _getPlayableItemAtRow(selectedRow) != nil {
+            _outlineView.selectRowIndexes(NSIndexSet(index: selectedRow), byExtendingSelection: false)
+            _outlineView.scrollRowToVisible(selectedRow)
+            _updateAllStateForSelectionChanged()
+            return true
+        } else {
+            return false
+        }
+    }
     
     // Button actions
     @IBAction func patternNext(sender: AnyObject?) {
@@ -78,10 +96,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                         selectedRow++
                     }
                 }
-                if let item = _getPlayableItemAtRow(selectedRow) {
-                    _outlineView.selectRowIndexes(NSIndexSet(index: selectedRow), byExtendingSelection: false)
-                    _outlineView.scrollRowToVisible(selectedRow)
-                    _playItem(item)
+                if _selectAndAttemptToPlayAtRow(selectedRow) {
                     break;
                 }
                 selectedRow++
@@ -94,10 +109,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         if selectedRow != -1 {
             selectedRow--
             while (selectedRow > 0) {
-                if let item = _getPlayableItemAtRow(selectedRow) {
-                    _outlineView.selectRowIndexes(NSIndexSet(index: selectedRow), byExtendingSelection: false)
-                    _outlineView.scrollRowToVisible(selectedRow)
-                    _playItem(item)
+                if _selectAndAttemptToPlayAtRow(selectedRow) {
                     break;
                 }
                 selectedRow--
@@ -127,6 +139,9 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             self.bind("shouldShowPreview", toObject: detailViewController.chkbxShowPreview, withKeyPath: "cell.state", options: nil)
             self.bind("shouldAutoPlayOnWheel", toObject: detailViewController.chkbxAutoPlayOnWheel, withKeyPath: "cell.state", options: nil)
             detailViewController.btnPlayOnWheel.cell!.bind("enabled", toObject: self, withKeyPath: "patternPlayEnabled", options: nil)
+            detailViewController.btnPlayOnWheel.target = self
+            detailViewController.btnPlayOnWheel.action = Selector("patternPlay:")
+            detailViewController.representedObject = _outlineView.selectedItem
         }
     }
     
@@ -161,40 +176,34 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    private func _playItem(item: PatternObjectWrapper) {
-        switch item {
-        case let programmedItem as ProgrammedPatternObjectWrapper:
-            // TODO: update the color that it has stored in it..
-            var rgbColor: CRGB!
-            if let color = programmedItem.color {
+    private func _playItem(item: CDPatternItemHeaderWrapper) {
+        // We might not have a conneciton, so do nothing then
+        if let connectedWheel = connectedWheel {
+            switch item {
+            case let programmedItem as ProgrammedPatternObjectWrapper:
+                let color = programmedItem.color.colorUsingColorSpace(NSColorSpace.sRGBColorSpace())!
                 let r = UInt8(round(color.redComponent*255.0))
                 let g = UInt8(round(color.greenComponent*255.0))
                 let b = UInt8(round(color.blueComponent*255.0))
-                rgbColor = CRGB(red: r, green: g, blue: b);
-            } else {
-                rgbColor = CRGB(red: 255, green: 0, blue: 0);
+                let rgbColor = CRGB(red: r, green: g, blue: b);
+                // Convert the speed to a duration
+                let duration: UInt32 = CDPatternDurationForPatternSpeed(item.speed, item.patternType)
+                connectedWheel.setDynamicPatternType(programmedItem.patternType, color: rgbColor, duration: duration)
+            case let imageItem as ImagePatternObjectWrapper:
+                // Convert the speed to a duration
+                let duration: UInt32 = CDPatternDurationForPatternSpeed(item.speed, item.patternType)
+                connectedWheel.setDynamicImagePattern(imageItem.relativeFilename, duration: duration)
+            default: break
+                
             }
-            
-            let duration: UInt32 = 50
-            
-            connectedWheel!.setDynamicPatternType(programmedItem.patternType, color: rgbColor, duration: duration)
-        case let imageItem as ImagePatternObjectWrapper:
-            connectedWheel!.setDynamicImagePattern(imageItem.relativeFilename, duration: 32) // TODO: duration customization..
-            break
-        default: break
-            
         }
-
-        
-        
-        
     }
     
     private func _canPlaySelectedItem() -> Bool {
         return _getPlayableSelectedItemWrapper() != nil
     }
     
-    func _getPlayableItemAtRow(row: Int) -> PatternObjectWrapper? {
+    func _getPlayableItemAtRow(row: Int) -> CDPatternItemHeaderWrapper? {
         if (row >= 0 && row < _outlineView.numberOfRows) {
             let item = _outlineView.itemAtRow(row)
             switch item {
@@ -214,7 +223,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    func _getPlayableSelectedItemWrapper() -> PatternObjectWrapper? {
+    func _getPlayableSelectedItemWrapper() -> CDPatternItemHeaderWrapper? {
         return _getPlayableItemAtRow(_outlineView.selectedRow)
     }
     

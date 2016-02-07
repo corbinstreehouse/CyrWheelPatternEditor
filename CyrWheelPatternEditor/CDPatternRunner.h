@@ -33,8 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 // Load squence from data in memory.. or
 - (void)loadFromData:(NSData *)data;
 // Load a preview item
-- (void)loadDynamicPatternType:(LEDPatternType)type patternSpeed:(CGFloat)speed patternColor:(NSColor *)color;
-- (void)loadDynamicBitmapPatternTypeWithFilename:(NSString *)filename patternSpeed:(CGFloat)speed;
+- (void)loadDynamicPatternType:(LEDPatternType)type patternSpeed:(double)speed patternColor:(NSColor *)color;
+- (void)loadDynamicBitmapPatternTypeWithFilename:(NSString *)filename patternSpeed:(double)speed;
 - (void)setBlackAndPause;
 
 @property(readonly, getter=isPaused) BOOL paused;

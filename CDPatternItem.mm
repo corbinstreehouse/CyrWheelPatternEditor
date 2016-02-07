@@ -174,8 +174,8 @@ static NSManagedObjectContext *g_currentContext = nil;
     }
 }
 
-- (BOOL)needsColor {
-    switch (self.patternType) {
+BOOL CDPatternTypeNeedsColor(LEDPatternType patternType) {
+    switch (patternType) {
         case LEDPatternTypeColorWipe:
         case LEDPatternTypeFadeIn:
         case LEDPatternTypeTheaterChase:
@@ -188,6 +188,10 @@ static NSManagedObjectContext *g_currentContext = nil;
         default:
             return NO;
     }
+}
+
+- (BOOL)needsColor {
+    return CDPatternTypeNeedsColor(self.patternType);
 }
 
 @dynamic displayColor;
@@ -304,7 +308,7 @@ static double _speedRangeForPatternType(LEDPatternType type) {
 #define A (-6.0)
 
 // In seconds
-NSTimeInterval _CDPatternDurationForPatternSpeed(double patternSpeed, LEDPatternType patternType) {
+NSTimeInterval CDPatternTimeIntervalForPatternSpeed(double patternSpeed, LEDPatternType patternType) {
     // Faster speed means a shorter duration
     if (patternSpeed <= 0) {
         // Slow speed means longest time..
@@ -330,30 +334,33 @@ NSTimeInterval _CDPatternDurationForPatternSpeed(double patternSpeed, LEDPattern
     }
 }
 
-uint32_t _CDPatternDurationFromTimeInterval(NSTimeInterval patternDuration) {
+uint32_t CDPatternDurationFromTimeInterval(NSTimeInterval patternDuration) {
     return round(patternDuration * 1000);
 }
 
-- (void)setPatternSpeed:(double)patternSpeed {
-    self.patternDuration = _CDPatternDurationForPatternSpeed(patternSpeed, self.patternType);
+NSTimeInterval CDPatternTimeIntervalForDuration(uint32_t duration) {
+    return duration / 1000;
 }
 
-- (double)patternSpeed {
-    double patternDuration = self.patternDuration;
+uint32_t CDPatternDurationForPatternSpeed(double patternSpeed, LEDPatternType patternType) {
+    return CDPatternDurationFromTimeInterval(CDPatternTimeIntervalForPatternSpeed(patternSpeed, patternType));
+}
+
+double CDPatternItemGetSpeedFromDuration(uint32_t patternDuration, LEDPatternType patternType) {
     // Long duration is a slow speed
-    if (patternDuration >= _maxPatternDurationForPatternType(self.patternType)) {
+    if (patternDuration >= _maxPatternDurationForPatternType(patternType)) {
         return 0;
     }
     // Short duration is the fastest speed
-    if (patternDuration <= _minPatternDurationForPatternType(self.patternType)) {
+    if (patternDuration <= _minPatternDurationForPatternType(patternType)) {
         return 1.0;
     }
     
     // Somewhere in the middle.... quadratic function, do the inverse of: y=(x-1)^2: x = sqrt(y) + 1
-    double baseDuration = self.patternDuration - _minPatternDurationForPatternType(self.patternType);
+    double baseDuration = patternDuration - _minPatternDurationForPatternType(patternType);
     
     double percentage;
-    double speedRange = _speedRangeForPatternType(self.patternType);
+    double speedRange = _speedRangeForPatternType(patternType);
     if (speedRange < 1.0) {
         percentage = log(baseDuration) / A;
     } else {
@@ -363,14 +370,26 @@ uint32_t _CDPatternDurationFromTimeInterval(NSTimeInterval patternDuration) {
     return percentage;
 }
 
+- (void)setPatternSpeed:(double)patternSpeed {
+    self.patternDuration = CDPatternTimeIntervalForPatternSpeed(patternSpeed, self.patternType);
+}
+
+- (double)patternSpeed {
+    return CDPatternItemGetSpeedFromDuration(self.patternDuration, self.patternType);
+}
+
 @dynamic patternSpeedEnabled;
 
 - (BOOL)patternSpeedEnabled {
-    if (LEDPatterns::PatternDurationShouldBeEqualToSegmentDuration(self.patternType)) {
+    return CDPatternItemGetSpeedEnabled(self.patternType);
+}
+
+BOOL CDPatternItemGetSpeedEnabled(LEDPatternType patternType) {
+    if (LEDPatterns::PatternDurationShouldBeEqualToSegmentDuration(patternType)) {
         return NO;
     }
-
-    return LEDPatterns::PatternNeedsDuration(self.patternType);
+    
+    return LEDPatterns::PatternNeedsDuration(patternType);
 }
 
 + (NSString *)pasteboardType {
@@ -378,3 +397,7 @@ uint32_t _CDPatternDurationFromTimeInterval(NSTimeInterval patternDuration) {
 }
 
 @end
+
+uint32_t CDPatternItemHeaderGetFilenameLength(const CDPatternItemHeader header) {
+    return header.filenameLength;
+}

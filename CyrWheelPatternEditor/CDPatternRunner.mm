@@ -249,17 +249,15 @@ static NSMutableSet *g_runningPatterns = [NSMutableSet set];
     fileInMemory.close();
 }
 
-- (void)loadDynamicPatternType:(LEDPatternType)type patternSpeed:(CGFloat)speed patternColor:(NSColor *)color {
+- (void)loadDynamicPatternType:(LEDPatternType)type patternSpeed:(double)speed patternColor:(NSColor *)color {
     color = [color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
     CRGB rgbColor = CRGB(round(color.redComponent*255), round(color.greenComponent *255), round(color.blueComponent*255));
-    NSTimeInterval patternDurationInS = _CDPatternDurationForPatternSpeed(speed, type);
-    uint32_t patternDuration = _CDPatternDurationFromTimeInterval(patternDurationInS);
+    uint32_t patternDuration = CDPatternDurationForPatternSpeed(speed, type);
     _sequenceManager.setDynamicPatternType(type, patternDuration, rgbColor);
 }
 
-- (void)loadDynamicBitmapPatternTypeWithFilename:(NSString *)filename patternSpeed:(CGFloat)speed{
-    NSTimeInterval patternDurationInS = _CDPatternDurationForPatternSpeed(speed, LEDPatternTypeBitmap);
-    uint32_t patternDuration = _CDPatternDurationFromTimeInterval(patternDurationInS);
+- (void)loadDynamicBitmapPatternTypeWithFilename:(NSString *)filename patternSpeed:(double)speed{
+    uint32_t patternDuration = CDPatternDurationForPatternSpeed(speed, LEDPatternTypeBitmap);
     _sequenceManager.setDynamicBitmapPatternType(filename.UTF8String, patternDuration, LEDPatternOptions());
 }
 

@@ -29,6 +29,10 @@
     return resInt;
 }
 
++ (NSColor *)colorFromCRGBColor:(CRGB)color {
+    return [NSColor colorWithSRGBRed:color.r/255.0 green:color.g/255.0 blue:color.b/255.0 alpha:1];
+}
+
 - (id)transformedValue:(id)value {
     if (value != nil) {
         NSAssert([value isKindOfClass:[NSNumber class]], @"class check");

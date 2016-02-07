@@ -55,10 +55,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-// In seconds
-NSTimeInterval _CDPatternDurationForPatternSpeed(double patternSpeed, LEDPatternType patternType);
+#if __cplusplus
+extern "C" {
+#endif
+    
+    // In seconds
+    NSTimeInterval CDPatternTimeIntervalForPatternSpeed(double patternSpeed, LEDPatternType patternType);
 
-// In ms as a uint32
-uint32_t _CDPatternDurationFromTimeInterval(NSTimeInterval timeInterval);
+    // In ms as a uint32
+    uint32_t CDPatternDurationFromTimeInterval(NSTimeInterval timeInterval);
+    uint32_t CDPatternDurationForPatternSpeed(double patternSpeed, LEDPatternType patternType);
+    NSTimeInterval CDPatternTimeIntervalForDuration(uint32_t duration);
+    double CDPatternItemGetSpeedFromDuration(uint32_t duration, LEDPatternType patternType);
+    BOOL CDPatternItemGetSpeedEnabled(LEDPatternType patternType);
+        
+    // Stupid thunk for unions
+    uint32_t CDPatternItemHeaderGetFilenameLength(const CDPatternItemHeader header);
+    BOOL CDPatternTypeNeedsColor(LEDPatternType patternType);
+    
+    
+#ifdef __cplusplus
+}
+#endif
 
 NS_ASSUME_NONNULL_END

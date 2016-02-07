@@ -75,8 +75,8 @@ NSString *CDPatternChildrenKey = @"children";
     bzero(&itemHeader, sizeof(CDPatternItemHeader));
     itemHeader.patternType = item.patternType;
     // Duration is stored in seconds but the header uses ms, and we round.
-    itemHeader.duration = _CDPatternDurationFromTimeInterval(item.duration);
-    itemHeader.patternDuration = _CDPatternDurationFromTimeInterval(item.patternDuration);
+    itemHeader.duration = CDPatternDurationFromTimeInterval(item.duration);
+    itemHeader.patternDuration = CDPatternDurationFromTimeInterval(item.patternDuration);
     itemHeader.patternOptions = item.patternOptions;
     itemHeader.patternEndCondition = item.patternEndCondition;
     itemHeader.color = item.encodedColor;

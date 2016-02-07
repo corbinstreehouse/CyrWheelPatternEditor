@@ -21,7 +21,9 @@ protocol CDWheelConnectionPresenter {
 }
 
 
-class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegate, CDWheelConnectionDelegate, NSTableViewDelegate, NSTableViewDataSource, CDWheelConnectionPresenter {
+
+
+class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegate, CDWheelConnectionDelegate, CDWheelConnectionPresenter, CDPatternItemHeaderWrapperChanged {
 
     lazy var centralManager: CBCentralManager = CBCentralManager(delegate: self, queue: nil)
     
@@ -29,6 +31,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         didSet {
             _updatePlayButton()
             _pushConnectedWheelToChildren()
+            _updateCurrentPatternItem()
         }
     }
     lazy var _discoveredPeripherals: [CBPeripheral] = []
@@ -256,16 +259,13 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         
     }
     
+    
+    // TODO: remove these..not used here anymore...
     dynamic var _addSequenceEnabled: Bool = false // for bindings
     dynamic var _removeSequencesEnabled: Bool = false;
 
     @IBAction func btnAddSequenceClicked(sender: NSButton) {
         _doAddWithOpenPanel()
-    }
-    
-    
-    @IBAction func btnRemoveSelectedSequencesClicked(sender: NSButton) {
-        // TODO...
     }
     
     func checkBluetoothState() {
@@ -400,23 +400,42 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     func _updateButtons() {
         _addSequenceEnabled = connectedWheel != nil && connectedWheel!.sequenceFilenames.count > 0
-//        _removeSequencesEnabled = _sequencesTableView.selectedRow != -1
     }
     
-    func _sequenceFilenamesChanged() {
-//        _sequencesTableView.reloadData()
-        _updateButtons()
-    }
-
     //MARK: Wheel Connection Delegate
-    
-    // complete reload or new values
-    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String]) {
-//        _sequencesTableView.reloadData()
-    }
     
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeState wheelState: CDWheelState) {
         _updatePlayButton();
+    }
+    
+    // For bindings
+    dynamic var currentPatternItem: CDPatternItemHeaderWrapper?
+    private func _updateCurrentPatternItem() {
+        if let patternItem = connectedWheel?.currentPatternItem {
+            self.currentPatternItem = CDPatternItemHeaderWrapper(patternItemHeader: patternItem, patternItemFilename: connectedWheel?.currentPatternItemFilename, delegate: self)
+        } else {
+            self.currentPatternItem = nil
+        }
+    }
+    
+    func patternItemSpeedChanged(item: CDPatternItemHeaderWrapper) {
+        // TODO: set the speed!
+        debugPrint("set speed")
+    }
+    
+    func patternItemColorChanged(item: CDPatternItemHeaderWrapper) {
+        // TODO: set the color!!
+        debugPrint("set color")
+    }
+    
+    func patternItemVelocityBasedBrightnessChanged(item: CDPatternItemHeaderWrapper) {
+        debugPrint("set patternItemVelocityBasedBrightnessChanged")
+
+    }
+
+    
+    func wheelConnection(wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?) {
+        _updateCurrentPatternItem()
     }
     
     func _updatePlayButtonWithState(wheelState: CDWheelState) {
@@ -429,61 +448,5 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         _updatePlayButtonWithState(wheelState)
     }
     
-    
-    
-    //MARK: ------------------------
-
-    
-//    func wheelConnection(wheelConnection: CDWheelConnection, didAddFilenames filenmames: String, atIndexes indexesAdded: NSIndexSet) {
-//        _sequencesTableView.insertRowsAtIndexes(indexesAdded, withAnimation: NSTableViewAnimationOptions.EffectFade)
-//    }
-//    
-//    func wheelConnection(wheelConnection: CDWheelConnection, didRemoveFilenamesAtIndexes indexesRemoved: NSIndexSet) {
-//        _sequencesTableView.removeRowsAtIndexes(indexesRemoved, withAnimation: NSTableViewAnimationOptions.EffectFade)
-//
-//    }
-
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        if let wheel = connectedWheel {
-            return wheel.sequenceFilenames.count
-        } else {
-            return 0;
-        }
-    }
-    
-    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let cellView = tableView.makeViewWithIdentifier(tableColumn!.identifier, owner: nil) as! NSTableCellView
-        cellView.textField!.stringValue = connectedWheel!.sequenceFilenames[row]
-        return cellView
-    }
-    
-    func tableViewSelectionDidChange(notification: NSNotification) {
-//        _removeSequencesEnabled = _sequencesTableView.selectedRow != -1
-    }
-    
-    func _removeSequencesAtIndexes(indexes: NSIndexSet) {
-        // TODO: Remove them right away from our visual representation. If we failed to really remove them, we add them back in..
-//        connectedWheel?.deleteFilenamesAtIndexes(indexes, didCompleteHandler: { (succeeded: Bool) -> Void in
-//            if (succeeded) {
-//                self._sequencesTableView.removeRowsAtIndexes(indexes, withAnimation: NSTableViewAnimationOptions.EffectFade)
-//                self._updateButtons()
-//            } else {
-//                // TODO: present some error..
-//            }
-//        })
-    }
-
-    // row actions from the sequences table
-    @IBAction func btnStartSequenceClicked(sender: NSButton) {
-        assert(false, "impl");
-    }
-    
-    // NOTE: not used..
-    @IBAction func btnRemoveSequenceClicked(sender: NSButton) {
-//        let row = _sequencesTableView.rowForView(sender)
-//        if row != -1 {
-//            _removeSequencesAtIndexes(NSIndexSet(index: row))
-//        }
-    }
     
 }

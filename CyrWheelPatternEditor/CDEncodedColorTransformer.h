@@ -7,10 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CDPatternData.h"
 
 @interface CDEncodedColorTransformer : NSValueTransformer
 
 + (NSColor *)colorFromInt:(int)integer;
++ (NSColor *)colorFromCRGBColor:(CRGB)color;
 + (int)intFromColor:(NSColor *)color;
 
 @end

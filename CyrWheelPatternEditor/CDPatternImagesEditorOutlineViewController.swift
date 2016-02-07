@@ -70,7 +70,7 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
             return _makeTemporaryPatternItemWithPatternType(programmedItem.patternType, imageFilename: nil)
         case let imageItem as ImagePatternObjectWrapper:
             if !imageItem.isDirectory {
-                return _makeTemporaryPatternItemWithPatternType(LEDPatternTypeImageReferencedBitmap, imageFilename: imageItem.relativeFilename)
+                return _makeTemporaryPatternItemWithPatternType(imageItem.patternType, imageFilename: imageItem.relativeFilename)
             } else {
                 return nil
             }

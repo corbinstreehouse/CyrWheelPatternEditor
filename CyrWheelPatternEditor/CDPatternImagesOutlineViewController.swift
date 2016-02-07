@@ -26,91 +26,31 @@ extension Array {
     }
 }
 
-// Custom row view for the header item
-class FloatingRowView: NSTableRowView {
-    
-//    override var wantsUpdateLayer: Bool {
-//        get {
-//            return true;
-//        }
-//    }
-//    
-//    override func updateLayer() {
-//        self.layer!.backgroundColor =
-//    }
-
-    override func drawRect(dirtyRect: NSRect) {
-        // TODO: something more generic/better with colors instead of hardcoding
-        let backgroundColor = NSColor(SRGBRed: 41.0/255.0, green: 41.0/255.0, blue: 41.0/255.0, alpha: 1.0)
-        backgroundColor.set()
-        NSRectFillUsingOperation(dirtyRect, NSCompositingOperation.CompositeSourceIn)
-        
-        let borderColor = NSColor(SRGBRed: 29.0/255.0, green: 29.0/255.0, blue: 29.0/255.0, alpha: 1.0)
-        borderColor.set()
-        var topRect = self.bounds
-        topRect.size.height = 2.0
-        NSRectFillUsingOperation(topRect, NSCompositingOperation.CompositeSourceIn)
-        
-        topRect.origin.y = NSMaxY(self.bounds) - 2.0
-        NSRectFillUsingOperation(topRect, NSCompositingOperation.CompositeSourceIn)
-    }
-    
-}
-
-class DarkRowView: NSTableRowView {
-//    override var interiorBackgroundStyle: NSBackgroundStyle {
-//        get {
-//            // Make the text not go dark 
-//            return NSBackgroundStyle.Dark
-//        }
-//    }
-
-//    override func updateLayer() {
-//        super.updateLayer()
-//        if self.selected && !self.emphasized {
-//            // Change the color to be a variation of the blue
-//            self.layer!.backgroundColor = NSColor.redColor().CGColor// NSColor.secondarySelectedControlColor().colorWithAlphaComponent(0.7).CGColor
-//        }
-//    }
-    override func drawSelectionInRect(dirtyRect: NSRect) {
-        var color = NSColor.alternateSelectedControlColor()
-        if !self.emphasized {
-            color = color.colorWithAlphaComponent(0.6)
-        }
-        color.set()
-        NSRectFillUsingOperation(dirtyRect, NSCompositingOperation.CompositeSourceIn)
-    }
-
-}
-
-class DarkOutlineView: NSOutlineView {
-    override func makeViewWithIdentifier(identifier: String, owner: AnyObject?) -> NSView? {
-        let result = super.makeViewWithIdentifier(identifier, owner: owner)
-        if let result = result {
-            if result.identifier == NSOutlineViewDisclosureButtonKey {
-                result.alphaValue = 0.8 // looks better... not so white
-            }
-        }
-        return result
-    }
-}
 
 
 // For binding the cell object value to and a simple model representing patterns that I can create
-class PatternObjectWrapper : NSObject {
-    dynamic var label: String
-    dynamic var image: NSImage?
-    init(label: String, image: NSImage?) {
-        self.label = label
-        self.image = image
-    }
-}
+//class PatternObjectWrapper : NSObject {
+//    sdf
+//    
+//    var patternType: LEDPatternType = LEDPatternTypeCount
+//    dynamic var label: String
+//    dynamic var image: NSImage?
+//    
+//    // used in bindings in CDWheelPlayerDetailViewController
+//    dynamic var color: NSColor = NSColor.redColor()
+//    dynamic var speed: Double = 0.6
+//
+//    init(label: String, image: NSImage?) {
+//        self.label = label
+//        self.image = image
+//    }
+//}
 
-class HeaderPatternObjectWrapper : PatternObjectWrapper {
+class HeaderPatternObjectWrapper : CDPatternItemHeaderWrapper {
     
 }
 
-class ImagePatternObjectWrapper: PatternObjectWrapper {
+class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
     var url: NSURL!
     var children: [ImagePatternObjectWrapper]?
     var isDirectory: Bool = false
@@ -118,11 +58,13 @@ class ImagePatternObjectWrapper: PatternObjectWrapper {
     weak var parent: ImagePatternObjectWrapper?
     
     init (label: String, url: NSURL, parent: ImagePatternObjectWrapper?) {
-        super.init(label: label, image: nil)
+        super.init(label: label)
         
         self.url = url
         self.parent = parent
         self.isDirectory = false
+        self.patternType = LEDPatternTypeImageReferencedBitmap
+
         do {
             var getter: AnyObject? = false
             try url.getResourceValue(&getter, forKey: NSURLIsDirectoryKey)
@@ -148,16 +90,13 @@ class ImagePatternObjectWrapper: PatternObjectWrapper {
             return result
         }
     }
-    
 }
 
 
-class ProgrammedPatternObjectWrapper: PatternObjectWrapper {
-    var patternType: LEDPatternType = LEDPatternTypeCount
-    var color: NSColor?
+class ProgrammedPatternObjectWrapper: CDPatternItemHeaderWrapper {
+
     init(patternType: LEDPatternType) {
-        let image: NSImage? = nil; // TODO: Load the template image (or start creating it..)
-        super.init(label: CDPatternItemNames.nameForPatternType(patternType), image: image)
+        super.init(label: CDPatternItemNames.nameForPatternType(patternType))
         self.patternType = patternType
     }
     
@@ -202,13 +141,13 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     @IBOutlet weak var _outlineView: NSOutlineView!
     
     private let _ignoredPatternTypes: [LEDPatternType] = [LEDPatternTypeCount, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
-    private var _rootChildren: [PatternObjectWrapper] = []
+    private var _rootChildren: [CDPatternItemHeaderWrapper] = []
     
-    private func _loadPatternTypeArray() -> [PatternObjectWrapper] {
+    private func _loadPatternTypeArray() -> [CDPatternItemHeaderWrapper] {
 
         let ignoredPatternTypes = LEDPatternType.nonSelectablePatternTypes
         
-        var result = [PatternObjectWrapper]()
+        var result = [CDPatternItemHeaderWrapper]()
         // Create a sorted array of pattern types to show excluding ones we can't select
         for patternObject in ProgrammedPatternObjectWrapper.allSortedProgrammedPatterns {
             if !ignoredPatternTypes.contains(patternObject.patternType) {
@@ -261,16 +200,16 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
 
         
         let programmedPatterns = _loadPatternTypeArray()
-        let programmedPatternGroupObject = HeaderPatternObjectWrapper(label: "Programmed Patterns", image: nil)
+        let programmedPatternGroupObject = HeaderPatternObjectWrapper(label: "Programmed Patterns")
         _rootChildren = [programmedPatternGroupObject]
         _rootChildren.appendContentsOf(programmedPatterns)
         
         let rootPatternImages = _loadRootPatternImages()
         if let rootImages = rootPatternImages.children {
             // Only at the image dir if we have images..
-            let imagePatternGroupObject = HeaderPatternObjectWrapper(label: "Image Patterns", image: nil)
+            let imagePatternGroupObject = HeaderPatternObjectWrapper(label: "Image Patterns")
             _rootChildren.append(imagePatternGroupObject)
-            let a: [PatternObjectWrapper] = rootImages
+            let a: [CDPatternItemHeaderWrapper] = rootImages
 //            _rootChildren.appendContentsOf(rootImages) // why doesn't this work??
             _rootChildren.appendContentsOf(a)
         }
