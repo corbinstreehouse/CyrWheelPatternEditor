@@ -70,7 +70,7 @@ extern "C" {
     BOOL CDPatternItemGetSpeedEnabled(LEDPatternType patternType);
         
     // Stupid thunk for unions
-    uint32_t CDPatternItemHeaderGetFilenameLength(const CDPatternItemHeader header);
+    uint32_t CDPatternItemHeaderGetFilenameLength(const CDPatternItemHeader *header);
     BOOL CDPatternTypeNeedsColor(LEDPatternType patternType);
     
     

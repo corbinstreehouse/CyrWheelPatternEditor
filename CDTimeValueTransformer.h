@@ -11,3 +11,6 @@
 @interface CDTimeValueTransformer : NSValueTransformer
 
 @end
+
+@interface CDBoolTransformer : NSValueTransformer
+@end

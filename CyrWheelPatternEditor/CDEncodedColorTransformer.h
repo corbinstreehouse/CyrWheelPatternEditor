@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "CDPatternData.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CDEncodedColorTransformer : NSValueTransformer
 
 + (NSColor *)colorFromInt:(int)integer;
@@ -16,3 +18,5 @@
 + (int)intFromColor:(NSColor *)color;
 
 @end
+
+NS_ASSUME_NONNULL_END

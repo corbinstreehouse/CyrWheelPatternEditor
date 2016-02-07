@@ -659,17 +659,12 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             
             // Does it have a filename? if so, wait for it..
             // Stupid thunk... 
-            let test = CDPatternItemHeaderGetFilenameLength(patternItemHeader)
-
-            
-            print(test)
-            let filenameLength = Int(CDPatternItemHeaderGetFilenameLength(patternItemHeader))
+            let filenameLength = Int(CDPatternItemHeaderGetFilenameLength(&patternItemHeader))
             if filenameLength > 0 {
                 if dataAvailable >= (filenameLength + 1) {
                     // read in the filename and we are done!
                     let stringData = data.subdataWithRange(NSRange(location: dataOffset, length: filenameLength))
-                    let s = NSString(data: stringData, encoding: NSUTF8StringEncoding)
-                    self.currentPatternItemFilename = String(s)
+                    self.currentPatternItemFilename = NSString(data: stringData, encoding: NSUTF8StringEncoding) as String!
                     _dataToReceive = nil;
                     NSLog("got filename: %@", self.currentPatternItemFilename!)
                     self.currentPatternItem = patternItemHeader

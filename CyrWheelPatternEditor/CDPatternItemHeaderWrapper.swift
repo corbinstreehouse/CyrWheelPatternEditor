@@ -27,7 +27,18 @@ class CDPatternItemHeaderWrapper: NSObject {
         self.looping = patternItemHeader.patternEndCondition == CDPatternEndConditionOnButtonClick
         self.speed = CDPatternItemGetSpeedFromDuration(patternItemHeader.patternDuration, patternItemHeader.patternType)
         self.speedEnabled = CDPatternItemGetSpeedEnabled(patternItemHeader.patternType)
-        self.color = CDEncodedColorTransformer.colorFromCRGBColor(patternItemHeader.color)
+
+        if self.colorEnabled {
+            // compiler is fucking up...
+            // CRASHES IN THE method..mystery why..
+            
+            let c = patternItemHeader.color
+    //        self.color = CDEncodedColorTransformer.colorFromCRGBColor(patternItemHeader.color)
+            self.color = NSColor(SRGBRed: CGFloat(c.red)*255.0, green: CGFloat(c.green)*255.0, blue: CGFloat(c.blue)*255.0, alpha: 1.0)
+        } else {
+            // black looks better when disabled.
+        }
+
         self.velocityBasedBrightness = patternItemHeader.shouldSetBrightnessByRotationalVelocity == 0 ? false : true
         if patternItemFilename != nil {
             self.patternName = patternItemFilename

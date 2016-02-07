@@ -36,12 +36,36 @@ static const NSUInteger HOURS_PER_DAY = 24;
     
     NSString *result;
     if (hours > 0) {
-         result = [NSString stringWithFormat:@"%.1ld:%.1ld:%.2ld:%.2ld", hours, minutes, seconds, milliseconds];
+         result = [NSString stringWithFormat:@"%.1ld:%.2ld:%.2ld:%.2ld", hours, minutes, seconds, milliseconds];
     } else {
-        result = [NSString stringWithFormat:@"%.1ld:%.2ld:%.2ld", minutes, seconds, milliseconds];
+        result = [NSString stringWithFormat:@"%.2ld:%.2ld:%.2ld", minutes, seconds, milliseconds];
     }
     return result;
 }
+
+
+@end
+
+
+@implementation CDBoolTransformer
+
+
++ (Class)transformedValueClass {
+    return [NSString class];
+};    // class of the "output" objects, as returned by transformedValue:
+
++ (BOOL)allowsReverseTransformation {
+    return NO;
+}
+
+- (id)transformedValue:(id)value {
+    if ([value boolValue]) {
+        return @"Yes";
+    } else {
+        return @"No";
+    }
+}
+
 
 
 @end

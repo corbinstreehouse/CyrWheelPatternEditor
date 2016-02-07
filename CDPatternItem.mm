@@ -398,6 +398,6 @@ BOOL CDPatternItemGetSpeedEnabled(LEDPatternType patternType) {
 
 @end
 
-uint32_t CDPatternItemHeaderGetFilenameLength(const CDPatternItemHeader header) {
-    return header.filenameLength;
+uint32_t CDPatternItemHeaderGetFilenameLength(const CDPatternItemHeader *header) {
+    return header->filenameLength;
 }
