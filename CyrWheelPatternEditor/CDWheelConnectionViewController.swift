@@ -219,10 +219,10 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
     @IBAction func btnPlayClicked(sender: AnyObject) {
-        var wheelState: CDWheelState = 0
         if let connectedWheel = connectedWheel {
             // Is it playing? then pause
-            if (wheelState & CDWheelStatePlaying) == 0 {
+            var wheelState: CDWheelState = connectedWheel.wheelState
+            if (wheelState & CDWheelStatePlaying) == CDWheelStatePlaying {
                 connectedWheel.sendCommand(CDWheelCommandPause);
                 wheelState = wheelState & ~CDWheelStatePlaying
             } else {
@@ -446,7 +446,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     func _updatePlayButtonWithState(wheelState: CDWheelState) {
         // When paused, show Play, and when playing show Paused
-        if (wheelState & CDWheelStatePlaying) == 0 {
+        if (wheelState & CDWheelStatePlaying) == CDWheelStatePlaying {
             _playButton.image = NSImage(named: "pause")
         } else {
             _playButton.image = NSImage(named: "play")
