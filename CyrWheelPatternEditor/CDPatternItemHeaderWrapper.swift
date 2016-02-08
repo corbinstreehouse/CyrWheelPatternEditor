@@ -62,7 +62,8 @@ class CDPatternItemHeaderWrapper: NSObject {
     dynamic var patternName: String!
     dynamic var duration: NSTimeInterval = 0
     dynamic var looping: Bool = false
-    dynamic var color: NSColor = NSColor.blackColor() {
+    // Use the sRGB color space as a starting point
+    dynamic var color: NSColor = NSColor(SRGBRed: 0, green: 0, blue: 0, alpha: 1.0) {
         didSet {
             delegate?.patternItemColorChanged(self)
         }
