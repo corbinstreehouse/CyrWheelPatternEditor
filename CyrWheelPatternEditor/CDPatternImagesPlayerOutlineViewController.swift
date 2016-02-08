@@ -87,7 +87,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             patternRunner?.play()
             break
         case let imageItem as ImagePatternObjectWrapper:
-            patternRunner?.loadDynamicBitmapPatternTypeWithFilename(imageItem.relativeFilename, patternSpeed: imageItem.speed)
+            patternRunner?.loadDynamicBitmapPatternTypeWithFilename(imageItem.relativeFilename, patternSpeed: imageItem.speed, bitmapOptions: imageItem.bitmapPatternOptions)
             patternRunner?.play()
             break
         default:
@@ -190,7 +190,10 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     func patternItemVelocityBasedBrightnessChanged(item: CDPatternItemHeaderWrapper) {
         _commonUpdateAfterItemPropertyChanged()
     }
-
+    
+    func patternItemBitmapOptionsChanged(item: CDPatternItemHeaderWrapper) {
+        _commonUpdateAfterItemPropertyChanged()
+    }
     
     dynamic var shouldShowPreview: Bool = true {
         didSet {
@@ -241,7 +244,8 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             case let imageItem as ImagePatternObjectWrapper:
                 // Convert the speed to a duration
                 let duration: UInt32 = CDPatternDurationForPatternSpeed(item.speed, item.patternType)
-                connectedWheel.setDynamicImagePattern(imageItem.relativeFilename, duration: duration)
+
+                connectedWheel.setDynamicImagePattern(imageItem.relativeFilename, duration: duration, bitmapOptions: imageItem.bitmapPatternOptions)
             default: break
                 
             }

@@ -13,6 +13,7 @@ protocol CDPatternItemHeaderWrapperChanged {
     func patternItemSpeedChanged(item: CDPatternItemHeaderWrapper)
     func patternItemColorChanged(item: CDPatternItemHeaderWrapper)
     func patternItemVelocityBasedBrightnessChanged(item: CDPatternItemHeaderWrapper)
+    func patternItemBitmapOptionsChanged(item: CDPatternItemHeaderWrapper)
 }
 
 class CDPatternItemHeaderWrapper: NSObject {
@@ -51,7 +52,10 @@ class CDPatternItemHeaderWrapper: NSObject {
         self.delegate = delegate; // set last
     }
     
-    init(label: String) {
+    init(patternType: LEDPatternType, label: String) {
+        super.init()
+        self.patternType = patternType
+        _commonInitAfterPatternType()
         self.patternName = label
     }
     
@@ -83,7 +87,7 @@ class CDPatternItemHeaderWrapper: NSObject {
         }
     }
     dynamic var colorEnabled = false
-    dynamic var speed: Double = 0.6 {
+    dynamic var speed: Double = 0.5 {
         didSet {
             delegate?.patternItemSpeedChanged(self)
         }

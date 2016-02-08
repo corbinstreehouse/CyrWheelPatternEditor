@@ -226,7 +226,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     
     
-    internal func setDynamicImagePattern(filename: String, duration: UInt32) {
+    internal func setDynamicImagePattern(filename: String, duration: UInt32, bitmapOptions: LEDBitmapPatternOptions) {
         // Write the command as an 8-bit value..
         var uartCommand: Int8 = CDWheelUARTCommandPlayImagePattern.rawValue
         // the uartCommand, followed by the value..
@@ -237,7 +237,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         data.appendBytes(&rawDuration, length: sizeofValue(rawDuration))
         
         // LEDBitmapPatternOptions
-        var rawOptions: LEDBitmapPatternOptions = LEDBitmapPatternOptions()
+        var rawOptions: LEDBitmapPatternOptions = bitmapOptions
         assert(sizeofValue(rawOptions) == 4)
         data.appendBytes(&rawOptions, length: sizeofValue(rawOptions))
         

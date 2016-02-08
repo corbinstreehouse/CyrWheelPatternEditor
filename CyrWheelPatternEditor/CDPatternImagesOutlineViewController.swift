@@ -55,15 +55,30 @@ class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
     var children: [ImagePatternObjectWrapper]?
     var isDirectory: Bool = false
 
+    dynamic var shouldStrechBitmap: Bool = false {
+        didSet {
+            delegate?.patternItemBitmapOptionsChanged(self)
+        }
+    }
+    dynamic var shouldInterpolateBitmap: Bool = false {
+        didSet {
+            delegate?.patternItemBitmapOptionsChanged(self)
+        }
+    }
+    
+    var bitmapPatternOptions: LEDBitmapPatternOptions {
+        get {
+            return LEDBitmapPatternOptions(shouldInterpolate: shouldInterpolateBitmap ? 1 : 0, shouldStrechBitmap:  shouldStrechBitmap ? 1 : 0, reserved: 0)
+        }
+    }
+
     weak var parent: ImagePatternObjectWrapper?
     
     init (label: String, url: NSURL, parent: ImagePatternObjectWrapper?) {
-        super.init(label: label)
-        
+        super.init(patternType: LEDPatternTypeImageReferencedBitmap, label: label)
         self.url = url
         self.parent = parent
         self.isDirectory = false
-        self.patternType = LEDPatternTypeImageReferencedBitmap
 
         do {
             var getter: AnyObject? = false
@@ -182,14 +197,14 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
 
         
         let programmedPatterns = _loadPatternTypeArray()
-        let programmedPatternGroupObject = HeaderPatternObjectWrapper(label: "Programmed Patterns")
+        let programmedPatternGroupObject = HeaderPatternObjectWrapper(patternType: LEDPatternTypeCount, label: "Programmed Patterns")
         _rootChildren = [programmedPatternGroupObject]
         _rootChildren.appendContentsOf(programmedPatterns)
         
         let rootPatternImages = _loadRootPatternImages()
         if let rootImages = rootPatternImages.children {
             // Only at the image dir if we have images..
-            let imagePatternGroupObject = HeaderPatternObjectWrapper(label: "Image Patterns")
+            let imagePatternGroupObject = HeaderPatternObjectWrapper(patternType: LEDPatternTypeCount, label: "Image Patterns")
             _rootChildren.append(imagePatternGroupObject)
             let a: [CDPatternItemHeaderWrapper] = rootImages
 //            _rootChildren.appendContentsOf(rootImages) // why doesn't this work??

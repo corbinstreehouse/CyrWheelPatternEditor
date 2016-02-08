@@ -256,9 +256,9 @@ static NSMutableSet *g_runningPatterns = [NSMutableSet set];
     _sequenceManager.setDynamicPatternType(type, patternDuration, rgbColor);
 }
 
-- (void)loadDynamicBitmapPatternTypeWithFilename:(NSString *)filename patternSpeed:(double)speed{
+- (void)loadDynamicBitmapPatternTypeWithFilename:(NSString *)filename patternSpeed:(double)speed bitmapOptions:(LEDBitmapPatternOptions)bitmapOptions {
     uint32_t patternDuration = CDPatternDurationForPatternSpeed(speed, LEDPatternTypeBitmap);
-    _sequenceManager.setDynamicBitmapPatternType(filename.UTF8String, patternDuration, LEDPatternOptions());
+    _sequenceManager.setDynamicBitmapPatternType(filename.UTF8String, patternDuration, bitmapOptions);
 }
 
 - (void)setBlackAndPause {

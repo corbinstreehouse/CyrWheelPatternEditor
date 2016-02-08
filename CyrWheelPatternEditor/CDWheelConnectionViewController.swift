@@ -431,11 +431,21 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     func patternItemVelocityBasedBrightnessChanged(item: CDPatternItemHeaderWrapper) {
         connectedWheel?.setCurrentPatternBrightnessByRotationalVelocity(item.velocityBasedBrightness)
     }
+    
+    func patternItemBitmapOptionsChanged(item: CDPatternItemHeaderWrapper) {
+        // TODO
+        NSLog("push options!!");
+//        connectedWheel?.set
+        
+    }
+
 
     
     func wheelConnection(wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?) {
         _updateCurrentPatternItem()
     }
+    
+    
     
     
     private dynamic var _playButtonEnabled = false;

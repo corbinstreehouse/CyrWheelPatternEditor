@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)loadFromData:(NSData *)data;
 // Load a preview item
 - (void)loadDynamicPatternType:(LEDPatternType)type patternSpeed:(double)speed patternColor:(NSColor *)color;
-- (void)loadDynamicBitmapPatternTypeWithFilename:(NSString *)filename patternSpeed:(double)speed;
+- (void)loadDynamicBitmapPatternTypeWithFilename:(NSString *)filename patternSpeed:(double)speed bitmapOptions:(LEDBitmapPatternOptions)bitmapOptions;
 - (void)setBlackAndPause;
 
 @property(readonly, getter=isPaused) BOOL paused;
