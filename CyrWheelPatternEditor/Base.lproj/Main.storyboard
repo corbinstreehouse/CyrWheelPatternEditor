@@ -890,9 +890,9 @@ DQ
                                 </buttonCell>
                             </button>
                             <box autoresizesSubviews="NO" borderWidth="2" title="Box" boxType="custom" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="Te7-Un-WyK" userLabel="Pattern Options box">
-                                <rect key="frame" x="-2" y="408" width="265" height="110"/>
+                                <rect key="frame" x="0.0" y="408" width="263" height="110"/>
                                 <view key="contentView" id="fpE-i8-Hf9">
-                                    <rect key="frame" x="2" y="2" width="261" height="106"/>
+                                    <rect key="frame" x="2" y="2" width="259" height="106"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OID-EU-wyS">
@@ -1008,7 +1008,7 @@ DQ
                         <constraints>
                             <constraint firstItem="Te7-Un-WyK" firstAttribute="top" secondItem="YdR-Xy-E2Y" secondAttribute="top" constant="37" id="eQ6-Bb-Xtg"/>
                             <constraint firstAttribute="trailing" secondItem="Te7-Un-WyK" secondAttribute="trailing" id="thX-Zc-w2d"/>
-                            <constraint firstItem="Te7-Un-WyK" firstAttribute="leading" secondItem="YdR-Xy-E2Y" secondAttribute="leading" constant="-2" id="xNa-yl-ZO4"/>
+                            <constraint firstItem="Te7-Un-WyK" firstAttribute="leading" secondItem="YdR-Xy-E2Y" secondAttribute="leading" id="xNa-yl-ZO4"/>
                         </constraints>
                     </view>
                     <connections>
@@ -1173,6 +1173,7 @@ DQ
                                                     </buttonCell>
                                                     <connections>
                                                         <action selector="btnCommandClicked:" target="mLl-X1-Dpi" id="wWa-Xh-HNq"/>
+                                                        <binding destination="mLl-X1-Dpi" name="enabled" keyPath="_priorSequenceEnabled" id="0pO-i9-kMF"/>
                                                     </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" fixedFrame="YES" tag="10" translatesAutoresizingMaskIntoConstraints="NO" id="rEe-wr-ffm" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
@@ -1183,6 +1184,7 @@ DQ
                                                     </buttonCell>
                                                     <connections>
                                                         <action selector="btnPlayClicked:" target="mLl-X1-Dpi" id="vvp-dW-H75"/>
+                                                        <binding destination="mLl-X1-Dpi" name="enabled" keyPath="_playButtonEnabled" id="ReW-Qm-m6J"/>
                                                     </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YNj-8Q-DYz" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
@@ -1193,6 +1195,7 @@ DQ
                                                     </buttonCell>
                                                     <connections>
                                                         <action selector="btnCommandClicked:" target="mLl-X1-Dpi" id="Fcf-v0-gQB"/>
+                                                        <binding destination="mLl-X1-Dpi" name="enabled" keyPath="_nextPatternEnabled" id="KjI-g8-aLV"/>
                                                     </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" fixedFrame="YES" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="lxl-Ih-RvL" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
@@ -1203,6 +1206,7 @@ DQ
                                                     </buttonCell>
                                                     <connections>
                                                         <action selector="btnCommandClicked:" target="mLl-X1-Dpi" id="frK-mT-qQy"/>
+                                                        <binding destination="mLl-X1-Dpi" name="enabled" keyPath="_nextSequenceEnabled" id="IMP-uz-agm"/>
                                                     </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" fixedFrame="YES" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="GmC-Dk-eRG" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
@@ -1213,6 +1217,7 @@ DQ
                                                     </buttonCell>
                                                     <connections>
                                                         <action selector="btnCommandClicked:" target="mLl-X1-Dpi" id="foQ-iN-gVy"/>
+                                                        <binding destination="mLl-X1-Dpi" name="enabled" keyPath="_priorPatternEnabled" id="UOQ-mc-Vqu"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
