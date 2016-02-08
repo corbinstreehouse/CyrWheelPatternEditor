@@ -878,10 +878,10 @@ DQ
                                             <rect key="frame" x="58" y="65" width="182" height="20"/>
                                             <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="nb3-ej-td3"/>
                                             <connections>
-                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject" id="Q1Z-IM-QLI">
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.speedEnabled" id="Lre-Yz-j8Y">
                                                     <dictionary key="options">
+                                                        <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
-                                                        <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
                                                 <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.speed" id="RJt-dX-BxF"/>
@@ -895,10 +895,10 @@ DQ
                                             </constraints>
                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <connections>
-                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject" id="GS5-cJ-H1D">
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.colorEnabled" id="ANT-wJ-VL5">
                                                     <dictionary key="options">
+                                                        <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
-                                                        <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
                                                 <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.color" id="qFd-Nt-pBh"/>
@@ -979,7 +979,7 @@ DQ
                                                         <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="mLl-X1-Dpi" name="value" keyPath="currentPatternItem.velocityBasedBrightness" id="0Xx-Hj-Hbc"/>
+                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.velocityBasedBrightness" id="ef9-ZQ-a0B"/>
                                             </connections>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SIE-vy-i3t">
@@ -990,8 +990,9 @@ DQ
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <connections>
-                                                <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="kh3-0V-jTP">
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject" id="FeQ-2x-h6x">
                                                     <dictionary key="options">
+                                                        <integer key="NSNullPlaceholder" value="0"/>
                                                         <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
@@ -1478,13 +1479,6 @@ DQ
                                                             <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
-                                                        <connections>
-                                                            <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="lyi-gI-L3i">
-                                                                <dictionary key="options">
-                                                                    <string key="NSValueTransformerName">NSIsNotNil</string>
-                                                                </dictionary>
-                                                            </binding>
-                                                        </connections>
                                                     </textField>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="or6-ps-jEr">
                                                         <rect key="frame" x="2" y="40" width="64" height="17"/>

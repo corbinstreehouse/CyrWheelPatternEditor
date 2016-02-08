@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewController, CDWheelConnectionPresenter {
+class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewController, CDWheelConnectionPresenter, CDPatternItemHeaderWrapperChanged {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,6 +64,10 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
 
         // Bindings will update based on this..
         detailViewController.representedObject = _outlineView.selectedItem
+        // Make sure we are the delegate
+        if let item = _outlineView.selectedItem as? CDPatternItemHeaderWrapper {
+            item.delegate = self
+        }
     }
     
     func outlineViewSelectionDidChange(notification: NSNotification) {
@@ -163,9 +167,30 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             detailViewController.btnPlayOnWheel.cell!.bind("enabled", toObject: self, withKeyPath: "patternPlayEnabled", options: nil)
             detailViewController.btnPlayOnWheel.target = self
             detailViewController.btnPlayOnWheel.action = Selector("patternPlay:")
-            detailViewController.representedObject = _outlineView.selectedItem
+            _updateAllStateForSelectionChanged()
         }
     }
+    
+    func _commonUpdateAfterItemPropertyChanged() {
+        _updatePreview()
+        if shouldAutoPlayOnWheel {
+            // Process on a slight delay when from a selection change to avoid pounding the BLTE and making it being unable to keep up..
+            _playSelectedItemAfterSlightDelay()
+        }
+    }
+    
+    func patternItemSpeedChanged(item: CDPatternItemHeaderWrapper) {
+        _commonUpdateAfterItemPropertyChanged()
+    }
+    
+    func patternItemColorChanged(item: CDPatternItemHeaderWrapper) {
+        _commonUpdateAfterItemPropertyChanged()
+    }
+    
+    func patternItemVelocityBasedBrightnessChanged(item: CDPatternItemHeaderWrapper) {
+        _commonUpdateAfterItemPropertyChanged()
+    }
+
     
     dynamic var shouldShowPreview: Bool = true {
         didSet {

@@ -94,33 +94,22 @@ class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
 
 
 class ProgrammedPatternObjectWrapper: CDPatternItemHeaderWrapper {
-
-    init(patternType: LEDPatternType) {
-        super.init(label: CDPatternItemNames.nameForPatternType(patternType))
-        self.patternType = patternType
-        if self.colorEnabled {
-            self.color = NSColor.redColor() // better default...
-        }
-    }
     
-    private static var _allSortedProgrammedPatterns: [ProgrammedPatternObjectWrapper]!
-    static var allSortedProgrammedPatterns: [ProgrammedPatternObjectWrapper] {
-        get  {
-            if _allSortedProgrammedPatterns == nil {
-                _allSortedProgrammedPatterns = [ProgrammedPatternObjectWrapper]()
-                for rawType in LEDPatternTypeMin.rawValue...LEDPatternTypeCount.rawValue  {
-                    let patternType = LEDPatternType(rawType)
-                    let patternTypeWrapper = ProgrammedPatternObjectWrapper(patternType: patternType)
-                    let index = _allSortedProgrammedPatterns.insertionIndexOf(patternTypeWrapper) {
-                        return $0.label.localizedStandardCompare($1.label) == NSComparisonResult.OrderedAscending
-                    }
-                    
-                    _allSortedProgrammedPatterns.insert(patternTypeWrapper, atIndex: index)
+    // always returns a new copy so i can set the delegate
+    static func allSortedProgrammedPatternsIgnoring(ignoredPatternTypes: [LEDPatternType]) -> [ProgrammedPatternObjectWrapper] {
+        var _allSortedProgrammedPatterns = [ProgrammedPatternObjectWrapper]()
+        for rawType in LEDPatternTypeMin.rawValue...LEDPatternTypeCount.rawValue  {
+            let patternType = LEDPatternType(rawType)
+            if !ignoredPatternTypes.contains(patternType) {
+                let patternTypeWrapper = ProgrammedPatternObjectWrapper(patternType: patternType)
+                let index = _allSortedProgrammedPatterns.insertionIndexOf(patternTypeWrapper) {
+                    return $0.label.localizedStandardCompare($1.label) == NSComparisonResult.OrderedAscending
                 }
-
+                
+                _allSortedProgrammedPatterns.insert(patternTypeWrapper, atIndex: index)
             }
-            return _allSortedProgrammedPatterns
         }
+        return _allSortedProgrammedPatterns
     }
     
 
@@ -147,17 +136,7 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     private var _rootChildren: [CDPatternItemHeaderWrapper] = []
     
     private func _loadPatternTypeArray() -> [CDPatternItemHeaderWrapper] {
-
-        let ignoredPatternTypes = LEDPatternType.nonSelectablePatternTypes
-        
-        var result = [CDPatternItemHeaderWrapper]()
-        // Create a sorted array of pattern types to show excluding ones we can't select
-        for patternObject in ProgrammedPatternObjectWrapper.allSortedProgrammedPatterns {
-            if !ignoredPatternTypes.contains(patternObject.patternType) {
-                result.append(patternObject)
-            }
-        }
-        return result
+        return ProgrammedPatternObjectWrapper.allSortedProgrammedPatternsIgnoring(LEDPatternType.nonSelectablePatternTypes)
     }
     
     private func _loadChildrenItems(parentItem: ImagePatternObjectWrapper) {

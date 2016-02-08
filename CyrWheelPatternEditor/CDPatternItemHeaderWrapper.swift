@@ -18,20 +18,23 @@ protocol CDPatternItemHeaderWrapperChanged {
 class CDPatternItemHeaderWrapper: NSObject {
     var delegate: CDPatternItemHeaderWrapperChanged?
     
+    private func _commonInitAfterPatternType() {
+        self.colorEnabled = CDPatternTypeNeedsColor(patternType)
+        self.speedEnabled = CDPatternItemGetSpeedEnabled(patternType)
+    }
+    
     init(patternItemHeader: CDPatternItemHeader, patternItemFilename: String?, delegate: CDPatternItemHeaderWrapperChanged?) {
         super.init()
         // The name is the string version of what is playing, or the patternItemFilename
         self.patternType = patternItemHeader.patternType
-        self.colorEnabled = CDPatternTypeNeedsColor(patternItemHeader.patternType)
+        _commonInitAfterPatternType()
         self.duration = CDPatternTimeIntervalForDuration(patternItemHeader.duration)
         self.looping = patternItemHeader.patternEndCondition == CDPatternEndConditionOnButtonClick
         self.speed = CDPatternItemGetSpeedFromDuration(patternItemHeader.patternDuration, patternItemHeader.patternType)
-        self.speedEnabled = CDPatternItemGetSpeedEnabled(patternItemHeader.patternType)
 
         if self.colorEnabled {
             // compiler is fucking up...
             // CRASHES IN THE method..mystery why..
-            
             let c = patternItemHeader.color
     //        self.color = CDEncodedColorTransformer.colorFromCRGBColor(patternItemHeader.color)
             self.color = NSColor(SRGBRed: CGFloat(c.red)*255.0, green: CGFloat(c.green)*255.0, blue: CGFloat(c.blue)*255.0, alpha: 1.0)
@@ -51,6 +54,17 @@ class CDPatternItemHeaderWrapper: NSObject {
     init(label: String) {
         self.patternName = label
     }
+    
+    init(patternType: LEDPatternType) {
+        super.init()
+        self.patternType = patternType
+        _commonInitAfterPatternType()
+        self.patternName = CDPatternItemNames.nameForPatternType(patternType)
+        if self.colorEnabled {
+            self.color = NSColor.redColor() // better default...
+        }
+    }
+
     
     var patternType: LEDPatternType = LEDPatternTypeCount
 

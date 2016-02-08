@@ -375,6 +375,15 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     func setCurrentPatternDuration(duration: UInt32) {
         _writeWheelUARTCommand(CDWheelUARTCommandSetCurrentPatternSpeed, with32BitValue: duration);
     }
+
+    // encoded color
+    func setCurrentPatternColor(color: UInt32) {
+        _writeWheelUARTCommand(CDWheelUARTCommandSetCurrentPatternColor, with32BitValue: color);
+    }
+   
+    func setCurrentPatternBrightnessByRotationalVelocity(value: Bool) {
+        _writeWheelUARTCommand(CDWheelUARTCommandSetCurrentPatternBrightnessByRotationalVelocity, with32BitValue: value ? 1 : 0);
+    }
     
     private func _getInt16FromData(value: NSData) -> Int16 {
         var resultLittleE = Int16(littleEndian: 0) // Bytes are little Endian

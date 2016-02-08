@@ -424,12 +424,12 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     func patternItemColorChanged(item: CDPatternItemHeaderWrapper) {
         // TODO: set the color!!
-        debugPrint("set color")
+        let encodedColor = CDEncodedColorTransformer.intFromColor(item.color)
+        connectedWheel?.setCurrentPatternColor(UInt32(encodedColor))
     }
     
     func patternItemVelocityBasedBrightnessChanged(item: CDPatternItemHeaderWrapper) {
-        debugPrint("set patternItemVelocityBasedBrightnessChanged")
-
+        connectedWheel?.setCurrentPatternBrightnessByRotationalVelocity(item.velocityBasedBrightness)
     }
 
     

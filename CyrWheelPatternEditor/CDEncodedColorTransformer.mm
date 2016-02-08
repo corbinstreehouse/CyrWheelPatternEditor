@@ -19,7 +19,7 @@
 }
 
 + (int)intFromColor:(NSColor *)color {
-    NSColor *c = [color colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]]; // bah..device needed..
+    NSColor *c = [color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
     CGFloat r, g, b, a;
     [c getRed:&r green:&g blue:&b alpha:&a];
     uint8_t r8 = r*255;
