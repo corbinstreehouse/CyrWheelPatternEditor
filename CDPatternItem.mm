@@ -280,6 +280,9 @@ static double _minPatternTimeIntervalForPatternType(LEDPatternType type) {
         case LEDPatternTypeBlink: {
             return 0.2; // Let blink go faster..
         }
+        case LEDPatternTypeRotatingBottomGlow: {
+            return 0.1; // faster!
+        }
         case LEDPatternTypeTheaterChase:
             return .01;
         default: {
