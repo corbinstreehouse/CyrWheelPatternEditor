@@ -219,19 +219,19 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
     @IBAction func btnPlayClicked(sender: AnyObject) {
-        var wheelState = (connectedWheel != nil) ? connectedWheel!.wheelState : CDWheelStatePaused
-        var command: CDWheelCommand
-        if wheelState == CDWheelStatePaused {
-            wheelState = CDWheelStatePlaying
-            command = CDWheelCommandPlay
-        } else {
-            wheelState = CDWheelStatePaused;
-            command = CDWheelCommandPause
+        var wheelState: CDWheelState = 0
+        if let connectedWheel = connectedWheel {
+            // Is it playing? then pause
+            if (wheelState & CDWheelStatePlaying) == 0 {
+                connectedWheel.sendCommand(CDWheelCommandPause);
+                wheelState = wheelState & ~CDWheelStatePlaying
+            } else {
+                connectedWheel.sendCommand(CDWheelCommandPlay);
+                wheelState = wheelState | CDWheelStatePlaying
+            }
+            // Assume it worked so we update the UI right away
+            _updatePlayButtonWithState(wheelState)
         }
-        // Assume it worked so we update the UI right away
-        _updatePlayButtonWithState(wheelState)
-        // Maybe I should set the state? make it read/write
-        connectedWheel?.sendCommand(command);
     }
     
     @IBAction func btnCommandClicked(sender: NSButton) {
@@ -437,14 +437,44 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         _updateCurrentPatternItem()
     }
     
+    
+    private dynamic var _playButtonEnabled = false;
+    private dynamic var _nextPatternEnabled = false;
+    private dynamic var _priorPatternEnabled = false;
+    private dynamic var _nextSequenceEnabled = false;
+    private dynamic var _priorSequenceEnabled = false;
+    
     func _updatePlayButtonWithState(wheelState: CDWheelState) {
         // When paused, show Play, and when playing show Paused
-        _playButton.image = wheelState == CDWheelStatePaused ? NSImage(named: "play") : NSImage(named: "pause")
+        if (wheelState & CDWheelStatePlaying) == 0 {
+            _playButton.image = NSImage(named: "pause")
+        } else {
+            _playButton.image = NSImage(named: "play")
+        }
+        
+        // Update the enabled state of the other buttons
+        if connectedWheel != nil  {
+            _playButtonEnabled = true
+            _nextPatternEnabled = (wheelState & CDWheelStateNextPatternAvailable) != 0
+            _priorPatternEnabled = (wheelState & CDWheelStatePriorPatternAvailable) != 0
+            _nextSequenceEnabled = (wheelState & CDWheelStateNextSequenceAvailable) != 0
+            _priorSequenceEnabled = (wheelState & CDWheelStatePriorSequenceAvailable) != 0
+        } else {
+            _playButtonEnabled = false
+            _nextPatternEnabled = false
+            _priorPatternEnabled = false
+            _nextSequenceEnabled = false
+            _priorSequenceEnabled = false
+        }
+
     }
     
     func _updatePlayButton() {
-        let wheelState = (connectedWheel != nil) ? connectedWheel!.wheelState : CDWheelStatePaused
-        _updatePlayButtonWithState(wheelState)
+        if let connectedWheel = connectedWheel {
+            _updatePlayButtonWithState(connectedWheel.wheelState)
+        } else {
+            _updatePlayButtonWithState(0)
+        }
     }
     
     

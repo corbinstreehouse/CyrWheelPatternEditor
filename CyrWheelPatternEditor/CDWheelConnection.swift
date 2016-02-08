@@ -89,7 +89,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     // Internal API
     internal var sequenceFilenames: [String] = [] // TODO: remove this..not used anymore..
     
-    var wheelState: CDWheelState = CDWheelStatePaused {
+    var wheelState: CDWheelState = CDWheelStateNone {
         didSet {
             delegate?.wheelConnection(self, didChangeState: wheelState);
         }
