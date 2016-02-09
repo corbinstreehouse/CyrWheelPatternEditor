@@ -355,7 +355,7 @@ uint32_t CDPatternDurationFromTimeInterval(NSTimeInterval patternDuration) {
 }
 
 NSTimeInterval CDPatternTimeIntervalForDuration(uint32_t duration) {
-    return duration / 1000;
+    return (NSTimeInterval)duration / 1000.0;
 }
 
 uint32_t CDPatternDurationForPatternSpeed(double patternSpeed, LEDPatternType patternType) {
@@ -378,13 +378,17 @@ double CDPatternItemGetSpeedFromDuration(uint32_t patternDurationX, LEDPatternTy
     
     double percentage;
     double speedRange = _speedRangeForPatternType(patternType);
+    percentage = baseDuration / speedRange;
     if (speedRange < 1.0) {
-        percentage = log(baseDuration) / A;
+        percentage = log(percentage) / A;
     } else {
-        percentage = patternTimeInterval / speedRange;
         percentage = 1.0 - percentage;
     }
     return percentage;
+}
+
+static double CDPatternItemGetSpeedFromTimeInterval(NSTimeInterval timeInterval, LEDPatternType patternType) {
+    return CDPatternItemGetSpeedFromDuration(CDPatternDurationFromTimeInterval(timeInterval), patternType);
 }
 
 - (void)setPatternSpeed:(double)patternSpeed {
@@ -392,7 +396,8 @@ double CDPatternItemGetSpeedFromDuration(uint32_t patternDurationX, LEDPatternTy
 }
 
 - (double)patternSpeed {
-    return CDPatternItemGetSpeedFromDuration(self.patternDuration, self.patternType);
+    // To make it confusing, patternDurationo is a time interval!
+    return CDPatternItemGetSpeedFromTimeInterval(self.patternDuration, self.patternType);
 }
 
 @dynamic patternSpeedEnabled;

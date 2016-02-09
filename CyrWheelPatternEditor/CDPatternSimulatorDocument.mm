@@ -88,6 +88,7 @@
     
     // Go through and find the sequence with the given name
     NSString *fileToFind = [url lastPathComponent];
+    // this is broken..
     [self.patternRunner setCurrentSequenceName:fileToFind];
     
     return YES;
