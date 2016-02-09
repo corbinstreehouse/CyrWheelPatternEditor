@@ -64,6 +64,7 @@
 		9DE5C4D71C66590200E0B96C /* CDWheelPlayerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE5C4D61C66590200E0B96C /* CDWheelPlayerDetailViewController.swift */; };
 		9DE5C4D91C67A93200E0B96C /* CDPatternItemHeaderWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE5C4D81C67A93200E0B96C /* CDPatternItemHeaderWrapper.swift */; };
 		9DE5C4DB1C67AA0700E0B96C /* DarkOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE5C4DA1C67AA0700E0B96C /* DarkOutlineView.swift */; };
+		9DE5C4DD1C698B7C00E0B96C /* CDEditorCyrWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE5C4DC1C698B7C00E0B96C /* CDEditorCyrWheelViewController.swift */; };
 		9DF0DBA71C39E4FD009ACE1C /* CDPatternItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF0DBA61C39E4FD009ACE1C /* CDPatternItemDetailViewController.swift */; };
 		9DFBAC111888EDFC00737C2F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DFBAC101888EDFC00737C2F /* Cocoa.framework */; };
 		9DFBAC1B1888EDFC00737C2F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9DFBAC191888EDFC00737C2F /* InfoPlist.strings */; };
@@ -212,6 +213,7 @@
 		9DE5C4D61C66590200E0B96C /* CDWheelPlayerDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDWheelPlayerDetailViewController.swift; path = ../CDWheelPlayerDetailViewController.swift; sourceTree = "<group>"; };
 		9DE5C4D81C67A93200E0B96C /* CDPatternItemHeaderWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternItemHeaderWrapper.swift; sourceTree = "<group>"; };
 		9DE5C4DA1C67AA0700E0B96C /* DarkOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DarkOutlineView.swift; path = ../DarkOutlineView.swift; sourceTree = "<group>"; };
+		9DE5C4DC1C698B7C00E0B96C /* CDEditorCyrWheelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDEditorCyrWheelViewController.swift; sourceTree = "<group>"; };
 		9DF0DBA61C39E4FD009ACE1C /* CDPatternItemDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternItemDetailViewController.swift; sourceTree = "<group>"; };
 		9DFBAC0D1888EDFC00737C2F /* CyrWheelPatternEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyrWheelPatternEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DFBAC101888EDFC00737C2F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -387,6 +389,7 @@
 				9DD0BFAC1C4F1DBB00C1DA43 /* CDPatternEditorBottomBar.swift */,
 				9DD0BFAE1C4F2F1B00C1DA43 /* CDPatternSequenceProtocols.swift */,
 				9DA21BA11C3C9A200047E8C1 /* CDWheelPreviewViewController.swift */,
+				9DE5C4DC1C698B7C00E0B96C /* CDEditorCyrWheelViewController.swift */,
 				9D683E2B1C0FF0AC0058EFA0 /* CDRolloverButton.swift */,
 				9D0EF1CC1BFEE406002C687E /* CDAppDelegate.swift */,
 				9D9775801C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift */,
@@ -610,6 +613,7 @@
 				9D97757F1C005BB3002D78EE /* CDWheelConnectionWindowController.swift in Sources */,
 				9D683E2C1C0FF0AC0058EFA0 /* CDRolloverButton.swift in Sources */,
 				9DA21BA21C3C9A200047E8C1 /* CDWheelPreviewViewController.swift in Sources */,
+				9DE5C4DD1C698B7C00E0B96C /* CDEditorCyrWheelViewController.swift in Sources */,
 				9DBEC63618A2FF0D00A05FB7 /* CWPatternSequenceManager.cpp in Sources */,
 				9D4FCB30193C29DB0000DE28 /* CDSimulatorLEDPatterns.cpp in Sources */,
 				9D0EF1CD1BFEE406002C687E /* CDAppDelegate.swift in Sources */,

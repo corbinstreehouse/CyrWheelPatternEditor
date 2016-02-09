@@ -2009,10 +2009,10 @@ DQ
             </objects>
             <point key="canvasLocation" x="2626" y="31"/>
         </scene>
-        <!--Wheel Preview View Controller-->
+        <!--Editor Cyr Wheel View Controller-->
         <scene sceneID="l63-S3-kDm">
             <objects>
-                <viewController id="nRD-7i-dlI" customClass="CDWheelPreviewViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="nRD-7i-dlI" customClass="CDEditorCyrWheelViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="BBR-X3-AQX">
                         <rect key="frame" x="0.0" y="0.0" width="518" height="338"/>
                         <autoresizingMask key="autoresizingMask"/>
