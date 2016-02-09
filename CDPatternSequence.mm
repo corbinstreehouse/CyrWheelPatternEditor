@@ -49,16 +49,16 @@ NSString *CDPatternChildrenKey = @"children";
     [self didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:CDPatternChildrenKey];
 }
 
-- (void)_writeHeaderToData:(NSMutableData *)data {
+static void _CDWriteHeaderToData(NSMutableData *data, NSInteger patternCount, BOOL ignoreButton) {
     CDPatternSequenceHeader header;
     bzero(&header, sizeof(CDPatternSequenceHeader));
     header.marker[0] = 'S';
     header.marker[1] = 'Q';
     header.marker[2] = 'C';
     header.version = SEQUENCE_VERSION_v5;
-    header.patternCount = self.children.count;
-    header.ignoreButtonForTimedPatterns = self.ignoreSingleClickButtonForTimedPatterns;
-    NSAssert(sizeof(header) == SEQUENCE_VERSION_SIZE, @"did I change the size of the header and forget to recompile this file?");
+    header.patternCount = patternCount;
+    header.ignoreButtonForTimedPatterns = ignoreButton;
+    NSCAssert(sizeof(header) == SEQUENCE_VERSION_SIZE, @"did I change the size of the header and forget to recompile this file?");
     [data appendBytes:&header length:sizeof(header)];
 }
 
@@ -95,13 +95,21 @@ NSString *CDPatternChildrenKey = @"children";
 
 - (NSData *)exportAsData {
     NSMutableData *data = [NSMutableData new];
-    [self _writeHeaderToData:data];
+    _CDWriteHeaderToData(data, self.children.count, self.ignoreSingleClickButtonForTimedPatterns);
     for (NSInteger i = 0; i < self.children.count; i++) {
         CDPatternItem *item = self.children[i];
         [self _writePatternItem:item toData:data];
     }
     return data;
 }
+
+- (NSData *)exportSingleItemAsData:(CDPatternItem *)item {
+    NSMutableData *data = [NSMutableData new];
+    _CDWriteHeaderToData(data, 1, false);
+    [self _writePatternItem:item toData:data];
+    return data;
+}
+
 
 - (BOOL)exportToURL:(NSURL *)url error:(NSError **)errorPtr {
     NSData *data = [self exportAsData];

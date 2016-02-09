@@ -42,6 +42,7 @@ extern NSString *CDPatternChildrenKey;
 
 - (BOOL)exportToURL:(NSURL *)url error:(NSError **)errorPtr;
 - (NSData *)exportAsData;
+- (NSData *)exportSingleItemAsData:(CDPatternItem *)item;
 
 @end
 

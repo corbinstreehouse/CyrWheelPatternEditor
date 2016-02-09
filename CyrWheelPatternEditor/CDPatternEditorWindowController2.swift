@@ -8,6 +8,13 @@
 
 import Cocoa
 
+class CDEditorPatternRunner : CDPatternRunner {
+
+    var showingCurrentSelection: Bool = false
+    
+    
+}
+
 class CDPatternEditorWindowController2: NSWindowController, CDPatternSequenceProvider, NSWindowDelegate {
 
     override func windowDidLoad() {
@@ -15,7 +22,7 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
         
         // Create the pattern runner 
         let delegate = NSApp.delegate as! CDAppDelegate
-        patternRunner = CDPatternRunner(patternDirectoryURL: delegate.patternDirectoryURL)
+        _patternRunner = CDEditorPatternRunner(patternDirectoryURL: delegate.patternDirectoryURL)
 //        patternRunner.setCyrWheelView(_cyrWheelView) // Done by a child view controller
 
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
@@ -77,7 +84,10 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
     
     
     // Create the main pattern runner here; we associate it with a child view controller later
-    var patternRunner: CDPatternRunner!
+    private var _patternRunner: CDEditorPatternRunner!
+    var patternRunner: CDPatternRunner! {
+        return _patternRunner
+    }
     
     // Bound to a child's value, so that another view can be bound to this one
     dynamic var patternSelectionIndexes: NSIndexSet = NSIndexSet() {
@@ -88,21 +98,39 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
     
     private func _updatePatternRunner() {
         // If we have one selected item, we create a preview for just that. Otherwise, we preview the whole sequence
-        
-//        _selectedPatternItem
-        
         if let validSequence = self.patternSequence {
-            let data = validSequence.exportAsData()
-            self.patternRunner.loadFromData(data)
+            if let selectedItem = self._selectedPatternItem  {
+                // Export a special version of that item that loops
+                let data = validSequence.exportSingleItemAsData(selectedItem)
+                _patternRunner.showingCurrentSelection = true
+                _patternRunner.loadFromData(data)
+            } else {
+                let data = validSequence.exportAsData()
+                _patternRunner.showingCurrentSelection = false
+                _patternRunner.loadFromData(data)
+            }
         }
-
     }
 
     
     func _startObservingChanges() {
         let context: NSManagedObjectContext = self.managedObjectContext
         NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextObjectsDidChangeNotification, object: context, queue: nil) { note in
-            
+            let needsUpdate = true
+//            if let updated = note.userInfo?[NSUpdatedObjectsKey] where updated.count > 0 {
+//                print("updated: \(updated)")
+//                if let selectedItem = self._selectedPatternItem  {
+//                    // If we have a selected item, only reload if we aren't showing a preview for it
+//                    if _patternRunner.showingCurrentSelection {
+//                        // TODO: maybe nly reload it if it was that item..
+//                        if selectedItem
+//                    }
+//                }
+//            }
+//            
+            if (needsUpdate) {
+                self._updatePatternRunner()
+            }
             /*
             if let updated = note.userInfo?[NSUpdatedObjectsKey] where updated.count > 0 {
             print("updated: \(updated)")
@@ -122,7 +150,6 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
             print("inserted: \(inserted)")
             }
             */
-            self._updatePatternRunner()
         }
     }
 

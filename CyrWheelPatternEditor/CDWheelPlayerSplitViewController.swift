@@ -18,7 +18,7 @@ class CDWheelPlayerSplitViewController: NSSplitViewController {
         let leftChild: CDPatternImagesPlayerOutlineViewController = self.childViewControllers[0] as! CDPatternImagesPlayerOutlineViewController
         let middleChild: CDWheelPreviewViewController = self.childViewControllers[1] as! CDWheelPreviewViewController
         let rightChild: CDWheelPlayerDetailViewController = self.childViewControllers[2] as! CDWheelPlayerDetailViewController
-        // The middle controls the runner..really I should push ownership of it to a parent or something..
+        // The middle controls the runner..really I should push ownership of it to a parent and push it down to the child, or just implement a protocol to get it and set the cyrWheel view like I do in other places
         leftChild.patternRunner = middleChild.patternRunner
         leftChild.detailViewController = rightChild;
     }
