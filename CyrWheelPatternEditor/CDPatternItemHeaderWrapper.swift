@@ -65,7 +65,7 @@ class CDPatternItemHeaderWrapper: NSObject {
         _commonInitAfterPatternType()
         self.patternName = CDPatternItemNames.nameForPatternType(patternType)
         if self.colorEnabled {
-            self.color = NSColor.redColor() // better default...
+            self.color = NSColor(SRGBRed: 1.0, green: 0, blue: 0, alpha: 1)
         }
     }
 
