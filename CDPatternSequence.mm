@@ -63,6 +63,10 @@ static void _CDWriteHeaderToData(NSMutableData *data, NSInteger patternCount, BO
 }
 
 - (void)_writePatternItem:(CDPatternItem *)item toData:(NSMutableData *)data {
+    [self _writePatternItem:item toData:data patternEndCondition:item.patternEndCondition];
+}
+
+- (void)_writePatternItem:(CDPatternItem *)item toData:(NSMutableData *)data patternEndCondition:(CDPatternEndCondition)endCond {
     CDPatternItemHeader itemHeader;
     
     // Figure out if we have a filename to follow the header
@@ -78,7 +82,7 @@ static void _CDWriteHeaderToData(NSMutableData *data, NSInteger patternCount, BO
     itemHeader.duration = CDPatternDurationFromTimeInterval(item.duration);
     itemHeader.patternDuration = CDPatternDurationFromTimeInterval(item.patternDuration);
     itemHeader.patternOptions = item.patternOptions;
-    itemHeader.patternEndCondition = item.patternEndCondition;
+    itemHeader.patternEndCondition = endCond;
     itemHeader.color = item.encodedColor;
     itemHeader.shouldSetBrightnessByRotationalVelocity = item.shouldSetBrightnessByRotationalVelocity ? 1 : 0;
     
@@ -106,7 +110,8 @@ static void _CDWriteHeaderToData(NSMutableData *data, NSInteger patternCount, BO
 - (NSData *)exportSingleItemAsData:(CDPatternItem *)item {
     NSMutableData *data = [NSMutableData new];
     _CDWriteHeaderToData(data, 1, false);
-    [self _writePatternItem:item toData:data];
+    // make it loop for demoing
+    [self _writePatternItem:item toData:data patternEndCondition:CDPatternEndConditionOnButtonClick];
     return data;
 }
 
