@@ -46,6 +46,8 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     private let wheelServiceUUID = CBUUID(string: kLEDWheelServiceUUID)
     private let uartTransmitCharacteristicUUID = CBUUID(string: "6E400002-B5A3-F393-E0A9-E50E24DCCA9E") // Write/transmit characteristic UUID
     private let uartReceiveCharacteristicUUID = CBUUID(string: "6E400003-B5A3-F393-E0A9-E50E24DCCA9E") // Read/receive (via notify) characteristic UUID
+
+    private let fpsCharUUID = CBUUID(string: kLEDWheelFPSCharacteristicUUID) // Read / notify
     
     internal var peripheral: CBPeripheral
     
@@ -57,6 +59,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     // uart stuff
     private var _uartTransmitCharacteristic: CBCharacteristic?
     private var _uartRecieveCharacteristic: CBCharacteristic?
+    private var _fpsChar: CBCharacteristic?
     
 
     internal var delegate: CDWheelConnectionDelegate?
@@ -479,6 +482,25 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             } else if (uuid.isEqual(uartReceiveCharacteristicUUID)) {
                 _uartRecieveCharacteristic = characteristic;
                 watchChar();
+            } else if (uuid.isEqual(fpsCharUUID)) {
+                _fpsChar = characteristic;
+                watchChar();
+                _updateFPS();
+            }
+        }
+    }
+    
+    dynamic var wheelFPS: Int = 0
+//        {
+//        didSet {
+//            NSLog("FPS: %d", wheelFPS);
+//        }
+//    }
+    
+    private func _updateFPS() {
+        if let char = _fpsChar {
+            if let data =  char.value {
+                wheelFPS = Int(_getInt16FromData(data))
             }
         }
     }
@@ -791,6 +813,8 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             } else {
                 DLog("NO _uartRecieveCharacteristic data??");
             }
+        } else if (characteristic == _fpsChar) {
+            _updateFPS()
         }
     }
     
