@@ -35,8 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL patternTypeNeedsPatternDuration; // corbin, eliminate?
 @property (nonatomic, readonly) BOOL patternSpeedEnabled;
 
-@property (nonatomic) BOOL bitmapOptionsShouldInterpolate;
+@property (nonatomic) BOOL bitmapOptionsShouldInterpolateStretchedPixels;
 @property (nonatomic) BOOL bitmapOptionsShouldStrechBitmap;
+@property (nonatomic) BOOL shouldInterpolateToNextRow; // bitmapOptions
 @property (readonly) BOOL bitmapOptionsEnabled;
 
 @property (nonatomic, readonly) NSString *displayName;

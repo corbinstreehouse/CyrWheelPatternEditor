@@ -53,14 +53,19 @@ class HeaderPatternObjectWrapper : CDPatternItemHeaderWrapper {
 class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
     var url: NSURL!
     var children: [ImagePatternObjectWrapper]?
-    var isDirectory: Bool = false
+    dynamic var isDirectory: Bool = false
 
     dynamic var shouldStrechBitmap: Bool = false {
         didSet {
             delegate?.patternItemBitmapOptionsChanged(self)
         }
     }
-    dynamic var shouldInterpolateBitmap: Bool = false {
+    dynamic var shouldInterpolateStretchedPixels: Bool = false {
+        didSet {
+            delegate?.patternItemBitmapOptionsChanged(self)
+        }
+    }
+    dynamic var shouldInterpolateToNextRow: Bool = false {
         didSet {
             delegate?.patternItemBitmapOptionsChanged(self)
         }
@@ -68,7 +73,7 @@ class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
     
     var bitmapPatternOptions: LEDBitmapPatternOptions {
         get {
-            return LEDBitmapPatternOptions(shouldInterpolate: shouldInterpolateBitmap ? 1 : 0, shouldStrechBitmap:  shouldStrechBitmap ? 1 : 0, reserved: 0)
+            return LEDBitmapPatternOptions(shouldInterpolateStretchedPixels: shouldInterpolateStretchedPixels ? 1 : 0, shouldStrechBitmap:  shouldStrechBitmap ? 1 : 0, shouldInterpolateToNextRow: shouldInterpolateToNextRow ? 1 : 0, reserved: 0)
         }
     }
 

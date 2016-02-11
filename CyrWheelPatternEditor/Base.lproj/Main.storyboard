@@ -869,13 +869,13 @@ DQ
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box autoresizesSubviews="NO" borderWidth="2" title="Box" boxType="custom" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="Te7-Un-WyK" userLabel="Pattern Options box">
-                                <rect key="frame" x="0.0" y="352" width="263" height="166"/>
+                                <rect key="frame" x="0.0" y="330" width="263" height="188"/>
                                 <view key="contentView" id="fpE-i8-Hf9">
-                                    <rect key="frame" x="2" y="2" width="259" height="162"/>
+                                    <rect key="frame" x="2" y="2" width="259" height="184"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OID-EU-wyS">
-                                            <rect key="frame" x="58" y="105" width="182" height="20"/>
+                                            <rect key="frame" x="58" y="127" width="182" height="20"/>
                                             <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="nb3-ej-td3"/>
                                             <connections>
                                                 <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.speedEnabled" id="Lre-Yz-j8Y">
@@ -888,15 +888,18 @@ DQ
                                             </connections>
                                         </slider>
                                         <colorWell ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YdC-lt-pFo">
-                                            <rect key="frame" x="60" y="76" width="44" height="23"/>
+                                            <rect key="frame" x="60" y="98" width="44" height="23"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="44" id="8bq-vx-dsh"/>
                                                 <constraint firstAttribute="height" constant="23" id="WOb-mI-Qvc"/>
                                             </constraints>
                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <connections>
-                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.colorEnabled" id="ANT-wJ-VL5">
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.colorEnabled" id="6Kl-0n-ECC">
                                                     <dictionary key="options">
+                                                        <integer key="NSMultipleValuesPlaceholder" value="0"/>
+                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                                        <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                     </dictionary>
@@ -905,7 +908,7 @@ DQ
                                             </connections>
                                         </colorWell>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Biq-J1-EA4">
-                                            <rect key="frame" x="7" y="131" width="244" height="19"/>
+                                            <rect key="frame" x="7" y="153" width="244" height="19"/>
                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Pattern Name" id="xE2-EV-O8e">
                                                 <font key="font" metaFont="system" size="15"/>
                                                 <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -930,7 +933,7 @@ DQ
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C2y-px-Zr3">
-                                            <rect key="frame" x="7" y="107" width="47" height="17"/>
+                                            <rect key="frame" x="7" y="129" width="47" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Speed:" id="ApW-aJ-V8t">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -945,7 +948,7 @@ DQ
                                             </connections>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PRj-Nz-ACB">
-                                            <rect key="frame" x="11" y="79" width="43" height="17"/>
+                                            <rect key="frame" x="11" y="101" width="43" height="17"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Color:" id="mOg-hW-bQT">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -968,22 +971,44 @@ DQ
                                             </connections>
                                         </textField>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PUv-30-Ufi">
-                                            <rect key="frame" x="11" y="49" width="179" height="18"/>
+                                            <rect key="frame" x="11" y="71" width="179" height="18"/>
                                             <buttonCell key="cell" type="check" title="Velocity based brightness" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Zvn-2E-UDE">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <connections>
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject" id="dKz-gR-wBq">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSIsNotNil</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.velocityBasedBrightness" id="ef9-ZQ-a0B"/>
                                             </connections>
                                         </button>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B0o-Vi-rWb">
-                                            <rect key="frame" x="11" y="29" width="174" height="18"/>
+                                            <rect key="frame" x="11" y="51" width="174" height="18"/>
                                             <buttonCell key="cell" type="check" title="Strech images to fill strip" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="H4E-6V-Bbb">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <connections>
+                                                <binding destination="fYl-F9-vf0" name="enabled2" keyPath="representedObject" previousBinding="j9Z-9p-Mcp" id="NBj-Xj-jRY">
+                                                    <dictionary key="options">
+                                                        <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                                        <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                                        <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                                        <integer key="NSNullPlaceholder" value="-1"/>
+                                                        <string key="NSValueTransformerName">NSIsNotNil</string>
+                                                    </dictionary>
+                                                </binding>
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.isDirectory" id="j9Z-9p-Mcp">
+                                                    <dictionary key="options">
+                                                        <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                                        <integer key="NSNullPlaceholder" value="0"/>
+                                                        <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldStrechBitmap" id="LXM-iK-Tfz">
                                                     <dictionary key="options">
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
@@ -994,13 +1019,65 @@ DQ
                                             </connections>
                                         </button>
                                         <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q5r-r5-DH0">
-                                            <rect key="frame" x="11" y="9" width="135" height="18"/>
-                                            <buttonCell key="cell" type="check" title="Interpolate images" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="xgl-5S-P9A">
+                                            <rect key="frame" x="11" y="31" width="188" height="18"/>
+                                            <buttonCell key="cell" type="check" title="Interpolate stretched pixels" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="xgl-5S-P9A">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <connections>
-                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateBitmap" id="CTp-lh-PzF">
+                                                <binding destination="fYl-F9-vf0" name="enabled2" keyPath="representedObject" previousBinding="SEI-6E-DYf" id="50L-zT-Hfj">
+                                                    <dictionary key="options">
+                                                        <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                                        <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                                        <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                                        <integer key="NSNullPlaceholder" value="-1"/>
+                                                        <string key="NSValueTransformerName">NSIsNotNil</string>
+                                                    </dictionary>
+                                                </binding>
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.isDirectory" id="SEI-6E-DYf">
+                                                    <dictionary key="options">
+                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                                        <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                                        <integer key="NSNullPlaceholder" value="0"/>
+                                                        <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
+                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateStretchedPixels" id="rpw-hD-w9j">
+                                                    <dictionary key="options">
+                                                        <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                                        <integer key="NSNullPlaceholder" value="0"/>
+                                                        <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                                    </dictionary>
+                                                </binding>
+                                            </connections>
+                                        </button>
+                                        <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B5J-Pq-Eq6">
+                                            <rect key="frame" x="11" y="11" width="159" height="18"/>
+                                            <buttonCell key="cell" type="check" title="Interpolate to next row" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="D0y-kA-1bF">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <binding destination="fYl-F9-vf0" name="enabled2" keyPath="representedObject" previousBinding="xy5-mz-Xzp" id="qqs-eq-79h">
+                                                    <dictionary key="options">
+                                                        <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                                        <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                                        <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                                        <integer key="NSNullPlaceholder" value="-1"/>
+                                                        <string key="NSValueTransformerName">NSIsNotNil</string>
+                                                    </dictionary>
+                                                </binding>
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.isDirectory" id="xy5-mz-Xzp">
+                                                    <dictionary key="options">
+                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                                        <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                                        <integer key="NSNullPlaceholder" value="0"/>
+                                                        <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                                    </dictionary>
+                                                </binding>
+                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateToNextRow" id="6Y2-kn-aCG">
                                                     <dictionary key="options">
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
@@ -1012,7 +1089,7 @@ DQ
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="166" id="1Lc-wI-dmP"/>
+                                    <constraint firstAttribute="height" constant="188" id="1Lc-wI-dmP"/>
                                 </constraints>
                                 <color key="borderColor" white="0.08585885067" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="fillColor" red="0.1450980392" green="0.1450980392" blue="0.1450980392" alpha="1" colorSpace="calibratedRGB"/>
@@ -1026,21 +1103,21 @@ DQ
                                 </textFieldCell>
                             </textField>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oHL-HI-GS8">
-                                <rect key="frame" x="13" y="327" width="107" height="18"/>
+                                <rect key="frame" x="13" y="306" width="107" height="18"/>
                                 <buttonCell key="cell" type="check" title="Show Preview" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KlP-a7-RPF">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uEl-Mu-icZ">
-                                <rect key="frame" x="13" y="307" width="140" height="18"/>
+                                <rect key="frame" x="13" y="286" width="140" height="18"/>
                                 <buttonCell key="cell" type="check" title="Auto Play on Wheel" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Z5V-yD-3Vc">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rcu-UP-bjt">
-                                <rect key="frame" x="69" y="270" width="126" height="32"/>
+                                <rect key="frame" x="69" y="249" width="126" height="32"/>
                                 <buttonCell key="cell" type="push" title="Play on Wheel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Dua-Kb-hAh">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -2322,21 +2399,16 @@ DQ
                                     </binding>
                                 </connections>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RKh-ib-2Fh">
-                                <rect key="frame" x="9" y="174" width="45" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Image:" id="9cg-hw-y6L">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ldQ-qn-G2b">
+                                <rect key="frame" x="8" y="242" width="184" height="18"/>
+                                <buttonCell key="cell" type="check" title="Velocity based brightness" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="6r6-cN-ax2">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
+                                </buttonCell>
                                 <connections>
-                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="gX0-uc-Xo5">
-                                        <dictionary key="options">
-                                            <string key="NSValueTransformerName">NSIsNotNil</string>
-                                        </dictionary>
-                                    </binding>
+                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.shouldSetBrightnessByRotationalVelocity" id="cHh-tl-PMs"/>
                                 </connections>
-                            </textField>
+                            </button>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xcf-1c-TsW">
                                 <rect key="frame" x="86" y="8" width="59" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Dal-XD-KrM">
@@ -2383,28 +2455,49 @@ DQ
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q5h-xY-tAW">
-                                <rect key="frame" x="8" y="202" width="135" height="18"/>
-                                <buttonCell key="cell" type="check" title="Interpolate images" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="jrs-Cf-E3l">
+                                <rect key="frame" x="8" y="202" width="188" height="18"/>
+                                <buttonCell key="cell" type="check" title="Interpolate stretched pixels" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="jrs-Cf-E3l">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection.bitmapOptionsShouldStrechBitmap" previousBinding="Czp-7i-8nR" id="Cxr-de-f7Q">
+                                        <dictionary key="options">
+                                            <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                            <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                            <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                            <integer key="NSNullPlaceholder" value="-1"/>
+                                        </dictionary>
+                                    </binding>
                                     <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="Czp-7i-8nR">
                                         <dictionary key="options">
                                             <integer key="NSNullPlaceholder" value="0"/>
                                         </dictionary>
                                     </binding>
-                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.bitmapOptionsShouldInterpolate" id="4Lf-Cy-t2Y"/>
+                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.bitmapOptionsShouldInterpolateStretchedPixels" id="Lf5-Q8-Ena"/>
                                 </connections>
                             </button>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ldQ-qn-G2b">
-                                <rect key="frame" x="8" y="242" width="184" height="18"/>
-                                <buttonCell key="cell" type="check" title="Velocity based brightness" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="6r6-cN-ax2">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l52-SO-gfb">
+                                <rect key="frame" x="8" y="182" width="159" height="18"/>
+                                <buttonCell key="cell" type="check" title="Interpolate to next row" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="81Z-Lj-Owz">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.shouldSetBrightnessByRotationalVelocity" id="cHh-tl-PMs"/>
+                                    <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection.bitmapOptionsShouldStrechBitmap" previousBinding="sR5-9I-wDT" id="qWR-4f-xZK">
+                                        <dictionary key="options">
+                                            <integer key="NSMultipleValuesPlaceholder" value="-1"/>
+                                            <integer key="NSNoSelectionPlaceholder" value="-1"/>
+                                            <integer key="NSNotApplicablePlaceholder" value="-1"/>
+                                            <integer key="NSNullPlaceholder" value="-1"/>
+                                        </dictionary>
+                                    </binding>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="sR5-9I-wDT">
+                                        <dictionary key="options">
+                                            <integer key="NSNullPlaceholder" value="0"/>
+                                        </dictionary>
+                                    </binding>
+                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.shouldInterpolateToNextRow" id="4fi-ON-tJY"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -2452,21 +2545,21 @@ DQ
                                         <scrollView wantsLayer="YES" horizontalCompressionResistancePriority="250" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="4pQ-YR-ucT">
                                             <rect key="frame" x="0.0" y="0.0" width="626" height="150"/>
                                             <clipView key="contentView" copiesOnScroll="NO" id="7AX-Jj-HMy">
-                                                <rect key="frame" x="0.0" y="0.0" width="611" height="135"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="626" height="150"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gJ3-de-LOQ" customClass="CDTimelineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="395" width="626" height="150"/>
+                                                        <rect key="frame" x="0.0" y="410" width="626" height="150"/>
                                                     </customView>
                                                 </subviews>
                                                 <color key="backgroundColor" red="0.12984204290000001" green="0.12984612579999999" blue="0.12984395030000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </clipView>
                                             <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="o58-lV-j5l">
-                                                <rect key="frame" x="0.0" y="135" width="611" height="15"/>
+                                                <rect key="frame" x="0.0" y="134" width="626" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wZJ-Op-eAi">
-                                                <rect key="frame" x="611" y="0.0" width="15" height="135"/>
+                                                <rect key="frame" x="610" y="0.0" width="16" height="150"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>

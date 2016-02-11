@@ -137,7 +137,7 @@ static NSManagedObjectContext *g_currentContext = nil;
     return [NSSet setWithObject:@"patternType"];
 }
 
-+ (NSSet *)keyPathsForValuesAffectingBitmapOptionsShouldInterpolate {
++ (NSSet *)keyPathsForValuesAffectingBitmapOptionsShouldInterpolateStretchedPixels {
     return [NSSet setWithObject:@"patternOptions"];
 }
 
@@ -418,9 +418,10 @@ BOOL CDPatternItemGetSpeedEnabled(LEDPatternType patternType) {
     return PATTERN_ITEM_PASTEBOARD_TYPE;
 }
 
-@synthesize bitmapOptionsShouldInterpolate;
-@synthesize bitmapOptionsShouldStrechBitmap;
-@synthesize bitmapOptionsEnabled;
+@dynamic bitmapOptionsShouldInterpolateStretchedPixels;
+@dynamic bitmapOptionsShouldStrechBitmap;
+@dynamic bitmapOptionsEnabled;
+@dynamic shouldInterpolateToNextRow;
 
 - (BOOL)bitmapOptionsEnabled {
     return self.patternType == LEDPatternTypeBitmap || self.patternType == LEDPatternTypeImageReferencedBitmap;
@@ -436,14 +437,24 @@ BOOL CDPatternItemGetSpeedEnabled(LEDPatternType patternType) {
     self.patternOptions = options.raw;
 }
 
--(void)setBitmapOptionsShouldInterpolate:(BOOL)value {
+-(void)setBitmapOptionsShouldInterpolateStretchedPixels:(BOOL)value {
     LEDPatternOptions options = self.patternOptions;
-    options.bitmapOptions.shouldInterpolate = value;
+    options.bitmapOptions.shouldInterpolateStretchedPixels = value;
     self.patternOptions = options.raw;
 }
 
-- (BOOL)bitmapOptionsShouldInterpolate {
-    return LEDPatternOptions(self.patternOptions).bitmapOptions.shouldInterpolate;
+- (BOOL)bitmapOptionsShouldInterpolateStretchedPixels {
+    return LEDPatternOptions(self.patternOptions).bitmapOptions.shouldInterpolateStretchedPixels;
+}
+
+- (BOOL)shouldInterpolateToNextRow {
+    return LEDPatternOptions(self.patternOptions).bitmapOptions.shouldInterpolateToNextRow;
+}
+
+- (void)setShouldInterpolateToNextRow:(BOOL)v {
+    LEDPatternOptions options = self.patternOptions;
+    options.bitmapOptions.shouldInterpolateToNextRow = v;
+    self.patternOptions = options.raw;
 }
 
 
