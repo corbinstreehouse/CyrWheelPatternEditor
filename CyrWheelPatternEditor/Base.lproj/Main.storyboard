@@ -1690,10 +1690,10 @@ DQ
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <connections>
-                                                <binding destination="mLl-X1-Dpi" name="displayPatternValue1" keyPath="connectedWheel.wheelFPS" id="YEN-5l-ow9">
+                                                <binding destination="mLl-X1-Dpi" name="displayPatternValue1" keyPath="connectedWheel.wheelFPS" id="omF-0j-oZ3">
                                                     <dictionary key="options">
                                                         <string key="NSDisplayPattern">%{value1}@ FPS</string>
-                                                        <string key="NSNullPlaceholder">FPS</string>
+                                                        <string key="NSNullPlaceholder">0</string>
                                                     </dictionary>
                                                 </binding>
                                                 <binding destination="mLl-X1-Dpi" name="enabled" keyPath="connectedWheel" id="PFV-eA-x7p">

@@ -235,11 +235,8 @@ static NSMutableSet *g_runningPatterns = [NSMutableSet set];
 
 - (NSString *)_currentSequenceName {
     char fullFilenamePath[MAX_PATH];
-    if (_sequenceManager.getCurrentPatternFileName(fullFilenamePath, MAX_PATH)) {
-        return [NSString stringWithCString:fullFilenamePath encoding:NSASCIIStringEncoding];
-    } else {
-        return @"Default Sequence";
-    }
+    _sequenceManager.getCurrentPatternFileName(fullFilenamePath, MAX_PATH);
+    return [NSString stringWithCString:fullFilenamePath encoding:NSASCIIStringEncoding];
 }
 
 - (void)loadFromData:(NSData *)data {

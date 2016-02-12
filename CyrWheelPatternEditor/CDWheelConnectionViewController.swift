@@ -243,30 +243,22 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
 
-    private func _doAddWithOpenPanel() {
-        let openPanel = NSOpenPanel()
-        openPanel.title = "Select a pattern sequence"
-        openPanel.allowedFileTypes = [gPatternFilenameExtension]
-        openPanel.allowsOtherFileTypes = false
-        openPanel.beginWithCompletionHandler { (result: Int) -> Void in
-            if result == NSModalResponseOK {
-                openPanel.orderOut(self)
-                self.connectedWheel?.uploadPatternItemWithURL(openPanel.URL!, progressHandler: { (progress, error) -> Void in
-                    
-                })
-            }
-        }
-        
-    }
+//    private func _doAddWithOpenPanel() {
+//        let openPanel = NSOpenPanel()
+//        openPanel.title = "Select a pattern sequence"
+//        openPanel.allowedFileTypes = [gPatternFilenameExtension]
+//        openPanel.allowsOtherFileTypes = false
+//        openPanel.beginWithCompletionHandler { (result: Int) -> Void in
+//            if result == NSModalResponseOK {
+//                openPanel.orderOut(self)
+//                self.connectedWheel?.uploadPatternItemWithURL(openPanel.URL!, progressHandler: { (progress, error) -> Void in
+//                    
+//                })
+//            }
+//        }
+//        
+//    }
     
-    
-    // TODO: remove these..not used here anymore...
-    dynamic var _addSequenceEnabled: Bool = false // for bindings
-    dynamic var _removeSequencesEnabled: Bool = false;
-
-    @IBAction func btnAddSequenceClicked(sender: NSButton) {
-        _doAddWithOpenPanel()
-    }
     
     func checkBluetoothState() {
         let state: CBCentralManagerState = centralManager.state;
@@ -396,10 +388,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         if peripheral == connectedWheel?.peripheral {
             connectedWheel = nil
         }
-    }
-    
-    func _updateButtons() {
-        _addSequenceEnabled = connectedWheel != nil && connectedWheel!.sequenceFilenames.count > 0
     }
     
     //MARK: Wheel Connection Delegate
