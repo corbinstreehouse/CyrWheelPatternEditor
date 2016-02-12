@@ -37,6 +37,218 @@ func DLog(format: String, _ args: CVarArgType...) {
     #endif
 }
 
+extension NSData {
+    
+    // I had this backwards... the ARM chip is dealing with big, but we are 386, which is little. But going big -> little doesn't work for some reason...the initializer for Int16 doesn't keep that state
+    func readLittleEndianFromBigEndianInt16() -> Int16 {
+        var result: Int16 = 0
+        self.getBytes(&result, length: sizeofValue(result)) // this read always seems to make the bytes littleEndian, because that is our architecture. So...we want to flip it
+        return result.byteSwapped // We deal w/little endian.
+    }
+
+    func readLittleEndianFromBigEndianUInt16() -> UInt16 {
+        return UInt16(readLittleEndianFromBigEndianInt16());
+    }
+    
+    // assumes same architecture...why does this work? I'm confused...
+    func readUInt32(offset: Int = 0) -> UInt32 {
+        var result: UInt32 = 0
+        self.getBytes(&result, range: NSRange(location: offset, length: sizeofValue(result)))
+        return result
+    }
+    
+    // filenameLength should NOT include the NULL terminator, but we do read the NULL terminator
+    func readStringOfLength(filenameLength: Int, offset: Int = 0) -> String {
+        let stringData = self.subdataWithRange(NSRange(location: offset, length: filenameLength))
+        let tmpStr = NSString(data: stringData, encoding: NSUTF8StringEncoding) as String!
+        return tmpStr
+    }
+}
+
+// State machine to parse the data, with a timeout.
+class CDDataReader {
+    private var _data: NSMutableData!
+    private var _offset: Int = 0;
+    private var _completionHandler: (dataReader: CDDataReader, unusedData: NSData?)-> Void
+    private var _timeoutHandler: (dataReader: CDDataReader)->Void
+    private var _timeoutTimerMaker = 0
+    internal var _completed = false
+    
+    init(completionHandler: (dataReader: CDDataReader, unusedData: NSData?)-> Void, timeoutHandler: (dataReader: CDDataReader)->Void) {
+        _completionHandler = completionHandler
+        _timeoutHandler = timeoutHandler
+    }
+    
+    internal func addData(data: NSData) {
+        _timeoutTimerMaker++
+        if (_data == nil) {
+            _data = NSMutableData(data: data)
+        } else {
+            _data.appendData(data)
+        }
+        _parseData()
+    }
+    
+    private func _startProcessDataResetTimer() {
+        _timeoutTimerMaker++
+        let localTimer = _timeoutTimerMaker;
+        let delay: Int64 = Int64(NSEC_PER_SEC)*1 // 1 seconds
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), { () -> Void in
+            if localTimer == self._timeoutTimerMaker {
+                if !self._completed {
+                    DLog("Timeout for UART data recieve: %@", self._data)
+                    self._timeoutHandler(dataReader: self);
+                }
+            } else {
+                // Ignore; we got more data
+            }
+        })
+    }
+ 
+    private func _parseData() {
+        parseData(_data)
+        if (!_completed) {
+            _startProcessDataResetTimer()
+        }
+    }
+    
+    internal func completedParsingDataAtOffset(offset: Int) {
+        _completed = true
+        if _data.length > offset {
+            // we have more UART data to process; trim down and process
+            let subData = _data.subdataWithRange(NSRange(location: offset, length: _data.length-offset))
+            DLog(" -- more data: %@", subData)
+            _completionHandler(dataReader: self, unusedData: subData)
+        } else {
+            // Done!
+            _completionHandler(dataReader: self, unusedData: nil)
+        }
+    }
+    
+    // Override point
+    func parseData(data: NSData) {
+        
+    }
+}
+
+class CDGetCurrentPatternInfoDataReader: CDDataReader {
+    
+    var currentPatternItemFilename: String? = nil
+    var currentPatternItem: CDPatternItemHeader? = nil
+    
+    override func parseData(data: NSData) {
+        // If it is invalid...we don't process it (I was getting a bad packet from something..)
+        DLog("_processPatternInfoData (data.length: %d): %@, subData:%@", data.length, data, data.subdataWithRange(NSRange(location: 1, length: data.length-1)))
+        var dataOffset = sizeof(CDWheelUARTRecieveCommand) // start past the command
+        var dataAvailable = data.length - dataOffset
+        // Keep repeating our reads until we have enough data to do all the work..
+        let expectedSize = sizeof(CDPatternItemHeader)
+        if (dataAvailable >= expectedSize) {
+            // Read in the header
+            var patternItemHeader = CDPatternItemHeader()
+            data.getBytes(&patternItemHeader, range: NSRange(location: dataOffset, length: sizeofValue(patternItemHeader)))
+            dataOffset += sizeofValue(patternItemHeader)
+            dataAvailable -= sizeofValue(patternItemHeader)
+            
+            // Validate our header...if we are invalid, we stop right away
+            if patternItemHeader.patternType.rawValue > LEDPatternTypeCount.rawValue || patternItemHeader.patternType.rawValue < 0 {
+                completedParsingDataAtOffset(data.length)
+                NSLog("BAD PATTERN: %d, subData: %@", patternItemHeader.patternType.rawValue, data.subdataWithRange(NSRange(location:sizeof(CDWheelUARTRecieveCommand), length:data.length-1)))
+                return; // ugly,.
+            }
+            
+            // Does it have a filename? if so, wait for it..
+            // Stupid thunk...
+            // Add one for the expected NULL terminator
+            let filenameLength = Int(CDPatternItemHeaderGetFilenameLength(&patternItemHeader))
+            if filenameLength > 0 {
+                if dataAvailable >= filenameLength {
+                    self.currentPatternItemFilename = data.readStringOfLength(filenameLength, offset: dataOffset)
+                    DLog("got filename: %@", currentPatternItemFilename!)
+                    self.currentPatternItem = patternItemHeader
+                    dataOffset += filenameLength
+                    completedParsingDataAtOffset(dataOffset)
+                } else {
+                    // not done..
+                    DLog("......filename waiting, dataAvailable: %d, expectedSize: %d", dataAvailable, filenameLength+1);
+                }
+            } else {
+                // done!
+                self.currentPatternItemFilename = nil
+                // Translate an invalidate item to NULL
+                if patternItemHeader.patternType != LEDPatternTypeCount {
+                    self.currentPatternItem = patternItemHeader
+                } else {
+                    self.currentPatternItem = nil;
+                }
+                completedParsingDataAtOffset(dataOffset)
+            }
+        } else {
+            DLog("......waiting, dataAvailable: %d, expectedSize: %d", dataAvailable, expectedSize);
+        }
+
+    }
+}
+
+
+
+class CDGetCustomSequencesDataReader: CDDataReader {
+    
+    var customSequences: [String] = []
+    
+    override func parseData(data: NSData) {
+        var dataAvailable = data.length
+        if (dataAvailable >= sizeof(CDWheelUARTCustomSequenceData)) {
+            var header: CDWheelUARTCustomSequenceData = CDWheelUARTCustomSequenceData()
+            data.getBytes(&header, length: sizeof(CDWheelUARTCustomSequenceData))
+            
+            dataAvailable -= sizeof(CDWheelUARTCustomSequenceData);
+//            var filePacket: CDWheelUARTFilePacket = CDWheelUARTFilePacket()
+            
+            if (header.count > 0) {
+                var tempSequences: [String] = []
+                var tmpCount = Int(header.count)
+                for (var i = 0; i < tmpCount && dataAvailable > 0; i++) {
+                    // read in the size and at least a char
+                    if dataAvailable > sizeof(UInt32) {
+                        let filenameLength: Int = Int(data.readUInt32(data.length - dataAvailable));
+                        if (filenameLength > 1024) {
+                            // ERROR..
+                            completedParsingDataAtOffset(data.length)
+                            return;
+                        }
+                        
+                        dataAvailable -= sizeof(UInt32);
+                        if dataAvailable >= filenameLength {
+                            // read in this name, go to the (possible) next
+                            let dataOffset = data.length - dataAvailable
+                            let tmpStr = data.readStringOfLength(filenameLength, offset: dataOffset);
+                            tempSequences.append(tmpStr)
+                            
+                            dataAvailable -= filenameLength
+                            tmpCount--;
+                        } else {
+                            // not enough data yet
+                            return;
+                        }
+                    } else {
+                        // not enough data yet
+                        return;
+                    }
+                }
+                // If we got here, we should be done!
+                assert(tempSequences.count == Int(header.count))
+                self.customSequences = tempSequences
+                completedParsingDataAtOffset(data.length - dataAvailable)
+            } else {
+                // No custom items..
+                completedParsingDataAtOffset(data.length - dataAvailable)
+            }
+        }
+
+    }
+}
+
 
 let gPatternEditorErrorDomain: String = "PatternEditorErrorDomain"
 let gPatternFilenameExtension: String = "pat"
@@ -88,9 +300,6 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     // set before the item..
     var currentPatternItemFilename: String?
-    
-    // Internal API
-    internal var sequenceFilenames: [String] = [] // TODO: remove this..not used anymore..
     
     var wheelState: CDWheelState = CDWheelStateNone {
         didSet {
@@ -299,38 +508,39 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     
     
+    // TODO: junk.... need to re-write
     private var _writeProgressHandler: ((progress: Float, error: NSError?) -> Void)? = nil
-    internal func uploadPatternItemWithURL(url: NSURL, progressHandler: ((progress: Float, error: NSError?) -> Void)) {
-        let filename: String = _makeFilenameFromURL(url)
-        
-        if sequenceFilenames.contains(filename) {
-            let error = NSError(domain: gPatternEditorErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "A file with the name '\(filename)' already exists. Please choose another file."])
-            progressHandler(progress: 1.0, error: error)
-            return;
-        }
-        
-        guard let fileData: NSData = NSData(contentsOfURL: url) else {
-            let error = NSError(domain: gPatternEditorErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to open the file '\(url)'"])
-            progressHandler(progress: 1.0, error: error)
-            return
-        }
-        
-        let dataToUpload: NSMutableData = NSMutableData()
-        
-        // Format of the data: 
-        // filename<null terminator>
-        // 32-bit size of the data following
-        // the file data
-        // TODO: CRC???
-        var filenameUTF8 = filename.nulTerminatedUTF8
-        dataToUpload.appendBytes(&filenameUTF8, length: filenameUTF8.count + 1) // plus one for the null terminator
-        
-        var sizeValue: UInt32 = UInt32(fileData.length)
-        dataToUpload.appendBytes(&sizeValue, length: sizeofValue(sizeValue))
-        dataToUpload.appendData(fileData)
-
-        _writeProgressHandler = progressHandler
-    }
+//    internal func uploadPatternItemWithURL(url: NSURL, progressHandler: ((progress: Float, error: NSError?) -> Void)) {
+//        let filename: String = _makeFilenameFromURL(url)
+//        
+//        if sequenceFilenames.contains(filename) {
+//            let error = NSError(domain: gPatternEditorErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "A file with the name '\(filename)' already exists. Please choose another file."])
+//            progressHandler(progress: 1.0, error: error)
+//            return;
+//        }
+//        
+//        guard let fileData: NSData = NSData(contentsOfURL: url) else {
+//            let error = NSError(domain: gPatternEditorErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to open the file '\(url)'"])
+//            progressHandler(progress: 1.0, error: error)
+//            return
+//        }
+//        
+//        let dataToUpload: NSMutableData = NSMutableData()
+//        
+//        // Format of the data: 
+//        // filename<null terminator>
+//        // 32-bit size of the data following
+//        // the file data
+//        // TODO: CRC???
+//        var filenameUTF8 = filename.nulTerminatedUTF8
+//        dataToUpload.appendBytes(&filenameUTF8, length: filenameUTF8.count + 1) // plus one for the null terminator
+//        
+//        var sizeValue: UInt32 = UInt32(fileData.length)
+//        dataToUpload.appendBytes(&sizeValue, length: sizeofValue(sizeValue))
+//        dataToUpload.appendData(fileData)
+//
+//        _writeProgressHandler = progressHandler
+//    }
     
     
     private var _internalUpdate: Bool = false;
@@ -388,19 +598,11 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         _writeWheelUARTCommand(CDWheelUARTCommandSetCurrentPatternBrightnessByRotationalVelocity, with32BitValue: value ? 1 : 0);
     }
     
-    private func _getInt16FromData(value: NSData) -> Int16 {
-        var resultLittleE = Int16(littleEndian: 0) // Bytes are little Endian
-        value.getBytes(&resultLittleE, length: sizeofValue(resultLittleE))
-        return resultLittleE.bigEndian // We deal w/big..
-    }
-    
     private func _updateBrightnessFromData(value: NSData) {
         self.brightnessEnabled = true;
         _internalUpdate = true;
-        
-        var byteValue: UInt16 = UInt16(littleEndian: 0);
-        value.getBytes(&byteValue, length: sizeofValue(byteValue))
-        self.brightness = byteValue.bigEndian;
+        // Wait..this has to be wrong..we are little, ARM is big
+        self.brightness = value.readLittleEndianFromBigEndianUInt16()
         _internalUpdate = false;
     }
 
@@ -473,7 +675,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             }  else if (uuid.isEqual(CBUUID(string: kLEDWheelCharGetWheelStateUUID))) {
                 _stateCharacteristic = characteristic;
                 if let data = characteristic.value {
-                    self.wheelState = CDWheelState(_getInt16FromData(data));
+                    self.wheelState = CDWheelState(data.readLittleEndianFromBigEndianInt16());
                 }
                 watchChar();
             } else if (uuid.isEqual(uartTransmitCharacteristicUUID)) {
@@ -491,16 +693,11 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     
     dynamic var wheelFPS: Int = 0
-//        {
-//        didSet {
-//            NSLog("FPS: %d", wheelFPS);
-//        }
-//    }
     
     private func _updateFPS() {
         if let char = _fpsChar {
             if let data =  char.value {
-                wheelFPS = Int(_getInt16FromData(data))
+                wheelFPS = Int(data.readLittleEndianFromBigEndianInt16())
             }
         }
     }
@@ -577,65 +774,6 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         }
     }
 
-    // MARK: ---------------------------
-
-//    private var _sequenceListData: NSMutableData? // Valid when we are loading the data
-//    private func _addDataToSequenceList(data: NSData?) {
-//        // Consdier done when we get nil data (or some other marker..)
-//        let isDone = data == nil
-//        if !isDone {
-//            if _sequenceListData == nil {
-//                _sequenceListData = NSMutableData()
-//            }
-//            _sequenceListData!.appendData(data!)
-//        }
-//        
-//        if (isDone) {
-//            peripheral.setNotifyValue(false, forCharacteristic: _getSequencesCharacteristic!)
-//            _parseSequenceListData();
-//        }
-//        
-//    }
-    
-//    public func enumerateObjectsUsingBlock(block: (AnyObject, Int, UnsafeMutablePointer<ObjCBool>) -> Void)
-//    internal func deleteFilenamesAtIndexes(indexes: NSIndexSet, didCompleteHandler: (succeeded: Bool) -> Void) {
-//        // TODO: what is the limit of the bytes I can send at one time?
-//        let data: NSMutableData = NSMutableData()
-//        
-//        for var index = indexes.firstIndex; index != NSNotFound; index = indexes.indexGreaterThanIndex(index) {
-//            // Send 16-bit indexes
-//            var indexAs16Bit: Int16 = Int16(index).littleEndian;
-//            data.appendBytes(&indexAs16Bit, length: sizeof(Int16))
-//        }
-//            
-//        peripheral.writeValue(data, forCharacteristic: _deleteSequenceCharacteristic!, type: CBCharacteristicWriteType.WithResponse)
-//    
-//    }
-    
-//    // not used..
-//    private func _addSequenceFilename(filename: String) {
-//        sequenceFilenames.append(filename)
-//    }
-//    
-//    // not used..
-//    private func _parseSequenceListData() {
-//        let data = _sequenceListData!
-//        if let dataAsString = String(data: data, encoding: NSUTF8StringEncoding) {
-//            var done = false
-//            repeat {
-//                if let range = dataAsString.rangeOfCharacterFromSet(NSCharacterSet.newlineCharacterSet()) {
-//                    let filename = dataAsString.substringToIndex(range.startIndex)
-//                    _addSequenceFilename(filename)
-//                } else {
-//                    done = true
-//                }
-//            } while !done;
-//        }
-//        
-//        delegate?.wheelConnection(self, didChangeSequenceFilenames: sequenceFilenames)
-//        _sequenceListData = nil // done with it
-//    }
-    
     func peripheral(peripheral: CBPeripheral, didUpdateNotificationStateForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         DLog("didUpdateNotify for characteristic: %@", stringFromUUID(characteristic.UUID))
         // We have to wait until we did update the notification state before we can request status...otherwise we loose "packets"
@@ -645,9 +783,6 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     
     func stringFromUUID(uuid: CBUUID) -> String {
-/*        if uuid.isEqual(CBUUID(string: kLEDWheelCharSendCommandUUID)) {
-            return "Wheel CommandCharacteristic"
-        } else */
         if (uuid.isEqual(CBUUID(string: kLEDWheelBrightnessCharacteristicReadUUID))) {
             return "Brightness READ Characteristic"
         }  else if (uuid.isEqual(CBUUID(string: kLEDWheelCharGetWheelStateUUID))) {
@@ -660,138 +795,79 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     
     // Data receiving
-    private var _dataToReceive: NSMutableData? = nil;
-    private var _dataRecieveCommand: CDWheelUARTRecieveCommand = CDWheelUARTRecieveCommandInvalid
+//    private var _dataToReceive: NSMutableData? = nil;
+//    private var _dataRecieveCommand: CDWheelUARTRecieveCommand = CDWheelUARTRecieveCommandInvalid
 
+    private var _dataReader: CDDataReader?
+    private func _commonDataReaderDoneWithUnusedData(unusedData: NSData?) {
+        _dataReader = nil;
+        // Start reading more, if necessary
+        if let unusedData = unusedData {
+            _recieveIncomingUARTData(unusedData)
+        }
+    }
+    
+    private func _didCompleteReadOfPatternInfo(dataReader: CDDataReader, unusedData: NSData?) {
+        let dataReader = dataReader as! CDGetCurrentPatternInfoDataReader
+        self.currentPatternItemFilename = dataReader.currentPatternItemFilename
+        self.currentPatternItem = dataReader.currentPatternItem
+        _commonDataReaderDoneWithUnusedData(unusedData)
+        _requestCustomSequencesIfNeeded()
+    }
+    
+    private func _didCompleteReadOfCustomSequences(dataReader: CDDataReader, unusedData: NSData?) {
+      
+        NSLog("corbin..")
+        _commonDataReaderDoneWithUnusedData(unusedData)
+    }
+    
+    private func _didFailDataReader(dataReadre: CDDataReader) {
+        _dataReader = nil;
+    }
+    
+    private func _startNewDataReaderWithData(data: NSData) {
+        // Read the first byte to see what to create
+        var dataRecieveCommand: CDWheelUARTRecieveCommand = CDWheelUARTRecieveCommandInvalid
+        data.getBytes(&dataRecieveCommand, length: sizeofValue(dataRecieveCommand))
+        
+        switch (dataRecieveCommand) {
+        case CDWheelUARTRecieveCommandInvalid:
+            // Done.. error state... droppingt the data..
+            NSLog("Invalid command, data: %@", data);
+        case CDWheelUARTRecieveCommandCurrentPatternInfo:
+            _dataReader = CDGetCurrentPatternInfoDataReader(completionHandler: _didCompleteReadOfPatternInfo, timeoutHandler: _didFailDataReader);
+            _dataReader!.addData(data)
+        case CDWheelUARTRecieveCommandCustomSequences:
+            _dataReader = CDGetCustomSequencesDataReader(completionHandler: _didCompleteReadOfCustomSequences, timeoutHandler: _didFailDataReader);
+            _dataReader!.addData(data)
+        default:
+            // An invalid value; we drop the data
+            NSLog("Invalid UART data: %@", data);
+            break
+        }
+    }
+    
     private func _recieveIncomingUARTData(data: NSData) {
         DLog("_recieveIncomingUARTData: %@", data)
-        _timeoutTimerMaker++
-        // Append to _dataToReceive and attempt to process
-        if _dataToReceive == nil {
-            // First time; create the mutable data, and find out what we are processing
-            _dataToReceive = NSMutableData()
-            _dataToReceive!.appendData(data)
-            // First time in, we have to see what we are going to process to know when we are done...
-            _dataRecieveCommand = CDWheelUARTRecieveCommandInvalid
-            _dataToReceive!.getBytes(&_dataRecieveCommand, length: sizeofValue(_dataRecieveCommand))
+        // Feed the existing, or create a new one!
+        if let dataReader = _dataReader {
+            dataReader.addData(data)
         } else {
-            _dataToReceive!.appendData(data)
-        }
-        
-        _processUARTRecieveData(_dataToReceive!)
-    }
-    
-    private func _processUARTRecieveData(data: NSData) {
-        switch (_dataRecieveCommand) {
-        case CDWheelUARTRecieveCommandInvalid:
-            // Done.. error state...
-            NSLog("Invalid command, data: %@", data);
-            _dataToReceive = nil;
-        case CDWheelUARTRecieveCommandCurrentPatternInfo:
-            _processPatternInfoData(data)
-            break
-        default:
-            // An invalid value...
-            NSLog("Invalid UART data: %@", data);
-            _dataToReceive = nil;
-            break
+            _startNewDataReaderWithData(data)
         }
     }
     
-    // timeouts..
-    var _timeoutTimerMaker = 0
-    private func _startProcessDataResetTimer() {
-        _timeoutTimerMaker++
-        let localTimer = _timeoutTimerMaker;
-        let delay: Int64 = Int64(NSEC_PER_SEC)*1 // 1 seconds
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue(), { () -> Void in
-            if localTimer == self._timeoutTimerMaker {
-                if self._dataToReceive != nil {
-                    DLog("Timeout for UART data recieve: %@", self._dataToReceive!)
-                    self._dataToReceive = nil; // drop our data
-                }
-            } else {
-                // Cancelled
-            }
-        })
-    }
+    private var _requestedCustomSequences = false
     
-    private func _doneUARTDataAtOffset(offset: Int) {
-        if let data = _dataToReceive {
-            if data.length > offset {
-                // we have more UART data to process; trim down and process
-                let subData = data.subdataWithRange(NSRange(location: offset, length: data.length-offset))
-                DLog(" -- more data: %@", subData)
-                _dataToReceive = nil
-                _recieveIncomingUARTData(subData) // Start again
-            } else {
-                // Done!
-                _dataToReceive = nil
-            }
+    private func _requestCustomSequencesIfNeeded() {
+        if (!_requestedCustomSequences) {
+            _requestedCustomSequences = true;
+            _writeWheelUARTCommand(CDWheelUARTCommandRequestCustomSequences)
         }
     }
     
-    
-    private func _processPatternInfoData(data: NSData) {
-        // If it is invalid...we don't process it (I was getting a bad packet from something..)
-        DLog("_processPatternInfoData (data.length: %d): %@, subData:%@", data.length, data, data.subdataWithRange(NSRange(location: 1, length: data.length-1)))
-        var dataOffset = sizeof(CDWheelUARTRecieveCommand) // start past the command
-        var dataAvailable = data.length - dataOffset
-        // Keep repeating our reads until we have enough data to do all the work..
-        let expectedSize = sizeof(CDPatternItemHeader)
-        if (dataAvailable >= expectedSize) {
-            // Read in the header
-            var patternItemHeader = CDPatternItemHeader()
-            data.getBytes(&patternItemHeader, range: NSRange(location: dataOffset, length: sizeofValue(patternItemHeader)))
-            dataOffset += sizeofValue(patternItemHeader)
-            dataAvailable -= sizeofValue(patternItemHeader)
-            
-            // Validate our header...if we are invalid, we stop right away
-            if patternItemHeader.patternType.rawValue > LEDPatternTypeCount.rawValue || patternItemHeader.patternType.rawValue < 0 {
-                _doneUARTDataAtOffset(data.length)
-                NSLog("BAD PATTERN: %d, subData: %@", patternItemHeader.patternType.rawValue, data.subdataWithRange(NSRange(location:sizeof(CDWheelUARTRecieveCommand), length:data.length-1)))
-                return; // ugly,.
-            }
-            
-            
-            // Does it have a filename? if so, wait for it..
-            // Stupid thunk... 
-            // Add one for the expected NULL terminator
-            var filenameLength = Int(CDPatternItemHeaderGetFilenameLength(&patternItemHeader))
-            if filenameLength > 0 {
-                // Account for the null terminator
-                filenameLength += 1
-                if dataAvailable >= filenameLength {
-                    // read in the filename and we are done!
-                    // Note: string needs it to NOT be NULL terminated for the length
-                    let stringData = data.subdataWithRange(NSRange(location: dataOffset, length: filenameLength))
-                    self.currentPatternItemFilename = NSString(data: stringData, encoding: NSUTF8StringEncoding) as String!
-                    DLog("got filename: %@", self.currentPatternItemFilename!)
-                    self.currentPatternItem = patternItemHeader
-                    dataOffset += filenameLength
-                    _doneUARTDataAtOffset(dataOffset)
-                } else {
-                    // not done..
-                    DLog("......filename waiting, dataAvailable: %d, expectedSize: %d", dataAvailable, filenameLength+1);
-                    _startProcessDataResetTimer();
-                }
-            } else {
-                // done!
-                self.currentPatternItemFilename = nil
-                // Translate an invalidate item to NULL
-                if patternItemHeader.patternType != LEDPatternTypeCount {
-                    self.currentPatternItem = patternItemHeader
-                } else {
-                    self.currentPatternItem = nil;
-                }
-                _doneUARTDataAtOffset(dataOffset)
-            }
-        } else {
-            DLog("......waiting, dataAvailable: %d, expectedSize: %d", dataAvailable, expectedSize);
-            _startProcessDataResetTimer();
-        }
-    }
-    
+//    var customSequenceFilenames: [String] = []
+//    
     func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         if error != nil {
             // TODO: present the error...make sure they aren't piling up
@@ -805,7 +881,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             }
         } else if (characteristic == _stateCharacteristic) {
             if let data = characteristic.value {
-                self.wheelState = CDWheelState(_getInt16FromData(data));
+                self.wheelState = CDWheelState(data.readLittleEndianFromBigEndianInt16());
             }
         } else if characteristic == _uartRecieveCharacteristic {
             if let data = characteristic.value {
