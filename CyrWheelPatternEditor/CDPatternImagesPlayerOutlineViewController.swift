@@ -106,21 +106,21 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                 // "Diff" the two arrays in a simple way
                 var oldCustomSequences = oldValue
                 var oldCustomSequenceWrappers = _customSequenceChildren
+                oldCustomSequenceWrappers.removeFirst() // delete the header for simplicity
                 for var i = 0; i < customSequences.count; i++ {
                     if let oldIndex = oldCustomSequences.indexOf(customSequences[i]) {
                         // Note that as we insert above, the stuff left offset is always lower than index
                         // Move this item, if needed, and remove it from our items that we know we processed
                         let oldIndexInTable = i + oldIndex;
-                        let oldWrapperIndex = oldIndexInTable + 1 // Accounts for the header that I insert..I really should make it have a parent/child relationship for header items.
                         if oldIndexInTable != i {
                             // +1 is the header offset
-                            _outlineView.moveItemAtIndex(oldWrapperIndex, inParent: nil, toIndex: i+1, inParent: nil)
+                            // Add one for the header...bah...
+                            _outlineView.moveItemAtIndex(oldIndex + 1, inParent: nil, toIndex: i + 1, inParent: nil)
                         }
                         
                         // oldCustomSequences is really kept around just so I can find the updated indexes. I could probabl do this faster/better...
                         oldCustomSequences.removeAtIndex(oldIndex)
-                        // Wrappers; one extra offset..
-                        oldCustomSequenceWrappers.removeAtIndex(oldWrapperIndex)
+                        oldCustomSequenceWrappers.removeAtIndex(oldIndex)
                     } else {
                         let wrapperIndex = _customSequenceChildren.count // accounts for the header...
                         let wrapper = CustomSequencePatternObjectWrapper(relativeFilename: customSequences[i])
@@ -363,6 +363,60 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     
     func _getPlayableSelectedItemWrapper() -> CDPatternItemHeaderWrapper? {
         return _getPlayableItemAtRow(_outlineView.selectedRow)
+    }
+    
+    @IBAction func btnUploadFileClicked(sender: NSButton) {
+        if let wheel = self.connectedWheel {
+            if !wheel.uploading {
+                _doAddWithOpenPanel()
+            }
+        }
+    }
+    
+    private func _uploadAtURL(url: NSURL) {
+        if let wheel = self.connectedWheel {
+            var filename: String!
+            // swap to a .pat extension if it isn't a .pat
+            if url.pathExtension != "pat" {
+                filename = url.URLByDeletingPathExtension!.URLByAppendingPathExtension("pat").lastPathComponent!
+            } else {
+                filename = url.lastPathComponent!
+            }
+            
+            if wheel.customSequences.contains(filename) {
+                let alert = NSAlert()
+                alert.messageText = "A file already exists on the wheel with that name. Replace it?"
+                alert.alertStyle = NSAlertStyle.CriticalAlertStyle
+                let buttonOK = alert.addButtonWithTitle("OK")
+                buttonOK.tag = NSModalResponseOK
+                let cancelButton = alert.addButtonWithTitle("Cancel")
+                cancelButton.tag = NSModalResponseCancel
+                
+                alert.beginSheetModalForWindow(self.view.window!, completionHandler: { (r: NSModalResponse) -> Void in
+                    if r == NSModalResponseOK {
+                        wheel.uploadFile(url, filename: filename)
+                    }
+                })
+                
+            } else {
+                wheel.uploadFile(url, filename: filename)
+            }
+        }
+    }
+    
+    private func _doAddWithOpenPanel() {
+        let openPanel = NSOpenPanel()
+        openPanel.title = "Select a pattern sequence"
+        openPanel.allowedFileTypes = [gPatternFilenameExtension, gSequenceEditorExtension]
+        openPanel.allowsOtherFileTypes = false
+        openPanel.beginWithCompletionHandler { (result: Int) -> Void in
+            if result == NSModalResponseOK {
+                openPanel.orderOut(self)
+                // Ask about ovewrites..
+                self._uploadAtURL(openPanel.URL!)
+            }
+        }
+        
     }
     
     

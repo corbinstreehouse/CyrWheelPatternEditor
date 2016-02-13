@@ -67,6 +67,27 @@ extension NSData {
     }
 }
 
+extension NSMutableData {
+    
+    func writeUInt32(i: UInt32) {
+        var rawValue: UInt32 = i;
+        self.appendBytes(&rawValue, length: sizeofValue(rawValue))
+    }
+    
+    func writeString(string: String) {
+        // Includes NULL term in size (for better or worse)
+        let filenameUTF8 = string.nulTerminatedUTF8
+        var sizeValue: UInt32 = UInt32(filenameUTF8.count)
+        self.appendBytes(&sizeValue, length: sizeofValue(sizeValue))
+        
+        let filenameLength = filenameUTF8.count; // null terminator
+        string.withCString { (p: UnsafePointer<Int8>) in
+            // filename, including null terminator
+            self.appendBytes(p, length: filenameLength)
+        }
+    }
+}
+
 // State machine to parse the data, with a timeout.
 class CDDataReader {
     private var _data: NSMutableData!
@@ -256,6 +277,7 @@ class CDGetCustomSequencesDataReader: CDDataReader {
 
 let gPatternEditorErrorDomain: String = "PatternEditorErrorDomain"
 let gPatternFilenameExtension: String = "pat"
+let gSequenceEditorExtension: String = "cyrwheel"
 
 class CDWheelConnection: NSObject, CBPeripheralDelegate {
     private let uartServiceUUID = CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E") // From AdaFruit's docs
@@ -455,24 +477,14 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
         
         // duration
-        var rawDuration: UInt32 = duration;
-        data.appendBytes(&rawDuration, length: sizeofValue(rawDuration))
+        data.writeUInt32(duration)
         
         // LEDBitmapPatternOptions
         var rawOptions: LEDBitmapPatternOptions = bitmapOptions
         assert(sizeofValue(rawOptions) == 4)
         data.appendBytes(&rawOptions, length: sizeofValue(rawOptions))
-        
-        // Includes NULL term in size (for better or worse)
-        let filenameUTF8 = filename.nulTerminatedUTF8
-        var sizeValue: UInt32 = UInt32(filenameUTF8.count)
-        data.appendBytes(&sizeValue, length: sizeofValue(sizeValue))
 
-        let filenameLength = filenameUTF8.count; // null terminator
-        filename.withCString { (p: UnsafePointer<Int8>) in
-            // filename, including null terminator
-            data.appendBytes(p, length: filenameLength)
-        }
+        data.writeString(filename)
         
         // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
         _startSendingUARTData(data)
@@ -798,6 +810,59 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
 //        }
 //    }
 
+    
+    dynamic var uploading: Bool = false;
+    
+    /*
+    
+    uint32_t filenameSize - including NULL
+    char * filename, including NULL
+    uint32_t file size
+    data
+    */
+    
+    func _writeNewSequenceFileWithData(dataToWrite: NSData, filename: String) {
+        DLog("uploading file...")
+        // Write the command as an 8-bit value..
+        var uartCommand: Int8 = CDWheelUARTCommandUploadSequence.rawValue
+        // the uartCommand, followed by the value..
+        let dataToSend: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
+        
+        dataToSend.writeString(filename)
+        
+        let dataSize: UInt32 = UInt32(dataToWrite.length)
+        dataToSend.writeUInt32(dataSize)
+        
+        dataToSend.appendData(dataToWrite);
+        
+        // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
+        _startSendingUARTData(dataToSend)
+        
+        // TODO: timeout!!
+    }
+    
+    func uploadFile(url: NSURL, filename: String) {
+        
+        assert(!uploading)
+        uploading = true;
+
+        // If it is a cyrwheel file... load it into data..and upload that
+        if url.pathExtension != "pat" {
+            do {
+                let document = try CDDocument(contentsOfURL: url, ofType: "public.cyrwheelpattern")
+                let data = document.exportToData();
+                _writeNewSequenceFileWithData(data, filename: filename)
+            } catch let error as NSError {
+                NSApp.presentError(error)
+            }
+        } else if let dataToWrite = NSData(contentsOfURL: url) {
+            _writeNewSequenceFileWithData(dataToWrite, filename: filename)
+        } else {
+            // error can't open file...
+            NSLog("can't open URL for writing: %@", url);
+        }
+    }
+    
     func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         if characteristic == _uartTransmitCharacteristic {
             // After initial response, start sending the file.....if we  need toooo
@@ -872,6 +937,12 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         case CDWheelUARTRecieveCommandCustomSequences:
             _dataReader = CDGetCustomSequencesDataReader(completionHandler: _didCompleteReadOfCustomSequences, timeoutHandler: _didFailDataReader);
             _dataReader!.addData(data)
+        case CDWheelUARTRecieveCommandUploadSequenceFinished:
+            // TODO: read success/failure?
+            uploading = false
+            _requestedCustomSequences = false;
+            _requestCustomSequencesIfNeeded()
+            break;
         default:
             // An invalid value; we drop the data
             NSLog("Invalid UART data: %@", data);
@@ -925,6 +996,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             _updateFPS()
         }
     }
+    
     
 
 }

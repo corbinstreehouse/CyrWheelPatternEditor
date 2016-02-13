@@ -167,7 +167,10 @@ NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
         wc = [((CDAppDelegate *)NSApp.delegate).mainStoryboard instantiateControllerWithIdentifier:@"CDPatternEditorWindowController2"];
     }
     [self addWindowController:wc];
-    
+}
+
+- (NSData *)exportToData {
+    return self.patternSequence.exportAsData;
 }
     
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController

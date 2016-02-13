@@ -73,9 +73,18 @@ class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
         }
     }
     
+    dynamic var pov: Bool = false {
+        didSet {
+            delegate?.patternItemBitmapOptionsChanged(self)
+        }
+    }
+    
     var bitmapPatternOptions: LEDBitmapPatternOptions {
         get {
-            return LEDBitmapPatternOptions(shouldInterpolateStretchedPixels: shouldInterpolateStretchedPixels ? 1 : 0, shouldStrechBitmap:  shouldStrechBitmap ? 1 : 0, shouldInterpolateToNextRow: shouldInterpolateToNextRow ? 1 : 0, reserved: 0)
+            return LEDBitmapPatternOptions(shouldInterpolateStretchedPixels: shouldInterpolateStretchedPixels ? 1 : 0, shouldStrechBitmap:  shouldStrechBitmap ? 1 : 0,
+                shouldInterpolateToNextRow: shouldInterpolateToNextRow ? 1 : 0,
+                pov: pov ? 1 : 0,
+                reserved: 0)
         }
     }
 
@@ -314,6 +323,14 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
             return outlineView.rowHeight
         }
     }
+
+    // Cmd-R to reveal the image in finder.
+    @IBAction func revealInFinder(sender: AnyObject) {
+        if let item = _outlineView.selectedItem as? ImagePatternObjectWrapper {
+            NSWorkspace.sharedWorkspace().selectFile(item.url.path, inFileViewerRootedAtPath: "")
+        }
+    }
+    
 
 
     

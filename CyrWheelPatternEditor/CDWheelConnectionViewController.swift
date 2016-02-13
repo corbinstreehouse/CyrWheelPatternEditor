@@ -246,24 +246,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         connectedWheel?.sendCommand(CDWheelCommand(sender.tag));
     }
     
-
-//    private func _doAddWithOpenPanel() {
-//        let openPanel = NSOpenPanel()
-//        openPanel.title = "Select a pattern sequence"
-//        openPanel.allowedFileTypes = [gPatternFilenameExtension]
-//        openPanel.allowsOtherFileTypes = false
-//        openPanel.beginWithCompletionHandler { (result: Int) -> Void in
-//            if result == NSModalResponseOK {
-//                openPanel.orderOut(self)
-//                self.connectedWheel?.uploadPatternItemWithURL(openPanel.URL!, progressHandler: { (progress, error) -> Void in
-//                    
-//                })
-//            }
-//        }
-//        
-//    }
-    
-    
     func checkBluetoothState() {
         let state: CBCentralManagerState = centralManager.state;
         

@@ -23,8 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (CDPatternItem *)makeTemporaryPatternItem;
 - (void)removeTemporaryPatternItem:(CDPatternItem *)item;
 - (void)addPatternItemToChildren:(CDPatternItem *)item;
-
 - (void)removePatternItemsAtIndexes:(NSIndexSet *)indexes;
+- (NSData *)exportToData;
 
 @end
 
