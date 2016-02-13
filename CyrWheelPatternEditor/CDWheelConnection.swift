@@ -14,6 +14,8 @@ protocol CDWheelConnectionDelegate {
 //    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String])
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeState: CDWheelState)
     func wheelConnection(wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?)
+    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequences: [String])
+    
     // adding values
 //    func wheelConnection(wheelConnection: CDWheelConnection, didAddFilenames filenmames: String, atIndexes indexesAdded: NSIndexSet);
     // removing values
@@ -205,10 +207,13 @@ class CDGetCustomSequencesDataReader: CDDataReader {
             dataAvailable -= sizeof(CDWheelUARTCustomSequenceData);
 //            var filePacket: CDWheelUARTFilePacket = CDWheelUARTFilePacket()
             
-            if (header.count > 0) {
+            let itemCount = Int(header.count)
+            if (itemCount > 0) {
+                if (dataAvailable == 0) {
+                    return; // waiting...
+                }
                 var tempSequences: [String] = []
-                var tmpCount = Int(header.count)
-                for (var i = 0; i < tmpCount && dataAvailable > 0; i++) {
+                for (var i = 0; i < itemCount; i++) {
                     // read in the size and at least a char
                     if dataAvailable > sizeof(UInt32) {
                         let filenameLength: Int = Int(data.readUInt32(data.length - dataAvailable));
@@ -226,18 +231,17 @@ class CDGetCustomSequencesDataReader: CDDataReader {
                             tempSequences.append(tmpStr)
                             
                             dataAvailable -= filenameLength
-                            tmpCount--;
                         } else {
                             // not enough data yet
                             return;
                         }
                     } else {
-                        // not enough data yet
+                        // not enough data yet return and wait...
                         return;
                     }
                 }
                 // If we got here, we should be done!
-                assert(tempSequences.count == Int(header.count))
+                assert(tempSequences.count == itemCount)
                 self.customSequences = tempSequences
                 completedParsingDataAtOffset(data.length - dataAvailable)
             } else {
@@ -306,6 +310,13 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             delegate?.wheelConnection(self, didChangeState: wheelState);
         }
     }
+    
+    var customSequences: [String] = [] {
+        didSet {
+            delegate?.wheelConnection(self, didChangeSequences: customSequences)
+        }
+    }
+    
     
     // Data sending
     let _dataChunkSize = 20 // I think this is a limit of the peripheral
@@ -437,7 +448,6 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         _startSendingUARTData(data)
     }
     
-    
     internal func setDynamicImagePattern(filename: String, duration: UInt32, bitmapOptions: LEDBitmapPatternOptions) {
         // Write the command as an 8-bit value..
         var uartCommand: Int8 = CDWheelUARTCommandPlayImagePattern.rawValue
@@ -458,6 +468,27 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         var sizeValue: UInt32 = UInt32(filenameUTF8.count)
         data.appendBytes(&sizeValue, length: sizeofValue(sizeValue))
 
+        let filenameLength = filenameUTF8.count; // null terminator
+        filename.withCString { (p: UnsafePointer<Int8>) in
+            // filename, including null terminator
+            data.appendBytes(p, length: filenameLength)
+        }
+        
+        // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
+        _startSendingUARTData(data)
+    }
+    
+    internal func playPatternSequence(filename: String) {
+        // Write the command as an 8-bit value..
+        var uartCommand: Int8 = CDWheelUARTCommandPlaySequence.rawValue
+        // the uartCommand, followed by the value..
+        let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
+        
+        // Includes NULL term in size (for better or worse)
+        let filenameUTF8 = filename.nulTerminatedUTF8
+        var sizeValue: UInt32 = UInt32(filenameUTF8.count)
+        data.appendBytes(&sizeValue, length: sizeofValue(sizeValue))
+        
         let filenameLength = filenameUTF8.count; // null terminator
         filename.withCString { (p: UnsafePointer<Int8>) in
             // filename, including null terminator
@@ -816,8 +847,9 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     
     private func _didCompleteReadOfCustomSequences(dataReader: CDDataReader, unusedData: NSData?) {
-      
-        NSLog("corbin..")
+        let dataReader = dataReader as! CDGetCustomSequencesDataReader
+        self.customSequences = dataReader.customSequences
+        
         _commonDataReaderDoneWithUnusedData(unusedData)
     }
     

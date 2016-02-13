@@ -1025,7 +1025,7 @@ DQ
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <connections>
-                                                <binding destination="fYl-F9-vf0" name="enabled2" keyPath="representedObject" previousBinding="SEI-6E-DYf" id="50L-zT-Hfj">
+                                                <binding destination="fYl-F9-vf0" name="enabled2" keyPath="representedObject" previousBinding="mHj-aB-bD9" id="jyl-rJ-2vQ">
                                                     <dictionary key="options">
                                                         <integer key="NSMultipleValuesPlaceholder" value="-1"/>
                                                         <integer key="NSNoSelectionPlaceholder" value="-1"/>
@@ -1034,13 +1034,12 @@ DQ
                                                         <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.isDirectory" id="SEI-6E-DYf">
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.shouldStrechBitmap" id="mHj-aB-bD9">
                                                     <dictionary key="options">
                                                         <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
-                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
                                                     </dictionary>
                                                 </binding>
                                                 <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateStretchedPixels" id="rpw-hD-w9j">
@@ -1059,7 +1058,7 @@ DQ
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
                                             <connections>
-                                                <binding destination="fYl-F9-vf0" name="enabled2" keyPath="representedObject" previousBinding="xy5-mz-Xzp" id="qqs-eq-79h">
+                                                <binding destination="fYl-F9-vf0" name="enabled2" keyPath="representedObject" previousBinding="Pyu-Yc-Cne" id="73N-us-fw9">
                                                     <dictionary key="options">
                                                         <integer key="NSMultipleValuesPlaceholder" value="-1"/>
                                                         <integer key="NSNoSelectionPlaceholder" value="-1"/>
@@ -1068,13 +1067,12 @@ DQ
                                                         <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.isDirectory" id="xy5-mz-Xzp">
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.shouldStrechBitmap" id="Pyu-Yc-Cne">
                                                     <dictionary key="options">
                                                         <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
-                                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
                                                     </dictionary>
                                                 </binding>
                                                 <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateToNextRow" id="6Y2-kn-aCG">

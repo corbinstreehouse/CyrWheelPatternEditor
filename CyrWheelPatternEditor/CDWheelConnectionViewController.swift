@@ -20,6 +20,9 @@ protocol CDWheelConnectionPresenter {
     var connectedWheel: CDWheelConnection? { get set }
 }
 
+protocol CDWheelConnectionSequencesPresenter {
+    var customSequences: [String] { get set }
+}
 
 
 
@@ -32,6 +35,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
             _updatePlayButton()
             _pushConnectedWheelToChildren()
             _updateCurrentPatternItem()
+            _pushSequencesToChildren()
         }
     }
     lazy var _discoveredPeripherals: [CBPeripheral] = []
@@ -321,12 +325,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-//    private var playerController: CDPatternImagesPlayerOutlineViewController?
-//    override func prepareForSegue(segue: NSStoryboardSegue, sender: AnyObject?) {
-//        playerController = segue.destinationController as? CDPatternImagesPlayerOutlineViewController
-//        playerController!.connectedWheel = connectedWheel;
-//    }
-    
     override func addChildViewController(childViewController: NSViewController) {
         super.addChildViewController(childViewController)
         _pushConnectedWheelToChildren()
@@ -340,7 +338,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
             _pushConnectedWheelToChildrenFromViewController(child)
         }
     }
-
     
     private func _pushConnectedWheelToChildren() {
         for child in self.childViewControllers {
@@ -348,9 +345,21 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-//    @IBAction func btnDoTest(sender: AnyObject) {
-//        connectedWheel?.doTest()    
-//    }
+    private func _pushSequencesChangeFromViewController(viewController: NSViewController, customSequences: [String]) {
+        if var presenter = viewController as? CDWheelConnectionSequencesPresenter {
+            presenter.customSequences = customSequences
+        }
+        for child in viewController.childViewControllers {
+            _pushSequencesChangeFromViewController(child, customSequences: customSequences)
+        }
+    }
+    
+    private func _pushSequencesToChildren() {
+        let sequences = (connectedWheel != nil) ? connectedWheel!.customSequences : []
+        for child in self.childViewControllers {
+            _pushSequencesChangeFromViewController(child, customSequences: sequences)
+        }
+    }
     
     func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
         if connectedWheel == nil {
@@ -426,15 +435,14 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
 //        connectedWheel?.set
         
     }
-
-
     
     func wheelConnection(wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?) {
         _updateCurrentPatternItem()
     }
-    
-    
-    
+
+    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequences customSequences: [String]) {
+        _pushSequencesToChildren()
+    }
     
     private dynamic var _playButtonEnabled = false;
     private dynamic var _nextPatternEnabled = false;

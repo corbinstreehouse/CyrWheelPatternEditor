@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewController, CDWheelConnectionPresenter, CDPatternItemHeaderWrapperChanged {
+class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewController, CDWheelConnectionPresenter, CDPatternItemHeaderWrapperChanged, CDWheelConnectionSequencesPresenter {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +29,9 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         didSet {
             if self.viewLoaded {
                 _updateButtonState();
+                if let wheel = connectedWheel {
+                    self.customSequences = wheel.customSequences
+                }
             }
         }
     }
@@ -70,6 +73,78 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
+    internal var _customSequenceChildren: [CDPatternItemHeaderWrapper] = []
+    
+    internal var customSequences: [String] = [] {
+        didSet {
+            // Diff the two and apply the updates to the outlineView
+            // First a header section
+            // everything is hardcoded at the start
+            if oldValue.count == 0 && customSequences.count == 0 {
+                // ignore empty to empty
+            } else if oldValue.count == 0 {
+                // Inserting everything new
+                // Add a header
+                let programmedPatternGroupObject = HeaderPatternObjectWrapper(label: "Custom Sequences")
+                _customSequenceChildren.append(programmedPatternGroupObject)
+                for sequenceFilename in customSequences {
+                    let wrapper = CustomSequencePatternObjectWrapper(relativeFilename: sequenceFilename)
+                    _customSequenceChildren.append(wrapper);
+                }
+                _rootChildren.insertContentsOf(_customSequenceChildren, at: 0)
+                let range = NSRange(location: 0, length: _customSequenceChildren.count)
+                _outlineView.insertItemsAtIndexes(NSIndexSet(indexesInRange: range), inParent: nil, withAnimation: .SlideDown)
+            } else if customSequences.count == 0 {
+                // Remove everything; capture the range first...
+                let range = NSRange(location: 0, length: _customSequenceChildren.count)
+                _rootChildren.removeRange(Range<Int>(start: 0, end: _customSequenceChildren.count))
+                _customSequenceChildren = []
+                
+                _outlineView.removeItemsAtIndexes(NSIndexSet(indexesInRange: range), inParent: nil, withAnimation: .SlideUp)
+            } else {
+                _outlineView.beginUpdates()
+                // "Diff" the two arrays in a simple way
+                var oldCustomSequences = oldValue
+                var oldCustomSequenceWrappers = _customSequenceChildren
+                for var i = 0; i < customSequences.count; i++ {
+                    if let oldIndex = oldCustomSequences.indexOf(customSequences[i]) {
+                        // Note that as we insert above, the stuff left offset is always lower than index
+                        // Move this item, if needed, and remove it from our items that we know we processed
+                        let oldIndexInTable = i + oldIndex;
+                        let oldWrapperIndex = oldIndexInTable + 1 // Accounts for the header that I insert..I really should make it have a parent/child relationship for header items.
+                        if oldIndexInTable != i {
+                            // +1 is the header offset
+                            _outlineView.moveItemAtIndex(oldWrapperIndex, inParent: nil, toIndex: i+1, inParent: nil)
+                        }
+                        
+                        // oldCustomSequences is really kept around just so I can find the updated indexes. I could probabl do this faster/better...
+                        oldCustomSequences.removeAtIndex(oldIndex)
+                        // Wrappers; one extra offset..
+                        oldCustomSequenceWrappers.removeAtIndex(oldWrapperIndex)
+                    } else {
+                        let wrapperIndex = _customSequenceChildren.count // accounts for the header...
+                        let wrapper = CustomSequencePatternObjectWrapper(relativeFilename: customSequences[i])
+                        // Wasn't around before..so it is new and add it at the end
+                        _customSequenceChildren.append(wrapper)
+                        // It is trickier to find out where to insert it into the root children
+                        _rootChildren.insert(wrapper, atIndex: wrapperIndex)
+                        // And same goes for the outlienview
+                        _outlineView.insertItemsAtIndexes(NSIndexSet(index: wrapperIndex), inParent: nil, withAnimation: .SlideDown)
+                    }
+                }
+                
+                // Remove all the old stuff left; now pushed at the bottom
+                if oldCustomSequenceWrappers.count > 0 {
+                    // again, offset for the header
+                    let range =  NSMakeRange(customSequences.count + 1, oldCustomSequenceWrappers.count);
+                    _outlineView.removeItemsAtIndexes(NSIndexSet(indexesInRange: range), inParent: nil, withAnimation: .SlideUp)
+                }
+                
+                _outlineView.endUpdates()
+            }
+        }
+    }
+    
     func outlineViewSelectionDidChange(notification: NSNotification) {
         _updateAllStateForSelectionChanged()
     }
@@ -90,6 +165,10 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             patternRunner?.loadDynamicBitmapPatternTypeWithFilename(imageItem.relativeFilename, patternSpeed: imageItem.speed, bitmapOptions: imageItem.bitmapPatternOptions)
             patternRunner?.play()
             break
+        case _ as CustomSequencePatternObjectWrapper:
+            // No preview yet...we'd have to download the item
+            patternRunner?.setBlackAndPause()
+            break;
         default:
             break
         }
@@ -246,8 +325,12 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                 let duration: UInt32 = CDPatternDurationForPatternSpeed(item.speed, item.patternType)
 
                 connectedWheel.setDynamicImagePattern(imageItem.relativeFilename, duration: duration, bitmapOptions: imageItem.bitmapPatternOptions)
-            default: break
-                
+            case let sequenceItem as CustomSequencePatternObjectWrapper:
+                connectedWheel.playPatternSequence(sequenceItem.relativeFilename)
+                break;
+
+            default:
+                break
             }
         }
     }
@@ -268,6 +351,8 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                 } else {
                     return nil
                 }
+            case let programmedItem as CustomSequencePatternObjectWrapper:
+                return programmedItem
             default:
                 return nil
             }

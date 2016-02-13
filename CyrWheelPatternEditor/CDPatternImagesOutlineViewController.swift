@@ -47,7 +47,9 @@ extension Array {
 //}
 
 class HeaderPatternObjectWrapper : CDPatternItemHeaderWrapper {
-    
+    init(label: String) {
+        super.init(patternType: LEDPatternTypeCount, label: label)
+    }
 }
 
 class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
@@ -112,6 +114,15 @@ class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
     }
 }
 
+class CustomSequencePatternObjectWrapper: CDPatternItemHeaderWrapper {
+    init (relativeFilename: String) {
+        // Pattern type is ignored..
+        self.relativeFilename = relativeFilename
+        super.init(patternType: LEDPatternTypeCount, label: relativeFilename)
+    }
+    var relativeFilename: String
+    
+}
 
 class ProgrammedPatternObjectWrapper: CDPatternItemHeaderWrapper {
     
@@ -153,7 +164,7 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     @IBOutlet weak var _outlineView: NSOutlineView!
     
     private let _ignoredPatternTypes: [LEDPatternType] = [LEDPatternTypeCount, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
-    private var _rootChildren: [CDPatternItemHeaderWrapper] = []
+    internal var _rootChildren: [CDPatternItemHeaderWrapper] = []
     
     private func _loadPatternTypeArray() -> [CDPatternItemHeaderWrapper] {
         return ProgrammedPatternObjectWrapper.allSortedProgrammedPatternsIgnoring(LEDPatternType.nonSelectablePatternTypes)
@@ -200,16 +211,15 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
         let programmedPatterns = _loadPatternTypeArray()
-        let programmedPatternGroupObject = HeaderPatternObjectWrapper(patternType: LEDPatternTypeCount, label: "Programmed Patterns")
+        let programmedPatternGroupObject = HeaderPatternObjectWrapper(label: "Programmed Patterns")
         _rootChildren = [programmedPatternGroupObject]
         _rootChildren.appendContentsOf(programmedPatterns)
         
         let rootPatternImages = _loadRootPatternImages()
         if let rootImages = rootPatternImages.children {
             // Only at the image dir if we have images..
-            let imagePatternGroupObject = HeaderPatternObjectWrapper(patternType: LEDPatternTypeCount, label: "Image Patterns")
+            let imagePatternGroupObject = HeaderPatternObjectWrapper(label: "Image Patterns")
             _rootChildren.append(imagePatternGroupObject)
             let a: [CDPatternItemHeaderWrapper] = rootImages
 //            _rootChildren.appendContentsOf(rootImages) // why doesn't this work??
