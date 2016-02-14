@@ -778,6 +778,7 @@
 				OTHER_CFLAGS = (
 					"-DPATTERN_EDITOR",
 					"-Wno-deprecated-register",
+					"-DACCELEROMETER=0",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.corbinstreehouse.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -805,6 +806,7 @@
 				OTHER_CFLAGS = (
 					"-DPATTERN_EDITOR",
 					"-Wno-deprecated-register",
+					"-DACCELEROMETER=0",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.corbinstreehouse.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
