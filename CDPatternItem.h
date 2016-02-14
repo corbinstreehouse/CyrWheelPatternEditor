@@ -36,9 +36,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL patternSpeedEnabled;
 
 @property (nonatomic) BOOL bitmapOptionsShouldInterpolateStretchedPixels;
-@property (nonatomic) BOOL bitmapOptionsShouldStrechBitmap;
+@property (nonatomic) BOOL bitmapOptionsShouldStretchBitmap;
 @property (nonatomic) BOOL shouldInterpolateToNextRow; // bitmapOptions
 @property (readonly) BOOL bitmapOptionsEnabled;
+@property (nonatomic) BOOL pov;
 
 @property (nonatomic, readonly) NSString *displayName;
 

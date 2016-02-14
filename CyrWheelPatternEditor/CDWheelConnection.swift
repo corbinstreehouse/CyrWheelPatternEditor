@@ -655,6 +655,15 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         _writeWheelUARTCommand(CDWheelUARTCommandSetCurrentPatternBrightnessByRotationalVelocity, with32BitValue: value ? 1 : 0);
     }
     
+    func setCurrentBitmapPatternOptions(valueX: LEDBitmapPatternOptions) {
+        // convert the raw data...
+        var value: LEDBitmapPatternOptions = valueX
+        withUnsafePointer(&value) { (arg: UnsafePointer<LEDBitmapPatternOptions>) in
+            let p: UnsafePointer<UInt32> = UnsafePointer<UInt32>(arg)
+            _writeWheelUARTCommand(CDWheelUARTCommandSetCurrentPatternOptions, with32BitValue: p.memory);
+        }
+    }
+    
     private func _updateBrightnessFromData(value: NSData) {
         self.brightnessEnabled = true;
         _internalUpdate = true;

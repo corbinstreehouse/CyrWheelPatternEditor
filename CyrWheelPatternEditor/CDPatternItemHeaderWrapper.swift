@@ -16,6 +16,25 @@ protocol CDPatternItemHeaderWrapperChanged {
     func patternItemBitmapOptionsChanged(item: CDPatternItemHeaderWrapper)
 }
 
+//extension LEDBitmapPatternOptions: RawRepresentable {
+//    
+//    public typealias RawValue = UInt32
+//    /// Convert from a value of `RawValue`, yielding `nil` iff
+//    /// `rawValue` does not correspond to a value of `Self`.
+//    public init?(rawValue: UInt32) {
+//        
+//    }
+//    /// The corresponding value of the "raw" type.
+//    ///
+//    /// `Self(rawValue: self.rawValue)!` is equivalent to `self`.
+//    public var rawValue: UInt32 {
+//        get {
+//            
+//        }
+//    }
+//
+//}
+
 class CDPatternItemHeaderWrapper: NSObject {
     var delegate: CDPatternItemHeaderWrapperChanged?
     
@@ -51,6 +70,11 @@ class CDPatternItemHeaderWrapper: NSObject {
         } else {
             self.patternName = CDPatternItemNames.nameForPatternType(patternItemHeader.patternType)
         }
+        
+        if self.isBitmapType {
+            self.bitmapPatternOptions = patternItemHeader.patternOptions.bitmapOptions
+        }
+        
         self.delegate = delegate; // set last
     }
     
@@ -105,4 +129,45 @@ class CDPatternItemHeaderWrapper: NSObject {
     }
     // TODO: create a preview image for this item..
     dynamic var image: NSImage? = nil
+    
+    dynamic var isBitmapType: Bool {
+        return self.patternType == LEDPatternTypeBitmap || self.patternType == LEDPatternTypeImageReferencedBitmap
+    }
+    
+    dynamic var shouldStretchBitmap: Bool = false {
+        didSet {
+            delegate?.patternItemBitmapOptionsChanged(self)
+        }
+    }
+    dynamic var shouldInterpolateStretchedPixels: Bool = false {
+        didSet {
+            delegate?.patternItemBitmapOptionsChanged(self)
+        }
+    }
+    dynamic var shouldInterpolateToNextRow: Bool = false {
+        didSet {
+            delegate?.patternItemBitmapOptionsChanged(self)
+        }
+    }
+    
+    dynamic var pov: Bool = false {
+        didSet {
+            delegate?.patternItemBitmapOptionsChanged(self)
+        }
+    }
+    
+    var bitmapPatternOptions: LEDBitmapPatternOptions {
+        get {
+            return LEDBitmapPatternOptions(shouldInterpolateStretchedPixels: shouldInterpolateStretchedPixels ? 1 : 0, shouldStretchBitmap:  shouldStretchBitmap ? 1 : 0,
+                shouldInterpolateToNextRow: shouldInterpolateToNextRow ? 1 : 0,
+                pov: pov ? 1 : 0,
+                reserved: 0)
+        }
+        set(value) {
+            pov = value.pov == 1 ? true : false;
+            shouldStretchBitmap = value.shouldStretchBitmap == 1 ? true : false;
+            shouldInterpolateStretchedPixels = value.shouldInterpolateStretchedPixels == 1 ? true : false
+            shouldInterpolateToNextRow = value.shouldInterpolateToNextRow == 1 ? true : false
+        }
+    }
 }

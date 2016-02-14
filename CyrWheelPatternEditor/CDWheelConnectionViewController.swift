@@ -402,7 +402,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
     func patternItemColorChanged(item: CDPatternItemHeaderWrapper) {
-        // TODO: set the color!!
         let encodedColor = CDEncodedColorTransformer.intFromColor(item.color)
         connectedWheel?.setCurrentPatternColor(UInt32(encodedColor))
     }
@@ -412,10 +411,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
     func patternItemBitmapOptionsChanged(item: CDPatternItemHeaderWrapper) {
-        // TODO
-        NSLog("push options!!");
-//        connectedWheel?.set
-        
+        connectedWheel?.setCurrentBitmapPatternOptions(item.bitmapPatternOptions)
     }
     
     func wheelConnection(wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?) {
