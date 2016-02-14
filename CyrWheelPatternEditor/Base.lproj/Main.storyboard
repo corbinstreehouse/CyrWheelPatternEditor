@@ -900,13 +900,13 @@ DQ
                                             <rect key="frame" x="58" y="144" width="182" height="20"/>
                                             <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="nb3-ej-td3"/>
                                             <connections>
+                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.speed" id="RJt-dX-BxF"/>
                                                 <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.speedEnabled" id="Lre-Yz-j8Y">
                                                     <dictionary key="options">
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.speed" id="RJt-dX-BxF"/>
                                             </connections>
                                         </slider>
                                         <colorWell ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YdC-lt-pFo">
@@ -917,6 +917,7 @@ DQ
                                             </constraints>
                                             <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <connections>
+                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.color" id="qFd-Nt-pBh"/>
                                                 <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.colorEnabled" id="6Kl-0n-ECC">
                                                     <dictionary key="options">
                                                         <integer key="NSMultipleValuesPlaceholder" value="0"/>
@@ -926,7 +927,6 @@ DQ
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.color" id="qFd-Nt-pBh"/>
                                             </connections>
                                         </colorWell>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Biq-J1-EA4">
@@ -937,19 +937,19 @@ DQ
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <connections>
+                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.label" id="eCb-UV-K5G">
+                                                    <dictionary key="options">
+                                                        <string key="NSNotApplicablePlaceholder">[No Pattern Selected]</string>
+                                                        <string key="NSNullPlaceholder">[No Pattern Selected]</string>
+                                                        <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="4yU-WR-OVz">
                                                     <dictionary key="options">
                                                         <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <string key="NSValueTransformerName">NSIsNotNil</string>
-                                                    </dictionary>
-                                                </binding>
-                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.label" id="eCb-UV-K5G">
-                                                    <dictionary key="options">
-                                                        <string key="NSNotApplicablePlaceholder">[No Pattern Selected]</string>
-                                                        <string key="NSNullPlaceholder">[No Pattern Selected]</string>
-                                                        <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                     </dictionary>
                                                 </binding>
                                             </connections>
@@ -977,17 +977,17 @@ DQ
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <connections>
+                                                <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="Xvz-pc-gf7">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSIsNotNil</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection.needsColor" previousBinding="Xvz-pc-gf7" id="vfB-a1-O1R">
                                                     <dictionary key="options">
                                                         <integer key="NSMultipleValuesPlaceholder" value="-1"/>
                                                         <integer key="NSNoSelectionPlaceholder" value="-1"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="-1"/>
                                                         <integer key="NSNullPlaceholder" value="-1"/>
-                                                    </dictionary>
-                                                </binding>
-                                                <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection" id="Xvz-pc-gf7">
-                                                    <dictionary key="options">
-                                                        <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
                                             </connections>
@@ -1056,16 +1056,16 @@ DQ
                                                         <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.shouldStrechBitmap" id="mHj-aB-bD9">
+                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateStretchedPixels" id="rpw-hD-w9j">
                                                     <dictionary key="options">
-                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateStretchedPixels" id="rpw-hD-w9j">
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.shouldStrechBitmap" id="mHj-aB-bD9">
                                                     <dictionary key="options">
+                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
@@ -1089,16 +1089,16 @@ DQ
                                                         <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.shouldStrechBitmap" id="Pyu-Yc-Cne">
+                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateToNextRow" id="6Y2-kn-aCG">
                                                     <dictionary key="options">
-                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateToNextRow" id="6Y2-kn-aCG">
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.shouldStrechBitmap" id="Pyu-Yc-Cne">
                                                     <dictionary key="options">
+                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
@@ -1552,6 +1552,12 @@ DQ
                                                         <rect key="frame" x="237" y="38" width="182" height="20"/>
                                                         <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="AC6-bv-QPR"/>
                                                         <connections>
+                                                            <binding destination="mLl-X1-Dpi" name="enabled" keyPath="currentPatternItem" id="1DX-eK-IcC">
+                                                                <dictionary key="options">
+                                                                    <string key="NSValueTransformerName">NSIsNotNil</string>
+                                                                </dictionary>
+                                                            </binding>
+                                                            <binding destination="mLl-X1-Dpi" name="value" keyPath="currentPatternItem.speed" id="VP7-YH-5fX"/>
                                                             <binding destination="mLl-X1-Dpi" name="enabled2" keyPath="currentPatternItem.speedEnabled" previousBinding="1DX-eK-IcC" id="k98-8F-xcy">
                                                                 <dictionary key="options">
                                                                     <integer key="NSMultipleValuesPlaceholder" value="-1"/>
@@ -1560,12 +1566,6 @@ DQ
                                                                     <integer key="NSNullPlaceholder" value="-1"/>
                                                                 </dictionary>
                                                             </binding>
-                                                            <binding destination="mLl-X1-Dpi" name="enabled" keyPath="currentPatternItem" id="1DX-eK-IcC">
-                                                                <dictionary key="options">
-                                                                    <string key="NSValueTransformerName">NSIsNotNil</string>
-                                                                </dictionary>
-                                                            </binding>
-                                                            <binding destination="mLl-X1-Dpi" name="value" keyPath="currentPatternItem.speed" id="VP7-YH-5fX"/>
                                                         </connections>
                                                     </slider>
                                                     <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="YcO-ms-KTA">
@@ -1576,13 +1576,13 @@ DQ
                                                         </constraints>
                                                         <color key="color" red="0.05813049898" green="0.055541899059999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                         <connections>
+                                                            <binding destination="mLl-X1-Dpi" name="value" keyPath="currentPatternItem.color" id="WcE-Am-T0p"/>
                                                             <binding destination="mLl-X1-Dpi" name="enabled" keyPath="currentPatternItem.colorEnabled" id="rX9-bH-tcR">
                                                                 <dictionary key="options">
                                                                     <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                                     <integer key="NSNullPlaceholder" value="0"/>
                                                                 </dictionary>
                                                             </binding>
-                                                            <binding destination="mLl-X1-Dpi" name="value" keyPath="currentPatternItem.color" id="WcE-Am-T0p"/>
                                                         </connections>
                                                     </colorWell>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eWN-aC-mFP">
@@ -1715,15 +1715,15 @@ DQ
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <connections>
+                                                <binding destination="mLl-X1-Dpi" name="enabled" keyPath="connectedWheel" id="PFV-eA-x7p">
+                                                    <dictionary key="options">
+                                                        <string key="NSValueTransformerName">NSIsNotNil</string>
+                                                    </dictionary>
+                                                </binding>
                                                 <binding destination="mLl-X1-Dpi" name="displayPatternValue1" keyPath="connectedWheel.wheelFPS" id="omF-0j-oZ3">
                                                     <dictionary key="options">
                                                         <string key="NSDisplayPattern">%{value1}@ FPS</string>
                                                         <string key="NSNullPlaceholder">0</string>
-                                                    </dictionary>
-                                                </binding>
-                                                <binding destination="mLl-X1-Dpi" name="enabled" keyPath="connectedWheel" id="PFV-eA-x7p">
-                                                    <dictionary key="options">
-                                                        <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
                                             </connections>
@@ -2434,6 +2434,12 @@ DQ
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="Czp-7i-8nR">
+                                        <dictionary key="options">
+                                            <integer key="NSNullPlaceholder" value="0"/>
+                                        </dictionary>
+                                    </binding>
+                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.bitmapOptionsShouldInterpolateStretchedPixels" id="Lf5-Q8-Ena"/>
                                     <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection.bitmapOptionsShouldStrechBitmap" previousBinding="Czp-7i-8nR" id="Cxr-de-f7Q">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="-1"/>
@@ -2442,12 +2448,6 @@ DQ
                                             <integer key="NSNullPlaceholder" value="-1"/>
                                         </dictionary>
                                     </binding>
-                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="Czp-7i-8nR">
-                                        <dictionary key="options">
-                                            <integer key="NSNullPlaceholder" value="0"/>
-                                        </dictionary>
-                                    </binding>
-                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.bitmapOptionsShouldInterpolateStretchedPixels" id="Lf5-Q8-Ena"/>
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l52-SO-gfb">
@@ -2457,17 +2457,17 @@ DQ
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="sR5-9I-wDT">
+                                        <dictionary key="options">
+                                            <integer key="NSNullPlaceholder" value="0"/>
+                                        </dictionary>
+                                    </binding>
                                     <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection.bitmapOptionsShouldStrechBitmap" previousBinding="sR5-9I-wDT" id="qWR-4f-xZK">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="-1"/>
                                             <integer key="NSNoSelectionPlaceholder" value="-1"/>
                                             <integer key="NSNotApplicablePlaceholder" value="-1"/>
                                             <integer key="NSNullPlaceholder" value="-1"/>
-                                        </dictionary>
-                                    </binding>
-                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="sR5-9I-wDT">
-                                        <dictionary key="options">
-                                            <integer key="NSNullPlaceholder" value="0"/>
                                         </dictionary>
                                     </binding>
                                     <binding destination="heP-6G-9Ue" name="value" keyPath="selection.shouldInterpolateToNextRow" id="4fi-ON-tJY"/>
@@ -2480,17 +2480,17 @@ DQ
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="Pmu-nV-Cz6">
+                                        <dictionary key="options">
+                                            <integer key="NSNullPlaceholder" value="0"/>
+                                        </dictionary>
+                                    </binding>
                                     <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection.bitmapOptionsShouldStrechBitmap" previousBinding="Pmu-nV-Cz6" id="hLv-7v-yzb">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="-1"/>
                                             <integer key="NSNoSelectionPlaceholder" value="-1"/>
                                             <integer key="NSNotApplicablePlaceholder" value="-1"/>
                                             <integer key="NSNullPlaceholder" value="-1"/>
-                                        </dictionary>
-                                    </binding>
-                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="Pmu-nV-Cz6">
-                                        <dictionary key="options">
-                                            <integer key="NSNullPlaceholder" value="0"/>
                                         </dictionary>
                                     </binding>
                                 </connections>
@@ -2606,7 +2606,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wZJ-Op-eAi">
-                                                <rect key="frame" x="610" y="0.0" width="16" height="150"/>
+                                                <rect key="frame" x="611" y="0.0" width="15" height="150"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
@@ -2861,6 +2861,11 @@ DQ
                                 </buttonCell>
                                 <connections>
                                     <action selector="btnUploadFileClicked:" target="ikO-88-XKn" id="5Bh-gg-ryR"/>
+                                    <binding destination="ikO-88-XKn" name="enabled" keyPath="connectedWheel" id="rZu-T1-fNE">
+                                        <dictionary key="options">
+                                            <string key="NSValueTransformerName">NSIsNotNil</string>
+                                        </dictionary>
+                                    </binding>
                                     <binding destination="ikO-88-XKn" name="enabled2" keyPath="connectedWheel.uploading" previousBinding="rZu-T1-fNE" id="JgX-2V-gfQ">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="-1"/>
@@ -2868,11 +2873,6 @@ DQ
                                             <integer key="NSNotApplicablePlaceholder" value="-1"/>
                                             <integer key="NSNullPlaceholder" value="-1"/>
                                             <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                        </dictionary>
-                                    </binding>
-                                    <binding destination="ikO-88-XKn" name="enabled" keyPath="connectedWheel" id="rZu-T1-fNE">
-                                        <dictionary key="options">
-                                            <string key="NSValueTransformerName">NSIsNotNil</string>
                                         </dictionary>
                                     </binding>
                                 </connections>
@@ -2888,7 +2888,15 @@ DQ
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="btnRemoveSelectedSequencesClicked:" target="mLl-X1-Dpi" id="Jce-t9-4x1"/>
+                                    <action selector="btnDeleteClicked:" target="ikO-88-XKn" id="4u4-oG-3dm"/>
+                                    <binding destination="ikO-88-XKn" name="enabled" keyPath="selectedItem.canDelete" id="nHf-ZW-npz">
+                                        <dictionary key="options">
+                                            <integer key="NSMultipleValuesPlaceholder" value="0"/>
+                                            <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                            <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                            <integer key="NSNullPlaceholder" value="0"/>
+                                        </dictionary>
+                                    </binding>
                                 </connections>
                             </button>
                             <box title="Box" boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="t7d-5i-lLt" userLabel="bottom box line">
@@ -2933,6 +2941,7 @@ DQ
                 </viewController>
                 <customObject id="hzd-Os-EUV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="x7G-fz-sgr"/>
+                <userDefaultsController id="nVb-Kp-jQ5"/>
             </objects>
             <point key="canvasLocation" x="160.5" y="2280"/>
         </scene>

@@ -59,9 +59,9 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
         return self.document!.managedObjectContext
     }
     
-    var patternSequence: CDPatternSequence! {
+    var patternSequence: CDPatternSequence? {
         get {
-            return self.document!.patternSequence;
+            return self.document?.patternSequence;
         }
     }
 

@@ -69,7 +69,8 @@ class CDPatternItemHeaderWrapper: NSObject {
         }
     }
 
-    
+    dynamic var canDelete = false;
+
     var patternType: LEDPatternType = LEDPatternTypeCount
 
     // alias...for bindings

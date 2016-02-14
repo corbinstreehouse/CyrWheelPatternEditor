@@ -128,6 +128,7 @@ class CustomSequencePatternObjectWrapper: CDPatternItemHeaderWrapper {
         // Pattern type is ignored..
         self.relativeFilename = relativeFilename
         super.init(patternType: LEDPatternTypeCount, label: relativeFilename)
+        self.canDelete = true;
     }
     var relativeFilename: String
     

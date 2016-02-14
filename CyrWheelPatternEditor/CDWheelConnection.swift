@@ -863,6 +863,17 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         }
     }
     
+    func removeFile(filename: String) {
+        var uartCommand: Int8 = CDWheelUARTCommandDeletePatternSequence.rawValue
+        let dataToSend: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
+        dataToSend.writeString(filename);
+        _startSendingUARTData(dataToSend)
+        // Remove it..
+        if let index = self.customSequences.indexOf(filename) {
+            self.customSequences.removeAtIndex(index)
+        }
+    }
+    
     func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         if characteristic == _uartTransmitCharacteristic {
             // After initial response, start sending the file.....if we  need toooo

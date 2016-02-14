@@ -56,6 +56,17 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         _playTimer = nil
     }
     
+    // for bindings
+    dynamic var selectedItem: CDPatternItemHeaderWrapper? {
+        didSet {
+            detailViewController.representedObject = _outlineView.selectedItem
+            // Make sure we are the delegate
+            if let item = _outlineView.selectedItem as? CDPatternItemHeaderWrapper {
+                item.delegate = self
+            }
+        }
+    }
+    
     func _updateAllStateForSelectionChanged() {
         _updateButtonState()
         // Setup a temporary represention to play in the simulator..
@@ -64,13 +75,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             // Process on a slight delay when from a selection change to avoid pounding the BLTE and making it being unable to keep up..
             _playSelectedItemAfterSlightDelay()
         }
-
-        // Bindings will update based on this..
-        detailViewController.representedObject = _outlineView.selectedItem
-        // Make sure we are the delegate
-        if let item = _outlineView.selectedItem as? CDPatternItemHeaderWrapper {
-            item.delegate = self
-        }
+        self.selectedItem = _outlineView.selectedItem as? CDPatternItemHeaderWrapper
     }
     
     internal var _customSequenceChildren: [CDPatternItemHeaderWrapper] = []
@@ -372,6 +377,31 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             }
         }
     }
+    
+    @IBAction func btnDeleteClicked(sender: NSButton) {
+        if let wheel = self.connectedWheel {
+            if wheel.uploading {
+                return;
+            }
+            
+            guard let item = _outlineView.selectedItem as? CustomSequencePatternObjectWrapper else { return }
+            
+            let alert = NSAlert()
+            alert.messageText = "Are you sure you want to delete the file? You can't undo this."
+            alert.alertStyle = NSAlertStyle.CriticalAlertStyle
+            let buttonOK = alert.addButtonWithTitle("OK")
+            buttonOK.tag = NSModalResponseOK
+            let cancelButton = alert.addButtonWithTitle("Cancel")
+            cancelButton.tag = NSModalResponseCancel
+            
+            alert.beginSheetModalForWindow(self.view.window!, completionHandler: { (r: NSModalResponse) -> Void in
+                if r == NSModalResponseOK {
+                    wheel.removeFile(item.relativeFilename);
+                }
+            })
+        }
+    }
+
     
     private func _uploadAtURL(url: NSURL) {
         if let wheel = self.connectedWheel {
