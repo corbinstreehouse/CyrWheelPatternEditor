@@ -24,7 +24,7 @@ class CDPatternItemHeaderWrapper: NSObject {
         self.speedEnabled = CDPatternItemGetSpeedEnabled(patternType)
     }
     
-    init(patternItemHeader: CDPatternItemHeader, patternItemFilename: String?, delegate: CDPatternItemHeaderWrapperChanged?) {
+    init(patternItemHeader: CDPatternItemHeader, patternItemFilename: String?, patternSequenceFilename: String?, delegate: CDPatternItemHeaderWrapperChanged?) {
         super.init()
         // The name is the string version of what is playing, or the patternItemFilename
         self.patternType = patternItemHeader.patternType
@@ -42,6 +42,8 @@ class CDPatternItemHeaderWrapper: NSObject {
         } else {
             // black looks better when disabled.
         }
+        
+        self.patternSequenceFilename = patternSequenceFilename
 
         self.velocityBasedBrightness = patternItemHeader.shouldSetBrightnessByRotationalVelocity == 0 ? false : true
         if patternItemFilename != nil {
@@ -73,6 +75,8 @@ class CDPatternItemHeaderWrapper: NSObject {
 
     var patternType: LEDPatternType = LEDPatternTypeCount
 
+    dynamic var patternSequenceFilename: String?
+    
     // alias...for bindings
     dynamic var label: String {
         return self.patternName

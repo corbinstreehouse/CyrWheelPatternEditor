@@ -391,7 +391,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     dynamic var currentPatternItem: CDPatternItemHeaderWrapper?
     private func _updateCurrentPatternItem() {
         if let patternItem = connectedWheel?.currentPatternItem {
-            self.currentPatternItem = CDPatternItemHeaderWrapper(patternItemHeader: patternItem, patternItemFilename: connectedWheel?.currentPatternItemFilename, delegate: self)
+            self.currentPatternItem = CDPatternItemHeaderWrapper(patternItemHeader: patternItem, patternItemFilename: connectedWheel?.currentPatternItemFilename, patternSequenceFilename: connectedWheel?.currentPatternSequenceFilename, delegate: self)
         } else {
             self.currentPatternItem = nil
         }

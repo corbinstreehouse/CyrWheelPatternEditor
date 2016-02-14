@@ -1586,7 +1586,7 @@ DQ
                                                         </connections>
                                                     </colorWell>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eWN-aC-mFP">
-                                                        <rect key="frame" x="209" y="15" width="161" height="17"/>
+                                                        <rect key="frame" x="206" y="15" width="161" height="17"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Velocity based brightness" id="pU3-t7-L50">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -1728,6 +1728,17 @@ DQ
                                                 </binding>
                                             </connections>
                                         </textField>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kmQ-Ce-GWC">
+                                            <rect key="frame" x="694" y="492" width="130" height="21"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Sequence Name" id="j65-kr-Dsg">
+                                                <font key="font" metaFont="system" size="17"/>
+                                                <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <connections>
+                                                <binding destination="mLl-X1-Dpi" name="value" keyPath="currentPatternItem.patternSequenceFilename" id="pgu-Cl-K4v"/>
+                                            </connections>
+                                        </textField>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="JNO-sE-V0s" firstAttribute="centerX" secondItem="NkX-gv-hmx" secondAttribute="centerX" id="0Q4-lw-gPD"/>
@@ -1736,9 +1747,11 @@ DQ
                                         <constraint firstAttribute="trailing" secondItem="MOO-Lr-0ss" secondAttribute="trailing" id="Gft-oI-fB3"/>
                                         <constraint firstAttribute="trailing" secondItem="yFc-VW-Tkl" secondAttribute="trailing" id="K7X-IC-hQJ"/>
                                         <constraint firstAttribute="trailing" secondItem="DmI-Aa-b0i" secondAttribute="trailing" constant="27" id="Luo-ra-siu"/>
+                                        <constraint firstItem="Hmk-2m-LMQ" firstAttribute="top" secondItem="kmQ-Ce-GWC" secondAttribute="bottom" constant="3" id="NYz-bi-yRu"/>
                                         <constraint firstItem="yFc-VW-Tkl" firstAttribute="leading" secondItem="NkX-gv-hmx" secondAttribute="leading" id="QfW-y3-IhD"/>
                                         <constraint firstItem="MOO-Lr-0ss" firstAttribute="leading" secondItem="NkX-gv-hmx" secondAttribute="leading" id="RFX-OU-9pj"/>
                                         <constraint firstItem="MOO-Lr-0ss" firstAttribute="top" secondItem="Hmk-2m-LMQ" secondAttribute="bottom" id="TJo-Gj-VqE"/>
+                                        <constraint firstAttribute="trailing" secondItem="kmQ-Ce-GWC" secondAttribute="trailing" constant="9" id="U0l-7a-Vqw"/>
                                         <constraint firstItem="Hmk-2m-LMQ" firstAttribute="top" secondItem="yFc-VW-Tkl" secondAttribute="bottom" constant="73" id="Wbo-UF-eKV"/>
                                         <constraint firstItem="JNO-sE-V0s" firstAttribute="top" secondItem="yFc-VW-Tkl" secondAttribute="bottom" constant="9" id="cpp-do-VQX"/>
                                         <constraint firstItem="DmI-Aa-b0i" firstAttribute="top" secondItem="VmN-Ck-i67" secondAttribute="bottom" id="dOb-CL-rNG"/>
@@ -2606,7 +2619,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wZJ-Op-eAi">
-                                                <rect key="frame" x="611" y="0.0" width="15" height="150"/>
+                                                <rect key="frame" x="610" y="0.0" width="16" height="150"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>

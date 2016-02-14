@@ -53,18 +53,50 @@ extension NSData {
     }
     
     // assumes same architecture...why does this work? I'm confused...
-    func readUInt32(offset: Int = 0) -> UInt32 {
+    func readUInt32AtOffset(offset: Int) -> UInt32 {
         var result: UInt32 = 0
         self.getBytes(&result, range: NSRange(location: offset, length: sizeofValue(result)))
         return result
     }
     
     // filenameLength should NOT include the NULL terminator, but we do read the NULL terminator
-    func readStringOfLength(filenameLength: Int, offset: Int = 0) -> String {
-        let stringData = self.subdataWithRange(NSRange(location: offset, length: filenameLength))
-        let tmpStr = NSString(data: stringData, encoding: NSUTF8StringEncoding) as String!
-        return tmpStr
+    func readStringOfLength(filenameLength: Int, offset: Int = 0) -> String? {
+        if filenameLength > 0 {
+            let stringData = self.subdataWithRange(NSRange(location: offset, length: filenameLength))
+            let tmpStr = NSString(data: stringData, encoding: NSUTF8StringEncoding) as String!
+            return tmpStr
+        } else {
+            return nil
+        }
     }
+    
+    func attemptToReadStringAtOffset(inout offset: Int, inout string: String?) -> Bool {
+        var dataAvailable = self.length - offset
+        if dataAvailable >= sizeof(UInt32) {
+            // we can read the size, so read it
+            let stringLength = Int(readUInt32AtOffset(offset))
+            dataAvailable -= sizeof(UInt32)
+            if stringLength == 0 {
+                offset += sizeof(UInt32)
+                string = nil
+                return true;
+            } else if stringLength > 1024 { // harcoded max length, ugly!
+                NSLog("ERROR reading string (bad length: %d", stringLength)
+                // Error condition.... how to represent this??
+                offset += sizeof(UInt32)
+                string = nil
+                return true
+            } else if dataAvailable >= stringLength {
+                // We can read the string (might be 0)
+                offset += sizeof(UInt32)
+                string = readStringOfLength(stringLength, offset: offset)
+                offset += stringLength
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }
 
 extension NSMutableData {
@@ -157,6 +189,7 @@ class CDDataReader {
 class CDGetCurrentPatternInfoDataReader: CDDataReader {
     
     var currentPatternItemFilename: String? = nil
+    var currentPatternSequenceFilename: String? = nil
     var currentPatternItem: CDPatternItemHeader? = nil
     
     override func parseData(data: NSData) {
@@ -179,37 +212,29 @@ class CDGetCurrentPatternInfoDataReader: CDDataReader {
                 NSLog("BAD PATTERN: %d, subData: %@", patternItemHeader.patternType.rawValue, data.subdataWithRange(NSRange(location:sizeof(CDWheelUARTRecieveCommand), length:data.length-1)))
                 return; // ugly,.
             }
+
+            // Translate an invalidate item to NULL
+            if patternItemHeader.patternType != LEDPatternTypeCount {
+                self.currentPatternItem = patternItemHeader
+            } else {
+                self.currentPatternItem = nil;
+            }
             
-            // Does it have a filename? if so, wait for it..
-            // Stupid thunk...
-            // Add one for the expected NULL terminator
-            let filenameLength = Int(CDPatternItemHeaderGetFilenameLength(&patternItemHeader))
-            if filenameLength > 0 {
-                if dataAvailable >= filenameLength {
-                    self.currentPatternItemFilename = data.readStringOfLength(filenameLength, offset: dataOffset)
-                    DLog("got filename: %@", currentPatternItemFilename!)
-                    self.currentPatternItem = patternItemHeader
-                    dataOffset += filenameLength
+            // Read the filename following the header
+            if data.attemptToReadStringAtOffset(&dataOffset, string: &self.currentPatternItemFilename) {
+                // Then read the sequence name following that name
+                if data.attemptToReadStringAtOffset(&dataOffset, string: &self.currentPatternSequenceFilename) {
+                    // And we are done!
                     completedParsingDataAtOffset(dataOffset)
                 } else {
-                    // not done..
-                    DLog("......filename waiting, dataAvailable: %d, expectedSize: %d", dataAvailable, filenameLength+1);
+                    DLog("......currentPatternSequenceFilename waiting, dataAvailable: %d", dataAvailable);
                 }
             } else {
-                // done!
-                self.currentPatternItemFilename = nil
-                // Translate an invalidate item to NULL
-                if patternItemHeader.patternType != LEDPatternTypeCount {
-                    self.currentPatternItem = patternItemHeader
-                } else {
-                    self.currentPatternItem = nil;
-                }
-                completedParsingDataAtOffset(dataOffset)
+                DLog("......currentPatternItemFilename waiting, dataAvailable: %d", dataAvailable);
             }
         } else {
-            DLog("......waiting, dataAvailable: %d, expectedSize: %d", dataAvailable, expectedSize);
+            DLog("......waiting for header, dataAvailable: %d, expectedSize: %d", dataAvailable, expectedSize);
         }
-
     }
 }
 
@@ -220,54 +245,42 @@ class CDGetCustomSequencesDataReader: CDDataReader {
     var customSequences: [String] = []
     
     override func parseData(data: NSData) {
-        var dataAvailable = data.length
-        if (dataAvailable >= sizeof(CDWheelUARTCustomSequenceData)) {
+        let dataLength = data.length
+        var offset = 0
+        if (dataLength >= sizeof(CDWheelUARTCustomSequenceData)) {
             var header: CDWheelUARTCustomSequenceData = CDWheelUARTCustomSequenceData()
             data.getBytes(&header, length: sizeof(CDWheelUARTCustomSequenceData))
             
-            dataAvailable -= sizeof(CDWheelUARTCustomSequenceData);
-//            var filePacket: CDWheelUARTFilePacket = CDWheelUARTFilePacket()
-            
+            offset += sizeof(CDWheelUARTCustomSequenceData);
+
             let itemCount = Int(header.count)
             if (itemCount > 0) {
-                if (dataAvailable == 0) {
+                if (offset >= dataLength) {
                     return; // waiting...
                 }
                 var tempSequences: [String] = []
                 for (var i = 0; i < itemCount; i++) {
-                    // read in the size and at least a char
-                    if dataAvailable > sizeof(UInt32) {
-                        let filenameLength: Int = Int(data.readUInt32(data.length - dataAvailable));
-                        if (filenameLength > 1024) {
-                            // ERROR..
-                            completedParsingDataAtOffset(data.length)
-                            return;
-                        }
-                        
-                        dataAvailable -= sizeof(UInt32);
-                        if dataAvailable >= filenameLength {
-                            // read in this name, go to the (possible) next
-                            let dataOffset = data.length - dataAvailable
-                            let tmpStr = data.readStringOfLength(filenameLength, offset: dataOffset);
-                            tempSequences.append(tmpStr)
-                            
-                            dataAvailable -= filenameLength
+                    var name: String?
+                    if data.attemptToReadStringAtOffset(&offset, string: &name) {
+                        if let name = name {
+                            tempSequences.append(name)
                         } else {
-                            // not enough data yet
+                            // Error!
+                            completedParsingDataAtOffset(offset)
                             return;
                         }
                     } else {
-                        // not enough data yet return and wait...
+                        // We are waiting..
                         return;
                     }
                 }
                 // If we got here, we should be done!
                 assert(tempSequences.count == itemCount)
                 self.customSequences = tempSequences
-                completedParsingDataAtOffset(data.length - dataAvailable)
+                completedParsingDataAtOffset(offset)
             } else {
                 // No custom items..
-                completedParsingDataAtOffset(data.length - dataAvailable)
+                completedParsingDataAtOffset(offset)
             }
         }
 
@@ -326,6 +339,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     // set before the item..
     var currentPatternItemFilename: String?
+    var currentPatternSequenceFilename: String?
     
     var wheelState: CDWheelState = CDWheelStateNone {
         didSet {
@@ -917,6 +931,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     private func _didCompleteReadOfPatternInfo(dataReader: CDDataReader, unusedData: NSData?) {
         let dataReader = dataReader as! CDGetCurrentPatternInfoDataReader
         self.currentPatternItemFilename = dataReader.currentPatternItemFilename
+        self.currentPatternSequenceFilename = dataReader.currentPatternSequenceFilename
         self.currentPatternItem = dataReader.currentPatternItem
         _commonDataReaderDoneWithUnusedData(unusedData)
         _requestCustomSequencesIfNeeded()

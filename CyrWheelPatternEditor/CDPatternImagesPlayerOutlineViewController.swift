@@ -8,6 +8,11 @@
 
 import Cocoa
 
+extension NSRange {
+    func toRange() -> Range<Int> {
+        return Range<Int>(start: location, end: location + length)
+    }
+}
 
 class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewController, CDWheelConnectionPresenter, CDPatternItemHeaderWrapperChanged, CDWheelConnectionSequencesPresenter {
 
@@ -102,7 +107,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             } else if customSequences.count == 0 {
                 // Remove everything; capture the range first...
                 let range = NSRange(location: 0, length: _customSequenceChildren.count)
-                _rootChildren.removeRange(Range<Int>(start: 0, end: _customSequenceChildren.count))
+                _rootChildren.removeRange(range.toRange())
                 _customSequenceChildren = []
                 
                 _outlineView.removeItemsAtIndexes(NSIndexSet(indexesInRange: range), inParent: nil, withAnimation: .SlideUp)
@@ -110,8 +115,6 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                 _outlineView.beginUpdates()
                 // "Diff" the two arrays in a simple way
                 var oldCustomSequences = oldValue
-                var oldCustomSequenceWrappers = _customSequenceChildren
-                oldCustomSequenceWrappers.removeFirst() // delete the header for simplicity
                 for var i = 0; i < customSequences.count; i++ {
                     if let oldIndex = oldCustomSequences.indexOf(customSequences[i]) {
                         // Note that as we insert above, the stuff left offset is always lower than index
@@ -120,17 +123,21 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                         if oldIndexInTable != i {
                             // +1 is the header offset
                             // Add one for the header...bah...
-                            _outlineView.moveItemAtIndex(oldIndex + 1, inParent: nil, toIndex: i + 1, inParent: nil)
+                            _outlineView.moveItemAtIndex(oldIndexInTable + 1, inParent: nil, toIndex: i + 1, inParent: nil)
+                            // Keep the "model" up to date too
+                            let tmp = _customSequenceChildren[oldIndexInTable + 1]
+                            _customSequenceChildren.removeAtIndex(oldIndexInTable + 1)
+                            _customSequenceChildren.insert(tmp, atIndex: i + 1)
                         }
                         
                         // oldCustomSequences is really kept around just so I can find the updated indexes. I could probabl do this faster/better...
                         oldCustomSequences.removeAtIndex(oldIndex)
-                        oldCustomSequenceWrappers.removeAtIndex(oldIndex)
                     } else {
-                        let wrapperIndex = _customSequenceChildren.count // accounts for the header...
+                        // Insert it at "i"
                         let wrapper = CustomSequencePatternObjectWrapper(relativeFilename: customSequences[i])
+                        let wrapperIndex = i + 1 // accounts for header
                         // Wasn't around before..so it is new and add it at the end
-                        _customSequenceChildren.append(wrapper)
+                        _customSequenceChildren.insert(wrapper, atIndex: wrapperIndex)
                         // It is trickier to find out where to insert it into the root children
                         _rootChildren.insert(wrapper, atIndex: wrapperIndex)
                         // And same goes for the outlienview
@@ -139,10 +146,11 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                 }
                 
                 // Remove all the old stuff left; now pushed at the bottom
-                if oldCustomSequenceWrappers.count > 0 {
+                if oldCustomSequences.count > 0 {
                     // again, offset for the header
-                    let range =  NSMakeRange(customSequences.count + 1, oldCustomSequenceWrappers.count);
+                    let range =  NSMakeRange(customSequences.count + 1, oldCustomSequences.count);
                     _outlineView.removeItemsAtIndexes(NSIndexSet(indexesInRange: range), inParent: nil, withAnimation: .SlideUp)
+                    _customSequenceChildren.removeRange(range.toRange())
                 }
                 
                 _outlineView.endUpdates()
