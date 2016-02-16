@@ -1056,16 +1056,16 @@ DQ
                                                         <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.shouldStretchBitmap" id="Q7W-Qs-ZLF">
+                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateStretchedPixels" id="rpw-hD-w9j">
                                                     <dictionary key="options">
-                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateStretchedPixels" id="rpw-hD-w9j">
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.shouldStretchBitmap" id="Q7W-Qs-ZLF">
                                                     <dictionary key="options">
+                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
@@ -1089,16 +1089,16 @@ DQ
                                                         <string key="NSValueTransformerName">NSIsNotNil</string>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.shouldStretchBitmap" id="coP-Ov-WKe">
+                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateToNextRow" id="6Y2-kn-aCG">
                                                     <dictionary key="options">
-                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
                                                     </dictionary>
                                                 </binding>
-                                                <binding destination="fYl-F9-vf0" name="value" keyPath="representedObject.shouldInterpolateToNextRow" id="6Y2-kn-aCG">
+                                                <binding destination="fYl-F9-vf0" name="enabled" keyPath="representedObject.shouldStretchBitmap" id="coP-Ov-WKe">
                                                     <dictionary key="options">
+                                                        <integer key="NSNoSelectionPlaceholder" value="0"/>
                                                         <integer key="NSNotApplicablePlaceholder" value="0"/>
                                                         <integer key="NSNullPlaceholder" value="0"/>
                                                         <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
@@ -1415,6 +1415,9 @@ DQ
                                                                     <menuItem isSeparatorItem="YES" id="HrX-gV-oiq"/>
                                                                     <menuItem title="Begin Calibrating" tag="5" id="HxN-JE-0WB">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        <connections>
+                                                                            <action selector="menuCommandClicked:" target="mLl-X1-Dpi" id="FEh-zf-ThR"/>
+                                                                        </connections>
                                                                     </menuItem>
                                                                     <menuItem title="End Calibrating" tag="6" id="ZOj-V3-BeK">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
@@ -1424,12 +1427,27 @@ DQ
                                                                     </menuItem>
                                                                     <menuItem title="Cancel Calibrating" tag="7" id="udh-jo-cKo">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        <connections>
+                                                                            <action selector="menuCommandClicked:" target="mLl-X1-Dpi" id="DQy-rT-ZIy"/>
+                                                                        </connections>
+                                                                    </menuItem>
+                                                                    <menuItem title="Begin / End Orientation Data Streaming" tag="7" id="Q0M-mT-5Zi">
+                                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        <connections>
+                                                                            <action selector="menuOrentationStreamingClicked:" target="mLl-X1-Dpi" id="kNk-a6-bxD"/>
+                                                                        </connections>
                                                                     </menuItem>
                                                                     <menuItem title="Begin Saving Data" tag="8" id="5sc-Gf-Ti8">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        <connections>
+                                                                            <action selector="menuCommandClicked:" target="mLl-X1-Dpi" id="JkL-f1-MbV"/>
+                                                                        </connections>
                                                                     </menuItem>
                                                                     <menuItem title="End Saving Data" tag="9" id="mA9-Gu-vqa">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
+                                                                        <connections>
+                                                                            <action selector="menuCommandClicked:" target="mLl-X1-Dpi" id="d5k-n6-iD2"/>
+                                                                        </connections>
                                                                     </menuItem>
                                                                     <menuItem title="Brightness Menu Item" tag="9" id="EK1-FN-ywv">
                                                                         <modifierMask key="keyEquivalentModifierMask"/>
@@ -1669,8 +1687,8 @@ DQ
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
-                                                            <binding destination="mLl-X1-Dpi" name="enabled" keyPath="currentPatternItem.shouldStretchBitmap" id="57a-4C-WpO"/>
                                                             <binding destination="mLl-X1-Dpi" name="value" keyPath="currentPatternItem.shouldInterpolateStretchedPixels" id="CXl-ew-KKb"/>
+                                                            <binding destination="mLl-X1-Dpi" name="enabled" keyPath="currentPatternItem.shouldStretchBitmap" id="57a-4C-WpO"/>
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OZj-f6-e5W">
@@ -1680,8 +1698,8 @@ DQ
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
                                                         <connections>
-                                                            <binding destination="mLl-X1-Dpi" name="enabled" keyPath="currentPatternItem.shouldStretchBitmap" id="W3Q-64-v6V"/>
                                                             <binding destination="mLl-X1-Dpi" name="value" keyPath="currentPatternItem.shouldInterpolateToNextRow" id="R72-9D-tIe"/>
+                                                            <binding destination="mLl-X1-Dpi" name="enabled" keyPath="currentPatternItem.shouldStretchBitmap" id="W3Q-64-v6V"/>
                                                         </connections>
                                                     </button>
                                                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TqR-VS-aeB">
@@ -1780,9 +1798,21 @@ DQ
                                                 <binding destination="mLl-X1-Dpi" name="value" keyPath="currentPatternItem.patternSequenceFilename" id="pgu-Cl-K4v"/>
                                             </connections>
                                         </textField>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Vxe-wZ-DzH">
+                                            <rect key="frame" x="719" y="523" width="103" height="17"/>
+                                            <buttonCell key="cell" type="roundTextured" title="Start/Stop Streaming" bezelStyle="texturedRounded" alignment="center" controlSize="mini" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Q8N-rN-0ba">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="miniSystem"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="menuOrentationStreamingClicked:" target="mLl-X1-Dpi" id="gTx-xM-xyQ"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="JNO-sE-V0s" firstAttribute="centerX" secondItem="NkX-gv-hmx" secondAttribute="centerX" id="0Q4-lw-gPD"/>
+                                        <constraint firstAttribute="trailing" secondItem="Vxe-wZ-DzH" secondAttribute="trailing" constant="9" id="5az-j5-BNF"/>
+                                        <constraint firstItem="Vxe-wZ-DzH" firstAttribute="top" secondItem="DmI-Aa-b0i" secondAttribute="bottom" constant="8" id="8t7-1g-vJm"/>
                                         <constraint firstItem="VmN-Ck-i67" firstAttribute="leading" secondItem="NkX-gv-hmx" secondAttribute="leading" id="Bl5-rQ-hRs"/>
                                         <constraint firstAttribute="trailing" secondItem="Hmk-2m-LMQ" secondAttribute="trailing" constant="-2" id="GEX-0y-DMe"/>
                                         <constraint firstAttribute="trailing" secondItem="MOO-Lr-0ss" secondAttribute="trailing" id="Gft-oI-fB3"/>
@@ -2490,6 +2520,12 @@ DQ
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="Czp-7i-8nR">
+                                        <dictionary key="options">
+                                            <integer key="NSNullPlaceholder" value="0"/>
+                                        </dictionary>
+                                    </binding>
+                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.bitmapOptionsShouldInterpolateStretchedPixels" id="Lf5-Q8-Ena"/>
                                     <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection.bitmapOptionsShouldStretchBitmap" previousBinding="Czp-7i-8nR" id="Q6N-d8-VoU">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="-1"/>
@@ -2498,12 +2534,6 @@ DQ
                                             <integer key="NSNullPlaceholder" value="-1"/>
                                         </dictionary>
                                     </binding>
-                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="Czp-7i-8nR">
-                                        <dictionary key="options">
-                                            <integer key="NSNullPlaceholder" value="0"/>
-                                        </dictionary>
-                                    </binding>
-                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.bitmapOptionsShouldInterpolateStretchedPixels" id="Lf5-Q8-Ena"/>
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l52-SO-gfb">
@@ -2513,17 +2543,17 @@ DQ
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
+                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="sR5-9I-wDT">
+                                        <dictionary key="options">
+                                            <integer key="NSNullPlaceholder" value="0"/>
+                                        </dictionary>
+                                    </binding>
                                     <binding destination="heP-6G-9Ue" name="enabled2" keyPath="selection.bitmapOptionsShouldStretchBitmap" previousBinding="sR5-9I-wDT" id="a3O-27-7sa">
                                         <dictionary key="options">
                                             <integer key="NSMultipleValuesPlaceholder" value="-1"/>
                                             <integer key="NSNoSelectionPlaceholder" value="-1"/>
                                             <integer key="NSNotApplicablePlaceholder" value="-1"/>
                                             <integer key="NSNullPlaceholder" value="-1"/>
-                                        </dictionary>
-                                    </binding>
-                                    <binding destination="heP-6G-9Ue" name="enabled" keyPath="selection.bitmapOptionsEnabled" id="sR5-9I-wDT">
-                                        <dictionary key="options">
-                                            <integer key="NSNullPlaceholder" value="0"/>
                                         </dictionary>
                                     </binding>
                                     <binding destination="heP-6G-9Ue" name="value" keyPath="selection.shouldInterpolateToNextRow" id="4fi-ON-tJY"/>

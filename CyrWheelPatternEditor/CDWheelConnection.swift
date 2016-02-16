@@ -287,6 +287,43 @@ class CDGetCustomSequencesDataReader: CDDataReader {
     }
 }
 
+class CDOrientationDataReader: CDDataReader {
+    
+    var result: NSData!
+    
+    override func parseData(data: NSData) {
+        let dataLength = data.length
+        if (dataLength >= sizeof(CDWheelUARTRecieveCommand)) {
+            let startOffset = sizeof(CDWheelUARTRecieveCommand);
+            var endOffset = startOffset;
+            // Read until a CRLF
+            // NOTE: if I make CDWheelUARTRecieveCommand larger than 1 byte, this will fail (or if it has the value \r)
+            var foundCR = false;
+            data.enumerateByteRangesUsingBlock({ (bytes: UnsafePointer<Void>, range: NSRange, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+                let chars = UnsafePointer<UInt8>(bytes)
+                for var i = 0; i < range.length; i++ {
+                    //ugh...\r\n?
+                    if foundCR && chars[i] == 10 {
+//                        Done!
+                        endOffset = range.location + i + 1; // past us
+                        stop.memory = true
+                    } else if chars[i] == 13 {
+                        foundCR = true
+                    } else {
+                        foundCR = false;
+                    }
+                }
+            })
+            if endOffset > startOffset {
+                result = data.subdataWithRange(NSRange(location: startOffset, length: endOffset-startOffset))
+                completedParsingDataAtOffset(endOffset)
+            } else {
+                // waiting..for the newline
+            }
+        }
+    }
+    
+}
 
 let gPatternEditorErrorDomain: String = "PatternEditorErrorDomain"
 let gPatternFilenameExtension: String = "pat"
@@ -886,6 +923,33 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         }
     }
     
+    private var m_orientationStreamingURL: NSURL?
+    dynamic var isStreamingOrentationData: Bool = false
+    func startOrientationStreamingToURL(url: NSURL) {
+        m_orientationStreamingURL = url
+        isStreamingOrentationData = true;
+        _writeWheelUARTCommand(CDWheelUARTCommandOrientationStartStreaming)
+    }
+    func endOrientationStreaming() {
+        m_orientationStreamingURL = nil
+        isStreamingOrentationData = false
+        _writeWheelUARTCommand(CDWheelUARTCommandOrientationEndStreaming)
+    }
+    
+    private func _writeOrientationData(data: NSData, toURL fileURL: NSURL) {
+        do {
+            let fileHandle = try NSFileHandle(forWritingToURL: fileURL)
+            fileHandle.seekToEndOfFile()
+            fileHandle.writeData(data)
+            fileHandle.closeFile()
+            
+        } catch let error as NSError {
+//            NSApp.presentError(error)
+            NSLog("Can't write to log file: %@", error)
+        }
+    }
+    
+    
     func removeFile(filename: String) {
         var uartCommand: Int8 = CDWheelUARTCommandDeletePatternSequence.rawValue
         let dataToSend: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
@@ -953,6 +1017,17 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         _commonDataReaderDoneWithUnusedData(unusedData)
     }
     
+    private func _didCompleteOrientationRead(dataReader: CDDataReader, unusedData: NSData?) {
+        let dataReader = dataReader as! CDOrientationDataReader
+        // m_orientationStreamingURL might be reset
+        if let url = m_orientationStreamingURL {
+            _writeOrientationData(dataReader.result, toURL: url)
+        }
+        
+        _commonDataReaderDoneWithUnusedData(unusedData)
+    }
+
+    
     private func _didFailDataReader(dataReadre: CDDataReader) {
         _dataReader = nil;
     }
@@ -977,6 +1052,10 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             uploading = false
             _requestedCustomSequences = false;
             _requestCustomSequencesIfNeeded()
+            break;
+        case CDWheelUARTRecieveCommandOrientationData:
+            _dataReader = CDOrientationDataReader(completionHandler: _didCompleteOrientationRead, timeoutHandler: _didFailDataReader);
+            _dataReader!.addData(data)
             break;
         default:
             // An invalid value; we drop the data
@@ -1009,7 +1088,10 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         if error != nil {
             // TODO: present the error...make sure they aren't piling up
-            debugPrint("didUpdateValueForCharacteristic error:\(error)!")
+            // not sure why _uartRecieveCharacteristic kicks this off
+            if characteristic != _uartRecieveCharacteristic {
+                debugPrint("didUpdateValueForCharacteristic error:\(error)!")
+            }
             return;
         }
         

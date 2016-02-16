@@ -242,6 +242,25 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         connectedWheel?.sendCommand(CDWheelCommand(sender.tag));
     }
     
+    @IBAction func menuOrentationStreamingClicked(sender: AnyObject!) {
+        if let wheel = connectedWheel {
+            if wheel.isStreamingOrentationData {
+                wheel.endOrientationStreaming()
+            } else {
+                let url = NSURL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+                let dataURL = url.URLByAppendingPathComponent("OrientationData.csv", isDirectory: false)
+                // Create the file empty if it doesn't exist
+                let fileManager = NSFileManager.defaultManager()
+                if !fileManager.fileExistsAtPath(dataURL.path!) {
+                    fileManager.createFileAtPath(dataURL.path!, contents: nil, attributes: [:])
+                }
+
+                wheel.startOrientationStreamingToURL(dataURL)
+                NSWorkspace.sharedWorkspace().selectFile(dataURL.path, inFileViewerRootedAtPath: "")
+            }
+        }
+    }
+    
     @IBAction func menuCommandClicked(sender: NSMenuItem) {
         connectedWheel?.sendCommand(CDWheelCommand(sender.tag));
     }
