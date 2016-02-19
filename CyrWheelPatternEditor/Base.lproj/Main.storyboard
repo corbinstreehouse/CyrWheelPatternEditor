@@ -672,6 +672,162 @@
             </objects>
             <point key="canvasLocation" x="23.5" y="349.5"/>
         </scene>
+        <!--Wheel File Manager View Controller-->
+        <scene sceneID="Anm-ia-Feg">
+            <objects>
+                <viewController id="OW5-lj-8si" customClass="CDWheelFileManagerViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="5KB-VR-5ni">
+                        <rect key="frame" x="0.0" y="0.0" width="715" height="480"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <box fixedFrame="YES" title="Box" boxType="custom" borderType="none" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="Fjg-XW-3at">
+                                <rect key="frame" x="0.0" y="110" width="610" height="370"/>
+                                <view key="contentView" ambiguous="YES" id="Nym-1n-TYD">
+                                    <rect key="frame" x="0.0" y="0.0" width="610" height="370"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <box fixedFrame="YES" title="Box" boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="aUJ-1V-qoJ" userLabel="Top line box">
+                                            <rect key="frame" x="0.0" y="230" width="610" height="2"/>
+                                            <view key="contentView" ambiguous="YES" id="UNI-c2-hFI">
+                                                <rect key="frame" x="0.0" y="0.0" width="610" height="2"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </view>
+                                            <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                            <color key="fillColor" white="0.08585885067" alpha="1" colorSpace="calibratedWhite"/>
+                                        </box>
+                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6n0-sA-7F6">
+                                            <rect key="frame" x="231" y="13" width="148" height="40"/>
+                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Loading..." id="tsW-0a-pPK">
+                                                <font key="font" metaFont="system" size="33"/>
+                                                <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wvt-Px-1in">
+                                            <rect key="frame" x="50" y="13" width="80" height="32"/>
+                                            <buttonCell key="cell" type="push" title="Delete" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yA6-ky-dnM">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zy1-Qx-HLq">
+                                            <rect key="frame" x="502" y="7" width="101" height="32"/>
+                                            <buttonCell key="cell" type="push" title="Download" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="O0c-Ex-6Eg">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="btnDownloadClicked:" target="OW5-lj-8si" id="ew9-o8-EoP"/>
+                                            </connections>
+                                        </button>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="umc-5R-iFf">
+                                            <rect key="frame" x="418" y="7" width="84" height="32"/>
+                                            <buttonCell key="cell" type="push" title="Upload" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="IZb-bc-yX5">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                        </button>
+                                        <box fixedFrame="YES" title="Box" boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="dKC-dn-1CD" userLabel="Bottom line Box">
+                                            <rect key="frame" x="0.0" y="48" width="610" height="2"/>
+                                            <view key="contentView" ambiguous="YES" id="fL5-7b-ayi">
+                                                <rect key="frame" x="0.0" y="0.0" width="610" height="2"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </view>
+                                            <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                            <color key="fillColor" white="0.08585885067" alpha="1" colorSpace="calibratedWhite"/>
+                                        </box>
+                                        <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GOb-iv-nn2">
+                                            <rect key="frame" x="0.0" y="85" width="502" height="138"/>
+                                            <clipView key="contentView" ambiguous="YES" id="o44-Av-cC3">
+                                                <rect key="frame" x="0.0" y="0.0" width="502" height="138"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="22" viewBased="YES" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="plV-Np-ejX" id="ryv-xA-jxg">
+                                                        <rect key="frame" x="0.0" y="0.0" width="502" height="138"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <size key="intercellSpacing" width="3" height="2"/>
+                                                        <color key="backgroundColor" white="0.144230525" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                                        <tableColumns>
+                                                            <tableColumn width="499" minWidth="40" maxWidth="1000" id="plV-Np-ejX">
+                                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
+                                                                    <font key="font" metaFont="smallSystem"/>
+                                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                                </tableHeaderCell>
+                                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="smx-6t-y0s">
+                                                                    <font key="font" metaFont="system"/>
+                                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                </textFieldCell>
+                                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                                <prototypeCellViews>
+                                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="rWd-H0-Kua">
+                                                                        <rect key="frame" x="1" y="1" width="499" height="22"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="szr-L7-bDl">
+                                                                            <font key="font" metaFont="system" size="18"/>
+                                                                            <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                        </textFieldCell>
+                                                                    </textField>
+                                                                </prototypeCellViews>
+                                                            </tableColumn>
+                                                        </tableColumns>
+                                                        <connections>
+                                                            <outlet property="dataSource" destination="OW5-lj-8si" id="hdx-f6-g9M"/>
+                                                            <outlet property="delegate" destination="OW5-lj-8si" id="ueI-Ov-y1m"/>
+                                                        </connections>
+                                                    </outlineView>
+                                                </subviews>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </clipView>
+                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="WUb-gv-z3N">
+                                                <rect key="frame" x="1" y="119" width="223" height="15"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="Y6V-SP-ynt">
+                                                <rect key="frame" x="224" y="17" width="15" height="102"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                            </scroller>
+                                        </scrollView>
+                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ARC-kl-BTz">
+                                            <rect key="frame" x="83" y="302" width="285" height="24"/>
+                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Not done ...cuz BT is too slow..." id="tEK-Go-Qfn">
+                                                <font key="font" metaFont="system" size="20"/>
+                                                <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <connections>
+                                                <binding destination="OW5-lj-8si" name="value" keyPath="connectedWheel.title" id="DCE-oB-JLg"/>
+                                            </connections>
+                                        </textField>
+                                    </subviews>
+                                </view>
+                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                <color key="fillColor" red="0.16220360989999999" green="0.16220840810000001" blue="0.1622058451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </box>
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5DW-CY-wnp">
+                                <rect key="frame" x="8" y="446" width="206" height="24"/>
+                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Cyr Wheel Connection" id="xwc-oN-om9">
+                                    <font key="font" metaFont="system" size="20"/>
+                                    <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="OW5-lj-8si" name="value" keyPath="connectedWheel.title" id="cxX-WI-dZy"/>
+                                </connections>
+                            </textField>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="_fileOutlineView" destination="ryv-xA-jxg" id="h1O-on-UEd"/>
+                    </connections>
+                </viewController>
+                <customObject id="lvz-dP-IP7" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="860.5" y="685"/>
+        </scene>
         <!--Wheel Connection Chooser View Controller-->
         <scene sceneID="gF1-cC-4t3">
             <objects>
@@ -851,7 +1007,7 @@ DQ
                 </viewController>
                 <customObject id="tD9-z3-zhi" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="909" y="857"/>
+            <point key="canvasLocation" x="827" y="1191"/>
         </scene>
         <!--Wheel Player Detail View Controller-->
         <scene sceneID="OUu-LX-NNI">
@@ -1392,7 +1548,7 @@ DQ
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="24" id="7tm-i9-Zxc"/>
                                                         </constraints>
-                                                        <popUpButtonCell key="cell" type="smallSquare" bezelStyle="smallSquare" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" altersStateOfSelectedItem="NO" id="eJV-g1-O7t" customClass="CDPopupButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                        <popUpButtonCell key="cell" type="smallSquare" bezelStyle="smallSquare" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" altersStateOfSelectedItem="NO" selectedItem="cLE-La-QSs" id="eJV-g1-O7t" customClass="CDPopupButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                             <font key="font" metaFont="menu"/>
                                                             <menu key="menu" id="Zje-HU-fZl">

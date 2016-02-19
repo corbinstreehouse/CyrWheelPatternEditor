@@ -10,27 +10,10 @@ import Cocoa
 import CoreBluetooth
 
 protocol CDWheelConnectionDelegate {
-    // complete reload or new values
-//    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequenceFilenames filenmames: [String])
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeState: CDWheelState)
     func wheelConnection(wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?)
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequences: [String])
-    
-    // adding values
-//    func wheelConnection(wheelConnection: CDWheelConnection, didAddFilenames filenmames: String, atIndexes indexesAdded: NSIndexSet);
-    // removing values
-//    func wheelConnection(wheelConnection: CDWheelConnection, didRemoveFilenamesAtIndexes indexesRemoved: NSIndexSet);
 }
-
-// TODO: Default implementation is to do nothing
-//extension CDWheelConnectionDelegate {
-//    func numericValueForObject(object: DelegatingObject) -> Int {
-//        return 0
-//    }
-//    func objectShouldDoMoreWork(object: DelegatingObject) -> Bool {
-//        return false
-//    }	
-//}
 
 let BT_DEBUG = 0
 func DLog(format: String, _ args: CVarArgType...) {
@@ -240,50 +223,39 @@ class CDGetCurrentPatternInfoDataReader: CDDataReader {
 
 
 
-class CDGetCustomSequencesDataReader: CDDataReader {
+class CDGetFilenamesDataReader: CDDataReader {
     
-    var customSequences: [String] = []
+    var filenames: [String] = []
+    var scannerOffset: Int = 1 // go past the first byte in the data indicating what we are doing
     
     override func parseData(data: NSData) {
         let dataLength = data.length
-        var offset = 0
-        if (dataLength >= sizeof(CDWheelUARTCustomSequenceData)) {
-            var header: CDWheelUARTCustomSequenceData = CDWheelUARTCustomSequenceData()
-            data.getBytes(&header, length: sizeof(CDWheelUARTCustomSequenceData))
-            
-            offset += sizeof(CDWheelUARTCustomSequenceData);
-
-            let itemCount = Int(header.count)
-            if (itemCount > 0) {
-                if (offset >= dataLength) {
-                    return; // waiting...
-                }
-                var tempSequences: [String] = []
-                for (var i = 0; i < itemCount; i++) {
-                    var name: String?
-                    if data.attemptToReadStringAtOffset(&offset, string: &name) {
-                        if let name = name {
-                            tempSequences.append(name)
-                        } else {
-                            // Error!
-                            completedParsingDataAtOffset(offset)
-                            return;
-                        }
+        // We have to have at least 2 bytes to read (the CRLF)
+        let dataLeft = dataLength - scannerOffset
+        if dataLeft >= 2 {
+            let bytes = data.bytes
+            let chars = UnsafePointer<UInt8>(bytes)
+            // We stop before the LF so we can read the next char (dataLength - 1)
+            for var i = scannerOffset; i < (dataLength - 1); i++ {
+                if chars[i] == 13 && chars[i+1] == 10 {
+                    // Found a filename!
+                    let filenameLength = i - scannerOffset
+                    if filenameLength > 0 {
+                        let stringRange = NSRange(location: scannerOffset, length: filenameLength)
+                        let stringData = data.subdataWithRange(stringRange)
+                        let tmpStr = NSString(data: stringData, encoding: NSUTF8StringEncoding) as String!
+                        filenames.append(tmpStr)
+                        scannerOffset += filenameLength + 2 // Go past the CR LF
                     } else {
-                        // We are waiting..
-                        return;
+                        // We are done! we just read a CRLF and nothing more.
+                        scannerOffset += filenameLength + 2 // Go past the CR LF
+                        completedParsingDataAtOffset(scannerOffset)
+                        break;
                     }
                 }
-                // If we got here, we should be done!
-                assert(tempSequences.count == itemCount)
-                self.customSequences = tempSequences
-                completedParsingDataAtOffset(offset)
-            } else {
-                // No custom items..
-                completedParsingDataAtOffset(offset)
             }
+            
         }
-
     }
 }
 
@@ -329,6 +301,23 @@ let gPatternEditorErrorDomain: String = "PatternEditorErrorDomain"
 let gPatternFilenameExtension: String = "pat"
 let gSequenceEditorExtension: String = "cyrwheel"
 
+// Simple organization..children not used yet..
+// It is an NSObject so we can feed it to NSOutlineView items
+class CDWheelFileObject: NSObject {
+    var filename: NSString
+    var label: String
+    weak var parent: CDWheelFileObject?
+    var children: [CDWheelFileObject] = []
+    
+    init(filename: String, parent: CDWheelFileObject?) {
+        self.filename = filename
+        self.parent = parent;
+        let s = filename as NSString
+        self.label = s.lastPathComponent
+    }
+}
+
+
 class CDWheelConnection: NSObject, CBPeripheralDelegate {
     private let uartServiceUUID = CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E") // From AdaFruit's docs
     private let wheelServiceUUID = CBUUID(string: kLEDWheelServiceUUID)
@@ -348,7 +337,6 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     private var _uartTransmitCharacteristic: CBCharacteristic?
     private var _uartRecieveCharacteristic: CBCharacteristic?
     private var _fpsChar: CBCharacteristic?
-    
 
     internal var delegate: CDWheelConnectionDelegate?
 
@@ -387,6 +375,18 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     var customSequences: [String] = [] {
         didSet {
             delegate?.wheelConnection(self, didChangeSequences: customSequences)
+        }
+    }
+    
+    // For all files, I used CDWheelFileObject representation. I could move customSequences to this..
+    private var _rootFileObject: CDWheelFileObject? = nil
+    var rootFileObject: CDWheelFileObject? {
+        get {
+            if _rootFileObject == nil {
+                _rootFileObject = CDWheelFileObject(filename: "/", parent: nil)
+                // request here..
+            }
+            return _rootFileObject
         }
     }
     
@@ -785,7 +785,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 _uartTransmitCharacteristic = characteristic;
                 commandEnabled = true;
             } else if (uuid.isEqual(uartReceiveCharacteristicUUID)) {
-                _uartRecieveCharacteristic = characteristic;
+                _uartRecieveCharacteristic = characteristic; // TODO: only notify?? no read of the value
                 watchChar();
             } else if (uuid.isEqual(fpsCharUUID)) {
                 _fpsChar = characteristic;
@@ -931,7 +931,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         _writeWheelUARTCommand(CDWheelUARTCommandOrientationStartStreaming)
     }
     func endOrientationStreaming() {
-        m_orientationStreamingURL = nil
+//        m_orientationStreamingURL = nil
         isStreamingOrentationData = false
         _writeWheelUARTCommand(CDWheelUARTCommandOrientationEndStreaming)
     }
@@ -1011,12 +1011,12 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     
     private func _didCompleteReadOfCustomSequences(dataReader: CDDataReader, unusedData: NSData?) {
-        let dataReader = dataReader as! CDGetCustomSequencesDataReader
-        self.customSequences = dataReader.customSequences
+        let dataReader = dataReader as! CDGetFilenamesDataReader
+        self.customSequences = dataReader.filenames
         
         _commonDataReaderDoneWithUnusedData(unusedData)
     }
-    
+        
     private func _didCompleteOrientationRead(dataReader: CDDataReader, unusedData: NSData?) {
         let dataReader = dataReader as! CDOrientationDataReader
         // m_orientationStreamingURL might be reset
@@ -1045,7 +1045,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             _dataReader = CDGetCurrentPatternInfoDataReader(completionHandler: _didCompleteReadOfPatternInfo, timeoutHandler: _didFailDataReader);
             _dataReader!.addData(data)
         case CDWheelUARTRecieveCommandCustomSequences:
-            _dataReader = CDGetCustomSequencesDataReader(completionHandler: _didCompleteReadOfCustomSequences, timeoutHandler: _didFailDataReader);
+            _dataReader = CDGetFilenamesDataReader(completionHandler: _didCompleteReadOfCustomSequences, timeoutHandler: _didFailDataReader);
             _dataReader!.addData(data)
         case CDWheelUARTRecieveCommandUploadSequenceFinished:
             // TODO: read success/failure?
