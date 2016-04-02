@@ -272,6 +272,7 @@ class CDOrientationDataReader: CDDataReader {
             // NOTE: if I make CDWheelUARTRecieveCommand larger than 1 byte, this will fail (or if it has the value \r)
             var foundCR = false;
             data.enumerateByteRangesUsingBlock({ (bytes: UnsafePointer<Void>, range: NSRange, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+                // CDGetFilenamesDataReader does this better
                 let chars = UnsafePointer<UInt8>(bytes)
                 for var i = 0; i < range.length; i++ {
                     //ugh...\r\n?

@@ -42,6 +42,7 @@
 		9DA21BA21C3C9A200047E8C1 /* CDWheelPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA21BA11C3C9A200047E8C1 /* CDWheelPreviewViewController.swift */; };
 		9DA685B219417089003631F6 /* LEDPatterns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DA685B119417089003631F6 /* LEDPatterns.cpp */; };
 		9DA685B4194176B6003631F6 /* lib8tion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DA685B3194176B6003631F6 /* lib8tion.cpp */; };
+		9DB503931C7EAAA00079155D /* CDBaseOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DB503911C7EAAA00079155D /* CDBaseOrientation.cpp */; };
 		9DBB2A7518A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7318A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm */; };
 		9DBB2A7618A2F21A00C44C7C /* CDPatternSimulatorWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7418A2F21A00C44C7C /* CDPatternSimulatorWindowController.xib */; };
 		9DBB2A7D18A2F4E000C44C7C /* CDPatternSimulatorDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9DBB2A7B18A2F4E000C44C7C /* CDPatternSimulatorDocument.mm */; };
@@ -61,7 +62,6 @@
 		9DCE4EC119D4F349002664D9 /* CDTimeValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DCE4EC019D4F349002664D9 /* CDTimeValueTransformer.m */; };
 		9DD0BFAD1C4F1DBB00C1DA43 /* CDPatternEditorBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD0BFAC1C4F1DBB00C1DA43 /* CDPatternEditorBottomBar.swift */; };
 		9DD0BFAF1C4F2F1B00C1DA43 /* CDPatternSequenceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD0BFAE1C4F2F1B00C1DA43 /* CDPatternSequenceProtocols.swift */; };
-		9DD394D6191EB2FD00B77A4F /* CDOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DD394D5191EB2FD00B77A4F /* CDOrientation.cpp */; };
 		9DE5C4D71C66590200E0B96C /* CDWheelPlayerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE5C4D61C66590200E0B96C /* CDWheelPlayerDetailViewController.swift */; };
 		9DE5C4D91C67A93200E0B96C /* CDPatternItemHeaderWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE5C4D81C67A93200E0B96C /* CDPatternItemHeaderWrapper.swift */; };
 		9DE5C4DB1C67AA0700E0B96C /* DarkOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE5C4DA1C67AA0700E0B96C /* DarkOutlineView.swift */; };
@@ -81,6 +81,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		9D5855C41CB02A3E00971D64 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D5855C01CB02A3E00971D64 /* MobileWheelConnection.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9D5855A91CB02A3E00971D64;
+			remoteInfo = MobileWheelConnection;
+		};
 		9DFBAC381888EDFC00737C2F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9DFBAC051888EDFC00737C2F /* Project object */;
@@ -138,6 +145,7 @@
 		9D500A2318BD88E8003BD8C2 /* CDEncodedColorTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDEncodedColorTransformer.h; sourceTree = "<group>"; };
 		9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDEncodedColorTransformer.mm; sourceTree = "<group>"; };
 		9D5706C31C3E0A7B0094D2F0 /* CDTimelineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDTimelineItem.h; sourceTree = "<group>"; };
+		9D5855C01CB02A3E00971D64 /* MobileWheelConnection.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MobileWheelConnection.xcodeproj; path = MobileWheelConnection/MobileWheelConnection.xcodeproj; sourceTree = "<group>"; };
 		9D62EAAE1C332C1500BFB916 /* CDPatternEditorWindowController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorWindowController2.swift; sourceTree = "<group>"; };
 		9D62EAB01C332C2D00BFB916 /* CDPatternEditorContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorContentViewController.swift; sourceTree = "<group>"; };
 		9D6408161C55C73D006D3083 /* CDNoWidthSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDNoWidthSplitView.swift; path = ../CDNoWidthSplitView.swift; sourceTree = "<group>"; };
@@ -173,6 +181,8 @@
 		9DA685B3194176B6003631F6 /* lib8tion.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = lib8tion.cpp; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/lib8tion.cpp; sourceTree = "<group>"; };
 		9DAF74F31C2CE35F00B43F75 /* FastLED.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FastLED.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/FastLED.h; sourceTree = "<group>"; };
 		9DAF74F41C2CE71E00B43F75 /* led_sysdefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = led_sysdefs.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/led_sysdefs.h; sourceTree = "<group>"; };
+		9DB503911C7EAAA00079155D /* CDBaseOrientation.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = CDBaseOrientation.cpp; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDBaseOrientation.cpp; sourceTree = "<group>"; };
+		9DB503921C7EAAA00079155D /* CDBaseOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDBaseOrientation.h; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDBaseOrientation.h; sourceTree = "<group>"; };
 		9DBB2A7218A2F21A00C44C7C /* CDPatternSimulatorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternSimulatorWindowController.h; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.h; sourceTree = "<group>"; };
 		9DBB2A7318A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CDPatternSimulatorWindowController.mm; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.mm; sourceTree = "<group>"; };
 		9DBB2A7418A2F21A00C44C7C /* CDPatternSimulatorWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CDPatternSimulatorWindowController.xib; path = CyrWheelPatternEditor/CDPatternSimulatorWindowController.xib; sourceTree = "<group>"; };
@@ -209,8 +219,6 @@
 		9DCE4EC519D52D28002664D9 /* colorpalettes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = colorpalettes.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/FastLED/colorpalettes.h; sourceTree = "<group>"; };
 		9DD0BFAC1C4F1DBB00C1DA43 /* CDPatternEditorBottomBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorBottomBar.swift; sourceTree = "<group>"; };
 		9DD0BFAE1C4F2F1B00C1DA43 /* CDPatternSequenceProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternSequenceProtocols.swift; sourceTree = "<group>"; };
-		9DD394D5191EB2FD00B77A4F /* CDOrientation.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = CDOrientation.cpp; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDOrientation.cpp; sourceTree = "<group>"; };
-		9DD394D7191EB30400B77A4F /* CDOrientation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDOrientation.h; path = ../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDOrientation.h; sourceTree = "<group>"; };
 		9DD394D8191EDE3000B77A4F /* CDDocument2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CDDocument2.xcdatamodel; sourceTree = "<group>"; };
 		9DE5C4D61C66590200E0B96C /* CDWheelPlayerDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDWheelPlayerDetailViewController.swift; path = ../CDWheelPlayerDetailViewController.swift; sourceTree = "<group>"; };
 		9DE5C4D81C67A93200E0B96C /* CDPatternItemHeaderWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternItemHeaderWrapper.swift; sourceTree = "<group>"; };
@@ -259,6 +267,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9D5855C11CB02A3E00971D64 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9D5855C51CB02A3E00971D64 /* MobileWheelConnection.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		9DBB2A7118A2F18300C44C7C /* Simulator */ = {
 			isa = PBXGroup;
 			children = (
@@ -318,8 +334,8 @@
 				9D683E2F1C1139380058EFA0 /* CDPatternSequenceManagerShared.h */,
 				9DBEC63418A2FF0D00A05FB7 /* CWPatternSequenceManager.h */,
 				9DBEC63518A2FF0D00A05FB7 /* CWPatternSequenceManager.cpp */,
-				9DD394D7191EB30400B77A4F /* CDOrientation.h */,
-				9DD394D5191EB2FD00B77A4F /* CDOrientation.cpp */,
+				9DB503911C7EAAA00079155D /* CDBaseOrientation.cpp */,
+				9DB503921C7EAAA00079155D /* CDBaseOrientation.h */,
 				9D211A1B1C3A1DA4006A75FC /* LEDPatternType.h */,
 				9DA685B019417089003631F6 /* LEDPatterns.h */,
 				9DA685B119417089003631F6 /* LEDPatterns.cpp */,
@@ -335,6 +351,7 @@
 		9DFBAC041888EDFC00737C2F = {
 			isa = PBXGroup;
 			children = (
+				9D5855C01CB02A3E00971D64 /* MobileWheelConnection.xcodeproj */,
 				9DBB2A7118A2F18300C44C7C /* Simulator */,
 				9DFBAC161888EDFC00737C2F /* CyrWheelPatternEditor */,
 				9DFBAC3A1888EDFC00737C2F /* CyrWheelPatternEditorTests */,
@@ -532,6 +549,12 @@
 			mainGroup = 9DFBAC041888EDFC00737C2F;
 			productRefGroup = 9DFBAC0E1888EDFC00737C2F /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 9D5855C11CB02A3E00971D64 /* Products */;
+					ProjectRef = 9D5855C01CB02A3E00971D64 /* MobileWheelConnection.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				9DFBAC0C1888EDFC00737C2F /* CyrWheelPatternEditor */,
@@ -539,6 +562,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		9D5855C51CB02A3E00971D64 /* MobileWheelConnection.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = MobileWheelConnection.app;
+			remoteRef = 9D5855C41CB02A3E00971D64 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9DFBAC0B1888EDFC00737C2F /* Resources */ = {
@@ -603,7 +636,6 @@
 				9D84FEBD1C65AF52004165A9 /* CDWheelPlayerSplitViewController.swift in Sources */,
 				9D931EB41C35D0B80065222F /* CDPatternSequenceSplitViewController.swift in Sources */,
 				9DBD8040189B525300A6A067 /* CDPatternItemViewController.mm in Sources */,
-				9DD394D6191EB2FD00B77A4F /* CDOrientation.cpp in Sources */,
 				9D7995C71C537DB8008D5818 /* CDPatternImagesOutlineViewController.swift in Sources */,
 				9DBB2A7518A2F21A00C44C7C /* CDPatternSimulatorWindowController.mm in Sources */,
 				9DD0BFAF1C4F2F1B00C1DA43 /* CDPatternSequenceProtocols.swift in Sources */,
@@ -616,6 +648,7 @@
 				9D1612ED1C3CB0AD00B7A890 /* CDPatternRunner.mm in Sources */,
 				9D97757F1C005BB3002D78EE /* CDWheelConnectionWindowController.swift in Sources */,
 				9D683E2C1C0FF0AC0058EFA0 /* CDRolloverButton.swift in Sources */,
+				9DB503931C7EAAA00079155D /* CDBaseOrientation.cpp in Sources */,
 				9DA21BA21C3C9A200047E8C1 /* CDWheelPreviewViewController.swift in Sources */,
 				9DE5C4DD1C698B7C00E0B96C /* CDEditorCyrWheelViewController.swift in Sources */,
 				9DBEC63618A2FF0D00A05FB7 /* CWPatternSequenceManager.cpp in Sources */,

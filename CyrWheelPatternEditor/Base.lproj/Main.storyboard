@@ -783,11 +783,11 @@
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="WUb-gv-z3N">
-                                                <rect key="frame" x="1" y="119" width="223" height="15"/>
+                                                <rect key="frame" x="0.0" y="-16" width="0.0" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="Y6V-SP-ynt">
-                                                <rect key="frame" x="224" y="17" width="15" height="102"/>
+                                                <rect key="frame" x="-16" y="0.0" width="16" height="0.0"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
@@ -2841,7 +2841,7 @@ DQ
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="wZJ-Op-eAi">
-                                                <rect key="frame" x="611" y="0.0" width="15" height="150"/>
+                                                <rect key="frame" x="610" y="0.0" width="16" height="150"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
