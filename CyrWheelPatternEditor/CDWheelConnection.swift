@@ -6,7 +6,7 @@
 //  Copyright © 2015 Corbin Dunn. All rights reserved.
 //
 
-import Cocoa
+import Foundation
 import CoreBluetooth
 
 protocol CDWheelConnectionDelegate {
@@ -872,7 +872,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
 //    }
 
     
-    dynamic var uploading: Bool = false;
+    dynamic private(set) var uploading: Bool = false;
     
     /*
     
@@ -882,7 +882,10 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     data
     */
     
-    func _writeNewSequenceFileWithData(dataToWrite: NSData, filename: String) {
+    internal func writeNewSequenceFileWithData(dataToWrite: NSData, filename: String) {
+        assert(!uploading)
+        uploading = true;
+        
         DLog("uploading file...")
         // Write the command as an 8-bit value..
         var uartCommand: Int8 = CDWheelUARTCommandUploadSequence.rawValue
@@ -900,28 +903,6 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         _startSendingUARTData(dataToSend)
         
         // TODO: timeout!!
-    }
-    
-    func uploadFile(url: NSURL, filename: String) {
-        
-        assert(!uploading)
-        uploading = true;
-
-        // If it is a cyrwheel file... load it into data..and upload that
-        if url.pathExtension != "pat" {
-            do {
-                let document = try CDDocument(contentsOfURL: url, ofType: "public.cyrwheelpattern")
-                let data = document.exportToData();
-                _writeNewSequenceFileWithData(data, filename: filename)
-            } catch let error as NSError {
-                NSApp.presentError(error)
-            }
-        } else if let dataToWrite = NSData(contentsOfURL: url) {
-            _writeNewSequenceFileWithData(dataToWrite, filename: filename)
-        } else {
-            // error can't open file...
-            NSLog("can't open URL for writing: %@", url);
-        }
     }
     
     private var m_orientationStreamingURL: NSURL?

@@ -18,6 +18,7 @@
 		9D4FCB33193C2E090000DE28 /* colorutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D4FCB31193C2E090000DE28 /* colorutils.cpp */; };
 		9D4FCB36193C2E100000DE28 /* hsv2rgb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D4FCB34193C2E100000DE28 /* hsv2rgb.cpp */; };
 		9D500A2518BD88E8003BD8C2 /* CDEncodedColorTransformer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */; };
+		9D5855D01CB0449000971D64 /* CDDesktopWheelConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5855CF1CB0449000971D64 /* CDDesktopWheelConnection.swift */; };
 		9D62EAAF1C332C1500BFB916 /* CDPatternEditorWindowController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62EAAE1C332C1500BFB916 /* CDPatternEditorWindowController2.swift */; };
 		9D62EAB11C332C2D00BFB916 /* CDPatternEditorContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62EAB01C332C2D00BFB916 /* CDPatternEditorContentViewController.swift */; };
 		9D6408171C55C73D006D3083 /* CDNoWidthSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6408161C55C73D006D3083 /* CDNoWidthSplitView.swift */; };
@@ -146,6 +147,7 @@
 		9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDEncodedColorTransformer.mm; sourceTree = "<group>"; };
 		9D5706C31C3E0A7B0094D2F0 /* CDTimelineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDTimelineItem.h; sourceTree = "<group>"; };
 		9D5855C01CB02A3E00971D64 /* MobileWheelConnection.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MobileWheelConnection.xcodeproj; path = MobileWheelConnection/MobileWheelConnection.xcodeproj; sourceTree = "<group>"; };
+		9D5855CF1CB0449000971D64 /* CDDesktopWheelConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDDesktopWheelConnection.swift; sourceTree = "<group>"; };
 		9D62EAAE1C332C1500BFB916 /* CDPatternEditorWindowController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorWindowController2.swift; sourceTree = "<group>"; };
 		9D62EAB01C332C2D00BFB916 /* CDPatternEditorContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorContentViewController.swift; sourceTree = "<group>"; };
 		9D6408161C55C73D006D3083 /* CDNoWidthSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDNoWidthSplitView.swift; path = ../CDNoWidthSplitView.swift; sourceTree = "<group>"; };
@@ -275,6 +277,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		9D5855C61CB02FBF00971D64 /* OSX */ = {
+			isa = PBXGroup;
+			children = (
+				9DBB2A7118A2F18300C44C7C /* Simulator */,
+				9DFBAC161888EDFC00737C2F /* CyrWheelPatternEditor */,
+				9DFBAC3A1888EDFC00737C2F /* CyrWheelPatternEditorTests */,
+				9DFBAC0F1888EDFC00737C2F /* Frameworks */,
+				9DFBAC0E1888EDFC00737C2F /* Products */,
+			);
+			name = OSX;
+			sourceTree = "<group>";
+		};
 		9DBB2A7118A2F18300C44C7C /* Simulator */ = {
 			isa = PBXGroup;
 			children = (
@@ -351,12 +365,8 @@
 		9DFBAC041888EDFC00737C2F = {
 			isa = PBXGroup;
 			children = (
+				9D5855C61CB02FBF00971D64 /* OSX */,
 				9D5855C01CB02A3E00971D64 /* MobileWheelConnection.xcodeproj */,
-				9DBB2A7118A2F18300C44C7C /* Simulator */,
-				9DFBAC161888EDFC00737C2F /* CyrWheelPatternEditor */,
-				9DFBAC3A1888EDFC00737C2F /* CyrWheelPatternEditorTests */,
-				9DFBAC0F1888EDFC00737C2F /* Frameworks */,
-				9DFBAC0E1888EDFC00737C2F /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -406,6 +416,7 @@
 				9DE5C4D61C66590200E0B96C /* CDWheelPlayerDetailViewController.swift */,
 				9DE5C4DA1C67AA0700E0B96C /* DarkOutlineView.swift */,
 				9D9775821C0223E3002D78EE /* CDWheelConnection.swift */,
+				9D5855CF1CB0449000971D64 /* CDDesktopWheelConnection.swift */,
 				9DD0BFAC1C4F1DBB00C1DA43 /* CDPatternEditorBottomBar.swift */,
 				9DD0BFAE1C4F2F1B00C1DA43 /* CDPatternSequenceProtocols.swift */,
 				9DA21BA11C3C9A200047E8C1 /* CDWheelPreviewViewController.swift */,
@@ -653,6 +664,7 @@
 				9DE5C4DD1C698B7C00E0B96C /* CDEditorCyrWheelViewController.swift in Sources */,
 				9DBEC63618A2FF0D00A05FB7 /* CWPatternSequenceManager.cpp in Sources */,
 				9D4FCB30193C29DB0000DE28 /* CDSimulatorLEDPatterns.cpp in Sources */,
+				9D5855D01CB0449000971D64 /* CDDesktopWheelConnection.swift in Sources */,
 				9D0EF1CD1BFEE406002C687E /* CDAppDelegate.swift in Sources */,
 				9D9775811C0175C6002D78EE /* CDWheelConnectionChooserViewController.swift in Sources */,
 				9DE5C4DB1C67AA0700E0B96C /* DarkOutlineView.swift in Sources */,

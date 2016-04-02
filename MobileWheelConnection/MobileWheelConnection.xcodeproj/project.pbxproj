@@ -13,6 +13,7 @@
 		9D5855B41CB02A3E00971D64 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D5855B21CB02A3E00971D64 /* Main.storyboard */; };
 		9D5855B61CB02A3E00971D64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D5855B51CB02A3E00971D64 /* Assets.xcassets */; };
 		9D5855B91CB02A3E00971D64 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D5855B71CB02A3E00971D64 /* LaunchScreen.storyboard */; };
+		9D5855C81CB0301100971D64 /* CDWheelConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5855C71CB0301100971D64 /* CDWheelConnection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,12 @@
 		9D5855B51CB02A3E00971D64 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9D5855B81CB02A3E00971D64 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9D5855BA1CB02A3E00971D64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9D5855C71CB0301100971D64 /* CDWheelConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDWheelConnection.swift; path = ../CyrWheelPatternEditor/CDWheelConnection.swift; sourceTree = "<group>"; };
+		9D5855CA1CB0304400971D64 /* CDPatternSequenceManagerShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDPatternSequenceManagerShared.h; path = /corbin/Projects/CyrWheelPatternEditor/../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternSequenceManagerShared.h; sourceTree = "<absolute>"; };
+		9D5855CB1CB0306000971D64 /* CDPatternData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternData.h; path = /corbin/Projects/CyrWheelPatternEditor/CyrWheelPatternEditor/../../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternData.h; sourceTree = "<absolute>"; };
+		9D5855CC1CB030A600971D64 /* MobileWheel-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MobileWheel-Bridging-Header.h"; sourceTree = "<group>"; };
+		9D5855CD1CB0315E00971D64 /* CDWheelBluetoothShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDWheelBluetoothShared.h; path = /corbin/Projects/CyrWheelPatternEditor/../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDWheelBluetoothShared.h; sourceTree = "<absolute>"; };
+		9D5855CE1CB0316700971D64 /* LEDPatternType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LEDPatternType.h; path = /corbin/Projects/CyrWheelPatternEditor/../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatternType.h; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +47,7 @@
 		9D5855A01CB02A3E00971D64 = {
 			isa = PBXGroup;
 			children = (
+				9D5855C91CB0303500971D64 /* Shared */,
 				9D5855AB1CB02A3E00971D64 /* MobileWheelConnection */,
 				9D5855AA1CB02A3E00971D64 /* Products */,
 			);
@@ -63,8 +71,21 @@
 				9D5855B51CB02A3E00971D64 /* Assets.xcassets */,
 				9D5855B71CB02A3E00971D64 /* LaunchScreen.storyboard */,
 				9D5855BA1CB02A3E00971D64 /* Info.plist */,
+				9D5855CC1CB030A600971D64 /* MobileWheel-Bridging-Header.h */,
 			);
 			path = MobileWheelConnection;
+			sourceTree = "<group>";
+		};
+		9D5855C91CB0303500971D64 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				9D5855CB1CB0306000971D64 /* CDPatternData.h */,
+				9D5855CA1CB0304400971D64 /* CDPatternSequenceManagerShared.h */,
+				9D5855C71CB0301100971D64 /* CDWheelConnection.swift */,
+				9D5855CD1CB0315E00971D64 /* CDWheelBluetoothShared.h */,
+				9D5855CE1CB0316700971D64 /* LEDPatternType.h */,
+			);
+			name = Shared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,6 +161,7 @@
 			files = (
 				9D5855B11CB02A3E00971D64 /* DetailViewController.swift in Sources */,
 				9D5855AF1CB02A3E00971D64 /* MasterViewController.swift in Sources */,
+				9D5855C81CB0301100971D64 /* CDWheelConnection.swift in Sources */,
 				9D5855AD1CB02A3E00971D64 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -257,6 +279,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.corbinstreehouse.MobileWheelConnection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MobileWheelConnection/MobileWheel-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -268,6 +291,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.corbinstreehouse.MobileWheelConnection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MobileWheelConnection/MobileWheel-Bridging-Header.h";
 			};
 			name = Release;
 		};
