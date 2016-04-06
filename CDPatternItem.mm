@@ -197,6 +197,7 @@ BOOL CDPatternTypeNeedsColor(LEDPatternType patternType) {
         case LEDPatternTypeWave:
         case LEDPatternTypeRotatingBottomGlow:
         case LEDPatternTypeSolidColor:
+        case LEDPatternTypeBlink:
             return YES;
         default:
             return NO;
