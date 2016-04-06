@@ -2959,11 +2959,14 @@ DQ
                                                             <rect key="frame" x="1" y="1" width="314" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xGA-Lc-8DE">
-                                                                    <rect key="frame" x="3" y="2" width="14" height="14"/>
+                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xGA-Lc-8DE">
+                                                                    <rect key="frame" x="3" y="1" width="16" height="16"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="50" id="Zhr-mM-SC8"/>
+                                                                    </constraints>
                                                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="vT7-m2-8qG"/>
                                                                     <connections>
-                                                                        <binding destination="mQ9-Rh-3ca" name="data" keyPath="objectValue.image" id="oIx-iZ-8Ah"/>
+                                                                        <binding destination="mQ9-Rh-3ca" name="value" keyPath="objectValue.image" id="Z5S-sY-VmN"/>
                                                                     </connections>
                                                                 </imageView>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R4w-lk-eMJ">
@@ -2982,7 +2985,7 @@ DQ
                                                                 <constraint firstItem="xGA-Lc-8DE" firstAttribute="leading" secondItem="mQ9-Rh-3ca" secondAttribute="leading" constant="3" id="Aln-b0-Q0i"/>
                                                                 <constraint firstItem="R4w-lk-eMJ" firstAttribute="centerY" secondItem="mQ9-Rh-3ca" secondAttribute="centerY" constant="-1" id="Co4-sQ-y5T"/>
                                                                 <constraint firstAttribute="trailing" secondItem="R4w-lk-eMJ" secondAttribute="trailing" constant="3" id="GGW-hm-eFX"/>
-                                                                <constraint firstItem="R4w-lk-eMJ" firstAttribute="leading" secondItem="xGA-Lc-8DE" secondAttribute="trailing" constant="3" id="cPy-HO-Lgb"/>
+                                                                <constraint firstItem="R4w-lk-eMJ" firstAttribute="leading" secondItem="xGA-Lc-8DE" secondAttribute="trailing" constant="1" id="cPy-HO-Lgb"/>
                                                                 <constraint firstItem="xGA-Lc-8DE" firstAttribute="centerY" secondItem="mQ9-Rh-3ca" secondAttribute="centerY" id="jhP-rg-2s5"/>
                                                             </constraints>
                                                             <connections>
