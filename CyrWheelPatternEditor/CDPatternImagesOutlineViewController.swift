@@ -72,7 +72,6 @@ class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
         } catch {
           
         }
-        // TODO: load the image!
     }
     
     var relativeFilename: String {
@@ -90,6 +89,17 @@ class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
             return result
         }
     }
+    
+    var _cachedImage: NSImage? = nil
+    dynamic override var image: NSImage? {
+        get {
+            if _cachedImage == nil {
+                _cachedImage = NSImage(byReferencingURL: self.url);
+            }
+            return _cachedImage;
+        }
+    }
+
 }
 
 class CustomSequencePatternObjectWrapper: CDPatternItemHeaderWrapper {

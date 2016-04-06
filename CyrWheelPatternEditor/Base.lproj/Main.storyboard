@@ -2223,17 +2223,17 @@ DQ
             <objects>
                 <viewController id="CRd-6Z-uQU" customClass="CDPatternImagesEditorOutlineViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="UuN-43-ydd">
-                        <rect key="frame" x="0.0" y="0.0" width="216" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="216" height="423"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="21" horizontalPageScroll="10" verticalLineScroll="21" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1In-Pd-QSU">
-                                <rect key="frame" x="0.0" y="0.0" width="216" height="300"/>
+                                <rect key="frame" x="0.0" y="117" width="216" height="306"/>
                                 <clipView key="contentView" id="AA9-s4-GV6">
-                                    <rect key="frame" x="0.0" y="0.0" width="216" height="300"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="216" height="306"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="LyL-O3-uPk" id="oSJ-F7-3Ql" customClass="DarkOutlineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="216" height="0.0"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="216" height="306"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" white="0.144230525" alpha="1" colorSpace="calibratedWhite"/>
@@ -2256,15 +2256,18 @@ DQ
                                                             <rect key="frame" x="1" y="1" width="213.22925932891849" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GCj-h2-Zvo">
-                                                                    <rect key="frame" x="3" y="2" width="14" height="14"/>
+                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GCj-h2-Zvo">
+                                                                    <rect key="frame" x="3" y="1" width="16" height="16"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="50" id="CKK-6n-B0i"/>
+                                                                    </constraints>
                                                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="Dnl-4N-h4P"/>
                                                                     <connections>
-                                                                        <binding destination="4Tw-Vh-t5C" name="data" keyPath="objectValue.image" id="H5A-Wh-hAO"/>
+                                                                        <binding destination="4Tw-Vh-t5C" name="value" keyPath="objectValue.image" id="6zq-pL-S0z"/>
                                                                     </connections>
                                                                 </imageView>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bhy-Ca-E8z">
-                                                                    <rect key="frame" x="18" y="1" width="194" height="17"/>
+                                                                    <rect key="frame" x="16" y="1" width="196" height="17"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="FJY-8C-QGf">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -2277,7 +2280,7 @@ DQ
                                                             </subviews>
                                                             <constraints>
                                                                 <constraint firstItem="Bhy-Ca-E8z" firstAttribute="centerY" secondItem="4Tw-Vh-t5C" secondAttribute="centerY" constant="-1" id="34Z-F1-gUD"/>
-                                                                <constraint firstItem="Bhy-Ca-E8z" firstAttribute="leading" secondItem="GCj-h2-Zvo" secondAttribute="trailing" constant="3" id="4RV-RY-iuR"/>
+                                                                <constraint firstItem="Bhy-Ca-E8z" firstAttribute="leading" secondItem="GCj-h2-Zvo" secondAttribute="trailing" constant="1" id="4RV-RY-iuR"/>
                                                                 <constraint firstItem="GCj-h2-Zvo" firstAttribute="leading" secondItem="4Tw-Vh-t5C" secondAttribute="leading" constant="3" id="E01-uQ-BbB"/>
                                                                 <constraint firstAttribute="trailing" secondItem="Bhy-Ca-E8z" secondAttribute="trailing" constant="3" id="bhL-8a-7c2"/>
                                                                 <constraint firstItem="GCj-h2-Zvo" firstAttribute="centerY" secondItem="4Tw-Vh-t5C" secondAttribute="centerY" id="gDe-kc-55z"/>
@@ -2343,21 +2346,33 @@ DQ
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LQU-oV-9ih">
+                                <rect key="frame" x="2" y="-3" width="212" height="120"/>
+                                <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="proportionallyUpOrDown" imageFrameStyle="grayBezel" id="4ds-99-efg"/>
+                                <connections>
+                                    <binding destination="heP-6G-9Ue" name="value" keyPath="selection.displayImage" id="dop-7S-1jc"/>
+                                </connections>
+                            </imageView>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="1In-Pd-QSU" secondAttribute="bottom" id="Ijv-4g-mPZ"/>
+                            <constraint firstItem="LQU-oV-9ih" firstAttribute="leading" secondItem="UuN-43-ydd" secondAttribute="leading" constant="5" id="9e4-ks-ThZ"/>
+                            <constraint firstAttribute="bottom" secondItem="1In-Pd-QSU" secondAttribute="bottom" constant="117" id="Ijv-4g-mPZ"/>
                             <constraint firstItem="1In-Pd-QSU" firstAttribute="top" secondItem="UuN-43-ydd" secondAttribute="top" id="Z2T-U5-e4J"/>
+                            <constraint firstAttribute="bottom" secondItem="LQU-oV-9ih" secondAttribute="bottom" id="Zcl-3s-l39"/>
                             <constraint firstItem="1In-Pd-QSU" firstAttribute="leading" secondItem="UuN-43-ydd" secondAttribute="leading" id="cXj-pT-LFY"/>
                             <constraint firstAttribute="trailing" secondItem="1In-Pd-QSU" secondAttribute="trailing" id="oDh-Kk-y7R"/>
+                            <constraint firstItem="LQU-oV-9ih" firstAttribute="top" secondItem="1In-Pd-QSU" secondAttribute="bottom" constant="3" id="sJr-dB-gwd"/>
+                            <constraint firstAttribute="trailing" secondItem="LQU-oV-9ih" secondAttribute="trailing" constant="5" id="tgB-3T-2LD"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="_outlineView" destination="oSJ-F7-3Ql" id="8Rc-pX-jRJ"/>
+                        <outlet property="imgvwPreview" destination="LQU-oV-9ih" id="mqi-Qg-j4I"/>
                     </connections>
                 </viewController>
                 <customObject id="0DA-dP-uov" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2626" y="31"/>
+            <point key="canvasLocation" x="2626" y="92.5"/>
         </scene>
         <!--Editor Cyr Wheel View Controller-->
         <scene sceneID="l63-S3-kDm">
@@ -2716,8 +2731,8 @@ DQ
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3VD-8l-YOo">
-                                <rect key="frame" x="8" y="180" width="99" height="18"/>
-                                <buttonCell key="cell" type="check" title="POV [TODO]" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="XI3-KW-tsM">
+                                <rect key="frame" x="8" y="180" width="49" height="18"/>
+                                <buttonCell key="cell" type="check" title="POV" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="XI3-KW-tsM">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>

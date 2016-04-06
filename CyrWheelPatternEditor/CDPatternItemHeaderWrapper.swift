@@ -128,7 +128,11 @@ class CDPatternItemHeaderWrapper: NSObject {
         }
     }
     // TODO: create a preview image for this item..
-    dynamic var image: NSImage? = nil
+    dynamic var image: NSImage? {
+        get {
+            return nil;
+        }
+    }
     
     dynamic var isBitmapType: Bool {
         return self.patternType == LEDPatternTypeBitmap || self.patternType == LEDPatternTypeImageReferencedBitmap
