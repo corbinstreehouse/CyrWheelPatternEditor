@@ -158,7 +158,8 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    func outlineViewSelectionDidChange(notification: NSNotification) {
+    override func outlineViewSelectionDidChange(notification: NSNotification) {
+        super.outlineViewSelectionDidChange(notification);
         _updateAllStateForSelectionChanged()
     }
 

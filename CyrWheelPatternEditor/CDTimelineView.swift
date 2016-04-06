@@ -110,7 +110,7 @@ class CDTimelineView: NSStackView, NSDraggingSource {
         }
     }
     
-    var _needsUpdate: Bool = false
+    private var _needsUpdate: Bool = false
     
     func reloadData() {
         self.needsLayout = true;
@@ -119,10 +119,19 @@ class CDTimelineView: NSStackView, NSDraggingSource {
         
     }
     
+    private var _selectionChanged = false
+    
     func _doWorkToChangeSelection(work: () -> Void) {
-        self.willChangeValueForKey("selectionIndexes")
+        if (!self.updating) {
+            self.willChangeValueForKey("selectionIndexes")
+        }
         work()
-        self.didChangeValueForKey("selectionIndexes")
+        
+        if (!self.updating) {
+            self.didChangeValueForKey("selectionIndexes")
+        } else {
+            _selectionChanged = true;
+        }
         self.needsDisplay = true
     }
     
@@ -206,6 +215,28 @@ class CDTimelineView: NSStackView, NSDraggingSource {
         }
     }
     
+    private var _updateCount = 0
+    func beginUpdates() {
+        if (_updateCount == 0) {
+            _selectionChanged = false
+        }
+        _updateCount++;
+    }
+    
+    func endUpdates() {
+        _updateCount--;
+        if _updateCount == 0 {
+            if (_selectionChanged) {
+                _selectionChanged = false;
+                self.willChangeValueForKey("selectionIndexes")
+                self.didChangeValueForKey("selectionIndexes")
+            }
+        }
+    }
+    
+    var updating: Bool {
+        return _updateCount > 0
+    }
     
     func _removeIndexFromSelection(index: Int) {
         // Don't go through the "setter"
@@ -228,6 +259,14 @@ class CDTimelineView: NSStackView, NSDraggingSource {
                 self.draggedIndexes = mutableIndexes
             }
         }
+    }
+
+    func removeItemsAtIndexes(indexes: NSIndexSet) {
+        beginUpdates()
+        indexes.enumerateIndexesWithOptions([.Reverse]) { (index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+            self.removeItemAtIndex(index)
+        }
+        endUpdates()        
     }
     
     func removeItemAtIndex(index: Int) {

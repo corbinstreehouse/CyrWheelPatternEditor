@@ -132,9 +132,7 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
     }
     
     func childrenRemovedAtIndexes(indexes: NSIndexSet) {
-        indexes.enumerateIndexesWithOptions([.Reverse]) { (index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
-            self._timelineView.removeItemAtIndex(index)
-        }
+        self._timelineView.removeItemsAtIndexes(indexes);
     }
     
     func childrenReplacedAtIndexes(indexes: NSIndexSet) {

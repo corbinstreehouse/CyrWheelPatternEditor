@@ -151,6 +151,7 @@ extension LEDPatternType {
 class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate {
 
     @IBOutlet weak var _outlineView: NSOutlineView!
+    @IBOutlet weak var imgvwPreview: NSImageView!
     
     private let _ignoredPatternTypes: [LEDPatternType] = [LEDPatternTypeCount, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
     internal var _rootChildren: [CDPatternItemHeaderWrapper] = []
@@ -217,11 +218,25 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
 //        _outlineView.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         _outlineView.reloadData()
         _outlineView.expandItem(nil)
+        self.imgvwPreview.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
     }
     
     
     ///MARK: OutlineView datasource/delegate methods
 
+    
+    func outlineViewSelectionDidChange(notification: NSNotification) {
+        _updatePreview();
+    }
+    
+    private func _updatePreview() {
+        if let item = _outlineView.selectedItem as? ImagePatternObjectWrapper {
+            self.imgvwPreview.image = item.image
+        } else {
+            self.imgvwPreview.image = nil
+        }
+    }
+    
     func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
         if item == nil {
             // the root

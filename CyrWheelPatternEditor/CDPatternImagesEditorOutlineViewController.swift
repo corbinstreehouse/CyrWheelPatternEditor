@@ -10,7 +10,6 @@ import Cocoa
 
 class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewController {
 
-    @IBOutlet weak var imgvwPreview: NSImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +17,6 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
         // Drag and drop setup
         _outlineView.setDraggingSourceOperationMask(NSDragOperation.Every, forLocal: true)
         _outlineView.registerForDraggedTypes([CDPatternItem.pasteboardType()])
-        self.imgvwPreview.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
     }
     
     private func _dataForItemsAtIndexes(indexes: NSIndexSet) -> NSData {
@@ -43,18 +41,6 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
         let doc = _getDocument()
         _enumerateItemsAsPatternItems(indexes) { (patternItem) -> () in
             doc.addPatternItemToChildren(patternItem)
-        }
-    }
-    
-    func outlineViewSelectionDidChange(notification: NSNotification) {
-        _updatePreview();
-    }
-    
-    private func _updatePreview() {
-        if let item = _outlineView.selectedItem as? ImagePatternObjectWrapper {
-            self.imgvwPreview.image = item.image
-        } else {
-            self.imgvwPreview.image = nil
         }
     }
     

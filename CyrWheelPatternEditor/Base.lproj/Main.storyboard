@@ -2347,7 +2347,7 @@ DQ
                                 </scroller>
                             </scrollView>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LQU-oV-9ih">
-                                <rect key="frame" x="2" y="-3" width="212" height="120"/>
+                                <rect key="frame" x="2" y="0.0" width="213" height="117"/>
                                 <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="proportionallyUpOrDown" imageFrameStyle="grayBezel" id="4ds-99-efg"/>
                                 <connections>
                                     <binding destination="heP-6G-9Ue" name="value" keyPath="selection.displayImage" id="dop-7S-1jc"/>
@@ -2358,11 +2358,11 @@ DQ
                             <constraint firstItem="LQU-oV-9ih" firstAttribute="leading" secondItem="UuN-43-ydd" secondAttribute="leading" constant="5" id="9e4-ks-ThZ"/>
                             <constraint firstAttribute="bottom" secondItem="1In-Pd-QSU" secondAttribute="bottom" constant="117" id="Ijv-4g-mPZ"/>
                             <constraint firstItem="1In-Pd-QSU" firstAttribute="top" secondItem="UuN-43-ydd" secondAttribute="top" id="Z2T-U5-e4J"/>
-                            <constraint firstAttribute="bottom" secondItem="LQU-oV-9ih" secondAttribute="bottom" id="Zcl-3s-l39"/>
+                            <constraint firstAttribute="bottom" secondItem="LQU-oV-9ih" secondAttribute="bottom" constant="3" id="Zcl-3s-l39"/>
                             <constraint firstItem="1In-Pd-QSU" firstAttribute="leading" secondItem="UuN-43-ydd" secondAttribute="leading" id="cXj-pT-LFY"/>
                             <constraint firstAttribute="trailing" secondItem="1In-Pd-QSU" secondAttribute="trailing" id="oDh-Kk-y7R"/>
                             <constraint firstItem="LQU-oV-9ih" firstAttribute="top" secondItem="1In-Pd-QSU" secondAttribute="bottom" constant="3" id="sJr-dB-gwd"/>
-                            <constraint firstAttribute="trailing" secondItem="LQU-oV-9ih" secondAttribute="trailing" constant="5" id="tgB-3T-2LD"/>
+                            <constraint firstAttribute="trailing" secondItem="LQU-oV-9ih" secondAttribute="trailing" constant="4" id="tgB-3T-2LD"/>
                         </constraints>
                     </view>
                     <connections>
@@ -2926,17 +2926,17 @@ DQ
             <objects>
                 <viewController id="ikO-88-XKn" customClass="CDPatternImagesPlayerOutlineViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="zZ0-0o-ixA" userLabel="Container View">
-                        <rect key="frame" x="0.0" y="0.0" width="317" height="310"/>
+                        <rect key="frame" x="0.0" y="0.0" width="317" height="452"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="21" horizontalPageScroll="10" verticalLineScroll="21" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RjE-5b-kyY">
-                                <rect key="frame" x="0.0" y="0.0" width="317" height="277"/>
+                                <rect key="frame" x="0.0" y="119" width="317" height="300"/>
                                 <clipView key="contentView" id="9kS-n7-4Mo">
-                                    <rect key="frame" x="0.0" y="0.0" width="317" height="277"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="317" height="300"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="rdk-a7-1px" id="MMI-21-fjJ" customClass="DarkOutlineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="317" height="0.0"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="317" height="300"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" white="0.144230525" alpha="1" colorSpace="calibratedWhite"/>
@@ -3050,7 +3050,7 @@ DQ
                                 </scroller>
                             </scrollView>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Fc2-69-58f">
-                                <rect key="frame" x="6" y="281" width="140" height="21"/>
+                                <rect key="frame" x="6" y="423" width="140" height="21"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Available Patterns" id="7Ez-c8-vhZ">
                                     <font key="font" metaFont="system" size="17"/>
                                     <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -3058,7 +3058,7 @@ DQ
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rDD-Al-8o3" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                <rect key="frame" x="184" y="283" width="18" height="18"/>
+                                <rect key="frame" x="184" y="425" width="18" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="BV0-K3-9WH"/>
                                     <constraint firstAttribute="width" constant="18" id="RBK-cc-3lr"/>
@@ -3073,7 +3073,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="htK-fY-Z2O" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                <rect key="frame" x="210" y="283" width="18" height="18"/>
+                                <rect key="frame" x="210" y="425" width="18" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="M08-Fv-BaM"/>
                                     <constraint firstAttribute="width" constant="18" id="flC-nR-tp6"/>
@@ -3088,7 +3088,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wFm-LW-LNc" userLabel="Rewind Rollover Button" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                <rect key="frame" x="158" y="283" width="18" height="18"/>
+                                <rect key="frame" x="158" y="425" width="18" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="1BA-7z-Uqc"/>
                                     <constraint firstAttribute="width" constant="18" id="Juw-Gg-tug"/>
@@ -3103,7 +3103,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sMu-wQ-6xE" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                <rect key="frame" x="270" y="282" width="18" height="18"/>
+                                <rect key="frame" x="270" y="424" width="18" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="18" id="oFZ-sr-8UF"/>
                                     <constraint firstAttribute="height" constant="18" id="zfg-s8-yZ3"/>
@@ -3131,7 +3131,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dy9-PI-7SA" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                <rect key="frame" x="292" y="282" width="18" height="18"/>
+                                <rect key="frame" x="292" y="424" width="18" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="18" id="5X0-k4-48G"/>
                                     <constraint firstAttribute="height" constant="18" id="8vA-mb-CHR"/>
@@ -3153,7 +3153,7 @@ DQ
                                 </connections>
                             </button>
                             <box title="Box" boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="t7d-5i-lLt" userLabel="bottom box line">
-                                <rect key="frame" x="0.0" y="275" width="317" height="2"/>
+                                <rect key="frame" x="0.0" y="417" width="317" height="2"/>
                                 <view key="contentView" id="nTa-em-Bjm">
                                     <rect key="frame" x="0.0" y="0.0" width="317" height="2"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3164,9 +3164,14 @@ DQ
                                 <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                                 <color key="fillColor" white="0.08585885067" alpha="1" colorSpace="calibratedWhite"/>
                             </box>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3Q7-f6-kmT">
+                                <rect key="frame" x="1" y="1" width="315" height="121"/>
+                                <imageCell key="cell" selectable="YES" editable="YES" alignment="left" imageScaling="proportionallyUpOrDown" imageFrameStyle="grayBezel" id="fHO-oO-ZJe"/>
+                            </imageView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="sMu-wQ-6xE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="htK-fY-Z2O" secondAttribute="trailing" constant="5" id="2ZO-NO-oVo"/>
+                            <constraint firstItem="3Q7-f6-kmT" firstAttribute="top" secondItem="RjE-5b-kyY" secondAttribute="bottom" id="4To-Ef-Nis"/>
                             <constraint firstAttribute="trailing" secondItem="dy9-PI-7SA" secondAttribute="trailing" constant="7" id="4b8-YH-J2x"/>
                             <constraint firstItem="dy9-PI-7SA" firstAttribute="leading" secondItem="sMu-wQ-6xE" secondAttribute="trailing" constant="4" id="8mh-BD-OPq"/>
                             <constraint firstItem="dy9-PI-7SA" firstAttribute="bottom" secondItem="sMu-wQ-6xE" secondAttribute="bottom" id="Egh-ra-pbn"/>
@@ -3178,25 +3183,30 @@ DQ
                             <constraint firstItem="rDD-Al-8o3" firstAttribute="leading" secondItem="wFm-LW-LNc" secondAttribute="trailing" constant="8" id="Teu-zS-NK5"/>
                             <constraint firstItem="t7d-5i-lLt" firstAttribute="top" secondItem="zZ0-0o-ixA" secondAttribute="top" constant="33" id="bCH-kO-mnP"/>
                             <constraint firstItem="RjE-5b-kyY" firstAttribute="top" secondItem="t7d-5i-lLt" secondAttribute="bottom" constant="-2" id="bmb-dO-z5Q"/>
+                            <constraint firstItem="3Q7-f6-kmT" firstAttribute="leading" secondItem="zZ0-0o-ixA" secondAttribute="leading" constant="4" id="dnH-CH-ccM"/>
                             <constraint firstAttribute="trailing" secondItem="RjE-5b-kyY" secondAttribute="trailing" id="fWR-w8-Kn1"/>
-                            <constraint firstAttribute="bottom" secondItem="RjE-5b-kyY" secondAttribute="bottom" id="gPj-ow-y4m"/>
+                            <constraint firstAttribute="bottom" secondItem="RjE-5b-kyY" secondAttribute="bottom" constant="119" id="gPj-ow-y4m"/>
                             <constraint firstItem="t7d-5i-lLt" firstAttribute="top" secondItem="dy9-PI-7SA" secondAttribute="bottom" constant="5" id="hbb-b8-x7Q"/>
                             <constraint firstItem="t7d-5i-lLt" firstAttribute="leading" secondItem="zZ0-0o-ixA" secondAttribute="leading" id="keB-xK-pcF"/>
                             <constraint firstAttribute="trailing" secondItem="t7d-5i-lLt" secondAttribute="trailing" id="laM-et-nu8"/>
                             <constraint firstItem="t7d-5i-lLt" firstAttribute="top" secondItem="wFm-LW-LNc" secondAttribute="bottom" constant="6" id="mBO-wr-BE8"/>
+                            <constraint firstAttribute="bottom" secondItem="3Q7-f6-kmT" secondAttribute="bottom" constant="4" id="mnD-Bm-qWr"/>
                             <constraint firstItem="htK-fY-Z2O" firstAttribute="leading" secondItem="rDD-Al-8o3" secondAttribute="trailing" constant="8" id="p0W-rO-R2g"/>
+                            <constraint firstAttribute="trailing" secondItem="3Q7-f6-kmT" secondAttribute="trailing" constant="4" id="v5s-8T-dj4"/>
                             <constraint firstItem="wFm-LW-LNc" firstAttribute="leading" secondItem="Fc2-69-58f" secondAttribute="trailing" constant="14" id="wjN-9i-tUC"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="_outlineView" destination="MMI-21-fjJ" id="3cE-fT-qI1"/>
+                        <outlet property="imgvwPreview" destination="3Q7-f6-kmT" id="2Fl-eR-D7G"/>
                     </connections>
                 </viewController>
                 <customObject id="hzd-Os-EUV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="x7G-fz-sgr"/>
                 <userDefaultsController id="nVb-Kp-jQ5"/>
+                <userDefaultsController id="ufp-zP-b05"/>
             </objects>
-            <point key="canvasLocation" x="160.5" y="2280"/>
+            <point key="canvasLocation" x="160.5" y="2351"/>
         </scene>
         <!--Wheel Player Split View Controller-->
         <scene sceneID="yYH-rw-fIU">
