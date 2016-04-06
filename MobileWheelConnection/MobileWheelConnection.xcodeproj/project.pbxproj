@@ -14,6 +14,8 @@
 		9D5855B61CB02A3E00971D64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D5855B51CB02A3E00971D64 /* Assets.xcassets */; };
 		9D5855B91CB02A3E00971D64 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D5855B71CB02A3E00971D64 /* LaunchScreen.storyboard */; };
 		9D5855C81CB0301100971D64 /* CDWheelConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5855C71CB0301100971D64 /* CDWheelConnection.swift */; };
+		9D5855D51CB0549600971D64 /* Patterns.framework in Resources */ = {isa = PBXBuildFile; fileRef = 9D5855D31CB0548600971D64 /* Patterns.framework */; };
+		9D76ECCE1CB1605F004B404D /* CDControlsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D76ECCD1CB1605F004B404D /* CDControlsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +33,8 @@
 		9D5855CC1CB030A600971D64 /* MobileWheel-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MobileWheel-Bridging-Header.h"; sourceTree = "<group>"; };
 		9D5855CD1CB0315E00971D64 /* CDWheelBluetoothShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CDWheelBluetoothShared.h; path = /corbin/Projects/CyrWheelPatternEditor/../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDWheelBluetoothShared.h; sourceTree = "<absolute>"; };
 		9D5855CE1CB0316700971D64 /* LEDPatternType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LEDPatternType.h; path = /corbin/Projects/CyrWheelPatternEditor/../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatternType.h; sourceTree = "<absolute>"; };
+		9D5855D31CB0548600971D64 /* Patterns.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Patterns.framework; path = ../CyrWheelPatternEditor/Patterns.framework; sourceTree = "<group>"; };
+		9D76ECCD1CB1605F004B404D /* CDControlsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDControlsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +51,7 @@
 		9D5855A01CB02A3E00971D64 = {
 			isa = PBXGroup;
 			children = (
+				9D5855D31CB0548600971D64 /* Patterns.framework */,
 				9D5855C91CB0303500971D64 /* Shared */,
 				9D5855AB1CB02A3E00971D64 /* MobileWheelConnection */,
 				9D5855AA1CB02A3E00971D64 /* Products */,
@@ -66,6 +71,7 @@
 			children = (
 				9D5855AC1CB02A3E00971D64 /* AppDelegate.swift */,
 				9D5855AE1CB02A3E00971D64 /* MasterViewController.swift */,
+				9D76ECCD1CB1605F004B404D /* CDControlsViewController.swift */,
 				9D5855B01CB02A3E00971D64 /* DetailViewController.swift */,
 				9D5855B21CB02A3E00971D64 /* Main.storyboard */,
 				9D5855B51CB02A3E00971D64 /* Assets.xcassets */,
@@ -146,6 +152,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D5855D51CB0549600971D64 /* Patterns.framework in Resources */,
 				9D5855B91CB02A3E00971D64 /* LaunchScreen.storyboard in Resources */,
 				9D5855B61CB02A3E00971D64 /* Assets.xcassets in Resources */,
 				9D5855B41CB02A3E00971D64 /* Main.storyboard in Resources */,
@@ -159,6 +166,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D76ECCE1CB1605F004B404D /* CDControlsViewController.swift in Sources */,
 				9D5855B11CB02A3E00971D64 /* DetailViewController.swift in Sources */,
 				9D5855AF1CB02A3E00971D64 /* MasterViewController.swift in Sources */,
 				9D5855C81CB0301100971D64 /* CDWheelConnection.swift in Sources */,
@@ -314,6 +322,7 @@
 				9D5855BF1CB02A3E00971D64 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

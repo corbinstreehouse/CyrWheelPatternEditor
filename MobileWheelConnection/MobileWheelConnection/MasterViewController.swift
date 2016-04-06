@@ -12,14 +12,19 @@ class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
     var objects = [AnyObject]()
-
-
+    
+    private var connectedWheel: CDWheelConnection? {
+        didSet {
+//            _fileOutlineView?.reloadData()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.navigationItem.leftBarButtonItem = self.editButtonItem()
+//        self.navigationItem.leftBarButtonItem = self.editButtonItem()
 
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
+        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "connectToWheel:")
         self.navigationItem.rightBarButtonItem = addButton
         if let split = self.splitViewController {
             let controllers = split.viewControllers
@@ -37,10 +42,12 @@ class MasterViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    func insertNewObject(sender: AnyObject) {
-        objects.insert(NSDate(), atIndex: 0)
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+    func connectToWheel(sender: AnyObject) {
+        
+        
+//        objects.insert(NSDate(), atIndex: 0)
+//        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+//        self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
 
     // MARK: - Segues
