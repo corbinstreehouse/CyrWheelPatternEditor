@@ -29,7 +29,16 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
     }
     
     func delete(sender: AnyObject?) {
-        self.patternSequence.removeChildrenAtIndexes(self._timelineView.selectionIndexes)
+        let selection = self._timelineView.selectionIndexes
+        if selection.count > 0 {
+            // Select the next item first (selection is maintained automatically)
+            let lastIndex = selection.lastIndex + 1
+            if lastIndex < _timelineView.numberOfItems {
+                _timelineView.selectionIndexes = NSIndexSet(index: lastIndex)
+            }
+            self.patternSequence.removeChildrenAtIndexes(selection)
+        }
+        
     }
     
     private let _patternItemPBoardType = CDPatternItem.pasteboardType()
