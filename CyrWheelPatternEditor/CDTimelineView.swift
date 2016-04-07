@@ -238,25 +238,34 @@ class CDTimelineView: NSStackView, NSDraggingSource {
         return _updateCount > 0
     }
     
+    func _adjustIndexSetForIndexRemoval(indexSet: NSIndexSet, index: Int) -> NSIndexSet {
+        let mutableIndexes = NSMutableIndexSet(indexSet: indexSet)
+        // Remove that item
+        mutableIndexes.removeIndex(index)
+        // Then move things for all indexes less than it
+        mutableIndexes.shiftIndexesStartingAtIndex(index, by: -1)
+        return mutableIndexes
+    }
+    
     func _removeIndexFromSelection(index: Int) {
         // Don't go through the "setter"
         _doWorkToChangeSelection() {
-            let mutableIndexes = NSMutableIndexSet(indexSet: self._selectionIndexes)
-            mutableIndexes.removeIndex(index)
-            self._selectionIndexes = mutableIndexes;
+            self._selectionIndexes = self._adjustIndexSetForIndexRemoval(self._selectionIndexes, index: index)
             
-            if self._anchorRow == index {
-                if self._selectionIndexes.count > 0 {
-                    self._anchorRow = self._selectionIndexes.firstIndex
-                } else {
-                    self._anchorRow = nil
+            if let anchorRow = self._anchorRow {
+                if anchorRow == index {
+                    if self._selectionIndexes.count > 0 {
+                        self._anchorRow = self._selectionIndexes.firstIndex
+                    } else {
+                        self._anchorRow = nil
+                    }
+                } else if anchorRow > index {
+                    self._anchorRow = anchorRow - 1
                 }
             }
             
             if let draggedIndexes = self.draggedIndexes {
-                let mutableIndexes = NSMutableIndexSet(indexSet: draggedIndexes)
-                mutableIndexes.removeIndex(index)
-                self.draggedIndexes = mutableIndexes
+                self.draggedIndexes = self._adjustIndexSetForIndexRemoval(draggedIndexes, index: index)
             }
         }
     }
