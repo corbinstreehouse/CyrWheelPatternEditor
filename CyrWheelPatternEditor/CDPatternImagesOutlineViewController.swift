@@ -180,12 +180,19 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
                         if let ext = url.pathExtension {
                             if ext.lowercaseString == "bmp" {
                                 children.append(child)
+                                // set it as POV if it is in the Images or Pictures folders
+                                let parentStr = parentItem.label.lowercaseString
+                                if parentStr.containsString("pictures") || parentStr.containsString("images") || parentStr.containsString("pixels") {
+                                    child.pov = true
+                                }
+                                
                             }
                         }
                     }
                 }
             } catch let error as NSError  {
-                NSLog("Error loading children: %@", error)
+                //NSLog("Error loading children: %@", error)
+                NSApp.presentError(error)
             }
             parentItem.children = children
         }
