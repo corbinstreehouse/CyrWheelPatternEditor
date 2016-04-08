@@ -174,9 +174,7 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         return item
     }
     
-    func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {
-        
-        
+    func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {        
         
     }
     

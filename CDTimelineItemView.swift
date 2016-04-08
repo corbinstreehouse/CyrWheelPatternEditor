@@ -324,7 +324,6 @@ class CDTimelineItemView: CDBorderedView {
         
     }
     
-
     override func mouseDown(theEvent: NSEvent) {
         var callSuper = true;
         // Go into resize mode if clicking on the right edge w/no modifiers

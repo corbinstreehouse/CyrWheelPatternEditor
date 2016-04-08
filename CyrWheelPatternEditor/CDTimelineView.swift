@@ -297,7 +297,7 @@ class CDTimelineView: NSStackView, NSDraggingSource {
             // We want to know when the clip view's size changes (via the scrollview) so we can fill the height by changing our intrinsic size that we have
             NSNotificationCenter.defaultCenter().addObserverForName(NSViewFrameDidChangeNotification, object: newSuper, queue: nil, usingBlock: { (note: NSNotification) -> Void in
                 self.invalidateIntrinsicContentSize()
-                // All our vies also depend on our size (for now!)
+                // All our views also depend on our size (for now!)
 //                for view in self.views {
 //                    view.invalidateIntrinsicContentSize()
 //                }
@@ -715,6 +715,10 @@ class CDTimelineView: NSStackView, NSDraggingSource {
         } else if itemCount > 0 {
             _anchorRow = goingForward ? 0 : itemCount - 1
             self.selectionIndexes = NSIndexSet(index: _anchorRow!)
+        }
+        // make it visible
+        if let anchorRow = _anchorRow {
+            self.scrollItemAtIndexToVisible(anchorRow)
         }
         _shouldUpdateAnchorRow = true
     }

@@ -2233,7 +2233,7 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="LyL-O3-uPk" id="oSJ-F7-3Ql" customClass="DarkOutlineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="216" height="306"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="216" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" white="0.144230525" alpha="1" colorSpace="calibratedWhite"/>
@@ -2936,7 +2936,7 @@ DQ
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="rdk-a7-1px" id="MMI-21-fjJ" customClass="DarkOutlineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="317" height="300"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="317" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" white="0.144230525" alpha="1" colorSpace="calibratedWhite"/>
