@@ -351,6 +351,18 @@ NSTimeInterval CDPatternTimeIntervalForPatternSpeed(double patternSpeed, LEDPatt
     }
 }
 
+- (uint32_t)durationInMS {
+    return CDPatternDurationFromTimeInterval(self.duration);
+}
+
+- (void)setDurationInMS:(uint32_t)durationInMS {
+    self.duration = CDPatternTimeIntervalForDuration(durationInMS);
+}
+
++ (NSSet *)keyPathsForValuesAffectingDurationInMS {
+    return [NSSet setWithObject:@"duration"];
+}
+
 uint32_t CDPatternDurationFromTimeInterval(NSTimeInterval patternDuration) {
     return round(patternDuration * 1000);
 }

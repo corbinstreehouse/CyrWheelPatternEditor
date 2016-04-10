@@ -10,7 +10,7 @@
 #define CDTimerlineItem_h
 
 @protocol CDTimelineItem <NSObject>
-@property (nonatomic) NSTimeInterval duration;
+@property (nonatomic) uint32_t durationInMS;
 @end
 
 #endif /* CDTimelineItem_h */

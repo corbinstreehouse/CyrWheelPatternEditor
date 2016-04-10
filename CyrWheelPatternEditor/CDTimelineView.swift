@@ -35,4 +35,37 @@ class CDTimelineView: NSView {
     }
     
     
+    var widthPerMS: CGFloat = CDTimelineItemView.defaultWidthPerSecond / 1000.0 {
+        didSet {
+            _removeAllTimeViews()
+            self.needsLayout = true
+        }
+    }
+    var startingOffset: CGFloat = 4.0; // TODO: use a shared constant or something...
+    
+    override func setFrameSize(newSize: NSSize) {
+        super.setFrameSize(newSize)
+        self.needsLayout = true;
+    }
+    
+    private var _timeViews: [NSTextField] = []
+    
+    func _removeAllTimeViews() {
+        for view in _timeViews {
+            view.removeFromSuperview()
+        }
+        _timeViews = []
+    }
+    
+    func _updateTimeViews() {
+        
+    }
+    
+    override func layout() {
+        super.layout()
+        _updateTimeViews()
+    }
+    
+    
+    
 }

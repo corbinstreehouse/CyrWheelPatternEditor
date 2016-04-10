@@ -26,9 +26,9 @@ class CDTimelineItemView: CDBorderedView {
     static let minWidth: CGFloat = 5.0
     static let cornerRadius: CGFloat = 4.0
     
-    // Each second will be X points on screen
     static let defaultWidthPerSecond: CGFloat = 50.0
     
+    var widthPerMS: CGFloat = CDTimelineItemView.defaultWidthPerSecond / 1000.0
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -52,17 +52,18 @@ class CDTimelineItemView: CDBorderedView {
     }
     
     // weak??
+    let durationKey = "durationInMS"
     var timelineItem: CDTimelineItem! {
         didSet {
             let obj: NSObject = self.timelineItem as! NSObject
-            obj.addObserver(self, forKeyPath: "duration", options: [], context: nil)
+            obj.addObserver(self, forKeyPath: durationKey, options: [], context: nil)
             self.invalidateIntrinsicContentSize()
         }
     }
     
     deinit {
         let obj: NSObject = self.timelineItem as! NSObject
-        obj.removeObserver(self, forKeyPath: "duration")
+        obj.removeObserver(self, forKeyPath: durationKey)
     }
     
     var selected: Bool = false {
@@ -72,23 +73,23 @@ class CDTimelineItemView: CDBorderedView {
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        if keyPath == "duration" {
+        if keyPath == durationKey {
             self.invalidateIntrinsicContentSize();
         }
     }
 
-    private func _widthForDuration(duration: NSTimeInterval) -> CGFloat {
-        return CGFloat(duration) * CDTimelineItemView.defaultWidthPerSecond
+    private func _widthForDuration(duration: UInt32) -> CGFloat {
+        return CGFloat(duration) * self.widthPerMS
     }
     
-    private func _durationForWidth(width: CGFloat) -> NSTimeInterval {
-        return NSTimeInterval(width / CDTimelineItemView.defaultWidthPerSecond)
+    private func _durationForWidth(width: CGFloat) -> Int {
+        return Int(width / self.widthPerMS)
     }
     
     override var intrinsicContentSize: NSSize {
         get {
             var result: NSRect = NSRect(origin: NSZeroPoint, size: super.intrinsicContentSize)
-            result.size.width = _widthForDuration(timelineItem.duration)
+            result.size.width = _widthForDuration(timelineItem.durationInMS)
             if let superview = self.superview {
                 result.size.height = superview.bounds.size.height - TOP_SPACING - BOTTOM_SPACING
             } else {
@@ -189,7 +190,7 @@ class CDTimelineItemView: CDBorderedView {
         
         self.resizing = true
         let startingPoint = theEvent.locationInWindow
-        let startingDuration = timelineItem.duration
+        let startingDuration = Int(timelineItem.durationInMS)
         
         self.window?.trackEventsMatchingMask([NSEventMask.LeftMouseDraggedMask, NSEventMask.LeftMouseUpMask], timeout: NSEventDurationForever, mode: NSDefaultRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
             
@@ -197,9 +198,10 @@ class CDTimelineItemView: CDBorderedView {
             let distanceMoved = currentPoint.x - startingPoint.x
             // cap it at 0...which would be an instantaenous flip...
             let newDuration = max(startingDuration + self._durationForWidth(distanceMoved), 0)
+            let newDurationInMS = UInt32(newDuration)
             
-            if self.timelineItem.duration != newDuration {
-                self.timelineItem.duration = newDuration
+            if self.timelineItem.durationInMS != newDurationInMS {
+                self.timelineItem.durationInMS = newDurationInMS
                 self.invalidateIntrinsicContentSize()
             }
             

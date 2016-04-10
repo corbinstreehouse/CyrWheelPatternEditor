@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSString *imageFilename; // The relative filename
 @property (nonatomic) LEDPatternType patternType;
 @property (nonatomic) double duration; // in seconds
+@property (nonatomic) uint32_t durationInMS; // in MS as what the chip uses
+
 @property (nonatomic) uint32_t encodedColor;
 @property (nonatomic) CDPatternEndCondition patternEndCondition;
 @property (nonatomic) uint32_t shouldSetBrightnessByRotationalVelocity; // Move to options in some way?

@@ -11,6 +11,7 @@ import Cocoa
 class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildrenDelegate, CDTimelineTrackViewDataSource, CDPatternSequencePresenter, CDTimelineTrackViewDraggingSourceDelegate, CDTimelineTrackViewDraggingDestinationDelegate {
 
     @IBOutlet weak var _timelineTrackView: CDTimelineTrackView!
+    @IBOutlet weak var _musicTrackView: CDTimelineTrackView!
     
     private var _childrenObserver: CDPatternSequenceChildrenObserver?;
 

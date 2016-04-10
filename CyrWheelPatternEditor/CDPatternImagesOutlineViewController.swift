@@ -182,7 +182,7 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
                                 children.append(child)
                                 // set it as POV if it is in the Images or Pictures folders
                                 let parentStr = parentItem.label.lowercaseString
-                                if parentStr.containsString("pictures") || parentStr.containsString("images") || parentStr.containsString("pixels") {
+                                if parentStr.containsString("pictures") || parentStr.containsString("images") || parentStr.containsString("pixels") || parentStr.containsString("figures") {
                                     child.pov = true
                                 }
                                 

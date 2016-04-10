@@ -35,8 +35,8 @@ let CDTimelineNoIndex: Int = -1
 //static let selectionBorderWidth: CGFloat = 2
 //static let normalBorderWidth: CGFloat = 1
 
-let TOP_SPACING: CGFloat = 10.0
-let BOTTOM_SPACING: CGFloat = 10.0
+let TOP_SPACING: CGFloat = 0.0
+let BOTTOM_SPACING: CGFloat = 0.0
 
 extension NSEvent {
     var character: Int {
@@ -156,6 +156,15 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
     }
     
+    var widthPerMS: CGFloat = CDTimelineItemView.defaultWidthPerSecond / 1000.0 {
+        didSet {
+            for view in self.views {
+                let view = view as! CDTimelineItemView
+                view.widthPerMS = widthPerMS
+            }
+        }
+    }
+    
     var _timelineItemViewControllers = NSMutableArray()
     
     func _makeTimelineItemViewAtIndex(index: Int, frame: NSRect, timelineItem: CDTimelineItem) -> CDTimelineItemView {
@@ -163,6 +172,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         _timelineItemViewControllers.insertObject(vc, atIndex: index)
         let result = vc.view as! CDTimelineItemView
         result.timelineItem = timelineItem
+        result.widthPerMS = self.widthPerMS
         return result
     }
     
@@ -304,24 +314,22 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
             self.invalidateIntrinsicContentSize()
         }
     }
-//    
-//    override var intrinsicContentSize : NSSize {
-//        get {
-//            var requestedSize = super.intrinsicContentSize
-//            if let superview = self.superview {
-//                let superBounds = superview.bounds;
-//                requestedSize.height = superBounds.size.height;
-//                // fill the height
-//                if requestedSize.width < superBounds.size.width {
-//                    requestedSize.width = superBounds.size.width
-//                }
-//            }
-//            return requestedSize
-//        }
-//    }
 
-    // Static height constant..
-    
+    override var intrinsicContentSize : NSSize {
+        get {
+            var requestedSize = super.intrinsicContentSize
+            // fill the scroll view width
+            if let superview = self.enclosingScrollView {
+                let superBounds = superview.bounds;
+                requestedSize.height = superBounds.size.height;
+                // fill the height
+                if requestedSize.width < superBounds.size.width {
+                    requestedSize.width = superBounds.size.width
+                }
+            }
+            return requestedSize
+        }
+    }
 
     func scrollItemAtIndexToVisible(index: Int) {
         self.layoutSubtreeIfNeeded()
@@ -348,34 +356,36 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
     }
     
+    // old code for highlghting on first responder
     override func updateLayer() {
         guard let layer = self.layer else {
             return;
         }
-        if _isFirstResponder && self.selectionIndexes.count == 0 {
-            layer.borderWidth = 2.0
-            layer.cornerRadius = 2.0
-            layer.borderColor = CDTimelineTrackView.selectedBorderColor.CGColor
-        } else {
-            layer.borderWidth = 0.0
-        }
+//        layer.backgroundColor = NSColor(white: 0, alpha: 0.25).CGColor
+//        if _isFirstResponder && self.selectionIndexes.count == 0 {
+//            layer.borderWidth = 2.0
+//            layer.cornerRadius = 2.0
+//            layer.borderColor = CDTimelineTrackView.selectedBorderColor.CGColor
+//        } else {
+//            layer.borderWidth = 0.0
+//        }
     }
-    
-    private var _isFirstResponder: Bool {
-        return self.window?.firstResponder == self
-    }
-    
-    override func becomeFirstResponder() -> Bool {
-        let r = super.becomeFirstResponder()
-        self.needsDisplay = true
-        return r
-    }
-    
-    override func resignFirstResponder() -> Bool {
-        let r = super.resignFirstResponder()
-        self.needsDisplay = true
-        return r
-    }
+//
+//    private var _isFirstResponder: Bool {
+//        return self.window?.firstResponder == self
+//    }
+//    
+//    override func becomeFirstResponder() -> Bool {
+//        let r = super.becomeFirstResponder()
+//        self.needsDisplay = true
+//        return r
+//    }
+//    
+//    override func resignFirstResponder() -> Bool {
+//        let r = super.resignFirstResponder()
+//        self.needsDisplay = true
+//        return r
+//    }
     
     func _resetAnchorRow() {
         if self.selectionIndexes.count > 0 {
