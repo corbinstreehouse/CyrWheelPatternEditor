@@ -1,5 +1,5 @@
 //
-//  CDTimelineview.swift
+//  CDTimelineTrackView.swift
 //  CyrWheelPatternEditor
 //
 //  Created by corbin dunn on 12/25/15.
@@ -9,22 +9,22 @@
 import Cocoa
 
 @objc // Needed (I forget why)
-protocol CDTimelineViewDataSource : NSObjectProtocol {
+protocol CDTimelineTrackViewDataSource : NSObjectProtocol {
     // complete reload or new values
-    func numberOfItemsInTimelineView(timelineView: CDTimelineView) -> Int
-    func timelineView(timelineView: CDTimelineView, itemAtIndex: Int) -> CDTimelineItem
-    optional func timelineView(timelineView: CDTimelineView, makeViewControllerAtIndex: Int) -> NSViewController
+    func numberOfItemsInTimelineView(timelineView: CDTimelineTrackView) -> Int
+    func timelineView(timelineView: CDTimelineTrackView, itemAtIndex: Int) -> CDTimelineItem
+    optional func timelineView(timelineView: CDTimelineTrackView, makeViewControllerAtIndex: Int) -> NSViewController
 }
 
-protocol CDTimelineViewDraggingSourceDelegate {
-    func timelineView(timelineView: CDTimelineView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting?
-    func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet)
-    func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation)
+protocol CDTimelineTrackViewDraggingSourceDelegate {
+    func timelineView(timelineView: CDTimelineTrackView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting?
+    func timelineView(timelineView: CDTimelineTrackView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet)
+    func timelineView(timelineView: CDTimelineTrackView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation)
 }
 
-protocol CDTimelineViewDraggingDestinationDelegate {
-    func timelineView(timelineView: CDTimelineView, updateDraggingInfo: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation
-    func timelineView(timelineView: CDTimelineView, performDragOperation: NSDraggingInfo, insertionIndex: Int?) -> Bool
+protocol CDTimelineTrackViewDraggingDestinationDelegate {
+    func timelineView(timelineView: CDTimelineTrackView, updateDraggingInfo: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation
+    func timelineView(timelineView: CDTimelineTrackView, performDragOperation: NSDraggingInfo, insertionIndex: Int?) -> Bool
     
 }
 
@@ -56,7 +56,7 @@ extension NSView {
     }
 }
 
-class CDTimelineView: NSStackView, NSDraggingSource {
+class CDTimelineTrackView: NSStackView, NSDraggingSource {
     // TODO: better way of dealing with UI constants/appearance for the view..
     static let itemFillColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
     static let itemBorderColor = NSColor(SRGBRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
@@ -94,7 +94,7 @@ class CDTimelineView: NSStackView, NSDraggingSource {
         _commonInit();
     }
     
-    var dataSource: CDTimelineViewDataSource? {
+    var dataSource: CDTimelineTrackViewDataSource? {
         didSet {
             reloadData();
         }
@@ -352,7 +352,7 @@ class CDTimelineView: NSStackView, NSDraggingSource {
         if _isFirstResponder && self.selectionIndexes.count == 0 {
             layer.borderWidth = 2.0
             layer.cornerRadius = 2.0
-            layer.borderColor = CDTimelineView.selectedBorderColor.CGColor
+            layer.borderColor = CDTimelineTrackView.selectedBorderColor.CGColor
         } else {
             layer.borderWidth = 0.0
         }
@@ -755,7 +755,7 @@ class CDTimelineView: NSStackView, NSDraggingSource {
         }
     }
     
-    var draggingSourceDelegate: CDTimelineViewDraggingSourceDelegate?
+    var draggingSourceDelegate: CDTimelineTrackViewDraggingSourceDelegate?
     
     
     // MARK: NSDraggingSource protocol implementation
@@ -812,7 +812,7 @@ class CDTimelineView: NSStackView, NSDraggingSource {
     private func _makeDraggingInsertionViewWithFrame(frame: NSRect) -> NSView {
         let result = NSView(frame: frame)
         result.wantsLayer = true
-        result.layer!.backgroundColor = CDTimelineView.draggingInsertionColor.CGColor
+        result.layer!.backgroundColor = CDTimelineTrackView.draggingInsertionColor.CGColor
         result.layerContentsRedrawPolicy = .Never
         return result
     }
@@ -868,7 +868,7 @@ class CDTimelineView: NSStackView, NSDraggingSource {
     }
     
 
-    var draggingDestinationDelegate: CDTimelineViewDraggingDestinationDelegate?
+    var draggingDestinationDelegate: CDTimelineTrackViewDraggingDestinationDelegate?
     
     var draggingInsertIndex: Int?  {
         didSet {

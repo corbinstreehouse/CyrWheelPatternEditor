@@ -2813,10 +2813,10 @@ DQ
             </objects>
             <point key="canvasLocation" x="3431" y="138.5"/>
         </scene>
-        <!--Timeline View Controller-->
+        <!--Timeline Track View Controller-->
         <scene sceneID="4SP-PD-tuN">
             <objects>
-                <viewController id="HFF-Cj-X5X" customClass="CDTimelineViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="HFF-Cj-X5X" customClass="CDTimelineTrackViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="pRt-sc-4M2">
                         <rect key="frame" x="0.0" y="0.0" width="626" height="152"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2845,7 +2845,7 @@ DQ
                                                 <rect key="frame" x="0.0" y="0.0" width="626" height="150"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gJ3-de-LOQ" customClass="CDTimelineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gJ3-de-LOQ" customClass="CDTimelineTrackView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="410" width="626" height="150"/>
                                                     </customView>
                                                 </subviews>

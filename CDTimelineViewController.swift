@@ -1,5 +1,5 @@
 //
-//  CDTimelineViewController.swift
+//  CDTimelineTrackViewController.swift
 //  CyrWheelPatternEditor
 //
 //  Created by corbin dunn on 12/29/15.
@@ -8,9 +8,9 @@
 
 import Cocoa
 
-class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDelegate, CDTimelineViewDataSource, CDPatternSequencePresenter, CDTimelineViewDraggingSourceDelegate, CDTimelineViewDraggingDestinationDelegate {
+class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildrenDelegate, CDTimelineTrackViewDataSource, CDPatternSequencePresenter, CDTimelineTrackViewDraggingSourceDelegate, CDTimelineTrackViewDraggingDestinationDelegate {
 
-    @IBOutlet weak var _timelineView: CDTimelineView!
+    @IBOutlet weak var _timelineView: CDTimelineTrackView!
     
     private var _childrenObserver: CDPatternSequenceChildrenObserver?;
 
@@ -149,7 +149,7 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         childrenInsertedAtIndexes(indexes)
     }
     
-    func numberOfItemsInTimelineView(timelineView: CDTimelineView) -> Int {
+    func numberOfItemsInTimelineView(timelineView: CDTimelineTrackView) -> Int {
         if self.patternSequence.children != nil {
             return self.patternSequence.children.count
         } else {
@@ -157,11 +157,11 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         }
     }
     
-    func timelineView(timelineView: CDTimelineView, itemAtIndex index: Int) -> CDTimelineItem {
+    func timelineView(timelineView: CDTimelineTrackView, itemAtIndex index: Int) -> CDTimelineItem {
         return self.patternSequence.children[index] as! CDTimelineItem
     }
     
-    func timelineView(timelineView: CDTimelineView, makeViewControllerAtIndex index: Int) -> NSViewController {
+    func timelineView(timelineView: CDTimelineTrackView, makeViewControllerAtIndex index: Int) -> NSViewController {
         let mainStoryboard: NSStoryboard = (NSApp.delegate as! CDAppDelegate).mainStoryboard
         let result = mainStoryboard.instantiateControllerWithIdentifier("TimelineItemView") as! NSViewController
         result.representedObject = self.patternSequence.children[index]
@@ -169,24 +169,24 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
     }
     
 
-    func timelineView(timelineView: CDTimelineView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting? {
+    func timelineView(timelineView: CDTimelineTrackView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting? {
         let item = self.patternSequence.children[index] as! CDPatternItem
         return item
     }
     
-    func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {        
+    func timelineView(timelineView: CDTimelineTrackView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {        
         
     }
     
-    func timelineView(timelineView: CDTimelineView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
+    func timelineView(timelineView: CDTimelineTrackView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
         
     }
     
     // Dragging destination
-    func timelineView(timelineView: CDTimelineView, updateDraggingInfo info: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation {
+    func timelineView(timelineView: CDTimelineTrackView, updateDraggingInfo info: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation {
         guard let index = insertionIndex else { return .None }
         // If we are the source, then don't allow a move before or after the index being dragged (it doesn't make sense), unless it is a copy
-        let sourceAsTV = info.draggingSource() as? CDTimelineView
+        let sourceAsTV = info.draggingSource() as? CDTimelineTrackView
         if sourceAsTV == timelineView {
             if info.draggingSourceOperationMask() == .Copy {
                 return .Copy
@@ -213,12 +213,12 @@ class CDTimelineViewController: NSViewController, CDPatternSequenceChildrenDeleg
         return .None
     }
     
-    func timelineView(timelineView: CDTimelineView, performDragOperation info: NSDraggingInfo, insertionIndex: Int?) -> Bool {
+    func timelineView(timelineView: CDTimelineTrackView, performDragOperation info: NSDraggingInfo, insertionIndex: Int?) -> Bool {
         guard let insertionIndex = insertionIndex else { return false }
         
         // Do it!
         // TODO: begin updates/endupdates and animations.. and animate the drop target..
-        let sourceAsTV = info.draggingSource() as? CDTimelineView
+        let sourceAsTV = info.draggingSource() as? CDTimelineTrackView
         if sourceAsTV == timelineView {
             let draggedIndexes = _timelineView.draggedIndexes!
             if info.draggingSourceOperationMask() == .Copy {
