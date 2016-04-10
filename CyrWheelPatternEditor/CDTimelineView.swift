@@ -11,20 +11,20 @@ import Cocoa
 @objc // Needed (I forget why)
 protocol CDTimelineTrackViewDataSource : NSObjectProtocol {
     // complete reload or new values
-    func numberOfItemsInTimelineView(timelineView: CDTimelineTrackView) -> Int
-    func timelineView(timelineView: CDTimelineTrackView, itemAtIndex: Int) -> CDTimelineItem
-    optional func timelineView(timelineView: CDTimelineTrackView, makeViewControllerAtIndex: Int) -> NSViewController
+    func numberOfItemsInTimelineTrackView(timelineTrackView: CDTimelineTrackView) -> Int
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, itemAtIndex: Int) -> CDTimelineItem
+    optional func timelineTrackView(timelineTrackView: CDTimelineTrackView, makeViewControllerAtIndex: Int) -> NSViewController
 }
 
 protocol CDTimelineTrackViewDraggingSourceDelegate {
-    func timelineView(timelineView: CDTimelineTrackView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting?
-    func timelineView(timelineView: CDTimelineTrackView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet)
-    func timelineView(timelineView: CDTimelineTrackView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation)
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting?
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet)
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation)
 }
 
 protocol CDTimelineTrackViewDraggingDestinationDelegate {
-    func timelineView(timelineView: CDTimelineTrackView, updateDraggingInfo: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation
-    func timelineView(timelineView: CDTimelineTrackView, performDragOperation: NSDraggingInfo, insertionIndex: Int?) -> Bool
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, updateDraggingInfo: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, performDragOperation: NSDraggingInfo, insertionIndex: Int?) -> Bool
     
 }
 
@@ -103,7 +103,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     var numberOfItems: Int {
         get {
             if let d = self.dataSource {
-                return d.numberOfItemsInTimelineView(self)
+                return d.numberOfItemsInTimelineTrackView(self)
             } else {
                 return 0;
             }
@@ -149,8 +149,8 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         
     }
     
-    func _delegateTimelineViewControllerAtIndex(index: Int) -> NSViewController {
-        if let result = dataSource?.timelineView?(self, makeViewControllerAtIndex: index) {
+    func _delegateTimelineTrackViewControllerAtIndex(index: Int) -> NSViewController {
+        if let result = dataSource?.timelineTrackView?(self, makeViewControllerAtIndex: index) {
             return result
         } else {
             let vc = NSViewController()
@@ -162,7 +162,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     var _timelineItemViewControllers = NSMutableArray()
     
     func _makeTimelineItemViewAtIndex(index: Int, frame: NSRect, timelineItem: CDTimelineItem) -> CDTimelineItemView {
-        let vc: NSViewController = _delegateTimelineViewControllerAtIndex(index)
+        let vc: NSViewController = _delegateTimelineTrackViewControllerAtIndex(index)
         _timelineItemViewControllers.insertObject(vc, atIndex: index)
         let result = vc.view as! CDTimelineItemView
         result.timelineItem = timelineItem
@@ -180,14 +180,14 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         _needsUpdate = false
         let itemFrame = _defaultItemViewFrame()
         for var i = 0; i < self.numberOfItems; i++ {
-            let timelineItem = self.dataSource!.timelineView(self, itemAtIndex: i)
+            let timelineItem = self.dataSource!.timelineTrackView(self, itemAtIndex: i)
             let itemView = _makeTimelineItemViewAtIndex(i, frame: itemFrame, timelineItem: timelineItem)
             self.addView(itemView, inGravity: NSStackViewGravity.Leading)
         }
     }
     
     func insertItemAtIndex(index: Int) {
-        let timelineItem = self.dataSource!.timelineView(self, itemAtIndex: index)
+        let timelineItem = self.dataSource!.timelineTrackView(self, itemAtIndex: index)
         let itemFrame = _defaultItemViewFrame()
         let itemView = _makeTimelineItemViewAtIndex(index, frame: itemFrame, timelineItem: timelineItem)
         self.insertView(itemView, atIndex: index, inGravity: NSStackViewGravity.Leading)
@@ -592,7 +592,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         var leaderIndex: Int? = hitIndex
         var items = [NSDraggingItem]()
         for index in indexes {
-            if let writer = draggingSourceDelegate.timelineView(self, pasteboardWriterForIndex: index) {
+            if let writer = draggingSourceDelegate.timelineTrackView(self, pasteboardWriterForIndex: index) {
                 let draggingItem = _makeDraggingItemForIndex(index, pasteboardWriter: writer)
                 items.append(draggingItem)
             } else {
@@ -787,7 +787,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     
     func draggingSession(session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint) {
         if let draggingSourceDelegate = draggingSourceDelegate {
-            draggingSourceDelegate.timelineView(self, draggingSession: session, willBeginAtPoint: screenPoint, forIndexes: self.draggedIndexes!)
+            draggingSourceDelegate.timelineTrackView(self, draggingSession: session, willBeginAtPoint: screenPoint, forIndexes: self.draggedIndexes!)
         }
         _fadeDraggedIndexesToValue(0.5)
     }
@@ -798,7 +798,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     
     func draggingSession(session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
         if let draggingSourceDelegate = draggingSourceDelegate {
-            draggingSourceDelegate.timelineView(self, draggingSession: session, endedAtPoint: screenPoint, operation: operation)
+            draggingSourceDelegate.timelineTrackView(self, draggingSession: session, endedAtPoint: screenPoint, operation: operation)
         }
         _fadeDraggedIndexesToValue(1.0)
         // drop the indexes at this point
@@ -922,13 +922,13 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         
         // Filter through the delegate
         if let d = self.draggingDestinationDelegate {
-            result = d.timelineView(self, updateDraggingInfo: draggingInfo, insertionIndex: self.draggingInsertIndex)
+            result = d.timelineTrackView(self, updateDraggingInfo: draggingInfo, insertionIndex: self.draggingInsertIndex)
             // If the delegate doesn't accept, implicitlely clear the drop point
             if result == .None {
                 // If we have another index, try again..
                 if let otherIndexToTry = otherIndexToTry {
                     self.draggingInsertIndex = otherIndexToTry
-                    result = d.timelineView(self, updateDraggingInfo: draggingInfo, insertionIndex: self.draggingInsertIndex)
+                    result = d.timelineTrackView(self, updateDraggingInfo: draggingInfo, insertionIndex: self.draggingInsertIndex)
                 }
                 
                 if result == .None {
@@ -965,7 +965,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     override func performDragOperation(sender: NSDraggingInfo) -> Bool {
         // I don't think we need a _updateDraggingDestinationState(sender) call..
         if let d = self.draggingDestinationDelegate {
-            if d.timelineView(self, performDragOperation: sender, insertionIndex: self.draggingInsertIndex) {
+            if d.timelineTrackView(self, performDragOperation: sender, insertionIndex: self.draggingInsertIndex) {
                 return true
             } else {
                 // we don't get a conclude??

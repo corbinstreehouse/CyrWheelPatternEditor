@@ -2883,7 +2883,7 @@ DQ
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="_timelineView" destination="gJ3-de-LOQ" id="TkX-fi-GDu"/>
+                        <outlet property="_timelineTrackView" destination="gJ3-de-LOQ" id="TkX-fi-GDu"/>
                     </connections>
                 </viewController>
                 <customObject id="mDA-ab-Qcf" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

@@ -258,7 +258,7 @@ class CDTimelineItemView: CDBorderedView {
         super.layout()
     }
     
-    func _enclosingTimelineView() -> CDTimelineTrackView? {
+    private func _enclosingTimelineTrackView() -> CDTimelineTrackView? {
         var itemView: CDTimelineTrackView? = nil
         var localView: NSView? = self
         while localView != nil {
@@ -298,7 +298,7 @@ class CDTimelineItemView: CDBorderedView {
     }
     
     func _trackEventsForResizingFromEvent(theEvent: NSEvent) {
-        let tv = self._enclosingTimelineView()!
+        let tv = self._enclosingTimelineTrackView()!
         tv.assignViewBeingResized(self) // affects selection
         
         self.resizing = true
@@ -337,7 +337,7 @@ class CDTimelineItemView: CDBorderedView {
                 callSuper = false
             } else if NSPointInRect(hitPoint, _leftSideResizeRect()) {
                 // forward to our left sibling (if any)
-                if let enclosingView = self._enclosingTimelineView() {
+                if let enclosingView = self._enclosingTimelineTrackView() {
                     if let index = enclosingView.indexOfView(self) {
                         if index > 0 {
                             let sibling = enclosingView.views[index - 1]

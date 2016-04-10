@@ -10,7 +10,7 @@ import Cocoa
 
 class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildrenDelegate, CDTimelineTrackViewDataSource, CDPatternSequencePresenter, CDTimelineTrackViewDraggingSourceDelegate, CDTimelineTrackViewDraggingDestinationDelegate {
 
-    @IBOutlet weak var _timelineView: CDTimelineTrackView!
+    @IBOutlet weak var _timelineTrackView: CDTimelineTrackView!
     
     private var _childrenObserver: CDPatternSequenceChildrenObserver?;
 
@@ -21,20 +21,20 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
         didSet {
             if let patternSequence = self.patternSequence {
                 _childrenObserver = CDPatternSequenceChildrenObserver(patternSequence: patternSequence, delegate: self)
-                _timelineView.dataSource = self
-                _timelineView.draggingSourceDelegate = self
-                _timelineView.draggingDestinationDelegate = self;
+                _timelineTrackView.dataSource = self
+                _timelineTrackView.draggingSourceDelegate = self
+                _timelineTrackView.draggingDestinationDelegate = self;
             }
         }
     }
     
     func delete(sender: AnyObject?) {
-        let selection = self._timelineView.selectionIndexes
+        let selection = self._timelineTrackView.selectionIndexes
         if selection.count > 0 {
             // Select the next item first (selection is maintained automatically)
             let lastIndex = selection.lastIndex + 1
-            if lastIndex < _timelineView.numberOfItems {
-                _timelineView.selectionIndexes = NSIndexSet(index: lastIndex)
+            if lastIndex < _timelineTrackView.numberOfItems {
+                _timelineTrackView.selectionIndexes = NSIndexSet(index: lastIndex)
             }
             self.patternSequence.removeChildrenAtIndexes(selection)
         }
@@ -47,22 +47,22 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
         super.viewDidLoad()
         // ONly hook this up when we have data to provide
         if self.patternSequence != nil {
-            _timelineView.dataSource = self
+            _timelineTrackView.dataSource = self
         }
         
-        _timelineView.registerForDraggedTypes([_patternItemPBoardType])
+        _timelineTrackView.registerForDraggedTypes([_patternItemPBoardType])
     }
     
     override func viewWillAppear() {
         let parentVC = self.patternSequenceProvider as! NSObject
         // Bind the parent to our value
         // TODO: unbind when done!
-        parentVC.bind("patternSelectionIndexes", toObject: _timelineView, withKeyPath: "selectionIndexes", options: nil)
+        parentVC.bind("patternSelectionIndexes", toObject: _timelineTrackView, withKeyPath: "selectionIndexes", options: nil)
     }
     
     func validateUserInterfaceItem(anItem: NSValidatedUserInterfaceItem) -> Bool {
         if anItem.action() == Selector("copy:") || anItem.action() == Selector("cut:") {
-            return _timelineView.selectionIndexes.count > 0
+            return _timelineTrackView.selectionIndexes.count > 0
         } else if anItem.action() == Selector("paste:") {
             let pasteboard: NSPasteboard = NSPasteboard.generalPasteboard()
             if let types = pasteboard.types {
@@ -81,8 +81,8 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
     }
     
     @IBAction func copy(sender: AnyObject) {
-        if _timelineView.selectionIndexes.count > 0 {
-            let data: NSData = _dataForItemsAtIndexes(_timelineView.selectionIndexes)
+        if _timelineTrackView.selectionIndexes.count > 0 {
+            let data: NSData = _dataForItemsAtIndexes(_timelineTrackView.selectionIndexes)
             let pasteboard: NSPasteboard = NSPasteboard.generalPasteboard()
             pasteboard.clearContents()
             pasteboard.declareTypes([_patternItemPBoardType], owner: self)
@@ -93,13 +93,13 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
     @IBAction func paste(sender: AnyObject) {
         let pasteboard: NSPasteboard = NSPasteboard.generalPasteboard()
         if let data = pasteboard.dataForType(_patternItemPBoardType) {
-            let index = _timelineView.selectionIndexes.count > 0 ? _timelineView.selectionIndexes.lastIndex + 1 : _timelineView.numberOfItems;
+            let index = _timelineTrackView.selectionIndexes.count > 0 ? _timelineTrackView.selectionIndexes.lastIndex + 1 : _timelineTrackView.numberOfItems;
             _insertItemsWithData(data, atStartingIndex: index)
         }
     }
     
     @IBAction func cut(sender: AnyObject) {
-        if _timelineView.selectionIndexes.count > 0 {
+        if _timelineTrackView.selectionIndexes.count > 0 {
             self.copy(sender)
             self.delete(sender)
         }
@@ -126,22 +126,22 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
     }
     
     func childrenAllChanged() {
-        _timelineView.reloadData()
+        _timelineTrackView.reloadData()
     }
     
     func childrenInsertedAtIndexes(indexes: NSIndexSet) {
         indexes.enumerateIndexesUsingBlock { (index:Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
-            self._timelineView.insertItemAtIndex(index)
+            self._timelineTrackView.insertItemAtIndex(index)
         }
         // Show new items added a the end
         let lastIndex = indexes.lastIndex
-        if lastIndex == self._timelineView.numberOfItems - 1 {
-            self._timelineView.scrollItemAtIndexToVisible(lastIndex)
+        if lastIndex == self._timelineTrackView.numberOfItems - 1 {
+            self._timelineTrackView.scrollItemAtIndexToVisible(lastIndex)
         }
     }
     
     func childrenRemovedAtIndexes(indexes: NSIndexSet) {
-        self._timelineView.removeItemsAtIndexes(indexes);
+        self._timelineTrackView.removeItemsAtIndexes(indexes);
     }
     
     func childrenReplacedAtIndexes(indexes: NSIndexSet) {
@@ -149,7 +149,7 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
         childrenInsertedAtIndexes(indexes)
     }
     
-    func numberOfItemsInTimelineView(timelineView: CDTimelineTrackView) -> Int {
+    func numberOfItemsInTimelineTrackView(timelineTrackView: CDTimelineTrackView) -> Int {
         if self.patternSequence.children != nil {
             return self.patternSequence.children.count
         } else {
@@ -157,11 +157,11 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
         }
     }
     
-    func timelineView(timelineView: CDTimelineTrackView, itemAtIndex index: Int) -> CDTimelineItem {
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, itemAtIndex index: Int) -> CDTimelineItem {
         return self.patternSequence.children[index] as! CDTimelineItem
     }
     
-    func timelineView(timelineView: CDTimelineTrackView, makeViewControllerAtIndex index: Int) -> NSViewController {
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, makeViewControllerAtIndex index: Int) -> NSViewController {
         let mainStoryboard: NSStoryboard = (NSApp.delegate as! CDAppDelegate).mainStoryboard
         let result = mainStoryboard.instantiateControllerWithIdentifier("TimelineItemView") as! NSViewController
         result.representedObject = self.patternSequence.children[index]
@@ -169,30 +169,30 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
     }
     
 
-    func timelineView(timelineView: CDTimelineTrackView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting? {
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting? {
         let item = self.patternSequence.children[index] as! CDPatternItem
         return item
     }
     
-    func timelineView(timelineView: CDTimelineTrackView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {        
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {        
         
     }
     
-    func timelineView(timelineView: CDTimelineTrackView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
         
     }
     
     // Dragging destination
-    func timelineView(timelineView: CDTimelineTrackView, updateDraggingInfo info: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation {
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, updateDraggingInfo info: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation {
         guard let index = insertionIndex else { return .None }
         // If we are the source, then don't allow a move before or after the index being dragged (it doesn't make sense), unless it is a copy
         let sourceAsTV = info.draggingSource() as? CDTimelineTrackView
-        if sourceAsTV == timelineView {
+        if sourceAsTV == timelineTrackView {
             if info.draggingSourceOperationMask() == .Copy {
                 return .Copy
             } else {
                 // We can only move if we aren't moving before or after a dragged index
-                if let draggedIndexes = timelineView.draggedIndexes {
+                if let draggedIndexes = timelineTrackView.draggedIndexes {
                     if draggedIndexes.containsIndex(index) || draggedIndexes.containsIndex(index-1) {
                         return .None
                     } else {
@@ -213,19 +213,19 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
         return .None
     }
     
-    func timelineView(timelineView: CDTimelineTrackView, performDragOperation info: NSDraggingInfo, insertionIndex: Int?) -> Bool {
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, performDragOperation info: NSDraggingInfo, insertionIndex: Int?) -> Bool {
         guard let insertionIndex = insertionIndex else { return false }
         
         // Do it!
         // TODO: begin updates/endupdates and animations.. and animate the drop target..
         let sourceAsTV = info.draggingSource() as? CDTimelineTrackView
-        if sourceAsTV == timelineView {
-            let draggedIndexes = _timelineView.draggedIndexes!
+        if sourceAsTV == timelineTrackView {
+            let draggedIndexes = _timelineTrackView.draggedIndexes!
             if info.draggingSourceOperationMask() == .Copy {
                 let data: NSData = _dataForItemsAtIndexes(draggedIndexes)
                 _insertItemsWithData(data, atStartingIndex: insertionIndex)
             } else {
-                let shouldSelectItems: Bool = draggedIndexes.isEqualToIndexSet(timelineView.selectionIndexes)
+                let shouldSelectItems: Bool = draggedIndexes.isEqualToIndexSet(timelineTrackView.selectionIndexes)
                 
                 let childrenToMove: [CDPatternItem] = patternSequence.children.objectsAtIndexes(draggedIndexes) as! [CDPatternItem]
                 
@@ -239,13 +239,13 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
                 patternSequence.insertChildren(childrenToMove, atIndexes: targetIndexes)
                 
                 if shouldSelectItems {
-                    timelineView.selectionIndexes = targetIndexes
+                    timelineTrackView.selectionIndexes = targetIndexes
                 }
             }
         } else {
             CDPatternItem.setCurrentContext(patternSequenceProvider!.managedObjectContext)
             var childIndex = UInt(insertionIndex)
-            info.enumerateDraggingItemsWithOptions([], forView: timelineView, classes: [CDPatternItem.self], searchOptions: [:], usingBlock: { (item: NSDraggingItem, index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+            info.enumerateDraggingItemsWithOptions([], forView: timelineTrackView, classes: [CDPatternItem.self], searchOptions: [:], usingBlock: { (item: NSDraggingItem, index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
                 let patternItem = item.item as! CDPatternItem
                 self.patternSequence.insertObject(patternItem, inChildrenAtIndex: childIndex)
                 childIndex++
