@@ -25,5 +25,9 @@ class CDThemeColors {
     static let separatorColor = NSColor(SRGBRed: 29.0/255.0, green: 29.0/255.0, blue: 29.0/255.0, alpha: 1.0)
     
     
+    // gray text
+    static let timecodeTextColor = NSColor(SRGBRed: 124.0/255.0, green: 124.0/255.0, blue: 124.0/255.0, alpha: 1.0)
+    static let timecodeSeparatorColor = NSColor(SRGBRed: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0)
+
     
 }
