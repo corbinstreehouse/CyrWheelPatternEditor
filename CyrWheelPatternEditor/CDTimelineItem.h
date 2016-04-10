@@ -1,5 +1,5 @@
 //
-//  CDTimerlineItem.h
+//  CDTimelineItem.h
 //  CyrWheelPatternEditor
 //
 //  Created by Corbin Dunn on 1/6/16 .
@@ -13,4 +13,4 @@
 @property (nonatomic) NSTimeInterval duration;
 @end
 
-#endif /* CDTimerlineItem_h */
+#endif /* CDTimelineItem_h */

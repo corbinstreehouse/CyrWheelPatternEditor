@@ -60,6 +60,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     // I like a more subtle look for showing the first responder..
     static let selectedBorderColor = NSColor.alternateSelectedControlColor().colorWithAlphaComponent(0.5)
     static let draggingInsertionColor = NSColor.greenColor() // TODO: color??
+    static let trackHeight: CGFloat = 50.0 // Variable??
     
     private let _sideSpacing: CGFloat = 4.0
     private let _dragThreshold: CGFloat = 5
@@ -287,6 +288,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
     }
     
+    // Dynamic height fill:
     override func viewDidMoveToSuperview() {
         super.viewDidMoveToSuperview()
         if let newSuper = self.superview {
@@ -298,6 +300,8 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
 //                    view.invalidateIntrinsicContentSize()
 //                }
             })
+            // Invalidate us right away too..
+            self.invalidateIntrinsicContentSize()
         }
     }
     
@@ -315,6 +319,9 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
             return requestedSize
         }
     }
+
+    // Static height constant..
+    
 
     func scrollItemAtIndexToVisible(index: Int) {
         self.layoutSubtreeIfNeeded()
