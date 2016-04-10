@@ -14,141 +14,22 @@ extension NSEvent {
     }
 }
 
-enum CDBorderedViewEdge : Int {
-    
-    case Both
-    case Left
-    case Right
-}
-
-class CDBorderedView: NSView {
-    
+class CDTimelineItemView: CDBorderedView {
+    // TODO: better way of dealing with UI constants/appearance for the view..
+    static let itemBorderColor = NSColor(SRGBRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
+    static let itemSelectedBorderColor = NSColor.alternateSelectedControlColor()
+    static let itemFillColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
     static let durationResizeWidth: CGFloat = 5
     static let selectionBorderWidth: CGFloat = 2
     static let normalBorderWidth: CGFloat = 1
     
+    static let minWidth: CGFloat = 5.0
+    static let cornerRadius: CGFloat = 4.0
+    
     // Each second will be X points on screen
     static let defaultWidthPerSecond: CGFloat = 50.0
-    static let minWidth: CGFloat = 5.0
-
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
-    }
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
-    }
 
-    override var layer: CALayer? {
-        didSet {
-//            if let layer = self.layer {
-//                layer.borderColor = self.borderColor?.CGColor
-//                layer.backgroundColor = NSColor.redColor().CGColor; //self.backgroundColor?.CGColor
-//                layer.borderWidth = self.borderWidth
-//                layer.cornerRadius = self.cornerRadius
-//                
-//            }
-        }
-    }
-    
-    var borderColor: NSColor? = nil {
-        willSet(v) {
-//            self.layer?.borderColor = self.borderColor?.CGColor
-            if (v != borderColor) {
-                self.needsDisplay = true;
-            }
-        }
-    }
-    var backgroundColor: NSColor? = nil {
-        willSet(v) {
-//            self.layer?.backgroundColor = self.backgroundColor?.CGColor
-            if (v != backgroundColor) {
-                self.needsDisplay = true;
-            }
-
-        }
-    }
-    var borderWidth: CGFloat = 0 {
-        willSet(v) {
-//            self.layer?.borderWidth = self.borderWidth
-            if (v != borderWidth) {
-                self.needsDisplay = true;
-            }
-
-        }
-    }
-    var cornerRadius: CGFloat = 0 {
-        willSet(v) {
-//            self.layer?.cornerRadius = self.cornerRadius
-            if (v != cornerRadius) {
-                self.needsDisplay = true;
-            }
-
-        }
-    }
-    override var wantsUpdateLayer: Bool {
-        get {
-            return true
-        }
-    }
-
-    var borderEdge: CDBorderedViewEdge = CDBorderedViewEdge.Both {
-        willSet(v) {
-            if (v != borderEdge) {
-                self.needsDisplay = true
-            }
-        }
-    }
-    
-    override func updateLayer() {
-        if let layer = self.layer {
-            if self.borderColor != nil && self.borderWidth > 0 {
-                
-// TODO: cache these and use the same values...
-                
-                let centerWidth = CGFloat(8) // probably cus the cornerRadius
-                let width: CGFloat = CGFloat(2) * self.borderWidth + centerWidth
-                let size = NSSize(width: width, height: width)
-                let image = NSImage(size: size, flipped: false, drawingHandler: { (rect: NSRect) -> Bool in
-                    let tmpRect = NSInsetRect(rect, self.borderWidth/2.0, self.borderWidth/2.0)
-                    if let fillColr = self.backgroundColor {
-                        let p = NSBezierPath(roundedRect: tmpRect, xRadius: self.cornerRadius, yRadius: self.cornerRadius)
-                        fillColr.set()
-                        p.fill()
-                    }
-                    if let strokeColor = self.borderColor {
-                        let p = NSBezierPath(roundedRect: tmpRect, xRadius: self.cornerRadius, yRadius: self.cornerRadius)
-                        strokeColor.set()
-                        p.lineWidth = self.borderWidth
-                        p.stroke()
-                    }
-                    
-                    return true
-                })
-                layer.contents = image.CGImageForProposedRect(nil, context: nil, hints: nil)
-                if self.borderEdge == .Right {
-                    layer.contentsRect = CGRect(x: 0.5, y: 0, width: 0.5, height: 1)
-                    layer.contentsCenter = CGRect(x: 0, y: 0.5, width: 0, height: 0)
-                } else {
-                    layer.contentsCenter = CGRect(x: 0.5, y: 0.5, width: 0, height: 0)
-                }
-                layer.contentsScale = self.window != nil ? self.window!.backingScaleFactor : 1.0
-            } else {
-                layer.contents = nil
-                layer.backgroundColor = self.backgroundColor?.CGColor
-            }
-//            layer.borderColor = self.borderColor?.CGColor
-//            layer.backgroundColor = self.backgroundColor?.CGColor
-//            layer.borderWidth = self.borderWidth
-//            layer.cornerRadius = self.cornerRadius
-        }
-    }
-}
-
-class CDTimelineItemView: CDBorderedView {
-    
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         _commonSetup()
@@ -160,13 +41,13 @@ class CDTimelineItemView: CDBorderedView {
     }
 
     func _commonSetup() {
-        self.backgroundColor = CDTimelineTrackView.itemFillColor
-        self.cornerRadius = 4.0
+        self.backgroundColor = CDTimelineItemView.itemFillColor
+        self.cornerRadius = CDTimelineItemView.cornerRadius
         self.borderWidth = CDTimelineItemView.normalBorderWidth
     }
     
     func _updateBorderColor() {
-        self.borderColor = self.selected /*&& !self.resizing*/ ? CDTimelineTrackView.itemSelectedBorderColor : CDTimelineTrackView.itemBorderColor;
+        self.borderColor = self.selected /*&& !self.resizing*/ ? CDTimelineItemView.itemSelectedBorderColor : CDTimelineItemView.itemBorderColor;
         self.borderWidth = self.selected || self.resizing ? CDTimelineItemView.selectionBorderWidth : CDTimelineItemView.normalBorderWidth
     }
     

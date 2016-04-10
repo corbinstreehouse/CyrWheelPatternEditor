@@ -57,10 +57,6 @@ extension NSView {
 }
 
 class CDTimelineTrackView: NSStackView, NSDraggingSource {
-    // TODO: better way of dealing with UI constants/appearance for the view..
-    static let itemFillColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
-    static let itemBorderColor = NSColor(SRGBRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
-    static let itemSelectedBorderColor = NSColor.alternateSelectedControlColor()
     // I like a more subtle look for showing the first responder..
     static let selectedBorderColor = NSColor.alternateSelectedControlColor().colorWithAlphaComponent(0.5)
     static let draggingInsertionColor = NSColor.greenColor() // TODO: color??
