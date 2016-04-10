@@ -13,7 +13,7 @@
 		9D1612ED1C3CB0AD00B7A890 /* CDPatternRunner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D1612EC1C3CB0AD00B7A890 /* CDPatternRunner.mm */; };
 		9D1E1AE71C2DA292002BD920 /* CDTimelineTrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1E1AE61C2DA292002BD920 /* CDTimelineTrackView.swift */; };
 		9D211A1E1C3A438A006A75FC /* CDPatternItemNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D211A1D1C3A438A006A75FC /* CDPatternItemNames.m */; };
-		9D2217791C2DB0660046D72C /* CDTimelineItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2217781C2DB0660046D72C /* CDTimelineItemView.swift */; };
+		9D2217791C2DB0660046D72C /* CDTimelineTrackItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2217781C2DB0660046D72C /* CDTimelineTrackItemView.swift */; };
 		9D49CD471CB9E51700C170A8 /* CDTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D49CD461CB9E51700C170A8 /* CDTimelineView.swift */; };
 		9D49CD491CB9E5E300C170A8 /* CDBorderedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D49CD481CB9E5E300C170A8 /* CDBorderedView.swift */; };
 		9D4FCB30193C29DB0000DE28 /* CDSimulatorLEDPatterns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D4FCB2E193C29DB0000DE28 /* CDSimulatorLEDPatterns.cpp */; };
@@ -135,7 +135,7 @@
 		9D211A1B1C3A1DA4006A75FC /* LEDPatternType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LEDPatternType.h; path = ../Arduino/LEDDigitalCyrWheel/Libraries/LEDPatterns/LEDPatternType.h; sourceTree = "<group>"; };
 		9D211A1C1C3A438A006A75FC /* CDPatternItemNames.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPatternItemNames.h; sourceTree = "<group>"; };
 		9D211A1D1C3A438A006A75FC /* CDPatternItemNames.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDPatternItemNames.m; sourceTree = "<group>"; };
-		9D2217781C2DB0660046D72C /* CDTimelineItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDTimelineItemView.swift; path = ../CDTimelineItemView.swift; sourceTree = "<group>"; };
+		9D2217781C2DB0660046D72C /* CDTimelineTrackItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDTimelineTrackItemView.swift; path = ../CDTimelineTrackItemView.swift; sourceTree = "<group>"; };
 		9D3A0DB0188A3D26001AD553 /* CDPatternData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDPatternData.h; path = ../../Arduino/LEDDigitalCyrWheel/LEDDigitalCyrWheel/CDPatternData.h; sourceTree = "<group>"; };
 		9D49CD461CB9E51700C170A8 /* CDTimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDTimelineView.swift; sourceTree = "<group>"; };
 		9D49CD481CB9E5E300C170A8 /* CDBorderedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDBorderedView.swift; sourceTree = "<group>"; };
@@ -433,7 +433,7 @@
 				9D5706C31C3E0A7B0094D2F0 /* CDTimelineItem.h */,
 				9D49CD461CB9E51700C170A8 /* CDTimelineView.swift */,
 				9D1E1AE61C2DA292002BD920 /* CDTimelineTrackView.swift */,
-				9D2217781C2DB0660046D72C /* CDTimelineItemView.swift */,
+				9D2217781C2DB0660046D72C /* CDTimelineTrackItemView.swift */,
 				9D931EAF1C33B4B70065222F /* CDTimelineTrackViewController.swift */,
 				9D62EAAE1C332C1500BFB916 /* CDPatternEditorWindowController2.swift */,
 				9D931EB31C35D0B80065222F /* CDPatternSequenceSplitViewController.swift */,
@@ -636,7 +636,7 @@
 				9D9775831C0223E3002D78EE /* CDWheelConnection.swift in Sources */,
 				9DFBAC2D1888EDFC00737C2F /* CDDocument.xcdatamodeld in Sources */,
 				9D8F58F91C1C7C3D00826D8D /* SdFat.cpp in Sources */,
-				9D2217791C2DB0660046D72C /* CDTimelineItemView.swift in Sources */,
+				9D2217791C2DB0660046D72C /* CDTimelineTrackItemView.swift in Sources */,
 				9DE5C4D91C67A93200E0B96C /* CDPatternItemHeaderWrapper.swift in Sources */,
 				9DCE4EC119D4F349002664D9 /* CDTimeValueTransformer.m in Sources */,
 				9D8F58FB1C1C7C7700826D8D /* SdFatUtil.cpp in Sources */,
