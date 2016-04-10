@@ -101,6 +101,11 @@ class CDTimelineItemView: CDBorderedView {
             return alignedRect.size
         }
     }
+    
+    override func viewDidMoveToSuperview() {
+        super.viewDidMoveToSuperview()
+        self.invalidateIntrinsicContentSize() // Because it is based on our superview
+    }
         
 //    override var wantsUpdateLayer: Bool {
 //        get {
