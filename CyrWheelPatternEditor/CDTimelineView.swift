@@ -11,7 +11,7 @@ import Cocoa
 
 class CDTimelineView: NSView {
     // Variables
-    let timelineSeperatorWidth: CGFloat = 110.0 // They appear every 110 pts
+    let timelineSeperatorWidth: CGFloat = 80.0 // They appear every X pts
     let startingOffset: CGFloat = 4.0 // they start at this offset
     let seperatorWidth: CGFloat = 1.0
     let textStartyingY: CGFloat = 1.0 // A better way??
@@ -113,16 +113,37 @@ class CDTimelineView: NSView {
         view.backgroundColor = NSColor.clearColor()
         view.bordered = false
         view.textColor = CDThemeColors.timecodeTextColor
+        view.editable = false
         return view
     }
     
     override var flipped: Bool { return true; }
+    
+    
+    private func _timeForWidth(width: CGFloat) -> NSTimeInterval {
+        return NSTimeInterval(width / self.widthPerMS / 1000)
+    }
+    
+    private func _timeForXOffset(offset: CGFloat) -> NSTimeInterval {
+        return _timeForWidth(offset - self.startingOffset)
+    }
+    
+    private func _stringFromTimeInterval(interval: NSTimeInterval) -> String {
+        let wholeSeconds = Int(interval)
+        let seconds = wholeSeconds % 60
+        let minutes = (wholeSeconds / 60) % 60
+//        let hours = (wholeSeconds / 3600)
+        let milliseconds = Int(round((interval-Double(wholeSeconds))*1000))
+        // Ignore hours for now
+        return String(format: "%02d:%02d:%03d", minutes, seconds, milliseconds)
+    }
     
     func _updateTimeViews() {
         // Figure out how many we need.
         let bounds = self.bounds
         let width = bounds.size.width
         let countNeeded: Int = Int(ceil((width - self.startingOffset) / self.timelineSeperatorWidth))
+        // Each pixel represents widthPerMS
 
 
         var sepBounds = bounds
@@ -139,7 +160,13 @@ class CDTimelineView: NSView {
             let sepView = _makeSeperatorViewWithFrame(sepBounds)
             self.addSubview(sepView)
 
-            let timecodeStr = "00:00:000"
+            var timecodeStr = "00:00:000"
+            if i > 0 {
+                // Format it each time to avoid rounding errors
+                let time = _timeForXOffset(sepBounds.origin.x)
+                timecodeStr = _stringFromTimeInterval(time)
+            }
+            
             let timeView = _makeTimeView(textBounds, timeStr: timecodeStr)
             self.addSubview(timeView)
             

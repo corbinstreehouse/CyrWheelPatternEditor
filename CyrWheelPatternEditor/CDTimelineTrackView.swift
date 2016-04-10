@@ -492,8 +492,18 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     
     private func _hitIndexForEvent(theEvent: NSEvent) -> Int? {
         let hitLocation = theEvent.locationInView(self)
+        // I'm not sure this is a great idea, but hit testing is failing..
+        for var i = 0; i < self.views.count; i++ {
+            let view = views[i]
+            if NSPointInRect(hitLocation, view.frame) {
+                return i
+            }
+        }
+        return nil
+        /*
         let hitView = self.hitTest(hitLocation)
         return indexOfView(hitView)
+        */
     }
 
     // return the last hit
