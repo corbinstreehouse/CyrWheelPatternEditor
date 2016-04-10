@@ -2845,10 +2845,10 @@ DQ
                                                 <rect key="frame" x="0.0" y="0.0" width="833" height="320"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <customView horizontalCompressionResistancePriority="250" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gJ3-de-LOQ" userLabel="TimelineView" customClass="CDTimelineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                    <customView horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="gJ3-de-LOQ" userLabel="TimelineView" customClass="CDTimelineView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="833" height="320"/>
                                                         <subviews>
-                                                            <customView horizontalCompressionResistancePriority="1000" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wVY-SH-0bE" customClass="CDTimelineTrackView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                            <customView horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="wVY-SH-0bE" customClass="CDTimelineTrackView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="833" height="162"/>
                                                             </customView>
                                                         </subviews>
@@ -2856,12 +2856,15 @@ DQ
                                                             <constraint firstItem="wVY-SH-0bE" firstAttribute="leading" secondItem="gJ3-de-LOQ" secondAttribute="leading" id="G2N-ru-GQM"/>
                                                             <constraint firstItem="wVY-SH-0bE" firstAttribute="top" secondItem="gJ3-de-LOQ" secondAttribute="top" constant="158" id="MVG-Xa-Pd4"/>
                                                             <constraint firstAttribute="bottom" secondItem="wVY-SH-0bE" secondAttribute="bottom" id="nSI-ec-owb"/>
-                                                            <constraint firstItem="wVY-SH-0bE" firstAttribute="width" secondItem="gJ3-de-LOQ" secondAttribute="width" id="tg2-yG-F9x"/>
+                                                            <constraint firstAttribute="width" secondItem="wVY-SH-0bE" secondAttribute="width" id="tg2-yG-F9x"/>
                                                         </constraints>
                                                     </customView>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="gJ3-de-LOQ" firstAttribute="leading" secondItem="7AX-Jj-HMy" secondAttribute="leading" id="yju-hk-zku"/>
+                                                    <constraint firstAttribute="bottom" secondItem="gJ3-de-LOQ" secondAttribute="bottom" id="4FL-TK-noj"/>
+                                                    <constraint firstItem="gJ3-de-LOQ" firstAttribute="leading" secondItem="7AX-Jj-HMy" secondAttribute="leading" id="Mvg-dh-wvi"/>
+                                                    <constraint firstItem="gJ3-de-LOQ" firstAttribute="top" secondItem="7AX-Jj-HMy" secondAttribute="top" id="OAV-db-iME"/>
+                                                    <constraint firstAttribute="trailing" secondItem="gJ3-de-LOQ" secondAttribute="trailing" placeholder="YES" id="ODx-nC-d00"/>
                                                 </constraints>
                                                 <color key="backgroundColor" red="0.12984204290000001" green="0.12984612579999999" blue="0.12984395030000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </clipView>

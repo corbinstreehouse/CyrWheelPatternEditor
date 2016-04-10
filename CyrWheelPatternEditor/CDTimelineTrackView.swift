@@ -304,21 +304,21 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
             self.invalidateIntrinsicContentSize()
         }
     }
-    
-    override var intrinsicContentSize : NSSize {
-        get {
-            var requestedSize = super.intrinsicContentSize
-            if let superview = self.superview {
-                let superBounds = superview.bounds;
-                requestedSize.height = superBounds.size.height;
-                // fill the height
-                if requestedSize.width < superBounds.size.width {
-                    requestedSize.width = superBounds.size.width
-                }
-            }
-            return requestedSize
-        }
-    }
+//    
+//    override var intrinsicContentSize : NSSize {
+//        get {
+//            var requestedSize = super.intrinsicContentSize
+//            if let superview = self.superview {
+//                let superBounds = superview.bounds;
+//                requestedSize.height = superBounds.size.height;
+//                // fill the height
+//                if requestedSize.width < superBounds.size.width {
+//                    requestedSize.width = superBounds.size.width
+//                }
+//            }
+//            return requestedSize
+//        }
+//    }
 
     // Static height constant..
     
