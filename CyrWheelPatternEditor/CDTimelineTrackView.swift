@@ -490,20 +490,20 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     // selection is based off this row
     var _anchorRow: Int?
     
-    private func _hitIndexForEvent(theEvent: NSEvent) -> Int? {
-        let hitLocation = theEvent.locationInView(self)
+    
+    private func _indexOfViewAtPoint(point: NSPoint) -> Int? {
         // I'm not sure this is a great idea, but hit testing is failing..
         for var i = 0; i < self.views.count; i++ {
             let view = views[i]
-            if NSPointInRect(hitLocation, view.frame) {
+            if NSPointInRect(point, view.frame) {
                 return i
             }
         }
         return nil
-        /*
-        let hitView = self.hitTest(hitLocation)
-        return indexOfView(hitView)
-        */
+    }
+    
+    private func _hitIndexForEvent(theEvent: NSEvent) -> Int? {
+        return _indexOfViewAtPoint(theEvent.locationInView(self))
     }
 
     // return the last hit
@@ -904,42 +904,38 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         let point = self.convertPoint(draggingInfo.draggingLocation(), fromView: nil)
         var result = NSDragOperation.None
         var otherIndexToTry: Int?
-        if let viewAtPoint = self.hitTest(point) {
-            if viewAtPoint == self {
-                // If we didn't hit a child view and instead hit us, find out where in us we are for th einsert
-                // First, none check
-                if self.views.count == 0 {
-                    self.draggingInsertIndex = 0
-                    result = NSDragOperation.Every
-                } else {
-                    // Make sure we are before or after the first view, and not above another one..which isn't going to work
-                    if point.x <= NSMinX(self.views[0].frame) {
-                        self.draggingInsertIndex = 0
-                        result = NSDragOperation.Every
-                    } else if point.x >= NSMaxX(self.views.last!.frame) {
-                        self.draggingInsertIndex = self.views.count // Past it
-                        result = NSDragOperation.Every
-                    }
-                }
-                
-            } else if let hitIndex = indexOfView(viewAtPoint) {
-                // Find out what view we hit and how far we are in it in order to do an insert before or after it.
-                let hitView = self.views[hitIndex]
-                let pointInHitView = hitView.convertPoint(draggingInfo.draggingLocation(), fromView: nil)
-                let halfWidth = hitView.bounds.size.width / 2.0
-                if pointInHitView.x <= halfWidth {
-                    // Before it, which is it's index itself for the insertion point
-                    self.draggingInsertIndex = hitIndex
-                    // And if this doesn't work, try otherIndexToTry..
-                    otherIndexToTry = hitIndex + 1
-                } else {
-                    // After it
-                    self.draggingInsertIndex = hitIndex + 1;
-                    otherIndexToTry = hitIndex
-                }
+        
+        if let hitIndex = _indexOfViewAtPoint(point) {
+            // Find out what view we hit and how far we are in it in order to do an insert before or after it.
+            let hitView = self.views[hitIndex]
+            let pointInHitView = hitView.convertPoint(draggingInfo.draggingLocation(), fromView: nil)
+            let halfWidth = hitView.bounds.size.width / 2.0
+            if pointInHitView.x <= halfWidth {
+                // Before it, which is it's index itself for the insertion point
+                self.draggingInsertIndex = hitIndex
+                // And if this doesn't work, try otherIndexToTry..
+                otherIndexToTry = hitIndex + 1
+            } else {
+                // After it
+                self.draggingInsertIndex = hitIndex + 1;
+                otherIndexToTry = hitIndex
+            }
+            result = NSDragOperation.Every
+        } else {
+            // If we didn't hit a child view and instead hit us, find out where in us we are for the insert
+            // First, none check
+            if self.views.count == 0 {
+                self.draggingInsertIndex = 0
                 result = NSDragOperation.Every
             } else {
-                // Hit something else? what???
+                // Make sure we are before or after the first view, and not above another one..which isn't going to work
+                if point.x <= NSMinX(self.views[0].frame) {
+                    self.draggingInsertIndex = 0
+                    result = NSDragOperation.Every
+                } else if point.x >= NSMaxX(self.views.last!.frame) {
+                    self.draggingInsertIndex = self.views.count // Past it
+                    result = NSDragOperation.Every
+                }
             }
         }
         
