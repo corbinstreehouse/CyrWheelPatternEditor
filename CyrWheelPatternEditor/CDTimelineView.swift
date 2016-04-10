@@ -144,16 +144,15 @@ class CDTimelineView: NSView {
         let width = bounds.size.width
         let countNeeded: Int = Int(ceil((width - self.startingOffset) / self.timelineSeperatorWidth))
         // Each pixel represents widthPerMS
-
-
         var sepBounds = bounds
         sepBounds.size.width = self.seperatorWidth
-        sepBounds.origin.x = self.startingOffset
+        // Start where we left off..
+        sepBounds.origin.x = self.startingOffset + CGFloat(_timeViews.count) * self.timelineSeperatorWidth
         
         var textBounds = bounds
         textBounds.size.width = self.timelineSeperatorWidth - self.seperatorWidth
         textBounds.size.height = 14.0 // better way than hardcoding?
-        textBounds.origin.x = self.startingOffset + self.seperatorWidth
+        textBounds.origin.x = sepBounds.minX + self.seperatorWidth
         textBounds.origin.y = self.textStartyingY // This is ugly..
         
         for var i = _timeViews.count; i <= countNeeded; i++ {
@@ -176,9 +175,12 @@ class CDTimelineView: NSView {
             textBounds.origin.x += self.timelineSeperatorWidth
         }
         
-        
-        
         // Remove the extras
+        while _timeViews.count > countNeeded {
+            let pair = _timeViews.removeLast()
+            pair.0.removeFromSuperview()
+            pair.1.removeFromSuperview()
+        }
         
         
 
