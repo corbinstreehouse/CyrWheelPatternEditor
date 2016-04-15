@@ -2961,6 +2961,9 @@ DQ
                         <constraint firstItem="M2z-z3-bag" firstAttribute="centerX" secondItem="d88-Lg-snN" secondAttribute="centerX" id="Uma-lm-GqM"/>
                         <constraint firstItem="M2z-z3-bag" firstAttribute="top" secondItem="d88-Lg-snN" secondAttribute="top" constant="-3" id="zfT-DM-ObE"/>
                     </constraints>
+                    <connections>
+                        <outlet property="_playheadImageView" destination="M2z-z3-bag" id="NfF-uo-rjE"/>
+                    </connections>
                 </customView>
             </objects>
             <point key="canvasLocation" x="2920.5" y="645"/>
