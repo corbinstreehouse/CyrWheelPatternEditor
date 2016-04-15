@@ -12,7 +12,7 @@ import Cocoa
 class CDTimelineView: NSView {
     // Variables
     let timelineSeperatorWidth: CGFloat = 80.0 // They appear every X pts
-    let startingOffset: CGFloat = 4.0 // they start at this offset
+    let startingOffset: CGFloat = 10.0 // they start at this offset
     let seperatorWidth: CGFloat = 1.0
     let textStartyingY: CGFloat = 1.0 // A better way??
 
@@ -26,13 +26,18 @@ class CDTimelineView: NSView {
         _commonInit()
     }
     
+    private func _addTimelineTrackView(timelineTrackView: CDTimelineTrackView) {
+        _timelineTrackViews.append(timelineTrackView)
+        timelineTrackView.sideSpacing = self.startingOffset
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         _commonInit()
         // find all the track views already added to us
         for subview in self.subviews {
             if let timelineTrackView = subview as? CDTimelineTrackView {
-                _timelineTrackViews.append(timelineTrackView)
+                _addTimelineTrackView(timelineTrackView)
             }
         }
     }
@@ -43,7 +48,7 @@ class CDTimelineView: NSView {
     override func didAddSubview(subview: NSView) {
         super.didAddSubview(subview)
         if let timelineTrackView = subview as? CDTimelineTrackView {
-            _timelineTrackViews.append(timelineTrackView)
+            _addTimelineTrackView(timelineTrackView)
         }
     }
     override func willRemoveSubview(subview: NSView) {
@@ -127,6 +132,16 @@ class CDTimelineView: NSView {
         return _timeForWidth(offset - self.startingOffset)
     }
     
+    private func _widthForTime(time: NSTimeInterval) -> CGFloat {
+        // rounding?? how? I guess round is fine..maybe round the time to get it in MS before multiplying by the width?
+        return CGFloat(round(time * 1000)) * self.widthPerMS
+    }
+    
+    private func _offsetForTime(time: NSTimeInterval) -> CGFloat {
+        return _widthForTime(time) + self.startingOffset;
+    }
+    
+    
     private func _stringFromTimeInterval(interval: NSTimeInterval) -> String {
         let wholeSeconds = Int(interval)
         let seconds = wholeSeconds % 60
@@ -186,20 +201,64 @@ class CDTimelineView: NSView {
             self.addSubview(timelineTrackView, positioned: NSWindowOrderingMode.Above, relativeTo: nil)
         }
         
-        self.addSubview(playheadView, positioned: NSWindowOrderingMode.Above, relativeTo: nil)
+        if let playheadView = self.playheadView {
+            self.addSubview(playheadView, positioned: NSWindowOrderingMode.Above, relativeTo: nil)
+        }
     }
     
-    internal var playheadView: NSView! {
+    private var _playheadViewPositionConstraint: NSLayoutConstraint?
+    
+    
+    private func _currentPlayheadViewOffset() -> CGFloat {
+        guard let playheadView = playheadView else { return 0; }
+        var xOffset = _offsetForTime(self.playheadTimePosition)
+        // The thing is centered..so offset by that amount
+        xOffset -= playheadView.frame.size.width/2.0
+        return xOffset
+    }
+    
+    
+    internal var playheadView: NSView? {
         didSet {
+            guard let playheadView = playheadView else { return }
             self.addSubview(playheadView)
             playheadView.translatesAutoresizingMaskIntoConstraints = false // this is set to false in IB but it screws up
 //             |-0-[purpleBox]-0-|
+            
+            let xOffset = _currentPlayheadViewOffset()
+            _playheadViewPositionConstraint = NSLayoutConstraint(item: playheadView, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: self, attribute: NSLayoutAttribute.Leading, multiplier: 1.0, constant: xOffset)
+            
+            let widthConstraint = NSLayoutConstraint(item: playheadView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: playheadView.frame.size.width)
+            
+//            let horzConstraints = NSLayoutConstraint.constraintsWithVisualFormat("|-0-[playheadView]-0-|", options: [], metrics: nil, views: views)
+            self.addConstraints([_playheadViewPositionConstraint!, widthConstraint])
+            
             let views = ["playheadView": playheadView]
-            let horzConstraints = NSLayoutConstraint.constraintsWithVisualFormat("|-0-[playheadView]-0-|", options: [], metrics: nil, views: views)
-            self.addConstraints(horzConstraints)
             let vertConstraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[playheadView]-0-|", options: [], metrics: nil, views: views)
             self.addConstraints(vertConstraints)
+            _updatePlayheadViewPosition()
         }
+    }
+    
+    
+    var playheadTimePosition: NSTimeInterval = 0 {
+        didSet {
+            _updatePlayheadViewPosition()
+        }
+        
+    }
+    
+    private func _updatePlayheadViewPosition() {
+        if let c = _playheadViewPositionConstraint {
+            c.constant = _currentPlayheadViewOffset()
+        }
+    }
+    
+    override func mouseDown(theEvent: NSEvent) {
+        // If we hit the playhead's main view, then track it and move it..
+        
+        
+        
     }
     
     override func layout() {

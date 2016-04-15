@@ -62,7 +62,11 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     static let draggingInsertionColor = NSColor.greenColor() // TODO: color??
     static let trackHeight: CGFloat = 50.0 // Variable??
     
-    private let _sideSpacing: CGFloat = 4.0
+    var sideSpacing: CGFloat = 10.0 {
+        didSet {
+            self.edgeInsets = NSEdgeInsetsMake(TOP_SPACING, sideSpacing, BOTTOM_SPACING, sideSpacing)
+        }
+    }
     private let _dragThreshold: CGFloat = 5
 
     func _commonInit() {
@@ -76,7 +80,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         self.setHuggingPriority(NSLayoutPriorityDefaultLow - 0.00001, forOrientation: NSLayoutConstraintOrientation.Vertical)
         // stack view properties
         self.spacing = 0;
-        self.edgeInsets = NSEdgeInsetsMake(TOP_SPACING, _sideSpacing, BOTTOM_SPACING, _sideSpacing)
+        self.edgeInsets = NSEdgeInsetsMake(TOP_SPACING, sideSpacing, BOTTOM_SPACING, sideSpacing)
         
         self.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
     }
@@ -358,9 +362,9 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     
     // old code for highlghting on first responder
     override func updateLayer() {
-        guard let layer = self.layer else {
-            return;
-        }
+//        guard let layer = self.layer else {
+//            return;
+//        }
 //        layer.backgroundColor = NSColor(white: 0, alpha: 0.25).CGColor
 //        if _isFirstResponder && self.selectionIndexes.count == 0 {
 //            layer.borderWidth = 2.0
