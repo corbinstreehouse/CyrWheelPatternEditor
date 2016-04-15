@@ -144,5 +144,28 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
             */
         }
     }
+    
+    override func keyDown(theEvent: NSEvent) {
+        var handled = false
+        if (theEvent.character == NSRightArrowFunctionKey) {
+            self.patternRunner.nextPatternItem()
+            handled = true;
+        } else if (theEvent.character == NSLeftArrowFunctionKey) {
+            self.patternRunner.priorPatternItem();
+            handled = true;
+        } else if let chars = theEvent.characters {
+            if (chars == " ") {
+                if self.patternRunner.paused {
+                    self.patternRunner.play()
+                } else {
+                    self.patternRunner.pause()
+                }
+                handled = true
+            }
+        }
+        if (!handled) {
+            super.keyDown(theEvent)
+        }
+    }
 
 }

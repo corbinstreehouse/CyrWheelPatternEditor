@@ -34,7 +34,7 @@ class CDEditorCyrWheelViewController: NSViewController {
     }
     
     @IBAction func btnPriorClicked(sender: NSButton) {
-        _patternRunner?.priorPatternItem();
+        _patternRunner?.rewind();
     }
     
     @IBAction func btnPlayPauseClicked(sender: NSButton) {

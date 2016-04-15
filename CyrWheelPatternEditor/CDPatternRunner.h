@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)priorSequence;
 - (void)nextPatternItem;
 - (void)priorPatternItem;
+- (void)rewind; // Like prior, but more like rewind to reset the current if needed, or go back if paused or near the start
 - (void)performButtonClick;
 
 - (void)moveToTheStart;

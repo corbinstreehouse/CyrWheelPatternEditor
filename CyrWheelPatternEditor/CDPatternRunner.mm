@@ -235,6 +235,10 @@ NSString * const CDPatternRunnerPlayheadTimePositionKey = @"playheadTimePosition
     _sequenceManager.priorPatternItem();
 }
 
+- (void)rewind {
+    _sequenceManager.rewind();
+}
+
 - (void)nextPatternItem {
     _sequenceManager.nextPatternItem();
 }

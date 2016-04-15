@@ -758,16 +758,20 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         var callSuper = false
         let shiftIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.ShiftKeyMask);
 
-        switch theEvent.character {
-        case NSRightArrowFunctionKey:
-            _selectNextIndexFromAnchorExtending(shiftIsDown, goingForward: true)
-        case NSLeftArrowFunctionKey:
-            _selectNextIndexFromAnchorExtending(shiftIsDown, goingForward: false)
-        case NSDeleteCharacter:
-            if self.selectionIndexes.count > 0 {
-                NSApp.sendAction("delete:", to: nil, from: self)
+        if self.numberOfItems > 0 {
+            switch theEvent.character {
+            case NSRightArrowFunctionKey:
+                _selectNextIndexFromAnchorExtending(shiftIsDown, goingForward: true)
+            case NSLeftArrowFunctionKey:
+                _selectNextIndexFromAnchorExtending(shiftIsDown, goingForward: false)
+            case NSDeleteCharacter:
+                if self.selectionIndexes.count > 0 {
+                    NSApp.sendAction("delete:", to: nil, from: self)
+                }
+            default:
+                callSuper = true;
             }
-        default:
+        } else {
             callSuper = true;
         }
         
