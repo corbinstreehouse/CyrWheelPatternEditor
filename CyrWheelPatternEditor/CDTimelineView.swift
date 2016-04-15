@@ -119,7 +119,6 @@ class CDTimelineView: NSView {
     
     override var flipped: Bool { return true; }
     
-    
     private func _timeForWidth(width: CGFloat) -> NSTimeInterval {
         return NSTimeInterval(width / self.widthPerMS / 1000)
     }
@@ -182,20 +181,78 @@ class CDTimelineView: NSView {
             pair.1.removeFromSuperview()
         }
         
-        
-
-        // bring the trakcs on top
+        // bring the tracks on top
         for timelineTrackView in _timelineTrackViews {
             self.addSubview(timelineTrackView, positioned: NSWindowOrderingMode.Above, relativeTo: nil)
         }
-
+        
+        self.addSubview(playheadView, positioned: NSWindowOrderingMode.Above, relativeTo: nil)
+    }
+    
+    internal var playheadView: NSView! {
+        didSet {
+            self.addSubview(playheadView)
+            playheadView.translatesAutoresizingMaskIntoConstraints = false // this is set to false in IB but it screws up
+//             |-0-[purpleBox]-0-|
+            let views = ["playheadView": playheadView]
+            let horzConstraints = NSLayoutConstraint.constraintsWithVisualFormat("|-0-[playheadView]-0-|", options: [], metrics: nil, views: views)
+            self.addConstraints(horzConstraints)
+            let vertConstraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[playheadView]-0-|", options: [], metrics: nil, views: views)
+            self.addConstraints(vertConstraints)
+        }
     }
     
     override func layout() {
         super.layout()
         _updateTimeViews()
+        super.layout() // stupid
     }
     
     
     
 }
+
+class CDPlayheadView : NSView {
+    
+    
+
+
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

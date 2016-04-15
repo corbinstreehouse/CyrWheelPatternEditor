@@ -12,7 +12,9 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
 
     @IBOutlet weak var _timelineTrackView: CDTimelineTrackView!
     @IBOutlet weak var _musicTrackView: CDTimelineTrackView!
-    
+    @IBOutlet weak var _playheadView: CDPlayheadView!
+    @IBOutlet weak var _timelineView: CDTimelineView!
+
     private var _childrenObserver: CDPatternSequenceChildrenObserver?;
 
     internal var patternSequence: CDPatternSequence! {
@@ -50,7 +52,7 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
         if self.patternSequence != nil {
             _timelineTrackView.dataSource = self
         }
-        
+        _timelineView.playheadView = _playheadView;
         _timelineTrackView.registerForDraggedTypes([_patternItemPBoardType])
     }
     
@@ -175,7 +177,7 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
         return item
     }
     
-    func timelineTrackView(timelineTrackView: CDTimelineTrackView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {        
+    func timelineTrackView(timelineTrackView: CDTimelineTrackView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet) {
         
     }
     
