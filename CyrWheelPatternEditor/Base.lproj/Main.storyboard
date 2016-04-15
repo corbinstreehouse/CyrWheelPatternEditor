@@ -2928,9 +2928,9 @@ DQ
                     <rect key="frame" x="0.0" y="0.0" width="17" height="173"/>
                     <subviews>
                         <box title="Box" boxType="custom" borderType="line" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="gtF-Yn-wUt">
-                            <rect key="frame" x="6.5" y="0.0" width="3" height="173"/>
+                            <rect key="frame" x="6.5" y="0.0" width="3" height="163"/>
                             <view key="contentView" id="8e8-dE-tg8">
-                                <rect key="frame" x="1" y="1" width="1" height="171"/>
+                                <rect key="frame" x="1" y="1" width="1" height="161"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </view>
                             <constraints>
@@ -2942,19 +2942,22 @@ DQ
                             <color key="borderColor" white="0.0" alpha="0.4593588362068966" colorSpace="calibratedWhite"/>
                             <color key="fillColor" red="1" green="1" blue="1" alpha="0.76885775862068961" colorSpace="calibratedRGB"/>
                         </box>
-                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="M2z-z3-bag">
+                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.77000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="M2z-z3-bag">
                             <rect key="frame" x="0.0" y="160" width="16" height="16"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="16" id="7A4-zz-jBI"/>
                                 <constraint firstAttribute="width" constant="16" id="Fdj-SA-v42"/>
                             </constraints>
-                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="A5745829-3166-452D-9006-07E1FD41BB40" id="eBl-ti-8Xn"/>
+                            <shadow key="shadow" blurRadius="2">
+                                <color key="color" red="0.86764699219999997" green="0.098039202389999996" blue="0.10196100180000001" alpha="0.7747036638" colorSpace="calibratedRGB"/>
+                            </shadow>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="download_arrow_white" id="eBl-ti-8Xn"/>
                         </imageView>
                     </subviews>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="gtF-Yn-wUt" secondAttribute="bottom" id="8xB-lw-2ey"/>
                         <constraint firstItem="gtF-Yn-wUt" firstAttribute="centerX" secondItem="d88-Lg-snN" secondAttribute="centerX" id="BJd-qj-Mbu"/>
-                        <constraint firstItem="gtF-Yn-wUt" firstAttribute="top" secondItem="d88-Lg-snN" secondAttribute="top" id="RCP-2y-tAG"/>
+                        <constraint firstItem="gtF-Yn-wUt" firstAttribute="top" secondItem="d88-Lg-snN" secondAttribute="top" constant="10" id="RCP-2y-tAG"/>
                         <constraint firstItem="M2z-z3-bag" firstAttribute="centerX" secondItem="d88-Lg-snN" secondAttribute="centerX" id="Uma-lm-GqM"/>
                         <constraint firstItem="M2z-z3-bag" firstAttribute="top" secondItem="d88-Lg-snN" secondAttribute="top" constant="-3" id="zfT-DM-ObE"/>
                     </constraints>
@@ -3335,45 +3338,11 @@ DQ
         </scene>
     </scenes>
     <resources>
-        <image name="A5745829-3166-452D-9006-07E1FD41BB40" width="512" height="512">
-            <mutableData key="keyedArchiveRepresentation">
-YnBsaXN0MDDUAQIDBAUGSUpYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK8QEAcI
-ERYbHCUmJysyNzo9Q0ZVJG51bGzUCQoLDA0ODxBWJGNsYXNzXE5TSW1hZ2VGbGFnc1ZOU1JlcHNXTlND
-b2xvcoAPEgDAAACAAoAN0hIJExVaTlMub2JqZWN0c6EUgAOADNISCRcaohgZgASABYALEADVHR4fIAkh
-GyIjJFZOU1NpemVfEA9OU0JpdHNQZXJTYW1wbGVfEBBOU0NvbG9yU3BhY2VOYW1lWU5TUERGRGF0YYAG
-gAeACIAKWns1MTIsIDUxMn1fEBlOU0NhbGlicmF0ZWRSR0JDb2xvclNwYWNl0igJKSpXTlMuZGF0YU8R
-BEUlUERGLTEuNAol4uPP0woxIDAgb2JqIDw8L0ZpbHRlci9GbGF0ZURlY29kZS9MZW5ndGggMzA5Pj5z
-dHJlYW0KeJytkz1uwzAMhXeeghcoQVGifq5QoEOmDkUnF21RpAXSJdcvRVlx4qlDYBjiB/E9kaJ9ghMw
-ahD8tpXxCD2ea3+P8AnP8AMBzyD4aFlfEBif4OWV8c3lKSipGfT0EQ95yx7yFszdYclUNLd4pQ8k6crC
-cYrX5B3uHLE/vx8gpVJsGDhTLWbduRgWEsUOVZxKp0YhG1UKigsoB2oYNfXUXkWimDFm28YJjUkTjszE
-qR81hKU4a/TNrIOak4pTzpabmlIxrbVofql6JaOX1KsLKywQI0m+tCmJwmw6ZOLoFtw7JRn+UkxlyJfS
-jvAgFHWWvYI3NPLWZhcQO832/NqqH6dUsUXihJKVWp5wc7+LXf87HPrHsBvpbmq3I93Ne4zwji6bfsuV
-6/Bemv/8Pwd//gDRmaoZCmVuZHN0cmVhbQplbmRvYmoKMyAwIG9iajw8L0NvbnRlbnRzIDEgMCBSL1R5
-cGUvUGFnZS9SZXNvdXJjZXM8PC9Qcm9jU2V0IFsvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1h
-Z2VJXT4+L1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgNTEyIDUxMl0+PgplbmRvYmoKMiAwIG9iajw8
-L0tpZHNbMyAwIFJdL1R5cGUvUGFnZXMvQ291bnQgMT4+CmVuZG9iago0IDAgb2JqPDwvVHlwZS9DYXRh
-bG9nL1BhZ2VzIDIgMCBSPj4KZW5kb2JqCjUgMCBvYmo8PC9Nb2REYXRlKEQ6MjAxNjA0MTIwMzMwMTFa
-KS9DcmVhdG9yKGh0dHA6Ly93d3cuZmlsZWZvcm1hdC5pbmZvL2NvbnZlcnQvaW1hZ2Uvc3ZnMnBkZi5o
-dG0pL0NyZWF0aW9uRGF0ZShEOjIwMTYwNDEyMDMzMDExWikvUHJvZHVjZXIoaVRleHQxLjIuMyBieSBs
-b3dhZ2llLmNvbSBcKGJhc2VkIG9uIGl0ZXh0LXBhdWxvLTE1MlwpKT4+CmVuZG9iagp4cmVmCjAgNgow
-MDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDUyOSAwMDAwMCBuIAow
-MDAwMDAwMzkxIDAwMDAwIG4gCjAwMDAwMDA1NzkgMDAwMDAgbiAKMDAwMDAwMDYyMyAwMDAwMCBuIAp0
-cmFpbGVyCjw8L0luZm8gNSAwIFIvSUQgWzw3OTlhNTllODg1MDE2YTRhMTQ0NmExMjQ0YWZhNzdhYz48
-Nzk5YTU5ZTg4NTAxNmE0YTE0NDZhMTI0NGFmYTc3YWM+XS9Sb290IDQgMCBSL1NpemUgNj4+CnN0YXJ0
-eHJlZgo4MjgKJSVFT0YKgAnSLC0uL1okY2xhc3NuYW1lWCRjbGFzc2VzXU5TTXV0YWJsZURhdGGjLjAx
-Vk5TRGF0YVhOU09iamVjdNIsLTM0XU5TUERGSW1hZ2VSZXCjNTYxXU5TUERGSW1hZ2VSZXBaTlNJbWFn
-ZVJlcNIsLTg5V05TQXJyYXmiODHSLC07PF5OU011dGFibGVBcnJheaM7ODHTPj8JQEFCV05TV2hpdGVc
-TlNDb2xvclNwYWNlRDAgMAAQA4AO0iwtREVXTlNDb2xvcqJEMdIsLUdIV05TSW1hZ2WiRzFfEA9OU0tl
-eWVkQXJjaGl2ZXLRS0xUcm9vdIABAAgAEQAaACMALQAyADcASgBQAFkAYABtAHQAfAB+AIMAhQCHAIwA
-lwCZAJsAnQCiAKUApwCpAKsArQC4AL8A0QDkAO4A8ADyAPQA9gEBAR0BIgEqBXMFdQV6BYUFjgWcBaAF
-pwWwBbUFwwXHBdUF4AXlBe0F8AX1BgQGCAYPBhcGJAYpBisGLQYyBjoGPQZCBkoGTQZfBmIGZwAAAAAA
-AAIBAAAAAAAAAE0AAAAAAAAAAAAAAAAAAAZpA
-</mutableData>
-        </image>
         <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSApplicationIcon" width="128" height="128"/>
         <image name="add" width="512" height="512"/>
         <image name="delete" width="512" height="512"/>
+        <image name="download_arrow_white" width="16" height="16"/>
         <image name="fastforward" width="512" height="512"/>
         <image name="gear" width="512" height="512"/>
         <image name="next" width="512" height="512"/>
