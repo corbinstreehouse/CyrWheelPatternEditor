@@ -8,16 +8,22 @@
 
 import Cocoa
 
-// patternSequenceProvider
-
 class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildrenDelegate, CDTimelineTrackViewDataSource, CDPatternSequencePresenter, CDTimelineTrackViewDraggingSourceDelegate, CDTimelineTrackViewDraggingDestinationDelegate {
+    
+    // ivars
+    private var _wasPausedBeforeTimelineDragging = false
+    private var _childrenObserver: CDPatternSequenceChildrenObserver?
+    private let _patternItemPBoardType = CDPatternItem.pasteboardType()
 
+    // outlets/ivars
     @IBOutlet weak var _timelineTrackView: CDTimelineTrackView!
     @IBOutlet weak var _musicTrackView: CDTimelineTrackView!
     @IBOutlet weak var _playheadView: CDPlayheadView!
-    @IBOutlet weak var _timelineView: CDTimelineView!
-
-    private var _childrenObserver: CDPatternSequenceChildrenObserver?;
+    @IBOutlet weak var _timelineView: CDTimelineView! {
+        didSet {
+            _timelineView?.delegate = self
+        }
+    }
 
     internal var patternSequence: CDPatternSequence! {
         willSet {
@@ -47,7 +53,6 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
         
     }
     
-    private let _patternItemPBoardType = CDPatternItem.pasteboardType()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -276,3 +281,26 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
         return true
     }
 }
+
+extension CDTimelineTrackViewController: CDTimelineViewDelegate {
+    
+    func timelineViewChanged(reason: CDTimelineViewChangeReason) {
+        let patternRunner = self.patternSequenceProvider!.patternRunner
+        switch (reason) {
+        case .playheadTimePositionMoved:
+            patternRunner.playheadTimePosition = _timelineView.playheadTimePosition
+        case .playheadTimeDraggingStarted:
+            _wasPausedBeforeTimelineDragging = patternRunner.paused
+            if !_wasPausedBeforeTimelineDragging {
+                patternRunner.pause();
+            }
+        case .playheadTimeDraggingEnded:
+            patternRunner.playheadTimePosition = _timelineView.playheadTimePosition
+            if !_wasPausedBeforeTimelineDragging {
+                patternRunner.play()
+            }
+        }
+        
+    }
+}
+

@@ -183,9 +183,10 @@ NSString * const CDPatternRunnerPlayheadTimePositionKey = @"playheadTimePosition
 -(void)setPlayheadTimePosition:(NSTimeInterval)playheadTimePosition {
     if (_playheadTimePosition != playheadTimePosition) {
         // update the manager
-        _sequenceManager.setPlayheadPositionInMS(playheadTimePosition);
-        // then our variable
-        [self _setPlayheadTimePosition:playheadTimePosition];
+        uint32_t timeInMS = round(playheadTimePosition*1000.0);
+        _sequenceManager.setPlayheadPositionInMS(timeInMS);
+        // then our variable based on the manager
+        [self _setPlayheadTimePosition:_sequenceManager.getPlayheadPositionInMS() / 1000.0];
     }
 }
 

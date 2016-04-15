@@ -8,6 +8,16 @@
 
 import Cocoa
 
+enum CDTimelineViewChangeReason {
+    case playheadTimeDraggingStarted;
+    case playheadTimeDraggingEnded;
+    case playheadTimePositionMoved;
+}
+
+protocol CDTimelineViewDelegate {
+    func timelineViewChanged(reason: CDTimelineViewChangeReason);
+}
+
 
 class CDTimelineView: NSView {
     // Variables
@@ -16,6 +26,8 @@ class CDTimelineView: NSView {
     let seperatorWidth: CGFloat = 1.0
     let textStartyingY: CGFloat = 1.0 // A better way??
 
+    var delegate: CDTimelineViewDelegate? = nil
+    
     private func _commonInit() {
         self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
         self.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
@@ -242,8 +254,6 @@ class CDTimelineView: NSView {
     
     
     var playheadTimePosition: NSTimeInterval = 0 {
-        willSet(newValue) {
-        }
         didSet {
             // Don't let it go less than our start
             if playheadTimePosition < 0 {
@@ -259,21 +269,29 @@ class CDTimelineView: NSView {
             c.constant = _currentPlayheadViewOffset()
         }
     }
-    
+
+    private func _timelineViewChanged(reason: CDTimelineViewChangeReason) {
+        if let delegate = self.delegate {
+            delegate.timelineViewChanged(reason)
+        }
+    }
     
     override func mouseDown(event: NSEvent) {
         // If we hit the playhead's main view, then track it and move it..
         if self.playheadView!.shouldDragForEvent(event) {
             let startingTimePosition = self.playheadTimePosition
             let startingPoint = event.locationInView(self)
+            self._timelineViewChanged(.playheadTimeDraggingStarted)
             self.window!.trackEventsMatchingMask([NSEventMask.LeftMouseDraggedMask, NSEventMask.LeftMouseUpMask], timeout: NSEventDurationForever, mode: NSEventTrackingRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
                 let currentPoint = event.locationInView(self)
                 let distanceMoved = currentPoint.x - startingPoint.x
                 let timeForDistanceMoved = self._timeForWidth(distanceMoved)
                 let newTimePosition = startingTimePosition + timeForDistanceMoved
                 self.playheadTimePosition = newTimePosition;
+                self._timelineViewChanged(.playheadTimePositionMoved)
                 if event.type == NSEventType.LeftMouseUp {
                     stop.memory = true
+                    self._timelineViewChanged(.playheadTimeDraggingEnded)
                 }
             })
         }
