@@ -67,10 +67,21 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
             [self _updatePlayheadPosition];
             break;
         }
+        case CDWheelChangeReasonStateChanged: {
+            [self _sendStateChangedNote];
+            break;
+        }
         default:
             break;
     }
 }
+
+NSString * const CDPatternRunnerStateChangedNotificationName = @"CDPatternRunnerStateChangedNotificationName";
+
+- (void)_sendStateChangedNote {
+    [[NSNotificationCenter defaultCenter] postNotificationName:CDPatternRunnerStateChangedNotificationName object:self];
+}
+
 #if USE_TIMER
 // One timer to rul them all
 NSTimer *g_timer = nil;

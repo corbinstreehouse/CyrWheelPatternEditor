@@ -2476,6 +2476,7 @@ DQ
                     </view>
                     <connections>
                         <outlet property="_cyrWheelView" destination="dxH-4V-fs3" id="1lv-ci-y5t"/>
+                        <outlet property="_playButton" destination="oVM-lu-PAm" id="maF-i7-Tmy"/>
                     </connections>
                 </viewController>
                 <customObject id="ORQ-sf-WdA" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

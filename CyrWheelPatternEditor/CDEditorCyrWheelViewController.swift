@@ -13,6 +13,7 @@ import Cocoa
 class CDEditorCyrWheelViewController: NSViewController {
 
     @IBOutlet weak var _cyrWheelView: CDCyrWheelView!
+    @IBOutlet weak var _playButton: CDRolloverButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,20 @@ class CDEditorCyrWheelViewController: NSViewController {
         // required
         let provider = self.patternSequenceProvider!
         provider.patternRunner.setCyrWheelView(_cyrWheelView);
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("_wheelStateChanged:"), name: CDPatternRunnerStateChangedNotificationName, object: provider.patternRunner)
+        _updateButtons()
+    }
+    
+    private func _updateButtons() {
+        if (_patternRunner!.paused) {
+            _playButton.image = NSImage(named: "play")
+        } else {
+            _playButton.image = NSImage(named: "pause")
+        }
+    }
+    
+    @objc func _wheelStateChanged(note: NSNotification) {
+        _updateButtons()
     }
     
     private var _patternRunner: CDPatternRunner? {

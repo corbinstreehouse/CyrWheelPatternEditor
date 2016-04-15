@@ -61,5 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 extern NSString * const CDPatternRunnerPlayheadTimePositionKey;
+extern NSString * const CDPatternRunnerStateChangedNotificationName;
 
 NS_ASSUME_NONNULL_END
