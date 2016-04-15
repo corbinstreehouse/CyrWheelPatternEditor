@@ -95,12 +95,11 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
     private func _updatePatternRunner() {
         // If we have one selected item, we create a preview for just that. Otherwise, we preview the whole sequence
         if let validSequence = self.patternSequence {
-            // Save the position and attempt to restore it!!
-            
-            
-            
-                let data = validSequence.exportAsData()
-                _patternRunner.loadFromData(data)
+            // Save the position and attempt to restore it!
+            let playheadTimePosition = _patternRunner.playheadTimePosition
+            let data = validSequence.exportAsData()
+            _patternRunner.loadFromData(data)
+            _patternRunner.playheadTimePosition = playheadTimePosition
         }
     }
 

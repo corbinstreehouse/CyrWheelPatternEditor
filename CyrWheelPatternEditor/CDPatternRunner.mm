@@ -185,7 +185,7 @@ NSString * const CDPatternRunnerPlayheadTimePositionKey = @"playheadTimePosition
         // update the manager
         uint32_t timeInMS = round(playheadTimePosition*1000.0);
         _sequenceManager.setPlayheadPositionInMS(timeInMS);
-        // then our variable based on the manager
+        // then our variable based on the manager; this will get the actual value
         [self _setPlayheadTimePosition:_sequenceManager.getPlayheadPositionInMS() / 1000.0];
     }
 }
@@ -282,12 +282,15 @@ NSString * const CDPatternRunnerPlayheadTimePositionKey = @"playheadTimePosition
     fileInMemory.setData(data);
     _sequenceManager.loadSequenceInMemoryFromFatFile(&fileInMemory);
     fileInMemory.close();
+    [self _setPlayheadTimePosition:0];
+    _sequenceManager.forceShow();
 }
 
 - (void)loadDynamicPatternType:(LEDPatternType)type patternSpeed:(double)speed patternColor:(NSColor *)color {
     color = [color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
     CRGB rgbColor = CRGB(round(color.redComponent*255), round(color.greenComponent *255), round(color.blueComponent*255));
     uint32_t patternDuration = CDPatternDurationForPatternSpeed(speed, type);
+    [self _setPlayheadTimePosition:0];
     _sequenceManager.setDynamicPatternType(type, patternDuration, rgbColor);
 }
 

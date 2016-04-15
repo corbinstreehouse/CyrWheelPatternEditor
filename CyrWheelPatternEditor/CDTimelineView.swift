@@ -282,11 +282,17 @@ class CDTimelineView: NSView {
             let startingTimePosition = self.playheadTimePosition
             let startingPoint = event.locationInView(self)
             self._timelineViewChanged(.playheadTimeDraggingStarted)
+            let maxTimePosition = self._timeForWidth(self.bounds.size.width - self.startingOffset)
             self.window!.trackEventsMatchingMask([NSEventMask.LeftMouseDraggedMask, NSEventMask.LeftMouseUpMask], timeout: NSEventDurationForever, mode: NSEventTrackingRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
                 let currentPoint = event.locationInView(self)
                 let distanceMoved = currentPoint.x - startingPoint.x
                 let timeForDistanceMoved = self._timeForWidth(distanceMoved)
-                let newTimePosition = startingTimePosition + timeForDistanceMoved
+                var newTimePosition = startingTimePosition + timeForDistanceMoved
+                if (newTimePosition < 0) {
+                    newTimePosition = 0;
+                } else if (newTimePosition > maxTimePosition) {
+                    newTimePosition = maxTimePosition;
+                }
                 self.playheadTimePosition = newTimePosition;
                 self._timelineViewChanged(.playheadTimePositionMoved)
                 if event.type == NSEventType.LeftMouseUp {
