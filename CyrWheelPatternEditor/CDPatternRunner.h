@@ -40,8 +40,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(readonly, getter=isPaused) BOOL paused;
 
 // KVO compliant
+
+// NOTE: these time values are old...I'm using them in the simulator; playheadTimePosition could now be used
 @property NSTimeInterval patternTimePassed;
 @property NSTimeInterval patternTimePassedFromFirstTimedPattern;
+
+@property NSTimeInterval playheadTimePosition; // CDPatternRunnerPlayheadTimePositionKey
+
 @property (nullable) CDPatternItem *currentPatternItem;
 @property (readonly, nullable) CDPatternSequence *currentPatternSequence; // Not settable from outside (TODO: make readonly here)
 
@@ -53,5 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @end
+
+extern NSString * const CDPatternRunnerPlayheadTimePositionKey;
 
 NS_ASSUME_NONNULL_END

@@ -22,6 +22,7 @@
     CWPatternSequenceManager _sequenceManager;
     NSManagedObjectContext *_context;
     NSPersistentStoreCoordinator *_coordinator;
+    NSTimeInterval _playheadTimePosition;
 }
 @property (nullable) CDPatternSequence *currentPatternSequence; // Not settable from outside (TODO: make readonly here)
 @end
@@ -60,6 +61,10 @@ static void _wheelChangedHandler(CDWheelChangeReason changeReason, void *data) {
         }
         case CDWheelChangeReasonSequenceChanged: {
             [self _loadCurrentSequence];
+            break;
+        }
+        case CDWheelChangeReasonPlayheadPositionChanged: {
+            [self _updatePlayheadPosition];
             break;
         }
         default:
@@ -150,14 +155,42 @@ static NSMutableSet *g_runningPatterns = [NSMutableSet set];
 @synthesize patternTimePassedFromFirstTimedPattern;
 @synthesize currentPatternItem;
 @synthesize currentPatternSequence;
+@dynamic playheadTimePosition;
 
 - (void)_tick:(NSTimer *)sender {
     if (!_sequenceManager.isPaused()) {
         _sequenceManager.process();
-        // ms -> s
-        self.patternTimePassed = _sequenceManager.getPatternTimePassed() / 1000.0;
-        self.patternTimePassedFromFirstTimedPattern = _sequenceManager.getPatternTimePassedFromFirstTimedPattern() / 1000.0;
+        [self _updatePlayheadPosition];
     }
+}
+
+NSString * const CDPatternRunnerPlayheadTimePositionKey = @"playheadTimePosition";
+
+
+- (void)_setPlayheadTimePosition:(NSTimeInterval)interval {
+    [self willChangeValueForKey:CDPatternRunnerPlayheadTimePositionKey];
+    _playheadTimePosition = interval;
+    [self didChangeValueForKey:CDPatternRunnerPlayheadTimePositionKey];
+}
+
+- (void)_updatePlayheadPosition {
+    // ms -> s
+    self.patternTimePassed = _sequenceManager.getPatternTimePassed() / 1000.0;
+    self.patternTimePassedFromFirstTimedPattern = _sequenceManager.getPatternTimePassedFromFirstTimedPattern() / 1000.0;
+    [self _setPlayheadTimePosition:_sequenceManager.getPlayheadPositionInMS() / 1000.0];
+}
+
+-(void)setPlayheadTimePosition:(NSTimeInterval)playheadTimePosition {
+    if (_playheadTimePosition != playheadTimePosition) {
+        // update the manager
+        _sequenceManager.setPlayheadPositionInMS(playheadTimePosition);
+        // then our variable
+        [self _setPlayheadTimePosition:playheadTimePosition];
+    }
+}
+
+- (NSTimeInterval)playheadTimePosition {
+    return _playheadTimePosition; // _sequenceManager.getPlayheadPositionInMS() / 1000.0;
 }
 
 - (void)_stopTimerIfNeeded {

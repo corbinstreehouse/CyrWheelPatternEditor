@@ -10,7 +10,7 @@ import Cocoa
 
 class CDEditorPatternRunner : CDPatternRunner {
 
-    var showingCurrentSelection: Bool = false
+//    var showingCurrentSelection: Bool = false
     
     
 }
@@ -90,25 +90,17 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
     }
     
     // Bound to a child's value, so that another view can be bound to this one
-    dynamic var patternSelectionIndexes: NSIndexSet = NSIndexSet() {
-        didSet {
-            _updatePatternRunner();
-        }
-    }
+    dynamic var patternSelectionIndexes: NSIndexSet = NSIndexSet()
     
     private func _updatePatternRunner() {
         // If we have one selected item, we create a preview for just that. Otherwise, we preview the whole sequence
         if let validSequence = self.patternSequence {
-            if let selectedItem = self._selectedPatternItem  {
-                // Export a special version of that item that loops
-                let data = validSequence.exportSingleItemAsData(selectedItem)
-                _patternRunner.showingCurrentSelection = true
-                _patternRunner.loadFromData(data)
-            } else {
+            // Save the position and attempt to restore it!!
+            
+            
+            
                 let data = validSequence.exportAsData()
-                _patternRunner.showingCurrentSelection = false
                 _patternRunner.loadFromData(data)
-            }
         }
     }
 

@@ -8,6 +8,8 @@
 
 import Cocoa
 
+// patternSequenceProvider
+
 class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildrenDelegate, CDTimelineTrackViewDataSource, CDPatternSequencePresenter, CDTimelineTrackViewDraggingSourceDelegate, CDTimelineTrackViewDraggingDestinationDelegate {
 
     @IBOutlet weak var _timelineTrackView: CDTimelineTrackView!
@@ -27,6 +29,7 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
                 _timelineTrackView.dataSource = self
                 _timelineTrackView.draggingSourceDelegate = self
                 _timelineTrackView.draggingDestinationDelegate = self;
+                _updatePlayheadViewPosition();
             }
         }
     }
@@ -57,10 +60,25 @@ class CDTimelineTrackViewController: NSViewController, CDPatternSequenceChildren
     }
     
     override func viewWillAppear() {
-        let parentVC = self.patternSequenceProvider as! NSObject
+        let sequenceProvider: CDPatternSequenceProvider = self.patternSequenceProvider!;
+        sequenceProvider.patternRunner.addObserver(self, forKeyPath: CDPatternRunnerPlayheadTimePositionKey, options: [], context: nil)
+        
+        let parentVC = sequenceProvider as! NSObject
         // Bind the parent to our value
         // TODO: unbind when done!
         parentVC.bind("patternSelectionIndexes", toObject: _timelineTrackView, withKeyPath: "selectionIndexes", options: nil)
+    }
+    
+    private func _updatePlayheadViewPosition() {
+        _timelineView.playheadTimePosition = self.patternSequenceProvider!.patternRunner.playheadTimePosition
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if keyPath == CDPatternRunnerPlayheadTimePositionKey {
+            _updatePlayheadViewPosition();
+        } else {
+            assert(false, "bad observation")
+        }
     }
     
     func validateUserInterfaceItem(anItem: NSValidatedUserInterfaceItem) -> Bool {

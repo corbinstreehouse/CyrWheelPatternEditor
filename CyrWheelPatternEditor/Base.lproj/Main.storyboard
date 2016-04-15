@@ -2927,8 +2927,8 @@ DQ
                 <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d88-Lg-snN" customClass="CDPlayheadView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="17" height="173"/>
                     <subviews>
-                        <box title="Box" boxType="custom" borderType="line" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="gtF-Yn-wUt">
-                            <rect key="frame" x="6.5" y="0.0" width="3" height="163"/>
+                        <box misplaced="YES" title="Box" boxType="custom" borderType="line" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="gtF-Yn-wUt">
+                            <rect key="frame" x="6" y="0.0" width="3" height="163"/>
                             <view key="contentView" id="8e8-dE-tg8">
                                 <rect key="frame" x="1" y="1" width="1" height="161"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
