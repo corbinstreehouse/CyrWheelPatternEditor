@@ -40,7 +40,8 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         let result = super.outlineView(outlineView, viewForTableColumn: tableColumn, item: item)
         
         if let cellView = result as? CDPatternImagesCellView {
-          //  cellView._uploadButton.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+//            cellView.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+//            cellView._uploadButton.image!.template = true
             // hide the button on dirs and programmed patterns
             var uploadButtonIsHidden = true
             if let imageItem = item as? ImagePatternObjectWrapper {
@@ -440,16 +441,25 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     
     // this does the upload with UI feedback
     private func _uploadFileFromURL(url: NSURL, filename: String, isSequenceFile: Bool, wheel: CDWheelConnection) {
+        
+        let vc = self.storyboard!.instantiateControllerWithIdentifier("CDUploadProgressViewController") as! CDUploadProgressViewController
+        vc.filename = "Uploading: " + filename
+        self.presentViewControllerAsSheet(vc)
+        
         wheel.uploadFileFromURL(url, filename: filename) { (uploadProgressAmount, finished, error) -> Void in
-            // TODO: UI feedback!
-            NSLog("upload: %g%%", uploadProgressAmount*100.0)
+            vc.progress = uploadProgressAmount * 100.0
             if finished {
-                if error == nil {
+                vc.dismissController(nil)
+                if let error = error {
+                    self.view.window!.presentError(error)
+                } else {
                     // When doing sequences, ask for them again
                     if (isSequenceFile) {
                         wheel.requestCustomSequences()
                     }
                 }
+            } else if uploadProgressAmount == 1.0 {
+                vc.filename = "Waiting for confirmation receipt..."
             }
         }
 
@@ -511,8 +521,23 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             if let imageItem = item as? ImagePatternObjectWrapper {
                 if !imageItem.isDirectory {
                     // Going to the root!
+                    
+                    
+                    let alert = NSAlert()
                     let filename = "/" + imageItem.relativeFilename
-                    self._uploadFileFromURL(imageItem.url, filename: filename, isSequenceFile: false, wheel: wheel);
+                    alert.messageText = "Are you sure you want to upload " + filename + "?"
+                    alert.alertStyle = NSAlertStyle.CriticalAlertStyle
+                    let buttonOK = alert.addButtonWithTitle("OK")
+                    buttonOK.tag = NSModalResponseOK
+                    let cancelButton = alert.addButtonWithTitle("Cancel")
+                    cancelButton.tag = NSModalResponseCancel
+                    
+                    alert.beginSheetModalForWindow(self.view.window!, completionHandler: { (r: NSModalResponse) -> Void in
+                        if r == NSModalResponseOK {
+                            self._uploadFileFromURL(imageItem.url, filename: filename, isSequenceFile: false, wheel: wheel);
+                        }
+                    })
+                    
                 }
             }
         }

@@ -3090,10 +3090,13 @@ DQ
                                                                         <constraint firstAttribute="width" constant="16" id="Hj1-jv-VhF"/>
                                                                         <constraint firstAttribute="height" constant="16" id="SQv-Bt-0La"/>
                                                                     </constraints>
-                                                                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="upload" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="Gib-mn-kN2">
+                                                                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="upload512" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="Gib-mn-kN2" customClass="CDRolloverButtonCell" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>
+                                                                    <connections>
+                                                                        <action selector="_cellBtnUploadClicked:" target="ikO-88-XKn" id="otn-CE-roL"/>
+                                                                    </connections>
                                                                 </button>
                                                             </subviews>
                                                             <constraints>
@@ -3297,6 +3300,7 @@ DQ
                 </viewController>
                 <customObject id="hzd-Os-EUV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="x7G-fz-sgr"/>
+                <userDefaultsController id="fIr-y2-Wkq"/>
             </objects>
             <point key="canvasLocation" x="160.5" y="2351"/>
         </scene>
@@ -3353,6 +3357,78 @@ DQ
             </objects>
             <point key="canvasLocation" x="604" y="2280"/>
         </scene>
+        <!--Upload Progress View Controller-->
+        <scene sceneID="hG9-NL-z8N">
+            <objects>
+                <viewController storyboardIdentifier="CDUploadProgressViewController" id="RnY-88-Ee3" customClass="CDUploadProgressViewController" customModule="CyrWheelPatternEditor" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="DAW-3b-wsz">
+                        <rect key="frame" x="0.0" y="0.0" width="610" height="192"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <box fixedFrame="YES" title="Box" boxType="custom" borderType="none" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="LJs-qD-xhs">
+                                <rect key="frame" x="0.0" y="0.0" width="610" height="192"/>
+                                <view key="contentView" ambiguous="YES" id="3Pi-OW-bB2">
+                                    <rect key="frame" x="0.0" y="0.0" width="610" height="192"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WNJ-97-LqI">
+                                            <rect key="frame" x="264" y="16" width="82" height="32"/>
+                                            <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Z5F-aE-cM1">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="dismissController:" target="RnY-88-Ee3" id="HRy-zg-LWy"/>
+                                            </connections>
+                                        </button>
+                                        <box fixedFrame="YES" borderWidth="2" title="Box" boxType="custom" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="ruC-hq-oMA" userLabel="Top line box">
+                                            <rect key="frame" x="0.0" y="95" width="610" height="77"/>
+                                            <view key="contentView" ambiguous="YES" id="eel-RI-8dn">
+                                                <rect key="frame" x="2" y="2" width="606" height="73"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZDz-5w-NRa">
+                                                        <rect key="frame" x="226" y="33" width="154" height="40"/>
+                                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Uploading" id="mnH-3e-OAo">
+                                                            <font key="font" metaFont="system" size="33"/>
+                                                            <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <progressIndicator wantsLayer="YES" fixedFrame="YES" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="cRL-Cn-Flo">
+                                                        <rect key="frame" x="207" y="6" width="192" height="20"/>
+                                                        <connections>
+                                                            <binding destination="RnY-88-Ee3" name="value" keyPath="progress" id="R2k-Yf-bbr"/>
+                                                        </connections>
+                                                    </progressIndicator>
+                                                </subviews>
+                                            </view>
+                                            <color key="borderColor" red="0.12984204290000001" green="0.12984612579999999" blue="0.12984395030000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="fillColor" red="0.1450980392" green="0.1450980392" blue="0.1450980392" alpha="1" colorSpace="calibratedRGB"/>
+                                        </box>
+                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pvS-wZ-7yz">
+                                            <rect key="frame" x="-2" y="70" width="614" height="17"/>
+                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="/Volumes/Foo.txt" id="Gty-1v-cLD">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <connections>
+                                                <binding destination="RnY-88-Ee3" name="value" keyPath="filename" id="mgp-Gj-d82"/>
+                                            </connections>
+                                        </textField>
+                                    </subviews>
+                                </view>
+                                <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                <color key="fillColor" red="0.16220360989999999" green="0.16220840810000001" blue="0.1622058451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </box>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="Nh1-d9-Ffq" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1482" y="1616"/>
+        </scene>
     </scenes>
     <resources>
         <image name="NSActionTemplate" width="14" height="14"/>
@@ -3366,6 +3442,6 @@ DQ
         <image name="play" width="512" height="512"/>
         <image name="previous" width="512" height="512"/>
         <image name="rewind" width="512" height="512"/>
-        <image name="upload" width="16" height="16"/>
+        <image name="upload512" width="512" height="512"/>
     </resources>
 </document>

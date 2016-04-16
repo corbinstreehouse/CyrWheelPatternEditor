@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D0C646F1CC20EE8005D7C6D /* CDUploadProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0C646E1CC20EE8005D7C6D /* CDUploadProgressViewController.swift */; };
 		9D0EF1CA1BFEE1BD002C687E /* CDWheelConnectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0EF1C81BFEE1BD002C687E /* CDWheelConnectionViewController.swift */; };
 		9D0EF1CD1BFEE406002C687E /* CDAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0EF1CC1BFEE406002C687E /* CDAppDelegate.swift */; };
 		9D117A1F1A0497B90045C12B /* colorpalettes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9DCE4EC419D52D27002664D9 /* colorpalettes.cpp */; };
@@ -125,6 +126,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9D0C646E1CC20EE8005D7C6D /* CDUploadProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDUploadProgressViewController.swift; sourceTree = "<group>"; };
 		9D0EF1C71BFEE1BD002C687E /* CyrWheelPatternEditor-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CyrWheelPatternEditor-Bridging-Header.h"; sourceTree = "<group>"; };
 		9D0EF1C81BFEE1BD002C687E /* CDWheelConnectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDWheelConnectionViewController.swift; sourceTree = "<group>"; };
 		9D0EF1CC1BFEE406002C687E /* CDAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDAppDelegate.swift; path = ../CDAppDelegate.swift; sourceTree = "<group>"; };
@@ -422,6 +424,7 @@
 				9DBD17781C7429ED00670FCC /* CDWheelFileManagerViewController.swift */,
 				9D84FEBC1C65AF52004165A9 /* CDWheelPlayerSplitViewController.swift */,
 				9DE5C4D61C66590200E0B96C /* CDWheelPlayerDetailViewController.swift */,
+				9D0C646E1CC20EE8005D7C6D /* CDUploadProgressViewController.swift */,
 				9DE5C4DA1C67AA0700E0B96C /* DarkOutlineView.swift */,
 				9D9775821C0223E3002D78EE /* CDWheelConnection.swift */,
 				9D5855CF1CB0449000971D64 /* CDDesktopWheelConnection.swift */,
@@ -674,6 +677,7 @@
 				9D1612ED1C3CB0AD00B7A890 /* CDPatternRunner.mm in Sources */,
 				9D97757F1C005BB3002D78EE /* CDWheelConnectionWindowController.swift in Sources */,
 				9D683E2C1C0FF0AC0058EFA0 /* CDRolloverButton.swift in Sources */,
+				9D0C646F1CC20EE8005D7C6D /* CDUploadProgressViewController.swift in Sources */,
 				9DB503931C7EAAA00079155D /* CDBaseOrientation.cpp in Sources */,
 				9DA21BA21C3C9A200047E8C1 /* CDWheelPreviewViewController.swift in Sources */,
 				9DE5C4DD1C698B7C00E0B96C /* CDEditorCyrWheelViewController.swift in Sources */,

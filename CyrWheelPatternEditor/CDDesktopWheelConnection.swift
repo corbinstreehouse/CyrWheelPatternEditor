@@ -13,7 +13,7 @@ extension CDWheelConnection {
     func uploadFileFromURL(url: NSURL, filename: String, uploadHandler: CDWheelConnectionUploadHandler) {
         
         // If it is a cyrwheel file... load it into data..and upload that
-        if url.pathExtension != "pat" {
+        if url.pathExtension == gSequenceEditorExtension {
             do {
                 let document = try CDDocument(contentsOfURL: url, ofType: "public.cyrwheelpattern")
                 let data = document.exportToData();

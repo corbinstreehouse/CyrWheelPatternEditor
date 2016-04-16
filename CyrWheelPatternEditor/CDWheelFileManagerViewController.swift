@@ -30,9 +30,9 @@ extension CDWheelFileManagerViewController : NSOutlineViewDelegate, NSOutlineVie
     
  
     func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
-        if let connectedWheel = self.connectedWheel {
-//            return connectedWheel.customSequences
-        }
+//        if let connectedWheel = self.connectedWheel {
+////            return connectedWheel.customSequences
+//        }
         return 0;
     }
     
