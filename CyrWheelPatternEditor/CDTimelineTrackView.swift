@@ -296,28 +296,46 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         _removeIndexFromSelection(index)
     }
     
-    override func viewWillMoveToSuperview(newSuperview: NSView?) {
-        if let oldsuper = self.superview {
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSViewFrameDidChangeNotification, object: oldsuper)
-        }
-    }
-    
-    // Dynamic height fill:
-    override func viewDidMoveToSuperview() {
-        super.viewDidMoveToSuperview()
-        if let newSuper = self.superview {
-            // We want to know when the clip view's size changes (via the scrollview) so we can fill the height by changing our intrinsic size that we have
-            NSNotificationCenter.defaultCenter().addObserverForName(NSViewFrameDidChangeNotification, object: newSuper, queue: nil, usingBlock: { (note: NSNotification) -> Void in
-                self.invalidateIntrinsicContentSize()
-                // All our views also depend on our size (for now!)
-//                for view in self.views {
-//                    view.invalidateIntrinsicContentSize()
-//                }
-            })
-            // Invalidate us right away too..
-            self.invalidateIntrinsicContentSize()
-        }
-    }
+//        // I don't think this is doing anything anymore...
+//    private var _registeredForChanges = false
+//    private func _registerForSuperFrameChangesIfNeeded() {
+//        if let newSuper = self.superview {
+//            if (!_registeredForChanges) {
+//                _registeredForChanges = true;
+//                weak var weakSelf = self;
+//                // We want to know when the clip view's size changes (via the scrollview) so we can fill the height by changing our intrinsic size that we have
+//                NSNotificationCenter.defaultCenter().addObserverForName(NSViewFrameDidChangeNotification, object: newSuper, queue: nil, usingBlock: { (note: NSNotification) -> Void in
+//                    weakSelf?.invalidateIntrinsicContentSize()
+//                    // All our views also depend on our size (for now!)
+//                    //                for view in self.views {
+//                    //                    view.invalidateIntrinsicContentSize()
+//                    //                }
+//                })
+//                // Invalidate us right away too..
+//                self.invalidateIntrinsicContentSize()
+//            }
+//        }
+//    }
+//    
+//    override func viewWillMoveToSuperview(newSuperview: NSView?) {
+//        super.viewWillMoveToSuperview(newSuperview)
+//        if _registeredForChanges && newSuperview == nil {
+//            _registeredForChanges = false
+//            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSViewFrameDidChangeNotification, object: self.superview!)
+//        }
+//    }
+//    
+//    // Dynamic height fill:
+//    override func viewDidMoveToSuperview() {
+//        super.viewDidMoveToSuperview()
+//        _registerForSuperFrameChangesIfNeeded()
+//    }
+//    
+//    override func viewDidMoveToWindow() {
+//        super.viewDidMoveToWindow()
+//        // I'm not getting viewWillMoveToSuperview since it is setup in the nib (strange..)
+//        _registerForSuperFrameChangesIfNeeded()
+//    }
 
     override var intrinsicContentSize : NSSize {
         get {
@@ -374,7 +392,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
 //            layer.borderWidth = 0.0
 //        }
     }
-//
+
 //    private var _isFirstResponder: Bool {
 //        return self.window?.firstResponder == self
 //    }

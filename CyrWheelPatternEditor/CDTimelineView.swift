@@ -208,13 +208,15 @@ class CDTimelineView: NSView {
             pair.1.removeFromSuperview()
         }
         
-        // bring the tracks on top
+        // bring the tracks on top, but only if needed, as this is an expensive operation.. bah, this needs to be better as it does a lot of work
         for timelineTrackView in _timelineTrackViews {
             self.addSubview(timelineTrackView, positioned: NSWindowOrderingMode.Above, relativeTo: nil)
         }
         
         if let playheadView = self.playheadView {
-            self.addSubview(playheadView, positioned: NSWindowOrderingMode.Above, relativeTo: nil)
+            if subviews.last != playheadView {
+                self.addSubview(playheadView, positioned: NSWindowOrderingMode.Above, relativeTo: nil)
+            }
         }
     }
     
