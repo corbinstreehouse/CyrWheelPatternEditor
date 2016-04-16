@@ -84,7 +84,7 @@ class CDTimelineView: NSView {
                 // Make sure we fill the super
                 let superBounds = superview.bounds;
                 requestedSize.height = superBounds.size.height;
-                // fill the height
+                // fill the height and as large as the width
                 if requestedSize.width < superBounds.size.width {
                     requestedSize.width = superBounds.size.width
                 }
@@ -92,6 +92,47 @@ class CDTimelineView: NSView {
             return requestedSize
         }
     }
+    
+    private var _registeredForChanges = false
+    private func _registerForSuperFrameChangesIfNeeded() {
+        if let newSuper = self.superview {
+            if (!_registeredForChanges) {
+                _registeredForChanges = true;
+                weak var weakSelf   = self;
+                // We want to know when the clip view's size changes (via the scrollview) so we can fill the height by changing our intrinsic size that we have
+                NSNotificationCenter.defaultCenter().addObserverForName(NSViewFrameDidChangeNotification, object: newSuper, queue: nil, usingBlock: { (note: NSNotification) -> Void in
+                    weakSelf?.invalidateIntrinsicContentSize()
+                    // All our views also depend on our size (for now!)
+                    //                for view in self.views {
+                    //                    view.invalidateIntrinsicContentSize()
+                    //                }
+                })
+                // Invalidate us right away too..
+                self.invalidateIntrinsicContentSize()
+//                self.needsLayout = true
+            }
+        }
+    }
+    
+    override func viewWillMoveToSuperview(newSuperview: NSView?) {
+        super.viewWillMoveToSuperview(newSuperview)
+        if _registeredForChanges && newSuperview == nil {
+            _registeredForChanges = false
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSViewFrameDidChangeNotification, object: self.superview!)
+        }
+    }
+    
+    // Dynamic width fill:
+    override func viewDidMoveToSuperview() {
+        super.viewDidMoveToSuperview()
+        _registerForSuperFrameChangesIfNeeded()
+    }
+    
+//    override func viewDidMoveToWindow() {
+//        super.viewDidMoveToWindow()
+//        // I'm not getting viewWillMoveToSuperview since it is setup in the nib (strange..)
+//        _registerForSuperFrameChangesIfNeeded()
+//    }
     
     
     var widthPerMS: CGFloat = CDTimelineItemView.defaultWidthPerSecond / 1000.0 {
@@ -253,7 +294,6 @@ class CDTimelineView: NSView {
             _updatePlayheadViewPosition()
         }
     }
-    
     
     var playheadTimePosition: NSTimeInterval = 0 {
         didSet {
