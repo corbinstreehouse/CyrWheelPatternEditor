@@ -14,6 +14,12 @@ extension NSRange {
     }
 }
 
+class CDPatternImagesCellView : NSTableCellView {
+    @IBOutlet weak var _uploadButton: NSButton!
+    @IBOutlet weak var _uploadButtonTrailingConstraint: NSLayoutConstraint!
+    
+}
+
 class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewController, CDWheelConnectionPresenter, CDPatternItemHeaderWrapperChanged, CDWheelConnectionSequencesPresenter {
 
     override func viewDidLoad() {
@@ -29,6 +35,27 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         _outlineView.allowsMultipleSelection = false
         _updateButtonState()
     }
+    
+    override func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
+        let result = super.outlineView(outlineView, viewForTableColumn: tableColumn, item: item)
+        
+        if let cellView = result as? CDPatternImagesCellView {
+          //  cellView._uploadButton.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+            // hide the button on dirs and programmed patterns
+            var uploadButtonIsHidden = true
+            if let imageItem = item as? ImagePatternObjectWrapper {
+                if !imageItem.isDirectory {
+                    // TODO: Only show it if it is not on the other side..
+                    uploadButtonIsHidden = false;
+                }
+            }
+            cellView._uploadButton.hidden = uploadButtonIsHidden
+            cellView._uploadButtonTrailingConstraint.constant = uploadButtonIsHidden ? -cellView._uploadButton.frame.size.width : 0;
+        }
+        
+        return result
+    }
+
     
     dynamic var connectedWheel: CDWheelConnection? = nil {
         didSet {
@@ -428,7 +455,6 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
 
     }
 
-    
     private func _uploadSequenceFileAtURL(url: NSURL) {
         if let wheel = self.connectedWheel {
             var filename: String!
@@ -473,6 +499,25 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
         
     }
+    
+    @IBAction func _cellBtnUploadClicked(sender: NSButton) {
+        if let wheel = self.connectedWheel {
+            if wheel.uploading {
+                return;
+            }
+            
+            let row = _outlineView.rowForView(sender)
+            let item = _outlineView.itemAtRow(row)
+            if let imageItem = item as? ImagePatternObjectWrapper {
+                if !imageItem.isDirectory {
+                    // Going to the root!
+                    let filename = "/" + imageItem.relativeFilename
+                    self._uploadFileFromURL(imageItem.url, filename: filename, isSequenceFile: false, wheel: wheel);
+                }
+            }
+        }
+    }
+    
     
     
 }

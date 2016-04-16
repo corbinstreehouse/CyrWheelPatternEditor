@@ -3034,45 +3034,8 @@ DQ
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView id="mQ9-Rh-3ca">
+                                                        <tableCellView identifier="HeaderCell" id="dqW-og-0Cn" userLabel="HeaderCell">
                                                             <rect key="frame" x="1" y="1" width="314" height="17"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                            <subviews>
-                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xGA-Lc-8DE">
-                                                                    <rect key="frame" x="3" y="2" width="14" height="14"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="50" id="Zhr-mM-SC8"/>
-                                                                    </constraints>
-                                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="vT7-m2-8qG"/>
-                                                                    <connections>
-                                                                        <binding destination="mQ9-Rh-3ca" name="value" keyPath="objectValue.image" id="Z5S-sY-VmN"/>
-                                                                    </connections>
-                                                                </imageView>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R4w-lk-eMJ">
-                                                                    <rect key="frame" x="16" y="1" width="297" height="17"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Mh5-al-3Gi">
-                                                                        <font key="font" metaFont="system"/>
-                                                                        <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
-                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                    </textFieldCell>
-                                                                    <connections>
-                                                                        <binding destination="mQ9-Rh-3ca" name="value" keyPath="objectValue.label" id="oLV-79-eqy"/>
-                                                                    </connections>
-                                                                </textField>
-                                                            </subviews>
-                                                            <constraints>
-                                                                <constraint firstItem="xGA-Lc-8DE" firstAttribute="leading" secondItem="mQ9-Rh-3ca" secondAttribute="leading" constant="3" id="Aln-b0-Q0i"/>
-                                                                <constraint firstItem="R4w-lk-eMJ" firstAttribute="centerY" secondItem="mQ9-Rh-3ca" secondAttribute="centerY" constant="-1" id="Co4-sQ-y5T"/>
-                                                                <constraint firstAttribute="trailing" secondItem="R4w-lk-eMJ" secondAttribute="trailing" constant="3" id="GGW-hm-eFX"/>
-                                                                <constraint firstItem="R4w-lk-eMJ" firstAttribute="leading" secondItem="xGA-Lc-8DE" secondAttribute="trailing" constant="1" id="cPy-HO-Lgb"/>
-                                                                <constraint firstItem="xGA-Lc-8DE" firstAttribute="centerY" secondItem="mQ9-Rh-3ca" secondAttribute="centerY" id="jhP-rg-2s5"/>
-                                                            </constraints>
-                                                            <connections>
-                                                                <outlet property="textField" destination="R4w-lk-eMJ" id="ayx-oG-6ZR"/>
-                                                            </connections>
-                                                        </tableCellView>
-                                                        <tableCellView identifier="HeaderCell" id="dqW-og-0Cn">
-                                                            <rect key="frame" x="1" y="20" width="314" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField identifier="GroupRowCell" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4N2-23-ThO">
@@ -3094,6 +3057,58 @@ DQ
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="textField" destination="4N2-23-ThO" id="t6X-Kr-Sla"/>
+                                                            </connections>
+                                                        </tableCellView>
+                                                        <tableCellView id="mQ9-Rh-3ca" customClass="CDPatternImagesCellView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                            <rect key="frame" x="1" y="20" width="314" height="17"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <subviews>
+                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xGA-Lc-8DE">
+                                                                    <rect key="frame" x="3" y="2" width="14" height="14"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="50" id="Zhr-mM-SC8"/>
+                                                                    </constraints>
+                                                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="vT7-m2-8qG"/>
+                                                                    <connections>
+                                                                        <binding destination="mQ9-Rh-3ca" name="value" keyPath="objectValue.image" id="Z5S-sY-VmN"/>
+                                                                    </connections>
+                                                                </imageView>
+                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R4w-lk-eMJ">
+                                                                    <rect key="frame" x="16" y="1" width="284" height="17"/>
+                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Mh5-al-3Gi">
+                                                                        <font key="font" metaFont="system"/>
+                                                                        <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                    </textFieldCell>
+                                                                    <connections>
+                                                                        <binding destination="mQ9-Rh-3ca" name="value" keyPath="objectValue.label" id="oLV-79-eqy"/>
+                                                                    </connections>
+                                                                </textField>
+                                                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="49w-fH-SlB" userLabel="_uploadButton" customClass="CDRolloverButton" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                                    <rect key="frame" x="298" y="1" width="16" height="16"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="16" id="Hj1-jv-VhF"/>
+                                                                        <constraint firstAttribute="height" constant="16" id="SQv-Bt-0La"/>
+                                                                    </constraints>
+                                                                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="upload" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" id="Gib-mn-kN2">
+                                                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                        <font key="font" metaFont="system"/>
+                                                                    </buttonCell>
+                                                                </button>
+                                                            </subviews>
+                                                            <constraints>
+                                                                <constraint firstItem="xGA-Lc-8DE" firstAttribute="leading" secondItem="mQ9-Rh-3ca" secondAttribute="leading" constant="3" id="Aln-b0-Q0i"/>
+                                                                <constraint firstItem="R4w-lk-eMJ" firstAttribute="centerY" secondItem="mQ9-Rh-3ca" secondAttribute="centerY" constant="-1" id="Co4-sQ-y5T"/>
+                                                                <constraint firstItem="49w-fH-SlB" firstAttribute="leading" secondItem="R4w-lk-eMJ" secondAttribute="trailing" id="WvK-M6-ebs"/>
+                                                                <constraint firstItem="49w-fH-SlB" firstAttribute="centerY" secondItem="mQ9-Rh-3ca" secondAttribute="centerY" id="aKY-QR-6Qr"/>
+                                                                <constraint firstItem="R4w-lk-eMJ" firstAttribute="leading" secondItem="xGA-Lc-8DE" secondAttribute="trailing" constant="1" id="cPy-HO-Lgb"/>
+                                                                <constraint firstItem="xGA-Lc-8DE" firstAttribute="centerY" secondItem="mQ9-Rh-3ca" secondAttribute="centerY" id="jhP-rg-2s5"/>
+                                                                <constraint firstItem="49w-fH-SlB" firstAttribute="trailing" secondItem="mQ9-Rh-3ca" secondAttribute="trailing" id="prN-jp-a7K"/>
+                                                            </constraints>
+                                                            <connections>
+                                                                <outlet property="_uploadButton" destination="49w-fH-SlB" id="Os8-yt-qR8"/>
+                                                                <outlet property="_uploadButtonTrailingConstraint" destination="prN-jp-a7K" id="Dw2-wv-joT"/>
+                                                                <outlet property="textField" destination="R4w-lk-eMJ" id="ayx-oG-6ZR"/>
                                                             </connections>
                                                         </tableCellView>
                                                         <customView identifier="FloatingRowView" id="Rxl-8X-WVk" customClass="FloatingRowView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
@@ -3282,8 +3297,6 @@ DQ
                 </viewController>
                 <customObject id="hzd-Os-EUV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController id="x7G-fz-sgr"/>
-                <userDefaultsController id="nVb-Kp-jQ5"/>
-                <userDefaultsController id="ufp-zP-b05"/>
             </objects>
             <point key="canvasLocation" x="160.5" y="2351"/>
         </scene>
@@ -3353,5 +3366,6 @@ DQ
         <image name="play" width="512" height="512"/>
         <image name="previous" width="512" height="512"/>
         <image name="rewind" width="512" height="512"/>
+        <image name="upload" width="16" height="16"/>
     </resources>
 </document>
