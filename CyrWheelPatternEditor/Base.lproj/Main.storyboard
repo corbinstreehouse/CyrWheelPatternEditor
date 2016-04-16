@@ -3038,8 +3038,8 @@ DQ
                                                             <rect key="frame" x="1" y="1" width="314" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xGA-Lc-8DE">
-                                                                    <rect key="frame" x="3" y="1" width="16" height="16"/>
+                                                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xGA-Lc-8DE">
+                                                                    <rect key="frame" x="3" y="2" width="14" height="14"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="50" id="Zhr-mM-SC8"/>
                                                                     </constraints>
@@ -3048,8 +3048,8 @@ DQ
                                                                         <binding destination="mQ9-Rh-3ca" name="value" keyPath="objectValue.image" id="Z5S-sY-VmN"/>
                                                                     </connections>
                                                                 </imageView>
-                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R4w-lk-eMJ">
-                                                                    <rect key="frame" x="18" y="1" width="194" height="17"/>
+                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R4w-lk-eMJ">
+                                                                    <rect key="frame" x="16" y="1" width="297" height="17"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="Mh5-al-3Gi">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -3075,8 +3075,8 @@ DQ
                                                             <rect key="frame" x="1" y="20" width="314" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textField identifier="GroupRowCell" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4N2-23-ThO">
-                                                                    <rect key="frame" x="0.0" y="1" width="828" height="17"/>
+                                                                <textField identifier="GroupRowCell" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4N2-23-ThO">
+                                                                    <rect key="frame" x="0.0" y="1" width="316" height="17"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Group Row" id="dI9-ZN-360">
                                                                         <font key="font" metaFont="systemSemibold" size="13"/>
                                                                         <color key="textColor" red="0.80392156859999997" green="0.80392156859999997" blue="0.80392156859999997" alpha="1" colorSpace="calibratedRGB"/>

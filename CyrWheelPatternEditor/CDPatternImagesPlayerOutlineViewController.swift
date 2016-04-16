@@ -410,9 +410,26 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             })
         }
     }
+    
+    // this does the upload with UI feedback
+    private func _uploadFileFromURL(url: NSURL, filename: String, isSequenceFile: Bool, wheel: CDWheelConnection) {
+        wheel.uploadFileFromURL(url, filename: filename) { (uploadProgressAmount, finished, error) -> Void in
+            // TODO: UI feedback!
+            NSLog("upload: %g%%", uploadProgressAmount*100.0)
+            if finished {
+                if error == nil {
+                    // When doing sequences, ask for them again
+                    if (isSequenceFile) {
+                        wheel.requestCustomSequences()
+                    }
+                }
+            }
+        }
+
+    }
 
     
-    private func _uploadAtURL(url: NSURL) {
+    private func _uploadSequenceFileAtURL(url: NSURL) {
         if let wheel = self.connectedWheel {
             var filename: String!
             // swap to a .pat extension if it isn't a .pat
@@ -433,12 +450,12 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                 
                 alert.beginSheetModalForWindow(self.view.window!, completionHandler: { (r: NSModalResponse) -> Void in
                     if r == NSModalResponseOK {
-                        wheel.uploadFile(url, filename: filename)
+                        self._uploadFileFromURL(url, filename: filename, isSequenceFile: true, wheel: wheel);
                     }
                 })
                 
             } else {
-                wheel.uploadFile(url, filename: filename)
+                self._uploadFileFromURL(url, filename: filename, isSequenceFile: true, wheel: wheel);
             }
         }
     }
@@ -448,11 +465,10 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         openPanel.title = "Select a pattern sequence"
         openPanel.allowedFileTypes = [gPatternFilenameExtension, gSequenceEditorExtension]
         openPanel.allowsOtherFileTypes = false
-        openPanel.beginWithCompletionHandler { (result: Int) -> Void in
+        openPanel.beginSheetModalForWindow(self.view.window!) { (result: Int) -> Void in
             if result == NSModalResponseOK {
                 openPanel.orderOut(self)
-                // Ask about ovewrites..
-                self._uploadAtURL(openPanel.URL!)
+                self._uploadSequenceFileAtURL(openPanel.URL!)
             }
         }
         

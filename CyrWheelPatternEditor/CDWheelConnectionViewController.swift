@@ -24,9 +24,7 @@ protocol CDWheelConnectionSequencesPresenter {
     var customSequences: [String] { get set }
 }
 
-
-
-class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegate, CDWheelConnectionDelegate, CDWheelConnectionPresenter, CDPatternItemHeaderWrapperChanged {
+class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegate, CDWheelConnectionPresenter, CDPatternItemHeaderWrapperChanged {
 
     lazy var centralManager: CBCentralManager = CBCentralManager(delegate: self, queue: nil)
     
@@ -400,11 +398,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    //MARK: Wheel Connection Delegate
-    
-    func wheelConnection(wheelConnection: CDWheelConnection, didChangeState wheelState: CDWheelState) {
-        _updatePlayButton();
-    }
     
     // For bindings
     dynamic var currentPatternItem: CDPatternItemHeaderWrapper?
@@ -431,14 +424,6 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     func patternItemBitmapOptionsChanged(item: CDPatternItemHeaderWrapper) {
         connectedWheel?.setCurrentBitmapPatternOptions(item.bitmapPatternOptions)
-    }
-    
-    func wheelConnection(wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?) {
-        _updateCurrentPatternItem()
-    }
-
-    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequences customSequences: [String]) {
-        _pushSequencesToChildren()
     }
     
     private dynamic var _playButtonEnabled = false;
@@ -478,6 +463,30 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         } else {
             _updatePlayButtonWithState(0)
         }
+    }
+    
+    
+    func _updateUploadProgressAmount(uploadProgressAmount: Float, finished: Bool, error: NSError?) {
+        NSLog("%g - %d", uploadProgressAmount, finished);
+    }
+
+}
+
+extension CDWheelConnectionViewController: CDWheelConnectionDelegate {
+    func wheelConnection(wheelConnection: CDWheelConnection, didChangeState wheelState: CDWheelState) {
+        _updatePlayButton();
+    }
+    
+    func wheelConnection(wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?) {
+        _updateCurrentPatternItem()
+    }
+    
+    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequences customSequences: [String]) {
+        _pushSequencesToChildren()
+    }
+    
+    func wheelConnection(wheelConnection: CDWheelConnection, uploadProgressAmount: Float, finished: Bool, error: NSError?) {
+        _updateUploadProgressAmount(uploadProgressAmount, finished: finished, error: error)
     }
     
     

@@ -15,12 +15,15 @@ protocol CDWheelConnectionDelegate {
     func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequences: [String])
 }
 
+typealias CDWheelConnectionUploadHandler = (uploadProgressAmount: Float, finished: Bool, error: NSError?)-> Void
+
 let BT_DEBUG = 0
 func DLog(format: String, _ args: CVarArgType...) {
     #if BT_DEBUG
     NSLog(format, __VA_ARGS__)
     #endif
 }
+
 
 extension NSData {
     
@@ -406,6 +409,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 if data.length <= _dataChunkSize {
                     // All of it goes in one chunk
                     peripheral.writeValue(data, forCharacteristic: transmitChar, type: CBCharacteristicWriteType.WithResponse)
+                    _didSendUARTDataWithLength(data.length)
                 } else {
                     // Chunk it
                     _dataOffset = 0
@@ -415,12 +419,11 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 }
             } else {
                 // queue the data up...or we drop it?
+                // I could just append into _dataToSend; that should work..
                 if _nextDataToSend == nil {
                     _nextDataToSend = NSMutableData()
                 }
-                if let nextData = _nextDataToSend {
-                    nextData.appendData(data)
-                }
+                _nextDataToSend!.appendData(data)
             }
         } else {
             // Not yet connected...
@@ -431,6 +434,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         _dataToSend = nil // done
         // If we have more queued data, start it
         if let nextData = _nextDataToSend {
+            _nextDataToSend = nil // drop it
             _startSendingUARTData(nextData)
         }
     }
@@ -460,13 +464,15 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 peripheral.writeValue(subData, forCharacteristic: transmitChar, type: CBCharacteristicWriteType.WithoutResponse)
     //            DLog("write: %d, %d, _dataOffset %d, total: %d", _writeCounter++, amountToSend, _dataOffset, data.length);
                 _sendMoreUARTDataIfNeededAfterDelay();
+                _didSendUARTDataWithLength(amountToSend)
             } else {
                 _doneSendingData()
             }
         } else {
-            // conneciton dropped while sending data..
-            _nextDataToSend = nil // drop the queued datta too
+            // connection dropped while sending data..
+            _nextDataToSend = nil // drop the queued data too
             _doneSendingData()
+            _markUploadSucceeded(false)
         }
     }
 
@@ -881,29 +887,86 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     uint32_t file size
     data
     */
+
     
-    internal func writeNewSequenceFileWithData(dataToWrite: NSData, filename: String) {
-        assert(!uploading)
-        uploading = true;
+    private class UploadData {
+        var filename: String
+        var dataLength: Int
+        var amountUploaded: Int = 0
+        var uploadHandler: CDWheelConnectionUploadHandler
         
+        init(filename: String, dataLength: Int, uploadHandler: CDWheelConnectionUploadHandler) {
+            self.filename = filename
+            self.dataLength = dataLength
+            self.uploadHandler = uploadHandler
+        }
+        
+    }
+    
+    private var _uploadData: UploadData? = nil
+    
+    private func _didSendUARTDataWithLength(length: Int) {
+        if let uploadData = _uploadData {
+            // we might start sending more data..so ignore more than 100%
+            if (uploadData.amountUploaded < uploadData.dataLength) {
+                uploadData.amountUploaded += length;
+                if (uploadData.amountUploaded > uploadData.dataLength) {
+                    // not sure about this.. just theory
+                    uploadData.amountUploaded = uploadData.dataLength
+                }
+                let progress = Float(uploadData.amountUploaded) / Float(uploadData.dataLength)
+                uploadData.uploadHandler(uploadProgressAmount: progress, finished: false, error: nil)
+            }
+        }
+    }
+    
+    private func _markUploadSucceeded(succeeded: Bool) {
+        uploading = false
+        if let uploadData = _uploadData {
+            let error: NSError? = succeeded ? nil : NSError(domain: gPatternEditorErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to upload the file '\(uploadData.filename)'"])
+            uploadData.uploadHandler(uploadProgressAmount: Float(uploadData.amountUploaded) / Float(uploadData.dataLength), finished: true, error: error)
+            _uploadData = nil
+        }
+    }
+    
+    func uploadFileWithData(dataToWrite: NSData, filename: String, uploadHandler: CDWheelConnectionUploadHandler) {
+        assert(!uploading)
+        
+        var totalDataLengthToWrite: Int = dataToWrite.length
+        let dataLength: UInt32 = UInt32(totalDataLengthToWrite)
+        
+        // keep track of how much data is in the queue before us; we have to send it too before our file is uploaded
+        if let data = _dataToSend {
+            totalDataLengthToWrite = data.length - _dataOffset;
+        }
+        
+        if let data = _nextDataToSend {
+            // none of _nextDataToSend will be sent yet..
+            totalDataLengthToWrite += data.length
+        }
+
+        _uploadData = UploadData(filename: filename, dataLength: totalDataLengthToWrite, uploadHandler: uploadHandler)
+        uploading = true;
+
         DLog("uploading file...")
         // Write the command as an 8-bit value..
-        var uartCommand: Int8 = CDWheelUARTCommandUploadSequence.rawValue
+        var uartCommand: Int8 = CDWheelUARTCommandUploadFile.rawValue
         // the uartCommand, followed by the value..
         let dataToSend: NSMutableData = NSMutableData(bytes: &uartCommand, length: sizeofValue(uartCommand))
         
         dataToSend.writeString(filename)
         
-        let dataSize: UInt32 = UInt32(dataToWrite.length)
-        dataToSend.writeUInt32(dataSize)
+        dataToSend.writeUInt32(dataLength)
         
         dataToSend.appendData(dataToWrite);
         
         // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
         _startSendingUARTData(dataToSend)
-        
-        // TODO: timeout!!
     }
+
+//    internal func writeNewSequenceFileWithData(dataToWrite: NSData, filename: String, uploadHandler: CDWheelConnectionUploadHandler) {
+//        uploadFileWithData(dataToWrite, filename: filename, uploadHandler: uploadHandler);
+//    }
     
     private var m_orientationStreamingURL: NSURL?
     dynamic var isStreamingOrentationData: Bool = false
@@ -1029,11 +1092,8 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         case CDWheelUARTRecieveCommandCustomSequences:
             _dataReader = CDGetFilenamesDataReader(completionHandler: _didCompleteReadOfCustomSequences, timeoutHandler: _didFailDataReader);
             _dataReader!.addData(data)
-        case CDWheelUARTRecieveCommandUploadSequenceFinished:
-            // TODO: read success/failure?
-            uploading = false
-            _requestedCustomSequences = false;
-            _requestCustomSequencesIfNeeded()
+        case CDWheelUARTRecieveCommandUploadFinished:
+            _markUploadSucceeded(true)
             break;
         case CDWheelUARTRecieveCommandOrientationData:
             _dataReader = CDOrientationDataReader(completionHandler: _didCompleteOrientationRead, timeoutHandler: _didFailDataReader);
@@ -1044,6 +1104,11 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             NSLog("Invalid UART data: %@", data);
             break
         }
+    }
+    
+    func requestCustomSequences() {
+        _requestedCustomSequences = false;
+        _requestCustomSequencesIfNeeded()
     }
     
     private func _recieveIncomingUARTData(data: NSData) {
