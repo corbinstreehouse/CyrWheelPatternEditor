@@ -191,6 +191,7 @@ BOOL CDPatternTypeNeedsColor(LEDPatternType patternType) {
     switch (patternType) {
         case LEDPatternTypeColorWipe:
         case LEDPatternTypeFadeIn:
+        case LEDPatternTypeFadeInFadeOut:
         case LEDPatternTypeTheaterChase:
         case LEDPatternTypeGradient:
         case LEDPatternTypeBottomGlow:

@@ -23,7 +23,7 @@
 		9D4FCB36193C2E100000DE28 /* hsv2rgb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D4FCB34193C2E100000DE28 /* hsv2rgb.cpp */; };
 		9D500A2518BD88E8003BD8C2 /* CDEncodedColorTransformer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9D500A2418BD88E8003BD8C2 /* CDEncodedColorTransformer.mm */; };
 		9D5855D01CB0449000971D64 /* CDDesktopWheelConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5855CF1CB0449000971D64 /* CDDesktopWheelConnection.swift */; };
-		9D59B4FD1CBA1078007833CF /* CDTimecodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D59B4FC1CBA1078007833CF /* CDTimecodeView.swift */; };
+		9D59B4FD1CBA1078007833CF /* CDTimecodeBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D59B4FC1CBA1078007833CF /* CDTimecodeBackgroundView.swift */; };
 		9D62EAAF1C332C1500BFB916 /* CDPatternEditorWindowController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62EAAE1C332C1500BFB916 /* CDPatternEditorWindowController2.swift */; };
 		9D62EAB11C332C2D00BFB916 /* CDPatternEditorContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D62EAB01C332C2D00BFB916 /* CDPatternEditorContentViewController.swift */; };
 		9D6408171C55C73D006D3083 /* CDNoWidthSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6408161C55C73D006D3083 /* CDNoWidthSplitView.swift */; };
@@ -157,7 +157,7 @@
 		9D5706C31C3E0A7B0094D2F0 /* CDTimelineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDTimelineItem.h; sourceTree = "<group>"; };
 		9D5855C01CB02A3E00971D64 /* MobileWheelConnection.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MobileWheelConnection.xcodeproj; path = MobileWheelConnection/MobileWheelConnection.xcodeproj; sourceTree = "<group>"; };
 		9D5855CF1CB0449000971D64 /* CDDesktopWheelConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDDesktopWheelConnection.swift; sourceTree = "<group>"; };
-		9D59B4FC1CBA1078007833CF /* CDTimecodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDTimecodeView.swift; sourceTree = "<group>"; };
+		9D59B4FC1CBA1078007833CF /* CDTimecodeBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDTimecodeBackgroundView.swift; sourceTree = "<group>"; };
 		9D62EAAE1C332C1500BFB916 /* CDPatternEditorWindowController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorWindowController2.swift; sourceTree = "<group>"; };
 		9D62EAB01C332C2D00BFB916 /* CDPatternEditorContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CDPatternEditorContentViewController.swift; sourceTree = "<group>"; };
 		9D6408161C55C73D006D3083 /* CDNoWidthSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CDNoWidthSplitView.swift; path = ../CDNoWidthSplitView.swift; sourceTree = "<group>"; };
@@ -439,7 +439,7 @@
 				9D49CD481CB9E5E300C170A8 /* CDBorderedView.swift */,
 				9D5706C31C3E0A7B0094D2F0 /* CDTimelineItem.h */,
 				9D47259D1CBAAB8800BCEE71 /* CDThemeColors.swift */,
-				9D59B4FC1CBA1078007833CF /* CDTimecodeView.swift */,
+				9D59B4FC1CBA1078007833CF /* CDTimecodeBackgroundView.swift */,
 				9D49CD461CB9E51700C170A8 /* CDTimelineView.swift */,
 				9D1E1AE61C2DA292002BD920 /* CDTimelineTrackView.swift */,
 				9D2217781C2DB0660046D72C /* CDTimelineTrackItemView.swift */,
@@ -661,7 +661,7 @@
 				9D211A1E1C3A438A006A75FC /* CDPatternItemNames.m in Sources */,
 				9DBD804A189C9FB200A6A067 /* CDPatternDataToImageTransformer.mm in Sources */,
 				9D931EB01C33B4B70065222F /* CDTimelineTrackViewController.swift in Sources */,
-				9D59B4FD1CBA1078007833CF /* CDTimecodeView.swift in Sources */,
+				9D59B4FD1CBA1078007833CF /* CDTimecodeBackgroundView.swift in Sources */,
 				9D84FEBD1C65AF52004165A9 /* CDWheelPlayerSplitViewController.swift in Sources */,
 				9D931EB41C35D0B80065222F /* CDPatternSequenceSplitViewController.swift in Sources */,
 				9DBD8040189B525300A6A067 /* CDPatternItemViewController.mm in Sources */,

@@ -51,11 +51,15 @@ class CDTimelineView: NSView {
             if let timelineTrackView = subview as? CDTimelineTrackView {
                 _addTimelineTrackView(timelineTrackView)
             }
+            if let timecodeBGView = subview as? CDTimecodeBackgroundView {
+                _timecodeBackgroundView = timecodeBGView
+            }
         }
     }
     
     // Keep track of the track views
-    var _timelineTrackViews: [CDTimelineTrackView] = []
+    private var _timelineTrackViews: [CDTimelineTrackView] = []
+    private var _timecodeBackgroundView: CDTimecodeBackgroundView!
     
     override func didAddSubview(subview: NSView) {
         super.didAddSubview(subview)
@@ -320,9 +324,17 @@ class CDTimelineView: NSView {
     
     override func mouseDown(event: NSEvent) {
         // If we hit the playhead's main view, then track it and move it..
-        if self.playheadView!.shouldDragForEvent(event) {
-            let startingTimePosition = self.playheadTimePosition
+        let timecodePointLocation = event.locationInView(_timecodeBackgroundView)
+        if _timecodeBackgroundView.bounds.contains(timecodePointLocation) {
             let startingPoint = event.locationInView(self)
+            // If it is already in the playhead, then don't move it
+            if !self.playheadView!.hitInsideDragImage(event) {
+                // otherwise, move to where clicke
+                self.playheadTimePosition = self._timeForXOffset(startingPoint.x)
+            }
+            
+            
+            let startingTimePosition = self.playheadTimePosition
             self._timelineViewChanged(.playheadTimeDraggingStarted)
             let maxTimePosition = self._timeForWidth(self.bounds.size.width - self.startingOffset)
             self.window!.trackEventsMatchingMask([NSEventMask.LeftMouseDraggedMask, NSEventMask.LeftMouseUpMask], timeout: NSEventDurationForever, mode: NSEventTrackingRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
@@ -361,7 +373,7 @@ class CDPlayheadView : NSView {
     
     @IBOutlet weak var _playheadImageView: NSImageView!
     
-    func shouldDragForEvent(event: NSEvent) -> Bool {
+    func hitInsideDragImage(event: NSEvent) -> Bool {
         // Yes if we hit our triangle view
         let point = event.locationInView(_playheadImageView)
         return _playheadImageView.bounds.contains(point)

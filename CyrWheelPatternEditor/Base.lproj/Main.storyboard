@@ -2855,7 +2855,7 @@ DQ
                                                             <customView identifier="_musicTrackView" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="NoI-qQ-bsz" userLabel="_musicTrackView" customClass="CDTimelineTrackView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="170" width="833" height="121"/>
                                                             </customView>
-                                                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="H01-dO-mTE" userLabel="_timecodeView" customClass="CDTimecodeBackgroundView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
+                                                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="H01-dO-mTE" userLabel="_timecodeBackgroundView" customClass="CDTimecodeBackgroundView" customModule="CyrWheelPatternEditor" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="301" width="833" height="19"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="19" id="dbB-fW-QhY"/>
