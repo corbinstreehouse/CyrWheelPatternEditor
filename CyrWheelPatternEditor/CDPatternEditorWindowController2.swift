@@ -166,5 +166,14 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
             super.keyDown(theEvent)
         }
     }
+    
+    @IBAction func revealInFinder(sender: AnyObject) {
+        if let item = self._selectedPatternItem {
+            if let relativeFilename = item.imageFilename {
+                let fullFilenamePath = CDAppDelegate.appDelegate.patternDirectoryURL.URLByAppendingPathComponent(relativeFilename)
+                NSWorkspace.sharedWorkspace().selectFile(fullFilenamePath.path!, inFileViewerRootedAtPath: "")
+            }
+        }
+    }
 
 }
