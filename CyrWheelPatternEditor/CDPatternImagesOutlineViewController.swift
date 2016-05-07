@@ -185,7 +185,6 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
                                 if parentStr.containsString("pictures") || parentStr.containsString("images") || parentStr.containsString("pixels") || parentStr.containsString("figures") {
                                     child.pov = true
                                 }
-                                
                             }
                         }
                     }
@@ -226,6 +225,8 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
         _outlineView.reloadData()
         _outlineView.expandItem(nil)
         self.imgvwPreview.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+        // allow adding files (no way to remove them yet...)
+        _outlineView.registerForDraggedTypes([kUTTypeURL as String])
     }
     
     
@@ -324,6 +325,72 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
         } else {
             return outlineView.rowHeight
         }
+    }
+    
+    func _acceptableTypesFromPasteboard(pasteboard: NSPasteboard) -> [NSURL] {
+        let options = [NSPasteboardURLReadingFileURLsOnlyKey: true, NSPasteboardURLReadingContentsConformToTypesKey: "com.microsoft.bmp" ]
+
+        // syntax HAS to be This stupidness
+        let aClass : AnyClass = NSURL.self
+        let classes = [aClass]
+        let objects = pasteboard.readObjectsForClasses(classes, options: options)
+        
+        if let urls = objects as? [NSURL] {
+            return urls
+        }
+        return []
+    }
+    
+    func outlineView(outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: AnyObject?, proposedChildIndex index: Int) -> NSDragOperation {
+        // we only accept image types on image folders..
+        if let imageItem = item as? ImagePatternObjectWrapper {
+            if imageItem.isDirectory {
+                // allow it
+                // TODO: make sure it doesn't exist already with the same name, or it is coming from the same parent folder!
+                if _acceptableTypesFromPasteboard(info.draggingPasteboard()).count > 0 {
+                    return NSDragOperation.Copy
+                }
+            }
+        }
+        return NSDragOperation.None
+        
+    }
+    
+    func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: AnyObject?, childIndex index: Int) -> Bool {
+        var result = false;
+        if let imageItem = item as? ImagePatternObjectWrapper {
+            if imageItem.isDirectory {
+                _outlineView.beginUpdates()
+                
+                let urls = _acceptableTypesFromPasteboard(info.draggingPasteboard())
+                if urls.count > 0 {
+                    let baseURL = imageItem.url
+                    var insertIndex = index
+                    if insertIndex == -1 {
+                        insertIndex = imageItem.children!.count
+                    }
+                    
+                    do {
+                        for url in urls {
+                            let urlToCopyTo = baseURL.URLByAppendingPathComponent(url.lastPathComponent!)
+                            try NSFileManager.defaultManager().copyItemAtURL(url, toURL: urlToCopyTo)
+                            
+                            let label = url.lastPathComponent!
+                            let newWrapperChild = ImagePatternObjectWrapper(label: label, url: urlToCopyTo, parent: imageItem)
+                            imageItem.children!.insert(newWrapperChild, atIndex: insertIndex)
+                            _outlineView.insertItemsAtIndexes(NSIndexSet(index: insertIndex), inParent: imageItem, withAnimation: .SlideDown)
+                            insertIndex++
+                        }
+                    } catch let error as NSError  {
+                        //NSLog("Error loading children: %@", error)
+                        self.view.window!.presentError(error)
+                    }
+                    result = true
+                }
+                _outlineView.endUpdates()
+            }
+        }
+        return result
     }
 
     // Cmd-R to reveal the image in finder.

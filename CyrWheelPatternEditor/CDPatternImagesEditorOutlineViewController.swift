@@ -39,8 +39,15 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
     
     private func _addSelectedItemsToSequence(indexes: NSIndexSet) {
         let doc = _getDocument()
+        var insertIndex = self.patternSequenceProvider!.patternSelectionIndexes.lastIndex
+        if insertIndex == NSNotFound {
+            insertIndex = doc.patternSequence.children.count
+        } else {
+            insertIndex++ // one past it
+        }
         _enumerateItemsAsPatternItems(indexes) { (patternItem) -> () in
-            doc.addPatternItemToChildren(patternItem)
+            doc.addPatternItemToChildren(patternItem, atIndex: insertIndex)
+            insertIndex++
         }
     }
     
@@ -52,6 +59,13 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
     private func _makeTemporaryPatternItemWithPatternType(patternType: LEDPatternType, imageFilename: String?) -> CDPatternItem {
         let doc = _getDocument()
         let newItem = doc.makeTemporaryPatternItem()
+        
+        // copy the selected item, if available..
+        var selectedIndex = self.patternSequenceProvider!.patternSelectionIndexes.lastIndex
+        if selectedIndex != NSNotFound {
+            let patternItemToCopy = self.patternSequenceProvider!.patternSequence!.children[selectedIndex]
+            patternItemToCopy.copyTo(newItem)
+        }
         
         // Make it have the same relative patternDuration/speed as the existing one; images we make have a 0.60 speed on initialization.
         let speedToSet = patternType == LEDPatternTypeImageReferencedBitmap ? 0.60 : newItem.patternSpeed

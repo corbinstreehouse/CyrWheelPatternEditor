@@ -128,8 +128,13 @@ NSString *CDCompiledSequenceTypeName = @"public.compiledcyrwheelsequence";
 }
 
 - (void)addPatternItemToChildren:(CDPatternItem *)patternItem {
-    [self.patternSequence insertObject:patternItem inChildrenAtIndex:self.patternSequence.children.count];
+    [self addPatternItemToChildren:patternItem atIndex:self.patternSequence.children.count];
 }
+
+- (void)addPatternItemToChildren:(CDPatternItem *)patternItem atIndex:(NSInteger)index {
+    [self.patternSequence insertObject:patternItem inChildrenAtIndex:index];
+}
+
 
 - (void)removePatternItemsAtIndexes:(NSIndexSet *)indexesToDelete {
     if (indexesToDelete.count > 0) {

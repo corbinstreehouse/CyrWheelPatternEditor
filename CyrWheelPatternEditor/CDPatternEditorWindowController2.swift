@@ -160,6 +160,13 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
                     self.patternRunner.pause()
                 }
                 handled = true
+            } else if (chars == ";") {
+                // final cut shortcuts
+                self.patternRunner.rewind();
+                handled = true;
+            } else if (chars == "'") {
+                self.patternRunner.nextPatternItem()
+                handled = true;
             }
         }
         if (!handled) {

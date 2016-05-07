@@ -313,6 +313,7 @@ class CDTimelineView: NSView {
     private func _updatePlayheadViewPosition() {
         if let c = _playheadViewPositionConstraint {
             c.constant = _currentPlayheadViewOffset()
+            self.window?.layoutIfNeeded()
         }
     }
 

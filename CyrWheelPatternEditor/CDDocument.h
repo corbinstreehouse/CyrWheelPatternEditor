@@ -21,8 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Temporary items must be removed from the manage object context after it is done being used, or added as a child.
 - (CDPatternItem *)makeTemporaryPatternItem;
+- (CDPatternItem *)makeTemporaryPatternItemBasedOn:(nullable CDPatternItem *)item;
 - (void)removeTemporaryPatternItem:(CDPatternItem *)item;
 - (void)addPatternItemToChildren:(CDPatternItem *)item;
+- (void)addPatternItemToChildren:(CDPatternItem *)patternItem atIndex:(NSInteger)index;
 - (void)removePatternItemsAtIndexes:(NSIndexSet *)indexes;
 - (NSData *)exportToData;
 
