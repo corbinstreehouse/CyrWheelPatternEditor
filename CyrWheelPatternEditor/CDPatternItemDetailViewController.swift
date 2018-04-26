@@ -24,10 +24,10 @@ class CDPatternItemDetailViewController: CDPatternSequencePresenterViewControlle
         // Create a sorted array of pattern types to show excluding ones we can't select
         // TODO: this could be a static copy
         for patternObject in ProgrammedPatternObjectWrapper.allSortedProgrammedPatternsIgnoring(hiddenPatternTypes) {
-            _popupPatternType.addItemWithTitle(patternObject.label)
+            _popupPatternType.addItem(withTitle: patternObject.label)
             let item: NSMenuItem = _popupPatternType.lastItem!
             item.tag = Int(patternObject.patternType.rawValue)
-            item.enabled = !disabledPatternTypes.contains(patternObject.patternType)
+            item.isEnabled = !disabledPatternTypes.contains(patternObject.patternType)
         }
 
         self.view.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)

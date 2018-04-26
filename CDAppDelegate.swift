@@ -17,42 +17,42 @@ class CDAppDelegate: NSObject, NSApplicationDelegate {
     // This ensures they are around
     internal lazy var connectionWindowControllers: [NSWindowController] = []
     
-    internal var patternDirectoryURL: NSURL {
-        let fileManager = NSFileManager.defaultManager()
-        let appSupportDir: NSURL = try! fileManager.URLForDirectory(NSSearchPathDirectory.ApplicationSupportDirectory, inDomain: NSSearchPathDomainMask.UserDomainMask, appropriateForURL: nil, create: true);
-        let editorSupportDir = appSupportDir.URLByAppendingPathComponent("CyrWheelPatternEditor", isDirectory: true)
-        let patternDir = editorSupportDir.URLByAppendingPathComponent("Patterns", isDirectory: true)
+    internal var patternDirectoryURL: URL {
+        let fileManager = FileManager.default
+        let appSupportDir: URL = try! fileManager.url(for: FileManager.SearchPathDirectory.applicationSupportDirectory, in: FileManager.SearchPathDomainMask.userDomainMask, appropriateFor: nil, create: true);
+        let editorSupportDir = appSupportDir.appendingPathComponent("CyrWheelPatternEditor", isDirectory: true)
+        let patternDir = editorSupportDir.appendingPathComponent("Patterns", isDirectory: true)
         return patternDir
     }
     
-    private func _getDefaultPatternDirectory() -> NSURL {
-        let bundle = NSBundle.mainBundle()
-        let url = bundle.URLForResource("Patterns", withExtension: "framework")
+    fileprivate func _getDefaultPatternDirectory() -> URL {
+        let bundle = Bundle.main
+        let url = bundle.url(forResource: "Patterns", withExtension: "framework")
         return url!
     }
     
-    func applicationWillFinishLaunching(notification: NSNotification) {
+    func applicationWillFinishLaunching(_ notification: Notification) {
         // Make sure our patterns are copied ot the user directory before we finish launching
         let patternDir = patternDirectoryURL
         do {
-            let fileManager = NSFileManager.defaultManager()
-            if !fileManager.fileExistsAtPath(patternDir.path!) {
+            let fileManager = FileManager.default
+            if !fileManager.fileExists(atPath: patternDir.path) {
                 // create the base dir, and copy
-                let appSupportDir: NSURL = try! fileManager.URLForDirectory(NSSearchPathDirectory.ApplicationSupportDirectory, inDomain: NSSearchPathDomainMask.UserDomainMask, appropriateForURL: nil, create: true);
-                let editorSupportDir = appSupportDir.URLByAppendingPathComponent("CyrWheelPatternEditor", isDirectory: true)
-                if !fileManager.fileExistsAtPath(editorSupportDir.path!) {
-                    try fileManager.createDirectoryAtURL(editorSupportDir, withIntermediateDirectories: true, attributes: [:])
+                let appSupportDir: URL = try! fileManager.url(for: FileManager.SearchPathDirectory.applicationSupportDirectory, in: FileManager.SearchPathDomainMask.userDomainMask, appropriateFor: nil, create: true);
+                let editorSupportDir = appSupportDir.appendingPathComponent("CyrWheelPatternEditor", isDirectory: true)
+                if !fileManager.fileExists(atPath: editorSupportDir.path) {
+                    try fileManager.createDirectory(at: editorSupportDir, withIntermediateDirectories: true, attributes: [:])
                 }
 
                 // Copy the default patterns to it..
-                try fileManager.copyItemAtURL(_getDefaultPatternDirectory(), toURL: patternDir)
+                try fileManager.copyItem(at: _getDefaultPatternDirectory(), to: patternDir)
             }
         } catch {
             // TODO...handle this..
         }
     }
 
-    func applicationDidFinishLaunching(notification: NSNotification) {
+    func applicationDidFinishLaunching(_ notification: Notification) {
         
         
     }

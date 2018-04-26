@@ -15,11 +15,11 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
         super.viewDidLoad()
         
         // Drag and drop setup
-        _outlineView.setDraggingSourceOperationMask(NSDragOperation.Every, forLocal: true)
-        _outlineView.registerForDraggedTypes([CDPatternItem.pasteboardType()])
+        _outlineView.setDraggingSourceOperationMask(NSDragOperation.every, forLocal: true)
+        _outlineView.register(forDraggedTypes: [CDPatternItem.pasteboardType()])
     }
     
-    private func _dataForItemsAtIndexes(indexes: NSIndexSet) -> NSData {
+    fileprivate func _dataForItemsAt(_ indexes: IndexSet) -> Data {
         // create temporary items in the model, then toss them away after achiving them
         var temporaryItems = [CDPatternItem]()
         let doc = _getDocument()
@@ -27,7 +27,7 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
             temporaryItems.append(patternItem)
         }
         
-        let data: NSData = NSKeyedArchiver.archivedDataWithRootObject(temporaryItems)
+        let data: Data = NSKeyedArchiver.archivedData(withRootObject: temporaryItems)
         
         // Free the temporary items in the model
         temporaryItems.forEach { (item: CDPatternItem) -> () in
@@ -37,34 +37,34 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
         return data
     }
     
-    private func _addSelectedItemsToSequence(indexes: NSIndexSet) {
+    fileprivate func _addSelectedItemsToSequence(_ indexes: IndexSet) {
         let doc = _getDocument()
-        var insertIndex = self.patternSequenceProvider!.patternSelectionIndexes.lastIndex
-        if insertIndex == NSNotFound {
-            insertIndex = doc.patternSequence.children.count
+        var insertIndex: Int = 0
+        if let temp = self.patternSequenceProvider!.patternSelectionIndexes.last {
+            insertIndex = temp + 1;
         } else {
-            insertIndex++ // one past it
+            insertIndex = doc.patternSequence.children!.count
         }
         _enumerateItemsAsPatternItems(indexes) { (patternItem) -> () in
-            doc.addPatternItemToChildren(patternItem, atIndex: insertIndex)
-            insertIndex++
+            doc.addPatternItem(toChildren: patternItem, at: insertIndex)
+            insertIndex = insertIndex + 1
         }
     }
     
-    private func _getDocument() -> CDDocument {
+    fileprivate func _getDocument() -> CDDocument {
         // This is a rather ugly way to get to the document..
         return self.parentWindowController!.document as! CDDocument
     }
     
-    private func _makeTemporaryPatternItemWithPatternType(patternType: LEDPatternType, imageFilename: String?) -> CDPatternItem {
+    fileprivate func _makeTemporaryPatternItemWithPatternType(_ patternType: LEDPatternType, imageFilename: String?) -> CDPatternItem {
         let doc = _getDocument()
         let newItem = doc.makeTemporaryPatternItem()
         
         // copy the selected item, if available..
-        var selectedIndex = self.patternSequenceProvider!.patternSelectionIndexes.lastIndex
-        if selectedIndex != NSNotFound {
-            let patternItemToCopy = self.patternSequenceProvider!.patternSequence!.children[selectedIndex]
-            patternItemToCopy.copyTo(newItem)
+        if let selectedIndex = self.patternSequenceProvider!.patternSelectionIndexes.last {
+            let patternSequence: CDPatternSequence = self.patternSequenceProvider!.patternSequence!
+            let patternItemToCopy: CDPatternItem = patternSequence.children![selectedIndex] as! CDPatternItem // why isn't this already typed?
+            patternItemToCopy.copy(to: newItem)
         }
         
         // Make it have the same relative patternDuration/speed as the existing one; images we make have a 0.60 speed on initialization.
@@ -77,8 +77,8 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
         return newItem
     }
     
-    private func _makeTemporaryPatteryItemForRow(index: Int) -> CDPatternItem? {
-        let item = _outlineView.itemAtRow(index)
+    fileprivate func _makeTemporaryPatteryItemForRow(_ index: Int) -> CDPatternItem? {
+        let item = _outlineView.item(atRow: index)
         switch item {
         case let programmedItem as ProgrammedPatternObjectWrapper:
             return _makeTemporaryPatternItemWithPatternType(programmedItem.patternType, imageFilename: nil)
@@ -93,21 +93,21 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    private func _enumerateItemsAsPatternItems(indexes: NSIndexSet, handler: (patternItem: CDPatternItem)->()) {
+    fileprivate func _enumerateItemsAsPatternItems(_ indexes: IndexSet, handler: (_ patternItem: CDPatternItem)->()) {
         for index in indexes {
             if let patternItem = _makeTemporaryPatteryItemForRow(index) {
-                handler(patternItem: patternItem)
+                handler(patternItem)
             }
         }
     }
     
     
     // Add pasteboard support
-    func outlineView(outlineView: NSOutlineView, pasteboardWriterForItem item: AnyObject) -> NSPasteboardWriting? {
-        let row = outlineView.rowForItem(item)
+    func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: AnyObject) -> NSPasteboardWriting? {
+        let row = outlineView.row(forItem: item)
         if let patternItem = _makeTemporaryPatteryItemForRow(row) {
             let pasteboardItem = NSPasteboardItem()
-            let data: NSData = NSKeyedArchiver.archivedDataWithRootObject(patternItem)
+            let data: Data = NSKeyedArchiver.archivedData(withRootObject: patternItem)
             pasteboardItem.setData(data, forType: CDPatternItem.pasteboardType())
             return pasteboardItem
         } else {
@@ -115,14 +115,14 @@ class CDPatternImagesEditorOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
 
-    @IBAction func _outlineDoubleClick(sender: NSOutlineView) {
+    @IBAction func _outlineDoubleClick(_ sender: NSOutlineView) {
         _addSelectedItemsToSequence(sender.selectedRowIndexes)
     }
     
-    @IBAction func copy(sender: AnyObject) {
+    @IBAction func copy(_ sender: AnyObject) {
         if _outlineView.selectedRowIndexes.count > 0 {
-            let data: NSData = _dataForItemsAtIndexes(_outlineView.selectedRowIndexes)
-            let pasteboard: NSPasteboard = NSPasteboard.generalPasteboard()
+            let data: Data = _dataForItemsAt(_outlineView.selectedRowIndexes)
+            let pasteboard: NSPasteboard = NSPasteboard.general()
             pasteboard.clearContents()
             pasteboard.declareTypes([CDPatternItem.pasteboardType()], owner: self)
             pasteboard.setData(data, forType: CDPatternItem.pasteboardType())

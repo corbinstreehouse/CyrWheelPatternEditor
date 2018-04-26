@@ -18,7 +18,7 @@ class CDWheelFileManagerViewController : NSViewController, CDWheelConnectionPres
         }
     }
     
-    @IBAction func btnDownloadClicked(sender: NSButton) {
+    @IBAction func btnDownloadClicked(_ sender: NSButton) {
         
         
     }
@@ -29,18 +29,18 @@ class CDWheelFileManagerViewController : NSViewController, CDWheelConnectionPres
 extension CDWheelFileManagerViewController : NSOutlineViewDelegate, NSOutlineViewDataSource {
     
  
-    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
 //        if let connectedWheel = self.connectedWheel {
 ////            return connectedWheel.customSequences
 //        }
         return 0;
     }
     
-    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         return ""
     }
     
-    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         return false
     }
 

@@ -7,24 +7,37 @@
 //
 
 import Cocoa
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 @objc // Needed (I forget why)
 protocol CDTimelineTrackViewDataSource : NSObjectProtocol {
     // complete reload or new values
-    func numberOfItemsInTimelineTrackView(timelineTrackView: CDTimelineTrackView) -> Int
-    func timelineTrackView(timelineTrackView: CDTimelineTrackView, itemAtIndex: Int) -> CDTimelineItem
-    optional func timelineTrackView(timelineTrackView: CDTimelineTrackView, makeViewControllerAtIndex: Int) -> NSViewController
+    func numberOfItemsInTimelineTrackView(_ timelineTrackView: CDTimelineTrackView) -> Int
+    func timelineTrackView(_ timelineTrackView: CDTimelineTrackView, itemAtIndex: Int) -> CDTimelineItem
+    @objc optional func timelineTrackView(_ timelineTrackView: CDTimelineTrackView, makeViewControllerAtIndex: Int) -> NSViewController
 }
 
 protocol CDTimelineTrackViewDraggingSourceDelegate {
-    func timelineTrackView(timelineTrackView: CDTimelineTrackView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting?
-    func timelineTrackView(timelineTrackView: CDTimelineTrackView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: NSIndexSet)
-    func timelineTrackView(timelineTrackView: CDTimelineTrackView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation)
+    func timelineTrackView(_ timelineTrackView: CDTimelineTrackView, pasteboardWriterForIndex index: Int) -> NSPasteboardWriting?
+    func timelineTrackView(_ timelineTrackView: CDTimelineTrackView, draggingSession session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint, forIndexes indexes: IndexSet)
+    func timelineTrackView(_ timelineTrackView: CDTimelineTrackView, draggingSession session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation)
 }
 
 protocol CDTimelineTrackViewDraggingDestinationDelegate {
-    func timelineTrackView(timelineTrackView: CDTimelineTrackView, updateDraggingInfo: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation
-    func timelineTrackView(timelineTrackView: CDTimelineTrackView, performDragOperation: NSDraggingInfo, insertionIndex: Int?) -> Bool
+    func timelineTrackView(_ timelineTrackView: CDTimelineTrackView, updateDraggingInfo: NSDraggingInfo, insertionIndex: Int?) -> NSDragOperation
+    func timelineTrackView(_ timelineTrackView: CDTimelineTrackView, performDragOperation: NSDraggingInfo, insertionIndex: Int?) -> Bool
     
 }
 
@@ -48,8 +61,8 @@ extension NSEvent {
 extension NSView {
     func screenshotAsImage() -> NSImage {
         let bounds = self.bounds
-        let imageRep = self.bitmapImageRepForCachingDisplayInRect(bounds)!
-        self.cacheDisplayInRect(bounds, toBitmapImageRep: imageRep)
+        let imageRep = self.bitmapImageRepForCachingDisplay(in: bounds)!
+        self.cacheDisplay(in: bounds, to: imageRep)
         let image = NSImage(size: imageRep.size)
         image.addRepresentation(imageRep)
         return image
@@ -58,8 +71,8 @@ extension NSView {
 
 class CDTimelineTrackView: NSStackView, NSDraggingSource {
     // I like a more subtle look for showing the first responder..
-    static let selectedBorderColor = NSColor.alternateSelectedControlColor().colorWithAlphaComponent(0.5)
-    static let draggingInsertionColor = NSColor.greenColor() // TODO: color??
+    static let selectedBorderColor = NSColor.alternateSelectedControlColor.withAlphaComponent(0.5)
+    static let draggingInsertionColor = NSColor.green // TODO: color??
     static let trackHeight: CGFloat = 50.0 // Variable??
     
     var sideSpacing: CGFloat = 10.0 {
@@ -67,17 +80,17 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
             self.edgeInsets = NSEdgeInsetsMake(TOP_SPACING, sideSpacing, BOTTOM_SPACING, sideSpacing)
         }
     }
-    private let _dragThreshold: CGFloat = 5
+    fileprivate let _dragThreshold: CGFloat = 5
 
     func _commonInit() {
         self.wantsLayer = true;
-        self.orientation = .Horizontal
-        self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
+        self.orientation = .horizontal
+        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
 
-        self.setClippingResistancePriority(NSLayoutPriorityRequired, forOrientation: NSLayoutConstraintOrientation.Horizontal)
-        self.setClippingResistancePriority(NSLayoutPriorityRequired, forOrientation: NSLayoutConstraintOrientation.Vertical)
-        self.setHuggingPriority(NSLayoutPriorityDefaultLow - 0.00001, forOrientation: NSLayoutConstraintOrientation.Horizontal)
-        self.setHuggingPriority(NSLayoutPriorityDefaultLow - 0.00001, forOrientation: NSLayoutConstraintOrientation.Vertical)
+        self.setClippingResistancePriority(NSLayoutPriorityRequired, for: NSLayoutConstraintOrientation.horizontal)
+        self.setClippingResistancePriority(NSLayoutPriorityRequired, for: NSLayoutConstraintOrientation.vertical)
+        self.setHuggingPriority(NSLayoutPriorityDefaultLow - 0.00001, for: NSLayoutConstraintOrientation.horizontal)
+        self.setHuggingPriority(NSLayoutPriorityDefaultLow - 0.00001, for: NSLayoutConstraintOrientation.vertical)
         // stack view properties
         self.spacing = 0;
         self.edgeInsets = NSEdgeInsetsMake(TOP_SPACING, sideSpacing, BOTTOM_SPACING, sideSpacing)
@@ -111,7 +124,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
     }
     
-    private var _needsUpdate: Bool = false
+    fileprivate var _needsUpdate: Bool = false
     
     func reloadData() {
         self.needsLayout = true;
@@ -120,16 +133,16 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         
     }
     
-    private var _selectionChanged = false
+    fileprivate var _selectionChanged = false
     
-    func _doWorkToChangeSelection(work: () -> Void) {
+    func _doWorkToChangeSelection(_ work: () -> Void) {
         if (!self.updating) {
-            self.willChangeValueForKey("selectionIndexes")
+            self.willChangeValue(forKey: "selectionIndexes")
         }
         work()
         
         if (!self.updating) {
-            self.didChangeValueForKey("selectionIndexes")
+            self.didChangeValue(forKey: "selectionIndexes")
         } else {
             _selectionChanged = true;
         }
@@ -145,12 +158,12 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         
         _anchorRow = nil
         _doWorkToChangeSelection({
-            self._selectionIndexes = NSIndexSet()
+            self._selectionIndexes = IndexSet()
         })
         
     }
     
-    func _delegateTimelineTrackViewControllerAtIndex(index: Int) -> NSViewController {
+    func _delegateTimelineTrackViewControllerAtIndex(_ index: Int) -> NSViewController {
         if let result = dataSource?.timelineTrackView?(self, makeViewControllerAtIndex: index) {
             return result
         } else {
@@ -171,9 +184,9 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     
     var _timelineItemViewControllers = NSMutableArray()
     
-    func _makeTimelineItemViewAtIndex(index: Int, frame: NSRect, timelineItem: CDTimelineItem) -> CDTimelineItemView {
+    func _makeTimelineItemViewAtIndex(_ index: Int, frame: NSRect, timelineItem: CDTimelineItem) -> CDTimelineItemView {
         let vc: NSViewController = _delegateTimelineTrackViewControllerAtIndex(index)
-        _timelineItemViewControllers.insertObject(vc, atIndex: index)
+        _timelineItemViewControllers.insert(vc, at: index)
         let result = vc.view as! CDTimelineItemView
         result.timelineItem = timelineItem
         result.widthPerMS = self.widthPerMS
@@ -190,23 +203,23 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
         _needsUpdate = false
         let itemFrame = _defaultItemViewFrame()
-        for var i = 0; i < self.numberOfItems; i++ {
+        for i in 0 ..< self.numberOfItems {
             let timelineItem = self.dataSource!.timelineTrackView(self, itemAtIndex: i)
             let itemView = _makeTimelineItemViewAtIndex(i, frame: itemFrame, timelineItem: timelineItem)
-            self.addView(itemView, inGravity: NSStackViewGravity.Leading)
+            self.addView(itemView, in: NSStackViewGravity.leading)
         }
     }
     
-    func insertItemAtIndex(index: Int) {
+    func insertItemAtIndex(_ index: Int) {
         let timelineItem = self.dataSource!.timelineTrackView(self, itemAtIndex: index)
         let itemFrame = _defaultItemViewFrame()
         let itemView = _makeTimelineItemViewAtIndex(index, frame: itemFrame, timelineItem: timelineItem)
-        self.insertView(itemView, atIndex: index, inGravity: NSStackViewGravity.Leading)
+        self.insertView(itemView, at: index, in: NSStackViewGravity.leading)
         
         _shiftSelectionFromIndex(index)
     }
     
-    func _shiftSelectionFromIndex(index: Int) {
+    func _shiftSelectionFromIndex(_ index: Int) {
         _doWorkToChangeSelection() {
             if let anchorRow = self._anchorRow {
                 if anchorRow >= index {
@@ -214,33 +227,33 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
                 }
             }
             
-            let mutableIndexes = NSMutableIndexSet(indexSet: self._selectionIndexes)
-            mutableIndexes.shiftIndexesStartingAtIndex(index, by: 1)
+            var mutableIndexes = IndexSet(self._selectionIndexes)
+            mutableIndexes.shift(startingAt: index, by: 1) // Swift 3
             self._selectionIndexes = mutableIndexes;
             
             if let draggedIndexes = self.draggedIndexes {
-                let mutableIndexes = NSMutableIndexSet(indexSet: draggedIndexes)
-                mutableIndexes.shiftIndexesStartingAtIndex(index, by: 1)
+                var mutableIndexes = IndexSet(draggedIndexes)
+                mutableIndexes.shift(startingAt: index, by: 1)
                 self.draggedIndexes = mutableIndexes
             }
         }
     }
     
-    private var _updateCount = 0
+    fileprivate var _updateCount = 0
     func beginUpdates() {
         if (_updateCount == 0) {
             _selectionChanged = false
         }
-        _updateCount++;
+        _updateCount += 1;
     }
     
     func endUpdates() {
-        _updateCount--;
+        _updateCount -= 1;
         if _updateCount == 0 {
             if (_selectionChanged) {
                 _selectionChanged = false;
-                self.willChangeValueForKey("selectionIndexes")
-                self.didChangeValueForKey("selectionIndexes")
+                self.willChangeValue(forKey: "selectionIndexes")
+                self.didChangeValue(forKey: "selectionIndexes")
             }
         }
     }
@@ -249,16 +262,16 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         return _updateCount > 0
     }
     
-    func _adjustIndexSetForIndexRemoval(indexSet: NSIndexSet, index: Int) -> NSIndexSet {
-        let mutableIndexes = NSMutableIndexSet(indexSet: indexSet)
+    func _adjustIndexSetForIndexRemoval(_ indexSet: IndexSet, index: Int) -> IndexSet {
+        var mutableIndexes = IndexSet(indexSet)
         // Remove that item
-        mutableIndexes.removeIndex(index)
+        mutableIndexes.remove(index)
         // Then move things for all indexes less than it
-        mutableIndexes.shiftIndexesStartingAtIndex(index, by: -1)
+        mutableIndexes.shift(startingAt: index, by: -1)
         return mutableIndexes
     }
     
-    func _removeIndexFromSelection(index: Int) {
+    func _removeIndexFromSelection(_ index: Int) {
         // Don't go through the "setter"
         _doWorkToChangeSelection() {
             self._selectionIndexes = self._adjustIndexSetForIndexRemoval(self._selectionIndexes, index: index)
@@ -266,7 +279,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
             if let anchorRow = self._anchorRow {
                 if anchorRow == index {
                     if self._selectionIndexes.count > 0 {
-                        self._anchorRow = self._selectionIndexes.firstIndex
+                        self._anchorRow = self._selectionIndexes.first
                     } else {
                         self._anchorRow = nil
                     }
@@ -281,18 +294,18 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
     }
 
-    func removeItemsAtIndexes(indexes: NSIndexSet) {
+    func removeItemsAtIndexes(_ indexes: IndexSet) {
         beginUpdates()
-        indexes.enumerateIndexesWithOptions([.Reverse]) { (index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+        (indexes as NSIndexSet).enumerate(options: [.reverse]) { (index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
             self.removeItemAtIndex(index)
         }
         endUpdates()        
     }
     
-    func removeItemAtIndex(index: Int) {
+    func removeItemAtIndex(_ index: Int) {
         let view = self.views[index]
         self.removeView(view)
-        _timelineItemViewControllers.removeObjectAtIndex(index)
+        _timelineItemViewControllers.removeObject(at: index)
         _removeIndexFromSelection(index)
     }
     
@@ -353,10 +366,10 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
     }
 
-    func scrollItemAtIndexToVisible(index: Int) {
+    func scrollItemAtIndexToVisible(_ index: Int) {
         self.layoutSubtreeIfNeeded()
         let viewToShow = self.views[index]
-        viewToShow.scrollRectToVisible(viewToShow.bounds)
+        viewToShow.scrollToVisible(viewToShow.bounds)
 //        self.enclosingScrollView?.scrollRectToVisible(viewToShow.frame)
     }
     
@@ -411,27 +424,27 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     
     func _resetAnchorRow() {
         if self.selectionIndexes.count > 0 {
-            _anchorRow = self.selectionIndexes.firstIndex
+            _anchorRow = self.selectionIndexes.first
         } else {
             _anchorRow = nil;
         }
     }
     
-    func _updateSelectionState(priorSelectedIndexes: NSIndexSet, newSelectedRows: NSIndexSet) {
+    func _updateSelectionState(_ priorSelectedIndexes: IndexSet, newSelectedRows: IndexSet) {
         // easiest implementation for now
-        priorSelectedIndexes.enumerateIndexesUsingBlock({ (index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+        (priorSelectedIndexes as NSIndexSet).enumerate({ (index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
             let itemView = self.views[index] as! CDTimelineItemView
             itemView.selected = false
         })
         
-        newSelectedRows.enumerateIndexesUsingBlock({ (index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+        (newSelectedRows as NSIndexSet).enumerate({ (index: Int, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
             let itemView = self.views[index] as! CDTimelineItemView
             itemView.selected = true
         })
     }
     
-    private var _settingViewBeingResized: Bool = false;
-    func assignViewBeingResized(newView: CDTimelineItemView?) {
+    fileprivate var _settingViewBeingResized: Bool = false;
+    func assignViewBeingResized(_ newView: CDTimelineItemView?) {
         if let oldView = self._viewBeingResized {
             if oldView != newView {
                 oldView.resizing = false;
@@ -441,10 +454,10 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         self._viewBeingResized = newView;
         
         if newView != nil {
-            if let itemIndex = self.views.indexOf(newView!) {
+            if let itemIndex = self.views.index(of: newView!) {
                 // drop selection to just this item
                 _settingViewBeingResized = true;
-                self.selectionIndexes = NSIndexSet(index: itemIndex)
+                self.selectionIndexes = IndexSet(integer: itemIndex)
                 _settingViewBeingResized = false
             }
         }
@@ -452,10 +465,10 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     }
     
     // when non-nil, we can't extend selection, etc.
-    private weak var _viewBeingResized: CDTimelineItemView?
+    fileprivate weak var _viewBeingResized: CDTimelineItemView?
     
     var _shouldUpdateAnchorRow = true
-    var _selectionIndexes: NSIndexSet = NSIndexSet()
+    var _selectionIndexes: IndexSet = IndexSet()
     
     var primaryIndex: Int? {
 //        if let r = _anchorRow {
@@ -464,11 +477,11 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         return _anchorRow
     }
     
-    dynamic var selectionIndexes: NSIndexSet {
+    dynamic var selectionIndexes: IndexSet {
         set(v) {
-            if (!_selectionIndexes.isEqualToIndexSet(v)) {
-                let priorSelectedIndexes = _selectionIndexes.mutableCopy() as! NSMutableIndexSet
-                priorSelectedIndexes.removeIndexes(v)
+            if (_selectionIndexes != v) {
+                let priorSelectedIndexes = (_selectionIndexes as NSIndexSet).mutableCopy() as! NSMutableIndexSet
+                priorSelectedIndexes.remove(v)
                 
                 _selectionIndexes = v
 
@@ -476,7 +489,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
                 if _shouldUpdateAnchorRow {
                     _resetAnchorRow()
                 }
-                _updateSelectionState(priorSelectedIndexes, newSelectedRows: v);
+                _updateSelectionState(priorSelectedIndexes as IndexSet, newSelectedRows: v);
                 
                 // Don't allow a duration selection when this is selected..
                 if !_settingViewBeingResized && v.count != 0 {
@@ -490,7 +503,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
     }
     
-    internal func indexOfView(view: NSView?) -> Int? {
+    internal func indexOfView(_ view: NSView?) -> Int? {
         var itemView: CDTimelineItemView? = nil
         var localView: NSView? = view
         while localView != nil {
@@ -502,7 +515,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
         
         if let v = itemView {
-            return self.views.indexOf(v)
+            return self.views.index(of: v)
         } else {
             return nil
         }
@@ -513,9 +526,9 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     var _anchorRow: Int?
     
     
-    private func _indexOfViewAtPoint(point: NSPoint) -> Int? {
+    fileprivate func _indexOfViewAtPoint(_ point: NSPoint) -> Int? {
         // I'm not sure this is a great idea, but hit testing is failing..
-        for var i = 0; i < self.views.count; i++ {
+        for i in 0 ..< self.views.count {
             let view = views[i]
             if NSPointInRect(point, view.frame) {
                 return i
@@ -524,13 +537,13 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         return nil
     }
     
-    private func _hitIndexForEvent(theEvent: NSEvent) -> Int? {
+    fileprivate func _hitIndexForEvent(_ theEvent: NSEvent) -> Int? {
         return _indexOfViewAtPoint(theEvent.locationInView(self))
     }
 
     // return the last hit
-    private func _processMouseEvent(theEvent: NSEvent) {
-        if theEvent.type != .LeftMouseDown {
+    fileprivate func _processMouseEvent(_ theEvent: NSEvent) {
+        if theEvent.type != .leftMouseDown {
             return
         }
         
@@ -543,12 +556,12 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         if let hitIndex = hitIndex {
             if let currentAnchorIndex = _anchorRow {
                 // If we did hit something, then select from the anchor to it, if extending the selection
-                let shiftIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.ShiftKeyMask);
-                let cmdIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.CommandKeyMask);
+                let shiftIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.shift);
+                let cmdIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.command);
                 if (_viewBeingResized != nil && (cmdIsDown || shiftIsDown)) {
                     // We can't process it; it conflicts with the duration selection
                     newAnchorRow = _anchorRow
-                    newSelectedRows.addIndexes(self.selectionIndexes)
+                    newSelectedRows.add(self.selectionIndexes)
                     NSBeep();
                 } else if (shiftIsDown) {
                     // anchor row direct to the new hit row
@@ -556,55 +569,55 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
                     let lastIndex = max(hitIndex, currentAnchorIndex)
                     let length = lastIndex - firstIndex + 1
                     newAnchorRow = currentAnchorIndex
-                    newSelectedRows.addIndexesInRange(NSRange(location: firstIndex, length: length))
+                    newSelectedRows.add(in: NSRange(location: firstIndex, length: length))
                 } else if (cmdIsDown) {
                     // toggle behavior
                     newAnchorRow = currentAnchorIndex
-                    newSelectedRows.addIndexes(self.selectionIndexes)
+                    newSelectedRows.add(self.selectionIndexes)
                     if (newSelectedRows.contains(hitIndex)) {
-                        newSelectedRows.removeIndex(hitIndex)
+                        newSelectedRows.remove(hitIndex)
                     } else {
-                        newSelectedRows.addIndex(hitIndex)
+                        newSelectedRows.add(hitIndex)
                     }
                 } else {
                     // basic selection changing the anchor
                     newAnchorRow = hitIndex
-                    newSelectedRows.addIndex(hitIndex)
+                    newSelectedRows.add(hitIndex)
                 }
             } else {
                 // no anchor, new selection
                 newAnchorRow = hitIndex
-                newSelectedRows.addIndex(hitIndex)
+                newSelectedRows.add(hitIndex)
             }
         }
 
         _anchorRow = newAnchorRow
-        self.selectionIndexes = newSelectedRows
+        self.selectionIndexes = newSelectedRows as IndexSet
         assignViewBeingResized(nil) // drop it..
     }
     
     
-    private func _shouldDragBeginWithEvent(event: NSEvent) -> Bool {
+    fileprivate func _shouldDragBeginWithEvent(_ event: NSEvent) -> Bool {
         // track the mouse a bit to see if we are dragging vs selecting.
         guard let window = self.window else { return false }
         var shouldStartDrag: Bool = false
         if event.clickCount == 1 {
             let startingPoint = event.locationInWindow
             
-            window.trackEventsMatchingMask([NSEventMask.LeftMouseUpMask, NSEventMask.LeftMouseDraggedMask], timeout: NSEventDurationForever, mode: NSEventTrackingRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+            window.trackEvents(matching: [NSEventMask.leftMouseUp, NSEventMask.leftMouseDragged], timeout: NSEventDurationForever, mode: RunLoopMode.eventTrackingRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
                 
                 switch event.type {
-                case NSEventType.LeftMouseDragged:
+                case NSEventType.leftMouseDragged:
                     let currentPoint = event.locationInWindow
                     if abs(currentPoint.x - startingPoint.x) > self._dragThreshold || abs(currentPoint.y - startingPoint.y) > self._dragThreshold {
                         // start a drag!
                         shouldStartDrag = true
-                        stop.memory = true;
+                        stop.pointee = true;
                     }
-                case NSEventType.LeftMouseUp:
+                case NSEventType.leftMouseUp:
                     // Didn't do a drag; repost this event (and maybe the drags? probably not needed...)
                     NSApp.postEvent(event, atStart: true)
-                    stop.memory = true
+                    stop.pointee = true
                 default:
                     break
                 }
@@ -614,25 +627,25 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         return shouldStartDrag
     }
     
-    private func _makeDraggingItemForIndex(index: Int, pasteboardWriter: NSPasteboardWriting) -> NSDraggingItem {
+    fileprivate func _makeDraggingItemForIndex(_ index: Int, pasteboardWriter: NSPasteboardWriting) -> NSDraggingItem {
         let draggingItem = NSDraggingItem(pasteboardWriter: pasteboardWriter)
         draggingItem.imageComponentsProvider = {
             let view = self.views[index]
 
             let component = NSDraggingImageComponent(key: NSDraggingImageComponentIconKey)
             component.contents = view.screenshotAsImage()
-            component.frame = self.convertRect(view.bounds, fromView: view)
+            component.frame = self.convert(view.bounds, from: view)
 
             return [component]
         }
         return draggingItem
     }
     
-    private func _startDraggingSessionWithEvent(event: NSEvent, indexes: NSIndexSet, hitIndex: Int) -> Bool {
+    fileprivate func _startDraggingSessionWithEvent(_ event: NSEvent, indexes: IndexSet, hitIndex: Int) -> Bool {
         guard let draggingSourceDelegate = draggingSourceDelegate else { return false }
         // Create pasteboard writers
         self.draggedIndexes = indexes // set them..
-        let mutableIndexes = NSMutableIndexSet(indexSet: indexes)
+        var mutableIndexes = IndexSet(indexes)
         
         var leaderIndex: Int? = hitIndex
         var items = [NSDraggingItem]()
@@ -642,7 +655,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
                 items.append(draggingItem)
             } else {
                 // not being dragged if we didn't get a writer
-                mutableIndexes.removeIndex(index)
+                mutableIndexes.remove(index)
                 if leaderIndex == index {
                     leaderIndex = nil
                 } else if leaderIndex != nil && index < leaderIndex {
@@ -654,7 +667,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         // If we have something, try to do it
         if items.count > 0 {
             self.draggedIndexes = mutableIndexes;
-            let session = self.beginDraggingSessionWithItems(items, event: event, source: self)
+            let session = self.beginDraggingSession(with: items, event: event, source: self)
             if let leaderIndex = leaderIndex {
                 session.draggingLeaderIndex = leaderIndex
             }
@@ -666,18 +679,18 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     }
     
     // returns true if it did a drag
-    private func _attemptDragWithEvent(event: NSEvent) -> Bool {
+    fileprivate func _attemptDragWithEvent(_ event: NSEvent) -> Bool {
         var result: Bool = false
         if draggingSourceDelegate != nil {
             let hitIndex = _hitIndexForEvent(event)
             if let hitIndex = hitIndex {
                 if _shouldDragBeginWithEvent(event) {
                     // drag everything if it was hit in a selection
-                    if self.selectionIndexes.containsIndex(hitIndex) {
+                    if self.selectionIndexes.contains(hitIndex) {
                         result = _startDraggingSessionWithEvent(event, indexes: self.selectionIndexes, hitIndex: hitIndex)
                     } else {
                         // drag just that one row
-                        result = _startDraggingSessionWithEvent(event, indexes: NSIndexSet(index: hitIndex), hitIndex: hitIndex)
+                        result = _startDraggingSessionWithEvent(event, indexes: IndexSet(integer: hitIndex), hitIndex: hitIndex)
                     }
                     
                 }
@@ -686,7 +699,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         return result
     }
     
-    override func mouseDown(theEvent: NSEvent) {
+    override func mouseDown(with theEvent: NSEvent) {
         if self.acceptsFirstResponder {
             self.window?.makeFirstResponder(self)
         }
@@ -698,17 +711,17 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         
         _shouldUpdateAnchorRow = false
         
-        self.window?.trackEventsMatchingMask([NSEventMask.LeftMouseDraggedMask, NSEventMask.LeftMouseUpMask], timeout: NSEventDurationForever, mode: NSEventTrackingRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+        self.window?.trackEvents(matching: [NSEventMask.leftMouseDragged, NSEventMask.leftMouseUp], timeout: NSEventDurationForever, mode: RunLoopMode.eventTrackingRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
         
             self._processMouseEvent(theEvent)
-            if event.type == .LeftMouseUp {
-                stop.memory = true
+            if event.type == .leftMouseUp {
+                stop.pointee = true
             }
         })
         _shouldUpdateAnchorRow = true
     }
     
-    func _keepIndexValid(index: Int) -> Int {
+    func _keepIndexValid(_ index: Int) -> Int {
         var result = index
         if (result < 0) {
             result = 0;
@@ -718,30 +731,30 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         return result
     }
     
-    func _selectNextIndexFromAnchorExtending(extendingSelection: Bool, goingForward: Bool) {
+    func _selectNextIndexFromAnchorExtending(_ extendingSelection: Bool, goingForward: Bool) {
         _shouldUpdateAnchorRow = false
         
         let itemCount = self.numberOfItems;
         if let anchorIndex = _anchorRow {
             if extendingSelection {
-                var firstIndex = self.selectionIndexes.firstIndex
-                var endingIndex = self.selectionIndexes.lastIndex
+                var firstIndex = self.selectionIndexes.first!
+                var endingIndex = self.selectionIndexes.last!
                 if anchorIndex == firstIndex {
                     // From the anchor to somewhere past it
                     if goingForward {
-                        endingIndex++
+                        endingIndex = endingIndex + 1
                     } else if firstIndex == endingIndex {
                         // Dec the first index instead of the ending
-                        firstIndex--
+                        firstIndex = firstIndex - 1
                     } else {
-                        endingIndex--
+                        endingIndex = endingIndex - 1
                     }
                 } else {
                     // expand at the start of the selection
                     if goingForward {
-                        firstIndex++
+                        firstIndex = firstIndex + 1
                     } else {
-                        firstIndex--
+                        firstIndex = firstIndex - 1
                     }
                 }
                 
@@ -749,17 +762,19 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
                 endingIndex = _keepIndexValid(endingIndex)
                 let length = endingIndex - firstIndex + 1
                 // Leave the anchor row where it is
-                self.selectionIndexes = NSIndexSet(indexesInRange: NSRange(location: firstIndex, length: length))
+//                self.selectionIndexes = IndexSet(integersIn: NSRange(location: firstIndex, length: length).toRange() ?? 0..<0)  // Swift migrator did this
+                self.selectionIndexes = IndexSet(integersIn: firstIndex ..< (firstIndex + length))
+
             } else {
                 var nextIndex = goingForward ? anchorIndex + 1 : anchorIndex - 1;
                 nextIndex = _keepIndexValid(nextIndex)
                 _anchorRow = nextIndex
-                self.selectionIndexes = NSIndexSet(index: nextIndex);
+                self.selectionIndexes = IndexSet(integer: nextIndex);
             }
             
         } else if itemCount > 0 {
             _anchorRow = goingForward ? 0 : itemCount - 1
-            self.selectionIndexes = NSIndexSet(index: _anchorRow!)
+            self.selectionIndexes = IndexSet(integer: _anchorRow!)
         }
         // make it visible
         if let anchorRow = _anchorRow {
@@ -768,13 +783,13 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         _shouldUpdateAnchorRow = true
     }
     
-    override func selectAll(sender: AnyObject?) {
-        self.selectionIndexes = NSIndexSet(indexesInRange: NSRange(location: 0, length: self.numberOfItems))
+    override func selectAll(_ sender: Any?) {
+        self.selectionIndexes = IndexSet(integersIn: 0 ..< self.numberOfItems)
     }
     
-    override func keyDown(theEvent: NSEvent) {
+    override func keyDown(with theEvent: NSEvent) {
         var callSuper = false
-        let shiftIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.ShiftKeyMask);
+        let shiftIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.shift);
 
         if self.numberOfItems > 0 {
             switch theEvent.character {
@@ -784,7 +799,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
                 _selectNextIndexFromAnchorExtending(shiftIsDown, goingForward: false)
             case NSDeleteCharacter:
                 if self.selectionIndexes.count > 0 {
-                    NSApp.sendAction("delete:", to: nil, from: self)
+                    NSApp.sendAction(#selector(NSText.delete(_:)), to: nil, from: self)
                 }
             default:
                 callSuper = true;
@@ -794,7 +809,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
         
         if callSuper {
-            super.keyDown(theEvent)
+            super.keyDown(with: theEvent)
         }
     }
     
@@ -808,19 +823,19 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
     
     
     // MARK: NSDraggingSource protocol implementation
-    func draggingSession(session: NSDraggingSession, sourceOperationMaskForDraggingContext context: NSDraggingContext) -> NSDragOperation {
+    func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor context: NSDraggingContext) -> NSDragOperation {
         // TODO: move to delegate when needed
-        if context == NSDraggingContext.WithinApplication {
-            return NSDragOperation.Every
+        if context == NSDraggingContext.withinApplication {
+            return NSDragOperation.every
         } else {
             // TODO: maybe allow dropping images on it??
-            return NSDragOperation.None
+            return NSDragOperation()
         }
     }
     
-    var draggedIndexes: NSIndexSet? // non nil when we are dragging
+    var draggedIndexes: IndexSet? // non nil when we are dragging
     
-    private func _fadeDraggedIndexesToValue(value: CGFloat) {
+    fileprivate func _fadeDraggedIndexesToValue(_ value: CGFloat) {
         // Fade out all the dragged items a bit..
         if let draggedIndexes = self.draggedIndexes {
             NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext) -> Void in
@@ -834,18 +849,18 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
     }
     
-    func draggingSession(session: NSDraggingSession, willBeginAtPoint screenPoint: NSPoint) {
+    func draggingSession(_ session: NSDraggingSession, willBeginAt screenPoint: NSPoint) {
         if let draggingSourceDelegate = draggingSourceDelegate {
             draggingSourceDelegate.timelineTrackView(self, draggingSession: session, willBeginAtPoint: screenPoint, forIndexes: self.draggedIndexes!)
         }
         _fadeDraggedIndexesToValue(0.5)
     }
 
-    func draggingSession(session: NSDraggingSession, movedToPoint screenPoint: NSPoint) {
+    func draggingSession(_ session: NSDraggingSession, movedTo screenPoint: NSPoint) {
         
     }
     
-    func draggingSession(session: NSDraggingSession, endedAtPoint screenPoint: NSPoint, operation: NSDragOperation) {
+    func draggingSession(_ session: NSDraggingSession, endedAt screenPoint: NSPoint, operation: NSDragOperation) {
         if let draggingSourceDelegate = draggingSourceDelegate {
             draggingSourceDelegate.timelineTrackView(self, draggingSession: session, endedAtPoint: screenPoint, operation: operation)
         }
@@ -854,20 +869,20 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         self.draggedIndexes = nil
     }
     
-    func ignoreModifierKeysForDraggingSession(session: NSDraggingSession) -> Bool {
+    func ignoreModifierKeys(for session: NSDraggingSession) -> Bool {
         return false
     }
     
-    private func _makeDraggingInsertionViewWithFrame(frame: NSRect) -> NSView {
+    fileprivate func _makeDraggingInsertionViewWithFrame(_ frame: NSRect) -> NSView {
         let result = NSView(frame: frame)
         result.wantsLayer = true
-        result.layer!.backgroundColor = CDTimelineTrackView.draggingInsertionColor.CGColor
-        result.layerContentsRedrawPolicy = .Never
+        result.layer!.backgroundColor = CDTimelineTrackView.draggingInsertionColor.cgColor
+        result.layerContentsRedrawPolicy = .never
         return result
     }
     
-    private let _insertionDividerWidth: CGFloat = 2.0
-    private func _draggingInsertionViewFrameForIndex(index: Int) -> NSRect {
+    fileprivate let _insertionDividerWidth: CGFloat = 2.0
+    fileprivate func _draggingInsertionViewFrameForIndex(_ index: Int) -> NSRect {
         var result: NSRect
         let viewCount = self.views.count
         if index < viewCount {
@@ -895,8 +910,8 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         return result;
     }
     
-    private var _draggingInsertionPointView: NSView?
-    private func _updateDraggingInsertionPointView() {
+    fileprivate var _draggingInsertionPointView: NSView?
+    fileprivate func _updateDraggingInsertionPointView() {
         if let index = self.draggingInsertIndex {
             let insertionFrame = _draggingInsertionViewFrameForIndex(index);
             if let v = _draggingInsertionPointView {
@@ -926,15 +941,15 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
     }
     
-    private func _updateDraggingDestinationState(draggingInfo: NSDraggingInfo) -> NSDragOperation {
-        let point = self.convertPoint(draggingInfo.draggingLocation(), fromView: nil)
-        var result = NSDragOperation.None
+    fileprivate func _updateDraggingDestinationState(_ draggingInfo: NSDraggingInfo) -> NSDragOperation {
+        let point = self.convert(draggingInfo.draggingLocation(), from: nil)
+        var result = NSDragOperation()
         var otherIndexToTry: Int?
         
         if let hitIndex = _indexOfViewAtPoint(point) {
             // Find out what view we hit and how far we are in it in order to do an insert before or after it.
             let hitView = self.views[hitIndex]
-            let pointInHitView = hitView.convertPoint(draggingInfo.draggingLocation(), fromView: nil)
+            let pointInHitView = hitView.convert(draggingInfo.draggingLocation(), from: nil)
             let halfWidth = hitView.bounds.size.width / 2.0
             if pointInHitView.x <= halfWidth {
                 // Before it, which is it's index itself for the insertion point
@@ -946,21 +961,21 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
                 self.draggingInsertIndex = hitIndex + 1;
                 otherIndexToTry = hitIndex
             }
-            result = NSDragOperation.Every
+            result = NSDragOperation.every
         } else {
             // If we didn't hit a child view and instead hit us, find out where in us we are for the insert
             // First, none check
             if self.views.count == 0 {
                 self.draggingInsertIndex = 0
-                result = NSDragOperation.Every
+                result = NSDragOperation.every
             } else {
                 // Make sure we are before or after the first view, and not above another one..which isn't going to work
                 if point.x <= NSMinX(self.views[0].frame) {
                     self.draggingInsertIndex = 0
-                    result = NSDragOperation.Every
+                    result = NSDragOperation.every
                 } else if point.x >= NSMaxX(self.views.last!.frame) {
                     self.draggingInsertIndex = self.views.count // Past it
-                    result = NSDragOperation.Every
+                    result = NSDragOperation.every
                 }
             }
         }
@@ -969,14 +984,14 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         if let d = self.draggingDestinationDelegate {
             result = d.timelineTrackView(self, updateDraggingInfo: draggingInfo, insertionIndex: self.draggingInsertIndex)
             // If the delegate doesn't accept, implicitlely clear the drop point
-            if result == .None {
+            if result == NSDragOperation() {
                 // If we have another index, try again..
                 if let otherIndexToTry = otherIndexToTry {
                     self.draggingInsertIndex = otherIndexToTry
                     result = d.timelineTrackView(self, updateDraggingInfo: draggingInfo, insertionIndex: self.draggingInsertIndex)
                 }
                 
-                if result == .None {
+                if result == NSDragOperation() {
                     self.draggingInsertIndex = nil
                 }
             }
@@ -986,28 +1001,28 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         
     }
     
-    private func _clearDraggingDestinationState() {
+    fileprivate func _clearDraggingDestinationState() {
         self.draggingInsertIndex = nil
     }
     
     // MARK: NSDraggingDestination protocol implementation..
-    override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
         return _updateDraggingDestinationState(sender)
     }
     
-    override func draggingUpdated(sender: NSDraggingInfo) -> NSDragOperation {
+    override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
         return _updateDraggingDestinationState(sender)
     }
     
-    override func draggingExited(sender: NSDraggingInfo?) {
+    override func draggingExited(_ sender: NSDraggingInfo?) {
         _clearDraggingDestinationState()
     }
     
-    override func prepareForDragOperation(sender: NSDraggingInfo) -> Bool {
+    override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
         return true
     }
     
-    override func performDragOperation(sender: NSDraggingInfo) -> Bool {
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         // I don't think we need a _updateDraggingDestinationState(sender) call..
         if let d = self.draggingDestinationDelegate {
             if d.timelineTrackView(self, performDragOperation: sender, insertionIndex: self.draggingInsertIndex) {
@@ -1023,7 +1038,7 @@ class CDTimelineTrackView: NSStackView, NSDraggingSource {
         }
     }
     
-    override func concludeDragOperation(sender: NSDraggingInfo?) {
+    override func concludeDragOperation(_ sender: NSDraggingInfo?) {
         _clearDraggingDestinationState()
     }
 //    func draggingEnded(sender: NSDraggingInfo?) {

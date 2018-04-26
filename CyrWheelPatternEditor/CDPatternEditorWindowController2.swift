@@ -22,14 +22,14 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
         
         // Create the pattern runner 
         let delegate = NSApp.delegate as! CDAppDelegate
-        _patternRunner = CDEditorPatternRunner(patternDirectoryURL: delegate.patternDirectoryURL)
+        _patternRunner = CDEditorPatternRunner(patternDirectoryURL: delegate.patternDirectoryURL as URL)
 //        patternRunner.setCyrWheelView(_cyrWheelView) // Done by a child view controller
 
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         let window = self.window!
         // TODO: better color management..
         // Agh..the dark appearance makes this not work! this line is basically pointless
-        window.backgroundColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
+        window.backgroundColor = NSColor(srgbRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
         window.titlebarAppearsTransparent = true
         window.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         // I don't want the content to use "vibrant" controls except in particular UI pieces, so I set the appearance to vibrantDark on specific UI view parents
@@ -40,7 +40,7 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
         _documentChanged();
     }
     
-    private func _documentChanged() {
+    fileprivate func _documentChanged() {
         if self.document != nil {
             var mainVC = self.window!.contentViewController as! CDPatternSequencePresenter;
             mainVC.patternSequence = self.patternSequence // This pushes our value to the view controllers
@@ -65,17 +65,17 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
         }
     }
 
-    private var _selectedPatternItem: CDPatternItem? {
+    fileprivate var _selectedPatternItem: CDPatternItem? {
         get {
             if patternSelectionIndexes.count == 1 {
-                return self.patternSequence?.children[patternSelectionIndexes.firstIndex] as? CDPatternItem
+                return self.patternSequence?.children![patternSelectionIndexes.first!] as? CDPatternItem
             } else {
                 return nil
             }
         }
     }
 
-    func window(window: NSWindow, willPositionSheet sheet: NSWindow, usingRect rect: NSRect) -> NSRect {
+    func window(_ window: NSWindow, willPositionSheet sheet: NSWindow, using rect: NSRect) -> NSRect {
         // drop it down
         var result = rect;
         result.origin.y -= 23
@@ -84,21 +84,21 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
     
     
     // Create the main pattern runner here; we associate it with a child view controller later
-    private var _patternRunner: CDEditorPatternRunner!
+    fileprivate var _patternRunner: CDEditorPatternRunner!
     var patternRunner: CDPatternRunner! {
         return _patternRunner
     }
     
     // Bound to a child's value, so that another view can be bound to this one
-    dynamic var patternSelectionIndexes: NSIndexSet = NSIndexSet()
+    dynamic var patternSelectionIndexes: IndexSet = IndexSet()
     
-    private func _updatePatternRunner() {
+    fileprivate func _updatePatternRunner() {
         // If we have one selected item, we create a preview for just that. Otherwise, we preview the whole sequence
         if let validSequence = self.patternSequence {
             // Save the position and attempt to restore it!
             let playheadTimePosition = _patternRunner.playheadTimePosition
             let data = validSequence.exportAsData()
-            _patternRunner.loadFromData(data)
+            _patternRunner.load(from: data)
             _patternRunner.playheadTimePosition = playheadTimePosition
         }
     }
@@ -106,7 +106,7 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
     
     func _startObservingChanges() {
         let context: NSManagedObjectContext = self.managedObjectContext
-        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextObjectsDidChangeNotification, object: context, queue: nil) { note in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: context, queue: nil) { note in
             let needsUpdate = true
 //            if let updated = note.userInfo?[NSUpdatedObjectsKey] where updated.count > 0 {
 //                print("updated: \(updated)")
@@ -144,7 +144,7 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
         }
     }
     
-    override func keyDown(theEvent: NSEvent) {
+    override func keyDown(with theEvent: NSEvent) {
         var handled = false
         if (theEvent.character == NSRightArrowFunctionKey) {
             self.patternRunner.nextPatternItem()
@@ -154,7 +154,7 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
             handled = true;
         } else if let chars = theEvent.characters {
             if (chars == " ") {
-                if self.patternRunner.paused {
+                if self.patternRunner.isPaused {
                     self.patternRunner.play()
                 } else {
                     self.patternRunner.pause()
@@ -170,15 +170,15 @@ class CDPatternEditorWindowController2: NSWindowController, CDPatternSequencePro
             }
         }
         if (!handled) {
-            super.keyDown(theEvent)
+            super.keyDown(with: theEvent)
         }
     }
     
-    @IBAction func revealInFinder(sender: AnyObject) {
+    @IBAction func revealInFinder(_ sender: AnyObject) {
         if let item = self._selectedPatternItem {
             if let relativeFilename = item.imageFilename {
-                let fullFilenamePath = CDAppDelegate.appDelegate.patternDirectoryURL.URLByAppendingPathComponent(relativeFilename)
-                NSWorkspace.sharedWorkspace().selectFile(fullFilenamePath.path!, inFileViewerRootedAtPath: "")
+                let fullFilenamePath = CDAppDelegate.appDelegate.patternDirectoryURL.appendingPathComponent(relativeFilename)
+                NSWorkspace.shared().selectFile(fullFilenamePath.path, inFileViewerRootedAtPath: "")
             }
         }
     }

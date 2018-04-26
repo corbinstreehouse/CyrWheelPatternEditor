@@ -11,21 +11,21 @@ import Cocoa
 
 enum CDBorderedViewEdge : Int {
     
-    case Both
-    case Left
-    case Right
+    case both
+    case left
+    case right
 }
 
 class CDBorderedView: NSView {
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
+        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
+        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
     }
     
     override var layer: CALayer? {
@@ -81,7 +81,7 @@ class CDBorderedView: NSView {
         }
     }
     
-    var borderEdge: CDBorderedViewEdge = CDBorderedViewEdge.Both {
+    var borderEdge: CDBorderedViewEdge = CDBorderedViewEdge.both {
         willSet(v) {
             if (v != borderEdge) {
                 self.needsDisplay = true
@@ -114,8 +114,8 @@ class CDBorderedView: NSView {
                     
                     return true
                 })
-                layer.contents = image.CGImageForProposedRect(nil, context: nil, hints: nil)
-                if self.borderEdge == .Right {
+                layer.contents = image.cgImage(forProposedRect: nil, context: nil, hints: nil)
+                if self.borderEdge == .right {
                     layer.contentsRect = CGRect(x: 0.5, y: 0, width: 0.5, height: 1)
                     layer.contentsCenter = CGRect(x: 0, y: 0.5, width: 0, height: 0)
                 } else {
@@ -124,7 +124,7 @@ class CDBorderedView: NSView {
                 layer.contentsScale = self.window != nil ? self.window!.backingScaleFactor : 1.0
             } else {
                 layer.contents = nil
-                layer.backgroundColor = self.backgroundColor?.CGColor
+                layer.backgroundColor = self.backgroundColor?.cgColor
             }
             //            layer.borderColor = self.borderColor?.CGColor
             //            layer.backgroundColor = self.backgroundColor?.CGColor

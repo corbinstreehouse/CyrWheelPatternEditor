@@ -11,7 +11,7 @@ extension NSOutlineView {
     var selectedItem: AnyObject? {
         get {
             if self.selectedRow != -1 {
-                return self.itemAtRow(self.selectedRow)
+                return self.item(atRow: self.selectedRow) as AnyObject
             } else {
                 return nil;
             }
@@ -32,20 +32,20 @@ class FloatingRowView: NSTableRowView {
     //        self.layer!.backgroundColor =
     //    }
     
-    override func drawRect(dirtyRect: NSRect) {
+    override func draw(_ dirtyRect: NSRect) {
         // TODO: something more generic/better with colors instead of hardcoding
-        let backgroundColor = NSColor(SRGBRed: 41.0/255.0, green: 41.0/255.0, blue: 41.0/255.0, alpha: 1.0)
+        let backgroundColor = NSColor(srgbRed: 41.0/255.0, green: 41.0/255.0, blue: 41.0/255.0, alpha: 1.0)
         backgroundColor.set()
-        NSRectFillUsingOperation(dirtyRect, NSCompositingOperation.CompositeSourceIn)
+        NSRectFillUsingOperation(dirtyRect, NSCompositingOperation.sourceIn)
         
-        let borderColor = NSColor(SRGBRed: 29.0/255.0, green: 29.0/255.0, blue: 29.0/255.0, alpha: 1.0)
+        let borderColor = NSColor(srgbRed: 29.0/255.0, green: 29.0/255.0, blue: 29.0/255.0, alpha: 1.0)
         borderColor.set()
         var topRect = self.bounds
         topRect.size.height = 2.0
-        NSRectFillUsingOperation(topRect, NSCompositingOperation.CompositeSourceIn)
+        NSRectFillUsingOperation(topRect, NSCompositingOperation.sourceIn)
         
         topRect.origin.y = NSMaxY(self.bounds) - 2.0
-        NSRectFillUsingOperation(topRect, NSCompositingOperation.CompositeSourceIn)
+        NSRectFillUsingOperation(topRect, NSCompositingOperation.sourceIn)
     }
     
 }
@@ -65,20 +65,20 @@ class DarkRowView: NSTableRowView {
     //            self.layer!.backgroundColor = NSColor.redColor().CGColor// NSColor.secondarySelectedControlColor().colorWithAlphaComponent(0.7).CGColor
     //        }
     //    }
-    override func drawSelectionInRect(dirtyRect: NSRect) {
-        var color = NSColor.alternateSelectedControlColor()
-        if !self.emphasized {
-            color = color.colorWithAlphaComponent(0.6)
+    override func drawSelection(in dirtyRect: NSRect) {
+        var color = NSColor.alternateSelectedControlColor
+        if !self.isEmphasized {
+            color = color.withAlphaComponent(0.6)
         }
         color.set()
-        NSRectFillUsingOperation(dirtyRect, NSCompositingOperation.CompositeSourceIn)
+        NSRectFillUsingOperation(dirtyRect, NSCompositingOperation.sourceIn)
     }
     
 }
 
 class DarkOutlineView: NSOutlineView {
-    override func makeViewWithIdentifier(identifier: String, owner: AnyObject?) -> NSView? {
-        let result = super.makeViewWithIdentifier(identifier, owner: owner)
+    override func make(withIdentifier identifier: String, owner: Any?) -> NSView? {
+        let result = super.make(withIdentifier: identifier, owner: owner)
         if let result = result {
             if result.identifier == NSOutlineViewDisclosureButtonKey {
                 result.alphaValue = 0.8 // looks better... not so white

@@ -24,37 +24,37 @@ class CDEditorCyrWheelViewController: NSViewController {
         // required
         let provider = self.patternSequenceProvider!
         provider.patternRunner.setCyrWheelView(_cyrWheelView);
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("_wheelStateChanged:"), name: CDPatternRunnerStateChangedNotificationName, object: provider.patternRunner)
+        NotificationCenter.default.addObserver(self, selector: #selector(CDEditorCyrWheelViewController._wheelStateChanged(_:)), name: NSNotification.Name(rawValue: CDPatternRunnerStateChangedNotificationName), object: provider.patternRunner)
         _updateButtons()
     }
     
-    private func _updateButtons() {
-        if (_patternRunner!.paused) {
+    fileprivate func _updateButtons() {
+        if (_patternRunner!.isPaused) {
             _playButton.image = NSImage(named: "play")
         } else {
             _playButton.image = NSImage(named: "pause")
         }
     }
     
-    @objc func _wheelStateChanged(note: NSNotification) {
+    @objc func _wheelStateChanged(_ note: Notification) {
         _updateButtons()
     }
     
-    private var _patternRunner: CDPatternRunner? {
+    fileprivate var _patternRunner: CDPatternRunner? {
         return self.patternSequenceProvider?.patternRunner
     }
     
-    @IBAction func btnFirstClicked(sender: NSButton) {
+    @IBAction func btnFirstClicked(_ sender: NSButton) {
         _patternRunner?.moveToTheStart()
     }
     
-    @IBAction func btnPriorClicked(sender: NSButton) {
+    @IBAction func btnPriorClicked(_ sender: NSButton) {
         _patternRunner?.rewind();
     }
     
-    @IBAction func btnPlayPauseClicked(sender: NSButton) {
+    @IBAction func btnPlayPauseClicked(_ sender: NSButton) {
         if let patternRunner = _patternRunner {
-            if patternRunner.paused {
+            if patternRunner.isPaused {
                 patternRunner.play()
             } else {
                 patternRunner.pause()
@@ -62,11 +62,11 @@ class CDEditorCyrWheelViewController: NSViewController {
         }
     }
     
-    @IBAction func btnNextClicked(sender: NSButton) {
+    @IBAction func btnNextClicked(_ sender: NSButton) {
         _patternRunner?.nextPatternItem()
     }
     
-    @IBAction func btnEndClicked(sender: NSButton) {
+    @IBAction func btnEndClicked(_ sender: NSButton) {
         _patternRunner?.moveToTheStart()
     }
 

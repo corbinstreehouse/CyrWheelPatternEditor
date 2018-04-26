@@ -10,10 +10,10 @@ import Cocoa
 
 // For bindings to the struct and a callback
 protocol CDPatternItemHeaderWrapperChanged {
-    func patternItemSpeedChanged(item: CDPatternItemHeaderWrapper)
-    func patternItemColorChanged(item: CDPatternItemHeaderWrapper)
-    func patternItemVelocityBasedBrightnessChanged(item: CDPatternItemHeaderWrapper)
-    func patternItemBitmapOptionsChanged(item: CDPatternItemHeaderWrapper)
+    func patternItemSpeedChanged(_ item: CDPatternItemHeaderWrapper)
+    func patternItemColorChanged(_ item: CDPatternItemHeaderWrapper)
+    func patternItemVelocityBasedBrightnessChanged(_ item: CDPatternItemHeaderWrapper)
+    func patternItemBitmapOptionsChanged(_ item: CDPatternItemHeaderWrapper)
 }
 
 //extension LEDBitmapPatternOptions: RawRepresentable {
@@ -38,7 +38,7 @@ protocol CDPatternItemHeaderWrapperChanged {
 class CDPatternItemHeaderWrapper: NSObject {
     var delegate: CDPatternItemHeaderWrapperChanged?
     
-    private func _commonInitAfterPatternType() {
+    fileprivate func _commonInitAfterPatternType() {
         self.colorEnabled = CDPatternTypeNeedsColor(patternType)
         self.speedEnabled = CDPatternItemGetSpeedEnabled(patternType)
     }
@@ -57,7 +57,7 @@ class CDPatternItemHeaderWrapper: NSObject {
             // CRASHES IN THE method..mystery why..
             let c = patternItemHeader.color
     //        self.color = CDEncodedColorTransformer.colorFromCRGBColor(patternItemHeader.color)
-            self.color = NSColor(SRGBRed: CGFloat(c.red)*255.0, green: CGFloat(c.green)*255.0, blue: CGFloat(c.blue)*255.0, alpha: 1.0)
+            self.color = NSColor(srgbRed: CGFloat(c.red)*255.0, green: CGFloat(c.green)*255.0, blue: CGFloat(c.blue)*255.0, alpha: 1.0)
         } else {
             // black looks better when disabled.
         }
@@ -68,7 +68,7 @@ class CDPatternItemHeaderWrapper: NSObject {
         if patternItemFilename != nil {
             self.patternName = patternItemFilename
         } else {
-            self.patternName = CDPatternItemNames.nameForPatternType(patternItemHeader.patternType)
+            self.patternName = CDPatternItemNames.name(for: patternItemHeader.patternType)
         }
         
         if self.isBitmapType {
@@ -89,9 +89,9 @@ class CDPatternItemHeaderWrapper: NSObject {
         super.init()
         self.patternType = patternType
         _commonInitAfterPatternType()
-        self.patternName = CDPatternItemNames.nameForPatternType(patternType)
+        self.patternName = CDPatternItemNames.name(for: patternType)
         if self.colorEnabled {
-            self.color = NSColor(SRGBRed: 1.0, green: 0, blue: 0, alpha: 1)
+            self.color = NSColor(srgbRed: 1.0, green: 0, blue: 0, alpha: 1)
         }
     }
 
@@ -107,10 +107,10 @@ class CDPatternItemHeaderWrapper: NSObject {
     }
     
     dynamic var patternName: String!
-    dynamic var duration: NSTimeInterval = 0
+    dynamic var duration: TimeInterval = 0
     dynamic var looping: Bool = false
     // Use the sRGB color space as a starting point
-    dynamic var color: NSColor = NSColor(SRGBRed: 0, green: 0, blue: 0, alpha: 1.0) {
+    dynamic var color: NSColor = NSColor(srgbRed: 0, green: 0, blue: 0, alpha: 1.0) {
         didSet {
             delegate?.patternItemColorChanged(self)
         }

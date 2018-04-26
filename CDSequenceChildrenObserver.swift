@@ -11,13 +11,13 @@ import Foundation
 protocol CDPatternSequenceChildrenDelegate {
     func childrenAllChanged();
     
-    func childrenInsertedAtIndexes(indexes: NSIndexSet);
-    func childrenRemovedAtIndexes(indexes: NSIndexSet);
-    func childrenReplacedAtIndexes(indexes: NSIndexSet);
+    func childrenInsertedAtIndexes(_ indexes: IndexSet);
+    func childrenRemovedAtIndexes(_ indexes: IndexSet);
+    func childrenReplacedAtIndexes(_ indexes: IndexSet);
 }
 
 class CDPatternSequenceChildrenObserver: NSObject {
-    private var _patternSequence: CDPatternSequence!
+    fileprivate var _patternSequence: CDPatternSequence!
     
     init(patternSequence: CDPatternSequence, delegate: CDPatternSequenceChildrenDelegate) {
         super.init()
@@ -30,44 +30,44 @@ class CDPatternSequenceChildrenObserver: NSObject {
         _patternSequence.removeObserver(self, forKeyPath: CDPatternChildrenKey)
     }
     
-    private var _delegate: CDPatternSequenceChildrenDelegate!
+    fileprivate var _delegate: CDPatternSequenceChildrenDelegate!
     
-    private func childrenAllChanged() {
+    fileprivate func childrenAllChanged() {
         _delegate.childrenAllChanged()
     }
     
-    private func childrenInsertedAtIndexes(indexes: NSIndexSet) {
+    fileprivate func childrenInsertedAtIndexes(_ indexes: IndexSet) {
         _delegate.childrenInsertedAtIndexes(indexes)
     }
     
-    private func childrenRemovedAtIndexes(indexes: NSIndexSet) {
+    fileprivate func childrenRemovedAtIndexes(_ indexes: IndexSet) {
         _delegate.childrenRemovedAtIndexes(indexes)
     }
     
-    private func childrenReplacedAtIndexes(indexes: NSIndexSet) {
+    fileprivate func childrenReplacedAtIndexes(_ indexes: IndexSet) {
         _delegate.childrenReplacedAtIndexes(indexes)
     }
     
-    private func _childrenChanged(change: [String : AnyObject]) {
-        if let changeKindInt = change[NSKeyValueChangeKindKey] as? UInt  {
+    fileprivate func _childrenChanged(_ change: [NSKeyValueChangeKey : Any]) {
+        if let changeKindInt = change[NSKeyValueChangeKey.kindKey] as? UInt  {
             let changeKind: NSKeyValueChange = NSKeyValueChange(rawValue: changeKindInt)!
             switch (changeKind) {
-            case NSKeyValueChange.Setting:
+            case NSKeyValueChange.setting:
                 childrenAllChanged()
-            case NSKeyValueChange.Insertion:
-                if let indexes = change[NSKeyValueChangeIndexesKey] as? NSIndexSet {
+            case NSKeyValueChange.insertion:
+                if let indexes = change[NSKeyValueChangeKey.indexesKey] as? IndexSet {
                     childrenInsertedAtIndexes(indexes)
                 } else {
                     childrenAllChanged()
                 }
-            case NSKeyValueChange.Removal:
-                if let indexes = change[NSKeyValueChangeIndexesKey] as? NSIndexSet {
+            case NSKeyValueChange.removal:
+                if let indexes = change[NSKeyValueChangeKey.indexesKey] as? IndexSet {
                     childrenRemovedAtIndexes(indexes)
                 } else {
                     childrenAllChanged()
                 }
-            case NSKeyValueChange.Replacement:
-                if let indexes = change[NSKeyValueChangeIndexesKey] as? NSIndexSet {
+            case NSKeyValueChange.replacement:
+                if let indexes = change[NSKeyValueChangeKey.indexesKey] as? IndexSet {
                     childrenReplacedAtIndexes(indexes)
                 } else {
                     childrenAllChanged()
@@ -78,7 +78,7 @@ class CDPatternSequenceChildrenObserver: NSObject {
         }
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         if keyPath == CDPatternChildrenKey {
             if let change = change {

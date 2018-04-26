@@ -18,7 +18,7 @@ protocol CDPatternSequencePresenter {
 
 protocol CDPatternSequenceProvider {
     var patternSequence: CDPatternSequence? { get }
-    var patternSelectionIndexes: NSIndexSet { get set } // For bindings and manipulation; there should only be one in the hierarchy..
+    var patternSelectionIndexes: IndexSet { get set } // For bindings and manipulation; there should only be one in the hierarchy..
     var managedObjectContext: NSManagedObjectContext { get }
 //    var selectedPatternItem: CDPatternItem? { get }
     var patternRunner: CDPatternRunner! { get }
@@ -60,7 +60,7 @@ class CDPatternSequencePresenterViewController: NSViewController, CDPatternSeque
         }
     }
     
-    override func addChildViewController(childViewController: NSViewController) {
+    override func addChildViewController(_ childViewController: NSViewController) {
         super.addChildViewController(childViewController)
         // Push the pattern sequence to children if available
         if self.patternSequence != nil {

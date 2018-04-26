@@ -9,16 +9,16 @@
 import Cocoa
 
 extension NSEvent {
-    func locationInView(view: NSView) -> NSPoint {
-        return view.convertPoint(self.locationInWindow, fromView: nil)
+    func locationInView(_ view: NSView) -> NSPoint {
+        return view.convert(self.locationInWindow, from: nil)
     }
 }
 
 class CDTimelineItemView: CDBorderedView {
     // TODO: better way of dealing with UI constants/appearance for the view..
-    static let itemBorderColor = NSColor(SRGBRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
-    static let itemSelectedBorderColor = NSColor.alternateSelectedControlColor()
-    static let itemFillColor = NSColor(SRGBRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
+    static let itemBorderColor = NSColor(srgbRed: 19.0/255.0, green: 19.0/255.0, blue: 19.0/255.0, alpha: 1.0)
+    static let itemSelectedBorderColor = NSColor.alternateSelectedControlColor
+    static let itemFillColor = NSColor(srgbRed: 49.0/255.0, green: 49.0/255.0, blue: 49.0/255.0, alpha: 1.0)
     static let durationResizeWidth: CGFloat = 5
     static let selectionBorderWidth: CGFloat = 2
     static let normalBorderWidth: CGFloat = 1
@@ -72,17 +72,17 @@ class CDTimelineItemView: CDBorderedView {
         }
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == durationKey {
             self.invalidateIntrinsicContentSize();
         }
     }
 
-    private func _widthForDuration(duration: UInt32) -> CGFloat {
+    fileprivate func _widthForDuration(_ duration: UInt32) -> CGFloat {
         return CGFloat(duration) * self.widthPerMS
     }
     
-    private func _durationForWidth(width: CGFloat) -> Int {
+    fileprivate func _durationForWidth(_ width: CGFloat) -> Int {
         return Int(width / self.widthPerMS)
     }
     
@@ -98,7 +98,7 @@ class CDTimelineItemView: CDBorderedView {
             if result.size.width < CDTimelineItemView.minWidth {
                 result.size.width = CDTimelineItemView.minWidth
             }
-            let alignedRect = self.backingAlignedRect(result, options: NSAlignmentOptions.AlignAllEdgesOutward)
+            let alignedRect = self.backingAlignedRect(result, options: AlignmentOptions.alignAllEdgesOutward)
             return alignedRect.size
         }
     }
@@ -114,7 +114,7 @@ class CDTimelineItemView: CDBorderedView {
 //        }
 //    }
     
-    private var _resizingView: CDBorderedView?
+    fileprivate var _resizingView: CDBorderedView?
     
     override func updateLayer() {
         _updateBorderColor()
@@ -128,10 +128,10 @@ class CDTimelineItemView: CDBorderedView {
                 let v = CDBorderedView(frame: frame)
                 v.cornerRadius = self.cornerRadius
                 v.borderWidth = CDTimelineItemView.selectionBorderWidth
-                v.borderColor = NSColor.yellowColor()
+                v.borderColor = NSColor.yellow
                 v.translatesAutoresizingMaskIntoConstraints = true
-                v.autoresizingMask = [NSAutoresizingMaskOptions.ViewMinXMargin, .ViewHeightSizable];
-                v.borderEdge = .Right
+                v.autoresizingMask = [NSAutoresizingMaskOptions.viewMinXMargin, .viewHeightSizable];
+                v.borderEdge = .right
                 self.addSubview(v)
                 _resizingView = v
                 
@@ -145,7 +145,7 @@ class CDTimelineItemView: CDBorderedView {
         super.layout()
     }
     
-    private func _enclosingTimelineTrackView() -> CDTimelineTrackView? {
+    fileprivate func _enclosingTimelineTrackView() -> CDTimelineTrackView? {
         var itemView: CDTimelineTrackView? = nil
         var localView: NSView? = self
         while localView != nil {
@@ -158,20 +158,20 @@ class CDTimelineItemView: CDBorderedView {
         return itemView
     }
 
-    private func _leftSideResizeRect() -> NSRect {
+    fileprivate func _leftSideResizeRect() -> NSRect {
         var bounds = self.bounds;
         bounds.size.width = CDTimelineItemView.durationResizeWidth;
         return bounds
     }
     
-    private func _resizeDrawingRect() -> NSRect {
+    fileprivate func _resizeDrawingRect() -> NSRect {
         var bounds = self.bounds;
         bounds.origin.x = NSMaxX(bounds) - CDTimelineItemView.durationResizeWidth
         bounds.size.width = CDTimelineItemView.durationResizeWidth;
         return bounds
     }
 
-    private func _durationHitRect() -> NSRect {
+    fileprivate func _durationHitRect() -> NSRect {
         var bounds = _resizeDrawingRect();
         bounds.size.width *= 2.0 // goes into the other view's area
         return bounds
@@ -184,7 +184,7 @@ class CDTimelineItemView: CDBorderedView {
         }
     }
     
-    func _trackEventsForResizingFromEvent(theEvent: NSEvent) {
+    func _trackEventsForResizingFromEvent(_ theEvent: NSEvent) {
         let tv = self._enclosingTimelineTrackView()!
         tv.assignViewBeingResized(self) // affects selection
         
@@ -192,7 +192,7 @@ class CDTimelineItemView: CDBorderedView {
         let startingPoint = theEvent.locationInWindow
         let startingDuration = Int(timelineItem.durationInMS)
         
-        self.window?.trackEventsMatchingMask([NSEventMask.LeftMouseDraggedMask, NSEventMask.LeftMouseUpMask], timeout: NSEventDurationForever, mode: NSDefaultRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+        self.window?.trackEvents(matching: [NSEventMask.leftMouseDragged, NSEventMask.leftMouseUp], timeout: NSEventDurationForever, mode: RunLoopMode.defaultRunLoopMode, handler: { (event: NSEvent, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
             
             let currentPoint = event.locationInWindow
             let distanceMoved = currentPoint.x - startingPoint.x
@@ -205,18 +205,18 @@ class CDTimelineItemView: CDBorderedView {
                 self.invalidateIntrinsicContentSize()
             }
             
-            if event.type == .LeftMouseUp {
-                stop.memory = true
+            if event.type == .leftMouseUp {
+                stop.pointee = true
             }
         })
         
     }
     
-    override func mouseDown(theEvent: NSEvent) {
+    override func mouseDown(with theEvent: NSEvent) {
         var callSuper = true;
         // Go into resize mode if clicking on the right edge w/no modifiers
-        let shiftIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.ShiftKeyMask);
-        let cmdIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.CommandKeyMask);
+        let shiftIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.shift);
+        let cmdIsDown = theEvent.modifierFlags.contains(NSEventModifierFlags.command);
         if (!cmdIsDown && !shiftIsDown) {
             let hitBounds = _durationHitRect()
             let hitPoint =  theEvent.locationInView(self)
@@ -229,7 +229,7 @@ class CDTimelineItemView: CDBorderedView {
                     if let index = enclosingView.indexOfView(self) {
                         if index > 0 {
                             let sibling = enclosingView.views[index - 1]
-                            sibling.mouseDown(theEvent)
+                            sibling.mouseDown(with: theEvent)
                             callSuper = false
                         }
                     }
@@ -238,7 +238,7 @@ class CDTimelineItemView: CDBorderedView {
             }
         }
         if callSuper {
-            super.mouseDown(theEvent)
+            super.mouseDown(with: theEvent)
         }
         
     }

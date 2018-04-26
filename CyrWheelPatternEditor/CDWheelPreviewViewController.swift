@@ -12,12 +12,12 @@ import Cocoa
 // corbin note: I'm now not really using anything in this class to do anything except link the runner with other stuff. something else should own the runner in the bluetooth preview controller use of this
 class CDWheelPreviewViewController: NSViewController {
 
-    private var _patternRunner: CDPatternRunner!
+    fileprivate var _patternRunner: CDPatternRunner!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let delegate = NSApp.delegate as! CDAppDelegate
-        _patternRunner = CDPatternRunner(patternDirectoryURL: delegate.patternDirectoryURL)
+        _patternRunner = CDPatternRunner(patternDirectoryURL: delegate.patternDirectoryURL as URL)
         _patternRunner.setCyrWheelView(_cyrWheelView)
     }
 

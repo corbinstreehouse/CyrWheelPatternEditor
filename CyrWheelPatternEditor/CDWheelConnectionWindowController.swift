@@ -14,21 +14,21 @@ class CDWheelConnectionWindowController: NSWindowController, NSWindowRestoration
         super.windowDidLoad()
     
         let window: NSWindow = self.window!
-        window.restorable = true;
-        window.restorationClass = self.dynamicType
+        window.isRestorable = true;
+        window.restorationClass = type(of: self)
         window.delegate = self
         
         // for the new UI
-        window.titleVisibility = NSWindowTitleVisibility.Hidden
+        window.titleVisibility = NSWindowTitleVisibility.hidden
         window.titlebarAppearsTransparent = true
         
         let delegate = CDAppDelegate.appDelegate
         delegate.connectionWindowControllers.append(self)
     }
     
-    static func restoreWindowWithIdentifier(identifier: String, state: NSCoder, completionHandler: (NSWindow?, NSError?) -> Void) {
-        let storyboard: NSStoryboard = NSStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        let controller: CDWheelConnectionWindowController = storyboard.instantiateControllerWithIdentifier("CDWheelConnectionWindowController") as! CDWheelConnectionWindowController
+    static func restoreWindow(withIdentifier identifier: String, state: NSCoder, completionHandler: @escaping (NSWindow?, Error?) -> Void) {
+        let storyboard: NSStoryboard = NSStoryboard(name: "Main", bundle: Bundle.main)
+        let controller: CDWheelConnectionWindowController = storyboard.instantiateController(withIdentifier: "CDWheelConnectionWindowController") as! CDWheelConnectionWindowController
         completionHandler(controller.window, nil)
     }
     
@@ -38,7 +38,7 @@ class CDWheelConnectionWindowController: NSWindowController, NSWindowRestoration
         }
     }
     
-    func window(window: NSWindow, willPositionSheet sheet: NSWindow, usingRect rect: NSRect) -> NSRect {
+    func window(_ window: NSWindow, willPositionSheet sheet: NSWindow, using rect: NSRect) -> NSRect {
         // drop it down
         var result = rect;
         result.origin.y -= 36
@@ -55,10 +55,10 @@ class CDWheelConnectionWindowController: NSWindowController, NSWindowRestoration
 //    }
     
     
-    func windowWillClose(notification: NSNotification) {
+    func windowWillClose(_ notification: Notification) {
         let delegate = CDAppDelegate.appDelegate
-        if let index = delegate.connectionWindowControllers.indexOf(self) {
-            delegate.connectionWindowControllers.removeAtIndex(index)
+        if let index = delegate.connectionWindowControllers.index(of: self) {
+            delegate.connectionWindowControllers.remove(at: index)
         }
     }
     

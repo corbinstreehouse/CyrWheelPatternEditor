@@ -9,7 +9,7 @@
 import Cocoa
 
 extension Array {
-    func insertionIndexOf(elem: Element, isOrderedBefore: (Element, Element) -> Bool) -> Int {
+    func insertionIndexOf(_ elem: Element, isOrderedBefore: (Element, Element) -> Bool) -> Int {
         var lo = 0
         var hi = self.count - 1
         while lo <= hi {
@@ -53,21 +53,21 @@ class HeaderPatternObjectWrapper : CDPatternItemHeaderWrapper {
 }
 
 class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
-    var url: NSURL!
+    var url: URL!
     var children: [ImagePatternObjectWrapper]?
     dynamic var isDirectory: Bool = false
 
     weak var parent: ImagePatternObjectWrapper?
     
-    init (label: String, url: NSURL, parent: ImagePatternObjectWrapper?) {
+    init (label: String, url: URL, parent: ImagePatternObjectWrapper?) {
         super.init(patternType: LEDPatternTypeImageReferencedBitmap, label: label)
         self.url = url
         self.parent = parent
         self.isDirectory = false
 
         do {
-            var getter: AnyObject? = false
-            try url.getResourceValue(&getter, forKey: NSURLIsDirectoryKey)
+            var getter: AnyObject? = false as AnyObject
+            try (url as NSURL).getResourceValue(&getter, forKey: URLResourceKey.isDirectoryKey)
             self.isDirectory = getter as! Bool
         } catch {
           
@@ -94,7 +94,7 @@ class ImagePatternObjectWrapper: CDPatternItemHeaderWrapper {
     dynamic override var image: NSImage? {
         get {
             if _cachedImage == nil {
-                _cachedImage = NSImage(byReferencingURL: self.url);
+                _cachedImage = NSImage(byReferencing: self.url);
             }
             return _cachedImage;
         }
@@ -116,17 +116,17 @@ class CustomSequencePatternObjectWrapper: CDPatternItemHeaderWrapper {
 class ProgrammedPatternObjectWrapper: CDPatternItemHeaderWrapper {
     
     // always returns a new copy so i can set the delegate
-    static func allSortedProgrammedPatternsIgnoring(ignoredPatternTypes: [LEDPatternType]) -> [ProgrammedPatternObjectWrapper] {
+    static func allSortedProgrammedPatternsIgnoring(_ ignoredPatternTypes: [LEDPatternType]) -> [ProgrammedPatternObjectWrapper] {
         var _allSortedProgrammedPatterns = [ProgrammedPatternObjectWrapper]()
         for rawType in LEDPatternTypeMin.rawValue...LEDPatternTypeCount.rawValue  {
             let patternType = LEDPatternType(rawType)
             if !ignoredPatternTypes.contains(patternType) {
                 let patternTypeWrapper = ProgrammedPatternObjectWrapper(patternType: patternType)
                 let index = _allSortedProgrammedPatterns.insertionIndexOf(patternTypeWrapper) {
-                    return $0.label.localizedStandardCompare($1.label) == NSComparisonResult.OrderedAscending
+                    return $0.label.localizedStandardCompare($1.label) == ComparisonResult.orderedAscending
                 }
                 
-                _allSortedProgrammedPatterns.insert(patternTypeWrapper, atIndex: index)
+                _allSortedProgrammedPatterns.insert(patternTypeWrapper, at: index)
             }
         }
         return _allSortedProgrammedPatterns
@@ -153,38 +153,36 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     @IBOutlet weak var _outlineView: NSOutlineView!
     @IBOutlet weak var imgvwPreview: NSImageView!
     
-    private let _ignoredPatternTypes: [LEDPatternType] = [LEDPatternTypeCount, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
+    fileprivate let _ignoredPatternTypes: [LEDPatternType] = [LEDPatternTypeCount, LEDPatternTypeImageReferencedBitmap, LEDPatternTypeImageEntireStrip_UNUSED, LEDPatternTypeBitmap]
     internal var _rootChildren: [CDPatternItemHeaderWrapper] = []
     
-    private func _loadPatternTypeArray() -> [CDPatternItemHeaderWrapper] {
+    fileprivate func _loadPatternTypeArray() -> [CDPatternItemHeaderWrapper] {
         return ProgrammedPatternObjectWrapper.allSortedProgrammedPatternsIgnoring(LEDPatternType.nonSelectablePatternTypes)
     }
     
-    private func _loadChildrenItems(parentItem: ImagePatternObjectWrapper) {
+    fileprivate func _loadChildrenItems(_ parentItem: ImagePatternObjectWrapper) {
         if parentItem.children == nil {
             var children: [ImagePatternObjectWrapper] = []
             
             // I store a relative filename name in the label
-            let keys = [NSURLIsDirectoryKey, NSURLLocalizedNameKey]
+            let keys = [URLResourceKey.isDirectoryKey, URLResourceKey.localizedNameKey]
 
-            let fileManager = NSFileManager.defaultManager()
+            let fileManager = FileManager.default
             do {
-                let patternImageURLs = try fileManager.contentsOfDirectoryAtURL(parentItem.url, includingPropertiesForKeys: keys, options: [NSDirectoryEnumerationOptions.SkipsHiddenFiles])
+                let patternImageURLs = try fileManager.contentsOfDirectory(at: parentItem.url, includingPropertiesForKeys: keys, options: [FileManager.DirectoryEnumerationOptions.skipsHiddenFiles])
                 for url in patternImageURLs {
-                    let label = url.lastPathComponent!
+                    let label = url.lastPathComponent
                     let child = ImagePatternObjectWrapper(label: label, url: url, parent: parentItem)
                     if child.isDirectory {
                         children.append(child)
                     } else {
                         // Only bitmap images
-                        if let ext = url.pathExtension {
-                            if ext.lowercaseString == "bmp" {
-                                children.append(child)
-                                // set it as POV if it is in the Images or Pictures folders
-                                let parentStr = parentItem.label.lowercaseString
-                                if parentStr.containsString("pictures") || parentStr.containsString("images") || parentStr.containsString("pixels") || parentStr.containsString("figures") {
-                                    child.pov = true
-                                }
+                        if url.pathExtension.lowercased() == "bmp" {
+                            children.append(child)
+                            // set it as POV if it is in the Images or Pictures folders
+                            let parentStr = parentItem.label.lowercased()
+                            if parentStr.contains("pictures") || parentStr.contains("images") || parentStr.contains("pixels") || parentStr.contains("figures") {
+                                child.pov = true
                             }
                         }
                     }
@@ -197,9 +195,9 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
         }
     }
     
-    private func _loadRootPatternImages() -> ImagePatternObjectWrapper {
+    fileprivate func _loadRootPatternImages() -> ImagePatternObjectWrapper {
         let patternURL = CDAppDelegate.appDelegate.patternDirectoryURL
-        let result = ImagePatternObjectWrapper(label: "", url: patternURL, parent: nil)
+        let result = ImagePatternObjectWrapper(label: "", url: patternURL as URL, parent: nil)
         _loadChildrenItems(result)
         return result
     }
@@ -210,7 +208,7 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
         let programmedPatterns = _loadPatternTypeArray()
         let programmedPatternGroupObject = HeaderPatternObjectWrapper(label: "Programmed Patterns")
         _rootChildren = [programmedPatternGroupObject]
-        _rootChildren.appendContentsOf(programmedPatterns)
+        _rootChildren.append(contentsOf: programmedPatterns)
         
         let rootPatternImages = _loadRootPatternImages()
         if let rootImages = rootPatternImages.children {
@@ -219,25 +217,25 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
             _rootChildren.append(imagePatternGroupObject)
             let a: [CDPatternItemHeaderWrapper] = rootImages
 //            _rootChildren.appendContentsOf(rootImages) // why doesn't this work??
-            _rootChildren.appendContentsOf(a)
+            _rootChildren.append(contentsOf: a)
         }
 //        _outlineView.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         _outlineView.reloadData()
         _outlineView.expandItem(nil)
         self.imgvwPreview.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         // allow adding files (no way to remove them yet...)
-        _outlineView.registerForDraggedTypes([kUTTypeURL as String])
+        _outlineView.register(forDraggedTypes: [kUTTypeURL as String])
     }
     
     
     ///MARK: OutlineView datasource/delegate methods
 
     
-    func outlineViewSelectionDidChange(notification: NSNotification) {
+    func outlineViewSelectionDidChange(_ notification: Notification) {
         _updatePreview();
     }
     
-    private func _updatePreview() {
+    fileprivate func _updatePreview() {
         if let item = _outlineView.selectedItem as? ImagePatternObjectWrapper {
             self.imgvwPreview.image = item.image
         } else {
@@ -245,7 +243,7 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
         }
     }
     
-    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if item == nil {
             // the root
             return _rootChildren.count
@@ -261,7 +259,7 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
         return 0
     }
     
-    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if item == nil {
             // the root
             return _rootChildren[index]
@@ -273,7 +271,7 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
         }
     }
     
-    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         if let imageItem = item as? ImagePatternObjectWrapper {
             return imageItem.isDirectory
         } else {
@@ -282,44 +280,44 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     }
     
     
-    func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, isGroupItem item: Any) -> Bool {
         // The root item's
         return item is HeaderPatternObjectWrapper
     }
     
-    func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
         if item is HeaderPatternObjectWrapper {
             return false
         }
         return true
     }
     
-    func outlineView(outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject? {
+    func outlineView(_ outlineView: NSOutlineView, objectValueFor tableColumn: NSTableColumn?, byItem item: Any?) -> Any? {
         return item
     }
     
     
-    func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
+    func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         if item is HeaderPatternObjectWrapper {
             // Header item
-            return outlineView.makeViewWithIdentifier("HeaderCell", owner: nil)
+            return outlineView.make(withIdentifier: "HeaderCell", owner: nil)
         } else if let tableColumn = tableColumn {
             // regular item
-            return outlineView.makeViewWithIdentifier(tableColumn.identifier, owner: nil)
+            return outlineView.make(withIdentifier: tableColumn.identifier, owner: nil)
         } else {
             return nil
         }
     }
     
-    func outlineView(outlineView: NSOutlineView, rowViewForItem item: AnyObject) -> NSTableRowView? {
+    func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
         if item is HeaderPatternObjectWrapper {
-            return outlineView.makeViewWithIdentifier("FloatingRowView", owner: nil) as? NSTableRowView
+            return outlineView.make(withIdentifier: "FloatingRowView", owner: nil) as? NSTableRowView
         } else {
-            return outlineView.makeViewWithIdentifier("DarkRowView", owner: nil) as? NSTableRowView
+            return outlineView.make(withIdentifier: "DarkRowView", owner: nil) as? NSTableRowView
         }
     }
     
-    func outlineView(outlineView: NSOutlineView, heightOfRowByItem item: AnyObject) -> CGFloat {
+    func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
         if item is HeaderPatternObjectWrapper {
             return outlineView.rowHeight + 4 // A little bigger/taller to look better w/the bold font
         } else {
@@ -327,37 +325,42 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
         }
     }
     
-    func _acceptableTypesFromPasteboard(pasteboard: NSPasteboard) -> [NSURL] {
+    func _acceptableTypesFromPasteboard(_ pasteboard: NSPasteboard) -> [URL] {
 //        let options: [NSString: AnyObject] = [NSString(string: NSPasteboardURLReadingFileURLsOnlyKey): true, NSString(string: NSPasteboardURLReadingContentsConformToTypesKey): NSString(string: "com.microsoft.bmp") ]
-        let options: [String: AnyObject] = [NSPasteboardURLReadingFileURLsOnlyKey: true, NSPasteboardURLReadingContentsConformToTypesKey: ["com.microsoft.bmp"] ]
+//        let options: [String: AnyObject] = [NSPasteboardURLReadingFileURLsOnlyKey: true as AnyObject, NSPasteboardURLReadingContentsConformToTypesKey: ["com.microsoft.bmp"] ] // Swift 1
 
+//        let k = NSPasteboard.ReadingOptionKey.urlReadingContentsConformToTypes
+        
+        let options: [String : Any] = [NSPasteboardURLReadingFileURLsOnlyKey : true, NSPasteboardURLReadingContentsConformToTypesKey : ["com.microsoft.bmp"] ] // Swift 3
+        
         // syntax HAS to be This stupidness
         let aClass : AnyClass = NSURL.self
         let classes = [aClass]
-        let objects = pasteboard.readObjectsForClasses(classes, options: options)
+        let objects = pasteboard.readObjects(forClasses: classes, options: options)
+//        let objects = pasteboard.readObjects(forClasses: [URL.self], options: options) // swift 4?
         
-        if let urls = objects as? [NSURL] {
+        if let urls = objects as? [URL] {
             return urls
         }
         return []
     }
     
-    func outlineView(outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: AnyObject?, proposedChildIndex index: Int) -> NSDragOperation {
+    func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
         // we only accept image types on image folders..
         if let imageItem = item as? ImagePatternObjectWrapper {
             if imageItem.isDirectory {
                 // allow it
                 // TODO: make sure it doesn't exist already with the same name, or it is coming from the same parent folder!
                 if _acceptableTypesFromPasteboard(info.draggingPasteboard()).count > 0 {
-                    return NSDragOperation.Copy
+                    return NSDragOperation.copy
                 }
             }
         }
-        return NSDragOperation.None
+        return NSDragOperation()
         
     }
     
-    func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: AnyObject?, childIndex index: Int) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
         var result = false;
         if let imageItem = item as? ImagePatternObjectWrapper {
             if imageItem.isDirectory {
@@ -373,14 +376,14 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
                     
                     do {
                         for url in urls {
-                            let urlToCopyTo = baseURL.URLByAppendingPathComponent(url.lastPathComponent!)
-                            try NSFileManager.defaultManager().copyItemAtURL(url, toURL: urlToCopyTo)
+                            let urlToCopyTo = baseURL?.appendingPathComponent(url.lastPathComponent)
+                            try FileManager.default.copyItem(at: url, to: urlToCopyTo!)
                             
-                            let label = url.lastPathComponent!
-                            let newWrapperChild = ImagePatternObjectWrapper(label: label, url: urlToCopyTo, parent: imageItem)
-                            imageItem.children!.insert(newWrapperChild, atIndex: insertIndex)
-                            _outlineView.insertItemsAtIndexes(NSIndexSet(index: insertIndex), inParent: imageItem, withAnimation: .SlideDown)
-                            insertIndex++
+                            let label = url.lastPathComponent
+                            let newWrapperChild = ImagePatternObjectWrapper(label: label, url: urlToCopyTo!, parent: imageItem)
+                            imageItem.children!.insert(newWrapperChild, at: insertIndex)
+                            _outlineView.insertItems(at: IndexSet(integer: insertIndex), inParent: imageItem, withAnimation: .slideDown)
+                            insertIndex += 1
                         }
                     } catch let error as NSError  {
                         //NSLog("Error loading children: %@", error)
@@ -395,9 +398,9 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     }
 
     // Cmd-R to reveal the image in finder.
-    @IBAction func revealInFinder(sender: AnyObject) {
+    @IBAction func revealInFinder(_ sender: AnyObject) {
         if let item = _outlineView.selectedItem as? ImagePatternObjectWrapper {
-            NSWorkspace.sharedWorkspace().selectFile(item.url.path, inFileViewerRootedAtPath: "")
+            NSWorkspace.shared().selectFile(item.url.path, inFileViewerRootedAtPath: "")
         }
     }
     

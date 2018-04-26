@@ -17,21 +17,21 @@ protocol CDColoredItemProtocol {
 }
 
 extension NSButtonCell {
-    func _drawTintedImage(image: NSImage, color: NSColor, frame: NSRect) {
+    func _drawTintedImage(_ image: NSImage, color: NSColor, frame: NSRect) {
         let newImage = NSImage(size: image.size, flipped: false) { (frame: NSRect) -> Bool in
-            image.drawInRect(frame)
+            image.draw(in: frame)
             color.set();
-            NSRectFillUsingOperation(frame, NSCompositingOperation.CompositeSourceAtop)
+            NSRectFillUsingOperation(frame, NSCompositingOperation.sourceAtop)
             return true;
         }
-        newImage.drawInRect(frame)
+        newImage.draw(in: frame)
     }
     
-    func _drawButtonImage(image: NSImage, withFrame frame: NSRect, button: NSButton, colorItem: CDColoredItemProtocol) {
+    func _drawButtonImage(_ image: NSImage, withFrame frame: NSRect, button: NSButton, colorItem: CDColoredItemProtocol) {
         var color: NSColor?
-        if !button.enabled {
-            color = colorItem.color.colorWithAlphaComponent(0.5)
-        } else if button.highlighted {
+        if !button.isEnabled {
+            color = colorItem.color.withAlphaComponent(0.5)
+        } else if button.isHighlighted {
             color = colorItem.downColor
         } else if colorItem.mouseInside {
             color = colorItem.hoverColor
@@ -44,34 +44,34 @@ extension NSButtonCell {
 
 
 class CDRolloverButtonCell: NSButtonCell {
-    override func drawImage(image: NSImage, withFrame frame: NSRect, inView controlView: NSView) {
+    override func drawImage(_ image: NSImage, withFrame frame: NSRect, in controlView: NSView) {
         let button = controlView as! NSButton
         let colorItem = controlView as! CDColoredItemProtocol
         _drawButtonImage(image, withFrame: frame, button: button, colorItem: colorItem)
     }
     
-    override func drawInteriorWithFrame(cellFrame: NSRect, inView controlView: NSView) {
-        self.drawBezelWithFrame(cellFrame, inView: controlView)
+    override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
+        self.drawBezel(withFrame: cellFrame, in: controlView)
         if let image = self.image {
-            self.drawImage(image, withFrame: self.imageRectForBounds(cellFrame), inView: controlView)   
+            self.drawImage(image, withFrame: self.imageRect(forBounds: cellFrame), in: controlView)   
         }
     }
     
-    override func drawBezelWithFrame(frame: NSRect, inView controlView: NSView) {
+    override func drawBezel(withFrame frame: NSRect, in controlView: NSView) {
         let button: NSButton = controlView as! NSButton
-        if button.bordered {
+        if button.isBordered {
             
         }
     }
 
-    override func mouseEntered(event: NSEvent) {
-        super.mouseEntered(event)
+    override func mouseEntered(with event: NSEvent) {
+        super.mouseEntered(with: event)
         var colorItem = controlView as! CDColoredItemProtocol
         colorItem.mouseInside = true;
     }
     
-    override func mouseExited(event: NSEvent) {
-        super.mouseExited(event)
+    override func mouseExited(with event: NSEvent) {
+        super.mouseExited(with: event)
         var colorItem = controlView as! CDColoredItemProtocol
         colorItem.mouseInside = true;
     }
@@ -82,7 +82,7 @@ class CDRolloverButtonCell: NSButtonCell {
 class CDRolloverButton: NSButton, CDColoredItemProtocol {
     
     func _commonInit() {
-        setButtonType(NSButtonType.MomentaryPushInButton)
+        setButtonType(NSButtonType.momentaryPushIn)
         showsBorderOnlyWhileMouseInside = true // causes us to redraw when mouse is inside..
 //        (self.cell as! NSButtonCell).backgroundColor = NSColor.clearColor()
     }
@@ -101,43 +101,43 @@ class CDRolloverButton: NSButton, CDColoredItemProtocol {
         _commonInit()
     }
 
-    var color: NSColor = NSColor(SRGBRed: 205.0/255.0, green: 205.0/255.0, blue: 205.0/255.0, alpha: 1.0)
-    var downColor: NSColor = NSColor(SRGBRed: 170.0/255.0, green: 170.0/255.0, blue: 170.0/255.0, alpha: 1.0)
-    var hoverColor: NSColor = NSColor(SRGBRed: 230.0/255.0, green: 230.0/255.0, blue: 230.0/255.0, alpha: 1.0)
-    var borderColor: NSColor = NSColor.whiteColor()
+    var color: NSColor = NSColor(srgbRed: 205.0/255.0, green: 205.0/255.0, blue: 205.0/255.0, alpha: 1.0)
+    var downColor: NSColor = NSColor(srgbRed: 170.0/255.0, green: 170.0/255.0, blue: 170.0/255.0, alpha: 1.0)
+    var hoverColor: NSColor = NSColor(srgbRed: 230.0/255.0, green: 230.0/255.0, blue: 230.0/255.0, alpha: 1.0)
+    var borderColor: NSColor = NSColor.white
     var mouseInside: Bool = false
 }
 
 
 class CDPopupButtonCell: NSPopUpButtonCell {
-    override func drawImage(image: NSImage, withFrame frame: NSRect, inView controlView: NSView) {
+    override func drawImage(_ image: NSImage, withFrame frame: NSRect, in controlView: NSView) {
         let button = controlView as! NSButton
         let colorItem = controlView as! CDColoredItemProtocol
         _drawButtonImage(image, withFrame: frame, button: button, colorItem: colorItem)
     }
     
-    override func drawInteriorWithFrame(cellFrame: NSRect, inView controlView: NSView) {
-        self.drawBezelWithFrame(cellFrame, inView: controlView)
+    override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
+        self.drawBezel(withFrame: cellFrame, in: controlView)
         if let image = self.image {
-            self.drawImage(image, withFrame: self.imageRectForBounds(cellFrame), inView: controlView)
+            self.drawImage(image, withFrame: self.imageRect(forBounds: cellFrame), in: controlView)
         }
     }
     
-    override func drawBezelWithFrame(frame: NSRect, inView controlView: NSView) {
+    override func drawBezel(withFrame frame: NSRect, in controlView: NSView) {
         let button: CDPopupButton = controlView as! CDPopupButton
-        if button.bordered {
+        if button.isBordered {
             
         }
     }
     
-    override func mouseEntered(event: NSEvent) {
-        super.mouseEntered(event)
+    override func mouseEntered(with event: NSEvent) {
+        super.mouseEntered(with: event)
         var colorItem = controlView as! CDColoredItemProtocol
         colorItem.mouseInside = true;
     }
     
-    override func mouseExited(event: NSEvent) {
-        super.mouseExited(event)
+    override func mouseExited(with event: NSEvent) {
+        super.mouseExited(with: event)
         var colorItem = controlView as! CDColoredItemProtocol
         colorItem.mouseInside = true;
     }
@@ -167,10 +167,10 @@ class CDPopupButton: NSPopUpButton, CDColoredItemProtocol {
         _commonInit()
     }
     
-    var color: NSColor = NSColor(SRGBRed: 205.0/255.0, green: 205.0/255.0, blue: 205.0/255.0, alpha: 1.0)
-    var downColor: NSColor = NSColor(SRGBRed: 170.0/255.0, green: 170.0/255.0, blue: 170.0/255.0, alpha: 1.0)
-    var hoverColor: NSColor = NSColor(SRGBRed: 230.0/255.0, green: 230.0/255.0, blue: 230.0/255.0, alpha: 1.0)
-    var borderColor: NSColor = NSColor.whiteColor()
+    var color: NSColor = NSColor(srgbRed: 205.0/255.0, green: 205.0/255.0, blue: 205.0/255.0, alpha: 1.0)
+    var downColor: NSColor = NSColor(srgbRed: 170.0/255.0, green: 170.0/255.0, blue: 170.0/255.0, alpha: 1.0)
+    var hoverColor: NSColor = NSColor(srgbRed: 230.0/255.0, green: 230.0/255.0, blue: 230.0/255.0, alpha: 1.0)
+    var borderColor: NSColor = NSColor.white
     var mouseInside: Bool = false
 
 }

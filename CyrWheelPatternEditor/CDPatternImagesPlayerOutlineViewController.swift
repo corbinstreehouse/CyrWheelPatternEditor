@@ -9,8 +9,8 @@
 import Cocoa
 
 extension NSRange {
-    func toRange() -> Range<Int> {
-        return Range<Int>(start: location, end: location + length)
+    func toRange() -> CountableRange<Int> {
+        return (location ..< location + length)
     }
 }
 
@@ -24,20 +24,20 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let defs = NSUserDefaults.standardUserDefaults()
-        if defs.valueForKey("shouldShowPreview") != nil {
-            shouldShowPreview = defs.boolForKey("shouldShowPreview")
+        let defs = UserDefaults.standard
+        if defs.value(forKey: "shouldShowPreview") != nil {
+            shouldShowPreview = defs.bool(forKey: "shouldShowPreview")
         }
-        if defs.valueForKey("shouldAutoPlayOnWheel") != nil {
-            shouldAutoPlayOnWheel = defs.boolForKey("shouldAutoPlayOnWheel")
+        if defs.value(forKey: "shouldAutoPlayOnWheel") != nil {
+            shouldAutoPlayOnWheel = defs.bool(forKey: "shouldAutoPlayOnWheel")
         }
         
         _outlineView.allowsMultipleSelection = false
         _updateButtonState()
     }
     
-    override func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
-        let result = super.outlineView(outlineView, viewForTableColumn: tableColumn, item: item)
+    override func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+        let result = super.outlineView(outlineView, viewFor: tableColumn, item: item)
         
         if let cellView = result as? CDPatternImagesCellView {
 //            cellView.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
@@ -50,7 +50,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                     uploadButtonIsHidden = false;
                 }
             }
-            cellView._uploadButton.hidden = uploadButtonIsHidden
+            cellView._uploadButton.isHidden = uploadButtonIsHidden
             cellView._uploadButtonTrailingConstraint.constant = uploadButtonIsHidden ? -cellView._uploadButton.frame.size.width : 0;
         }
         
@@ -60,7 +60,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     
     dynamic var connectedWheel: CDWheelConnection? = nil {
         didSet {
-            if self.viewLoaded {
+            if self.isViewLoaded {
                 _updateButtonState();
                 if let wheel = connectedWheel {
                     self.customSequences = wheel.customSequences
@@ -69,7 +69,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
 
-    @IBAction func _outlineDoubleClick(sender: NSOutlineView) {
+    @IBAction func _outlineDoubleClick(_ sender: NSOutlineView) {
         if connectedWheel != nil {
             if let item = _getPlayableItemAtRow(_outlineView.selectedRow) {
                 _playItem(item)
@@ -77,14 +77,14 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    private var _playTimer: NSTimer? = nil
+    fileprivate var _playTimer: Timer? = nil
     func _playSelectedItemAfterSlightDelay() {
         if let timer = _playTimer {
             timer.invalidate()
         }
-        _playTimer = NSTimer.scheduledTimerWithTimeInterval(0.3, target: self, selector: Selector("_playTimerFired:"), userInfo: nil, repeats: false)
+        _playTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(CDPatternImagesPlayerOutlineViewController._playTimerFired(_:)), userInfo: nil, repeats: false)
     }
-    func _playTimerFired(sender: AnyObject?) {
+    func _playTimerFired(_ sender: AnyObject?) {
         _playSelectedItem()
         _playTimer = nil
     }
@@ -129,47 +129,50 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                     let wrapper = CustomSequencePatternObjectWrapper(relativeFilename: sequenceFilename)
                     _customSequenceChildren.append(wrapper);
                 }
-                _rootChildren.insertContentsOf(_customSequenceChildren, at: 0)
-                let range = NSRange(location: 0, length: _customSequenceChildren.count)
-                _outlineView.insertItemsAtIndexes(NSIndexSet(indexesInRange: range), inParent: nil, withAnimation: .SlideDown)
+                _rootChildren.insert(contentsOf: _customSequenceChildren, at: 0)
+                let insertionRange = 0 ..< _customSequenceChildren.count
+                let insertionIndexes = IndexSet(integersIn: insertionRange)
+                _outlineView.insertItems(at: insertionIndexes, inParent: nil, withAnimation: .slideDown)
             } else if customSequences.count == 0 {
                 // Remove everything; capture the range first...
-                let range = NSRange(location: 0, length: _customSequenceChildren.count)
-                _rootChildren.removeRange(range.toRange())
+//                let range = NSRange(location: 0, length: _customSequenceChildren.count)
+//                _rootChildren.removeSubrange(range.toRange())
+                let range = 0 ..< _customSequenceChildren.count
+                _rootChildren.removeSubrange(range)
                 _customSequenceChildren = []
-                
-                _outlineView.removeItemsAtIndexes(NSIndexSet(indexesInRange: range), inParent: nil, withAnimation: .SlideUp)
+                let removeIndexes = IndexSet(integersIn: range)
+                _outlineView.removeItems(at: removeIndexes, inParent: nil, withAnimation: .slideUp)
             } else {
                 _outlineView.beginUpdates()
                 // "Diff" the two arrays in a simple way
                 var oldCustomSequences = oldValue
-                for var i = 0; i < customSequences.count; i++ {
-                    if let oldIndex = oldCustomSequences.indexOf(customSequences[i]) {
+                for i in 0 ..< customSequences.count {
+                    if let oldIndex = oldCustomSequences.index(of: customSequences[i]) {
                         // Note that as we insert above, the stuff left offset is always lower than index
                         // Move this item, if needed, and remove it from our items that we know we processed
                         let oldIndexInTable = i + oldIndex;
                         if oldIndexInTable != i {
                             // +1 is the header offset
                             // Add one for the header...bah...
-                            _outlineView.moveItemAtIndex(oldIndexInTable + 1, inParent: nil, toIndex: i + 1, inParent: nil)
+                            _outlineView.moveItem(at: oldIndexInTable + 1, inParent: nil, to: i + 1, inParent: nil)
                             // Keep the "model" up to date too
                             let tmp = _customSequenceChildren[oldIndexInTable + 1]
-                            _customSequenceChildren.removeAtIndex(oldIndexInTable + 1)
-                            _customSequenceChildren.insert(tmp, atIndex: i + 1)
+                            _customSequenceChildren.remove(at: oldIndexInTable + 1)
+                            _customSequenceChildren.insert(tmp, at: i + 1)
                         }
                         
                         // oldCustomSequences is really kept around just so I can find the updated indexes. I could probabl do this faster/better...
-                        oldCustomSequences.removeAtIndex(oldIndex)
+                        oldCustomSequences.remove(at: oldIndex)
                     } else {
                         // Insert it at "i"
                         let wrapper = CustomSequencePatternObjectWrapper(relativeFilename: customSequences[i])
                         let wrapperIndex = i + 1 // accounts for header
                         // Wasn't around before..so it is new and add it at the end
-                        _customSequenceChildren.insert(wrapper, atIndex: wrapperIndex)
+                        _customSequenceChildren.insert(wrapper, at: wrapperIndex)
                         // It is trickier to find out where to insert it into the root children
-                        _rootChildren.insert(wrapper, atIndex: wrapperIndex)
+                        _rootChildren.insert(wrapper, at: wrapperIndex)
                         // And same goes for the outlienview
-                        _outlineView.insertItemsAtIndexes(NSIndexSet(index: wrapperIndex), inParent: nil, withAnimation: .SlideDown)
+                        _outlineView.insertItems(at: IndexSet(integer: wrapperIndex), inParent: nil, withAnimation: .slideDown)
                     }
                 }
                 
@@ -177,8 +180,8 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                 if oldCustomSequences.count > 0 {
                     // again, offset for the header
                     let range =  NSMakeRange(customSequences.count + 1, oldCustomSequences.count);
-                    _outlineView.removeItemsAtIndexes(NSIndexSet(indexesInRange: range), inParent: nil, withAnimation: .SlideUp)
-                    _customSequenceChildren.removeRange(range.toRange())
+                    _outlineView.removeItems(at: IndexSet(integersIn: range.toRange() ?? 0..<0), inParent: nil, withAnimation: .slideUp)
+                    _customSequenceChildren.removeSubrange(range.toRange())
                 }
                 
                 _outlineView.endUpdates()
@@ -186,7 +189,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    override func outlineViewSelectionDidChange(notification: NSNotification) {
+    override func outlineViewSelectionDidChange(_ notification: Notification) {
         super.outlineViewSelectionDidChange(notification);
         _updateAllStateForSelectionChanged()
     }
@@ -194,7 +197,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     // Set by a parent to another thing that is doing the running
     var patternRunner: CDPatternRunner?
     
-    private func _updatePreview() {
+    fileprivate func _updatePreview() {
         guard shouldShowPreview else { _clearPreview(); return }
         guard let item = _getPlayableItemAtRow(_outlineView.selectedRow) else { _clearPreview(); return }
         
@@ -204,7 +207,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             patternRunner?.play()
             break
         case let imageItem as ImagePatternObjectWrapper:
-            patternRunner?.loadDynamicBitmapPatternTypeWithFilename(imageItem.relativeFilename, patternSpeed: imageItem.speed, bitmapOptions: imageItem.bitmapPatternOptions)
+            patternRunner?.loadDynamicBitmapPatternType(withFilename: imageItem.relativeFilename, patternSpeed: imageItem.speed, bitmapOptions: imageItem.bitmapPatternOptions)
             patternRunner?.play()
             break
         case _ as CustomSequencePatternObjectWrapper:
@@ -216,9 +219,9 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    private func _selectAndAttemptToPlayAtRow(selectedRow: Int) -> Bool {
+    fileprivate func _selectAndAttemptToPlayAtRow(_ selectedRow: Int) -> Bool {
         if _getPlayableItemAtRow(selectedRow) != nil {
-            _outlineView.selectRowIndexes(NSIndexSet(index: selectedRow), byExtendingSelection: false)
+            _outlineView.selectRowIndexes(IndexSet(integer: selectedRow), byExtendingSelection: false)
             _outlineView.scrollRowToVisible(selectedRow)
             _updateAllStateForSelectionChanged()
             return true
@@ -228,51 +231,51 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     }
     
     // Button actions
-    @IBAction func patternNext(sender: AnyObject?) {
+    @IBAction func patternNext(_ sender: AnyObject?) {
         // Select the next row and do a play
         var selectedRow = _outlineView.selectedRow
         if selectedRow != -1 {
-            selectedRow++
+            selectedRow += 1
             while (selectedRow < _outlineView.numberOfRows) {
-                if let itemAtRow = _outlineView.itemAtRow(selectedRow) {
+                if let itemAtRow = _outlineView.item(atRow: selectedRow) {
                     // If it is expandable..expand it..and go to it's first child
                     if _outlineView.isExpandable(itemAtRow) && !_outlineView.isItemExpanded(itemAtRow) {
                         _outlineView.expandItem(itemAtRow) // numberOfRows is now larger.
-                        selectedRow++
+                        selectedRow += 1
                     }
                 }
                 if _selectAndAttemptToPlayAtRow(selectedRow) {
                     break;
                 }
-                selectedRow++
+                selectedRow += 1
             }
         }
     }
     
-    @IBAction func patternPrior(sender: AnyObject?) {
+    @IBAction func patternPrior(_ sender: AnyObject?) {
         var selectedRow = _outlineView.selectedRow
         if selectedRow != -1 {
-            selectedRow--
+            selectedRow -= 1
             while (selectedRow > 0) {
                 if _selectAndAttemptToPlayAtRow(selectedRow) {
                     break;
                 }
-                selectedRow--
+                selectedRow -= 1
             }
         }
     }
     
-    private func _playSelectedItem() {
+    fileprivate func _playSelectedItem() {
         if let item = _getPlayableItemAtRow(_outlineView.selectedRow) {
             _playItem(item)
         }
     }
     
-    private func _clearPreview() {
+    fileprivate func _clearPreview() {
         patternRunner?.setBlackAndPause()
     }
     
-    @IBAction func patternPlay(sender: AnyObject?) {
+    @IBAction func patternPlay(_ sender: AnyObject?) {
         if let item = _getPlayableItemAtRow(_outlineView.selectedRow) {
             _playItem(item)
         }
@@ -282,12 +285,12 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         didSet {
             // Bind some of the UI to us
             detailViewController.chkbxShowPreview.state = shouldShowPreview ? 1 : 0
-            self.bind("shouldShowPreview", toObject: detailViewController.chkbxShowPreview, withKeyPath: "cell.state", options: nil)
+            self.bind("shouldShowPreview", to: detailViewController.chkbxShowPreview, withKeyPath: "cell.state", options: nil)
             detailViewController.chkbxAutoPlayOnWheel.state = shouldAutoPlayOnWheel ? 1 : 0
-            self.bind("shouldAutoPlayOnWheel", toObject: detailViewController.chkbxAutoPlayOnWheel, withKeyPath: "cell.state", options: nil)
-            detailViewController.btnPlayOnWheel.cell!.bind("enabled", toObject: self, withKeyPath: "patternPlayEnabled", options: nil)
+            self.bind("shouldAutoPlayOnWheel", to: detailViewController.chkbxAutoPlayOnWheel, withKeyPath: "cell.state", options: nil)
+            detailViewController.btnPlayOnWheel.cell!.bind("enabled", to: self, withKeyPath: "patternPlayEnabled", options: nil)
             detailViewController.btnPlayOnWheel.target = self
-            detailViewController.btnPlayOnWheel.action = Selector("patternPlay:")
+            detailViewController.btnPlayOnWheel.action = #selector(CDPatternImagesPlayerOutlineViewController.patternPlay(_:))
             _updateAllStateForSelectionChanged()
         }
     }
@@ -300,26 +303,26 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    func patternItemSpeedChanged(item: CDPatternItemHeaderWrapper) {
+    func patternItemSpeedChanged(_ item: CDPatternItemHeaderWrapper) {
         _commonUpdateAfterItemPropertyChanged()
     }
     
-    func patternItemColorChanged(item: CDPatternItemHeaderWrapper) {
+    func patternItemColorChanged(_ item: CDPatternItemHeaderWrapper) {
         _commonUpdateAfterItemPropertyChanged()
     }
     
-    func patternItemVelocityBasedBrightnessChanged(item: CDPatternItemHeaderWrapper) {
+    func patternItemVelocityBasedBrightnessChanged(_ item: CDPatternItemHeaderWrapper) {
         _commonUpdateAfterItemPropertyChanged()
     }
     
-    func patternItemBitmapOptionsChanged(item: CDPatternItemHeaderWrapper) {
+    func patternItemBitmapOptionsChanged(_ item: CDPatternItemHeaderWrapper) {
         _commonUpdateAfterItemPropertyChanged()
     }
     
     dynamic var shouldShowPreview: Bool = true {
         didSet {
             _updatePreview()
-            NSUserDefaults.standardUserDefaults().setBool(shouldShowPreview, forKey: "shouldShowPreview")
+            UserDefaults.standard.set(shouldShowPreview, forKey: "shouldShowPreview")
         }
     }
     
@@ -328,7 +331,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             if shouldAutoPlayOnWheel {
                 _playSelectedItem()
             }
-            NSUserDefaults.standardUserDefaults().setBool(shouldAutoPlayOnWheel, forKey: "shouldAutoPlayOnWheel")
+            UserDefaults.standard.set(shouldAutoPlayOnWheel, forKey: "shouldAutoPlayOnWheel")
         }
     }
     
@@ -337,7 +340,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     dynamic var patternPriorEnabled: Bool = false;
     dynamic var patternPlayEnabled: Bool = false;
     
-    private func _updateButtonState() {
+    fileprivate func _updateButtonState() {
         if connectedWheel != nil && _outlineView.selectedRow != -1 {
             patternNextEnabled = _outlineView.selectedRow < (_outlineView.numberOfRows - 1)
             patternPriorEnabled = _outlineView.selectedRow > 1 // row 0 is a header
@@ -349,12 +352,12 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    private func _playItem(item: CDPatternItemHeaderWrapper) {
+    fileprivate func _playItem(_ item: CDPatternItemHeaderWrapper) {
         // We might not have a conneciton, so do nothing then
         if let connectedWheel = connectedWheel {
             switch item {
             case let programmedItem as ProgrammedPatternObjectWrapper:
-                let color = programmedItem.color.colorUsingColorSpace(NSColorSpace.sRGBColorSpace())!
+                let color = programmedItem.color.usingColorSpace(NSColorSpace.sRGB)!
                 let r = UInt8(round(color.redComponent*255.0))
                 let g = UInt8(round(color.greenComponent*255.0))
                 let b = UInt8(round(color.blueComponent*255.0))
@@ -377,13 +380,13 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    private func _canPlaySelectedItem() -> Bool {
+    fileprivate func _canPlaySelectedItem() -> Bool {
         return _getPlayableSelectedItemWrapper() != nil
     }
     
-    func _getPlayableItemAtRow(row: Int) -> CDPatternItemHeaderWrapper? {
+    func _getPlayableItemAtRow(_ row: Int) -> CDPatternItemHeaderWrapper? {
         if (row >= 0 && row < _outlineView.numberOfRows) {
-            let item = _outlineView.itemAtRow(row)
+            let item = _outlineView.item(atRow: row)
             switch item {
             case let programmedItem as ProgrammedPatternObjectWrapper:
                 return programmedItem
@@ -407,7 +410,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         return _getPlayableItemAtRow(_outlineView.selectedRow)
     }
     
-    @IBAction func btnUploadFileClicked(sender: NSButton) {
+    @IBAction func btnUploadFileClicked(_ sender: NSButton) {
         if let wheel = self.connectedWheel {
             if !wheel.uploading {
                 _doAddWithOpenPanel()
@@ -415,7 +418,7 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    @IBAction func btnDeleteClicked(sender: NSButton) {
+    @IBAction func btnDeleteClicked(_ sender: NSButton) {
         if let wheel = self.connectedWheel {
             if wheel.uploading {
                 return;
@@ -425,13 +428,13 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
             
             let alert = NSAlert()
             alert.messageText = "Are you sure you want to delete the file? You can't undo this."
-            alert.alertStyle = NSAlertStyle.CriticalAlertStyle
-            let buttonOK = alert.addButtonWithTitle("OK")
+            alert.alertStyle = NSAlertStyle.critical
+            let buttonOK = alert.addButton(withTitle: "OK")
             buttonOK.tag = NSModalResponseOK
-            let cancelButton = alert.addButtonWithTitle("Cancel")
+            let cancelButton = alert.addButton(withTitle: "Cancel")
             cancelButton.tag = NSModalResponseCancel
             
-            alert.beginSheetModalForWindow(self.view.window!, completionHandler: { (r: NSModalResponse) -> Void in
+            alert.beginSheetModal(for: self.view.window!, completionHandler: { (r: NSModalResponse) -> Void in
                 if r == NSModalResponseOK {
                     wheel.removeFile(item.relativeFilename);
                 }
@@ -440,16 +443,16 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
     }
     
     // this does the upload with UI feedback
-    private func _uploadFileFromURL(url: NSURL, filename: String, isSequenceFile: Bool, wheel: CDWheelConnection) {
+    fileprivate func _uploadFileFromURL(_ url: URL, filename: String, isSequenceFile: Bool, wheel: CDWheelConnection) {
         
-        let vc = self.storyboard!.instantiateControllerWithIdentifier("CDUploadProgressViewController") as! CDUploadProgressViewController
+        let vc = self.storyboard!.instantiateController(withIdentifier: "CDUploadProgressViewController") as! CDUploadProgressViewController
         vc.filename = "Uploading: " + filename
         self.presentViewControllerAsSheet(vc)
         
         wheel.uploadFileFromURL(url, filename: filename) { (uploadProgressAmount, finished, error) -> Void in
             vc.progress = uploadProgressAmount * 100.0
             if finished {
-                vc.dismissController(nil)
+                vc.dismiss(nil)
                 if let error = error {
                     self.view.window!.presentError(error)
                 } else {
@@ -465,26 +468,26 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
 
     }
 
-    private func _uploadSequenceFileAtURL(url: NSURL) {
+    fileprivate func _uploadSequenceFileAtURL(_ url: URL) {
         if let wheel = self.connectedWheel {
             var filename: String!
             // swap to a .pat extension if it isn't a .pat
             if url.pathExtension != "pat" {
-                filename = url.URLByDeletingPathExtension!.URLByAppendingPathExtension("pat").lastPathComponent!
+                filename = url.deletingPathExtension().appendingPathExtension("pat").lastPathComponent
             } else {
-                filename = url.lastPathComponent!
+                filename = url.lastPathComponent
             }
             
             if wheel.customSequences.contains(filename) {
                 let alert = NSAlert()
                 alert.messageText = "A file already exists on the wheel with that name. Replace it?"
-                alert.alertStyle = NSAlertStyle.CriticalAlertStyle
-                let buttonOK = alert.addButtonWithTitle("OK")
+                alert.alertStyle = NSAlertStyle.critical
+                let buttonOK = alert.addButton(withTitle: "OK")
                 buttonOK.tag = NSModalResponseOK
-                let cancelButton = alert.addButtonWithTitle("Cancel")
+                let cancelButton = alert.addButton(withTitle: "Cancel")
                 cancelButton.tag = NSModalResponseCancel
                 
-                alert.beginSheetModalForWindow(self.view.window!, completionHandler: { (r: NSModalResponse) -> Void in
+                alert.beginSheetModal(for: self.view.window!, completionHandler: { (r: NSModalResponse) -> Void in
                     if r == NSModalResponseOK {
                         self._uploadFileFromURL(url, filename: filename, isSequenceFile: true, wheel: wheel);
                     }
@@ -496,28 +499,28 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
         }
     }
     
-    private func _doAddWithOpenPanel() {
+    fileprivate func _doAddWithOpenPanel() {
         let openPanel = NSOpenPanel()
         openPanel.title = "Select a pattern sequence"
         openPanel.allowedFileTypes = [gPatternFilenameExtension, gSequenceEditorExtension]
         openPanel.allowsOtherFileTypes = false
-        openPanel.beginSheetModalForWindow(self.view.window!) { (result: Int) -> Void in
+        openPanel.beginSheetModal(for: self.view.window!) { (result: Int) -> Void in
             if result == NSModalResponseOK {
                 openPanel.orderOut(self)
-                self._uploadSequenceFileAtURL(openPanel.URL!)
+                self._uploadSequenceFileAtURL(openPanel.url!)
             }
         }
         
     }
     
-    @IBAction func _cellBtnUploadClicked(sender: NSButton) {
+    @IBAction func _cellBtnUploadClicked(_ sender: NSButton) {
         if let wheel = self.connectedWheel {
             if wheel.uploading {
                 return;
             }
             
-            let row = _outlineView.rowForView(sender)
-            let item = _outlineView.itemAtRow(row)
+            let row = _outlineView.row(for: sender)
+            let item = _outlineView.item(atRow: row)
             if let imageItem = item as? ImagePatternObjectWrapper {
                 if !imageItem.isDirectory {
                     // Going to the root!
@@ -526,15 +529,15 @@ class CDPatternImagesPlayerOutlineViewController: CDPatternImagesOutlineViewCont
                     let alert = NSAlert()
                     let filename = "/" + imageItem.relativeFilename
                     alert.messageText = "Are you sure you want to upload " + filename + "?"
-                    alert.alertStyle = NSAlertStyle.CriticalAlertStyle
-                    let buttonOK = alert.addButtonWithTitle("OK")
+                    alert.alertStyle = NSAlertStyle.critical
+                    let buttonOK = alert.addButton(withTitle: "OK")
                     buttonOK.tag = NSModalResponseOK
-                    let cancelButton = alert.addButtonWithTitle("Cancel")
+                    let cancelButton = alert.addButton(withTitle: "Cancel")
                     cancelButton.tag = NSModalResponseCancel
                     
-                    alert.beginSheetModalForWindow(self.view.window!, completionHandler: { (r: NSModalResponse) -> Void in
+                    alert.beginSheetModal(for: self.view.window!, completionHandler: { (r: NSModalResponse) -> Void in
                         if r == NSModalResponseOK {
-                            self._uploadFileFromURL(imageItem.url, filename: filename, isSequenceFile: false, wheel: wheel);
+                            self._uploadFileFromURL(imageItem.url as URL, filename: filename, isSequenceFile: false, wheel: wheel);
                         }
                     })
                     

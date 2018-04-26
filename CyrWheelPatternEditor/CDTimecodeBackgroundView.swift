@@ -10,7 +10,7 @@ import Cocoa
 
 class CDTimecodeBackgroundView: NSView {
     
-    private let shadowHeight: CGFloat = 3.0
+    fileprivate let shadowHeight: CGFloat = 3.0
 
     override var wantsUpdateLayer: Bool {
         get {
@@ -19,7 +19,7 @@ class CDTimecodeBackgroundView: NSView {
     }
     
     func _commonInit() {
-        self.layerContentsRedrawPolicy = .OnSetNeedsDisplay
+        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
     }
     
     override init(frame frameRect: NSRect) {
@@ -32,17 +32,17 @@ class CDTimecodeBackgroundView: NSView {
         _commonInit()
     }
     
-    override var flipped: Bool { return true; }
+    override var isFlipped: Bool { return true; }
     
     override func updateLayer() {
         guard let layer = self.layer else {
             return;
         }
         let image = NSImage(size: NSSize(width: 1, height: self.bounds.size.height), flipped: true) { (imageBounds: NSRect) -> Bool in
-            let g = NSGradient(startingColor: CDThemeColors.lightBackgroundColor, endingColor: CDThemeColors.lightestBackgroundColor)!
+            let g = NSGradient(starting: CDThemeColors.lightBackgroundColor, ending: CDThemeColors.lightestBackgroundColor)!
             var gradientRect = imageBounds
             gradientRect.size.height = imageBounds.height // / 2.0
-            g.drawInRect(gradientRect, angle: 90)
+            g.draw(in: gradientRect, angle: 90)
             
             
             // Draw a bottom line separator
@@ -58,10 +58,10 @@ class CDTimecodeBackgroundView: NSView {
             NSRectFill(bottomRect)
             
             
-            let shadowGradient = NSGradient(startingColor: CDThemeColors.separatorColor, endingColor: CDThemeColors.separatorColor.colorWithAlphaComponent(0))!
+            let shadowGradient = NSGradient(starting: CDThemeColors.separatorColor, ending: CDThemeColors.separatorColor.withAlphaComponent(0))!
             gradientRect.size.height = self.shadowHeight
             gradientRect.origin.y = imageBounds.maxY - self.shadowHeight
-            shadowGradient.drawInRect(gradientRect, angle: 90)
+            shadowGradient.draw(in: gradientRect, angle: 90)
             
             return true
         }

@@ -37,7 +37,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     lazy var _discoveredPeripherals: [CBPeripheral] = []
-    dynamic var lastConnectedWheelUUID: NSUUID? = nil {
+    dynamic var lastConnectedWheelUUID: UUID? = nil {
         didSet {
 //            self.invalidateRestorableState()
         }
@@ -90,7 +90,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     dynamic var isConnectingToWheel: Bool {
         get {
             if connectedWheel != nil {
-                return connectedWheel!.peripheral.state == .Connecting
+                return connectedWheel!.peripheral.state == .connecting
             } else {
                 // maybe return state of the bluetooth
                 return false;
@@ -110,9 +110,9 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     dynamic var scanButtonEnabled: Bool
     {
         get {
-            if centralManager.state == .PoweredOn {
+            if centralManager.state == .poweredOn {
                 if connectedWheel != nil {
-                    return connectedWheel!.peripheral.state != .Connecting
+                    return connectedWheel!.peripheral.state != .connecting
                 } else {
                     return true
                 }
@@ -125,13 +125,13 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    override class func keyPathsForValuesAffectingValueForKey(key: String) -> Set<String> {
+    override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
         if key == "isConnectingToWheel" {
             return ["connectedWheel", "connectedWheel.peripheral.state"]
         } else if key == "scanButtonEnabled" {
             return ["centralManager.state", "isConnectingToWheel"]
         } else {
-            return super.keyPathsForValuesAffectingValueForKey(key)
+            return super.keyPathsForValuesAffectingValue(forKey: key)
         }
     }
     
@@ -139,16 +139,16 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     func startScanning() {
         let services = [CBUUID(string: kLEDWheelServiceUUID)]
-        centralManager.scanForPeripheralsWithServices(services, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+        centralManager.scanForPeripherals(withServices: services, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
     }
     
-    func startConnectionToPeripheral(peripheral: CBPeripheral) {
-        self.centralManager.connectPeripheral(peripheral, options: nil)
+    func startConnectionToPeripheral(_ peripheral: CBPeripheral) {
+        self.centralManager.connect(peripheral, options: nil)
     }
     
     func showConnectionChooser() {
         // Start the sheet to choose a periperal..ideally the code to bind things together shouldn't be here, but it is hard to seperate the delegate for the manager to provide just the items
-        let localWheelChooserViewController: CDWheelConnectionChooserViewController = self.storyboard!.instantiateControllerWithIdentifier("CDWheelConnectionChooserViewController") as! CDWheelConnectionChooserViewController
+        let localWheelChooserViewController: CDWheelConnectionChooserViewController = self.storyboard!.instantiateController(withIdentifier: "CDWheelConnectionChooserViewController") as! CDWheelConnectionChooserViewController
         localWheelChooserViewController.discoveredPeripherals = _discoveredPeripherals
         localWheelChooserViewController.scanning = true
         self.addChildViewController(localWheelChooserViewController)
@@ -173,7 +173,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     @IBOutlet weak var _mnuItemConnect: NSMenuItem!
     @IBOutlet weak var _menuItemDisconnect: NSMenuItem!
     
-    @IBAction func _mnuConnectClicked(sender: AnyObject) {
+    @IBAction func _mnuConnectClicked(_ sender: AnyObject) {
         startScanning()
         showConnectionChooser()
     }
@@ -185,16 +185,16 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    @IBAction func _mnuDisconnectClicked(sender: AnyObject) {
+    @IBAction func _mnuDisconnectClicked(_ sender: AnyObject) {
         _disconnectFromWheel();
     }
     
-    override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
+    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem == _mnuItemConnect {
             return true; // maybe limit...
         } else if menuItem == _menuItemDisconnect {
             if let peripheral: CBPeripheral = connectedWheel?.peripheral {
-                if peripheral.state != .Disconnected {
+                if peripheral.state != .disconnected {
                     return true
                 }
             }
@@ -204,15 +204,18 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         return true;
     }
 
-    @IBAction func bntStartConnectionClicked(sender: AnyObject) {
+    @IBAction func bntStartConnectionClicked(_ sender: AnyObject) {
         if let peripheral: CBPeripheral = connectedWheel?.peripheral {
             switch (peripheral.state) {
-            case .Connecting:
+            case .connecting:
                 centralManager.cancelPeripheralConnection(peripheral)
-            case .Connected:
+            case .connected:
                 centralManager.cancelPeripheralConnection(peripheral)
-            case .Disconnected:
+            case .disconnected:
                 startConnectionToPeripheral(peripheral)
+            case .disconnecting:
+                print("disconnecting")
+                 // corbin?
             }
         } else {
             startScanning()
@@ -220,7 +223,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    @IBAction func btnPlayClicked(sender: AnyObject) {
+    @IBAction func btnPlayClicked(_ sender: AnyObject) {
         if let connectedWheel = connectedWheel {
             // Is it playing? then pause
             var wheelState: CDWheelState = connectedWheel.wheelState
@@ -236,51 +239,51 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    @IBAction func btnCommandClicked(sender: NSButton) {
+    @IBAction func btnCommandClicked(_ sender: NSButton) {
         connectedWheel?.sendCommand(CDWheelCommand(sender.tag));
     }
     
-    @IBAction func menuOrentationStreamingClicked(sender: AnyObject!) {
+    @IBAction func menuOrentationStreamingClicked(_ sender: AnyObject!) {
         if let wheel = connectedWheel {
             if wheel.isStreamingOrentationData {
                 wheel.endOrientationStreaming()
             } else {
-                let url = NSURL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-                let dataURL = url.URLByAppendingPathComponent("OrientationData.csv", isDirectory: false)
+                let url = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+                let dataURL = url.appendingPathComponent("OrientationData.csv", isDirectory: false)
                 // Create the file empty if it doesn't exist
-                let fileManager = NSFileManager.defaultManager()
-                if !fileManager.fileExistsAtPath(dataURL.path!) {
-                    fileManager.createFileAtPath(dataURL.path!, contents: nil, attributes: [:])
+                let fileManager = FileManager.default
+                if !fileManager.fileExists(atPath: dataURL.path) {
+                    fileManager.createFile(atPath: dataURL.path, contents: nil, attributes: [:])
                 }
 
                 wheel.startOrientationStreamingToURL(dataURL)
-                NSWorkspace.sharedWorkspace().selectFile(dataURL.path, inFileViewerRootedAtPath: "")
+                NSWorkspace.shared().selectFile(dataURL.path, inFileViewerRootedAtPath: "")
             }
         }
     }
     
-    @IBAction func menuCommandClicked(sender: NSMenuItem) {
+    @IBAction func menuCommandClicked(_ sender: NSMenuItem) {
         connectedWheel?.sendCommand(CDWheelCommand(sender.tag));
     }
     
     func checkBluetoothState() {
-        let state: CBCentralManagerState = centralManager.state;
+        let state = centralManager.state;
         
         switch (state) {
-        case .Unsupported:
+        case .unsupported:
             managerStateDescription = "Bluetooth LE is not supported by this machine"
-        case .PoweredOff:
+        case .poweredOff:
             managerStateDescription = "Bluetooth LE is not powered on"
-        case .Resetting:
+        case .resetting:
             managerStateDescription = "Bluetooth LE is resetting"
-        case .Unauthorized:
+        case .unauthorized:
             managerStateDescription = "This application is not authorized to use Bluetooth LE"
-        case .Unknown:
+        case .unknown:
             managerStateDescription = "Bluetooth LE in an unknown state"
-        case .PoweredOn:
+        case .poweredOn:
             managerStateDescription = ""
         }
-        let poweredOn = state == .PoweredOn
+        let poweredOn = state == .poweredOn
         _wheelChooserViewController?.scanning = poweredOn
         scanButtonEnabled = poweredOn
         
@@ -302,15 +305,15 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     
     // CBCentralManagerDelegate delegate methods
-    func centralManagerDidUpdateState(central: CBCentralManager) {
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
         checkBluetoothState()
     }
     
-    func centralManager(central: CBCentralManager, didRetrievePeripherals peripherals: [CBPeripheral]) {
+    func centralManager(_ central: CBCentralManager, didRetrievePeripherals peripherals: [CBPeripheral]) {
         print("didRetrieve peripherals: %@", peripherals)
     }
 
-    func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         if !_discoveredPeripherals.contains(peripheral) {
             _discoveredPeripherals.append(peripheral)
             if _wheelChooserViewController == nil {
@@ -324,12 +327,12 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    override func addChildViewController(childViewController: NSViewController) {
+    override func addChildViewController(_ childViewController: NSViewController) {
         super.addChildViewController(childViewController)
         _pushConnectedWheelToChildren()
     }
 
-    private func _pushConnectedWheelToChildrenFromViewController(viewController: NSViewController) {
+    fileprivate func _pushConnectedWheelToChildrenFromViewController(_ viewController: NSViewController) {
         if var presenter = viewController as? CDWheelConnectionPresenter {
             presenter.connectedWheel = connectedWheel
         }
@@ -338,13 +341,13 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    private func _pushConnectedWheelToChildren() {
+    fileprivate func _pushConnectedWheelToChildren() {
         for child in self.childViewControllers {
             _pushConnectedWheelToChildrenFromViewController(child)
         }
     }
     
-    private func _pushSequencesChangeFromViewController(viewController: NSViewController, customSequences: [String]) {
+    fileprivate func _pushSequencesChangeFromViewController(_ viewController: NSViewController, customSequences: [String]) {
         if var presenter = viewController as? CDWheelConnectionSequencesPresenter {
             presenter.customSequences = customSequences
         }
@@ -353,14 +356,14 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    private func _pushSequencesToChildren() {
+    fileprivate func _pushSequencesToChildren() {
         let sequences = (connectedWheel != nil) ? connectedWheel!.customSequences : []
         for child in self.childViewControllers {
             _pushSequencesChangeFromViewController(child, customSequences: sequences)
         }
     }
     
-    func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         if connectedWheel == nil {
             connectedWheel = CDWheelConnection(peripheral: peripheral);
             connectedWheel!.delegate = self;
@@ -375,9 +378,9 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         _discoveredPeripherals = []; // drop whatever we found
     }
     
-    func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         let alert = NSAlert()
-        if let actualError: NSError = error {
+        if let actualError: NSError = error as NSError? {
             alert.messageText = actualError.localizedDescription
             if actualError.localizedFailureReason != nil {
                 alert.informativeText = actualError.localizedFailureReason!
@@ -385,11 +388,11 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         } else {
             alert.messageText = "Failed to connect to wheel"
         }
-        alert.addButtonWithTitle("OK")
-        alert.beginSheetModalForWindow(self.view.window!, completionHandler: nil)
+        alert.addButton(withTitle: "OK")
+        alert.beginSheetModal(for: self.view.window!, completionHandler: nil)
     }
     
-    func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("did disconnect ", peripheral)
         startScanning()
         // Don't drop the connectedWheel so we can reconnect easily, but update our state
@@ -401,7 +404,7 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     
     // For bindings
     dynamic var currentPatternItem: CDPatternItemHeaderWrapper?
-    private func _updateCurrentPatternItem() {
+    fileprivate func _updateCurrentPatternItem() {
         if let patternItem = connectedWheel?.currentPatternItem {
             self.currentPatternItem = CDPatternItemHeaderWrapper(patternItemHeader: patternItem, patternItemFilename: connectedWheel?.currentPatternItemFilename, patternSequenceFilename: connectedWheel?.currentPatternSequenceFilename, delegate: self)
         } else {
@@ -409,30 +412,30 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
         }
     }
     
-    func patternItemSpeedChanged(item: CDPatternItemHeaderWrapper) {
+    func patternItemSpeedChanged(_ item: CDPatternItemHeaderWrapper) {
         connectedWheel?.setCurrentPatternDuration(CDPatternDurationForPatternSpeed(item.speed, item.patternType))
     }
     
-    func patternItemColorChanged(item: CDPatternItemHeaderWrapper) {
-        let encodedColor = CDEncodedColorTransformer.intFromColor(item.color)
+    func patternItemColorChanged(_ item: CDPatternItemHeaderWrapper) {
+        let encodedColor = CDEncodedColorTransformer.int(from: item.color)
         connectedWheel?.setCurrentPatternColor(UInt32(encodedColor))
     }
     
-    func patternItemVelocityBasedBrightnessChanged(item: CDPatternItemHeaderWrapper) {
+    func patternItemVelocityBasedBrightnessChanged(_ item: CDPatternItemHeaderWrapper) {
         connectedWheel?.setCurrentPatternBrightnessByRotationalVelocity(item.velocityBasedBrightness)
     }
     
-    func patternItemBitmapOptionsChanged(item: CDPatternItemHeaderWrapper) {
+    func patternItemBitmapOptionsChanged(_ item: CDPatternItemHeaderWrapper) {
         connectedWheel?.setCurrentBitmapPatternOptions(item.bitmapPatternOptions)
     }
     
-    private dynamic var _playButtonEnabled = false;
-    private dynamic var _nextPatternEnabled = false;
-    private dynamic var _priorPatternEnabled = false;
-    private dynamic var _nextSequenceEnabled = false;
-    private dynamic var _priorSequenceEnabled = false;
+    fileprivate dynamic var _playButtonEnabled = false;
+    fileprivate dynamic var _nextPatternEnabled = false;
+    fileprivate dynamic var _priorPatternEnabled = false;
+    fileprivate dynamic var _nextSequenceEnabled = false;
+    fileprivate dynamic var _priorSequenceEnabled = false;
     
-    func _updatePlayButtonWithState(wheelState: CDWheelState) {
+    func _updatePlayButtonWithState(_ wheelState: CDWheelState) {
         // When paused, show Play, and when playing show Paused
         if (wheelState & CDWheelStatePlaying) == CDWheelStatePlaying {
             _playButton.image = NSImage(named: "pause")
@@ -466,26 +469,26 @@ class CDWheelConnectionViewController: NSViewController, CBCentralManagerDelegat
     }
     
     
-    func _updateUploadProgressAmount(uploadProgressAmount: Float, finished: Bool, error: NSError?) {
-        NSLog("%g - %d", uploadProgressAmount, finished);
+    func _updateUploadProgressAmount(_ uploadProgressAmount: Float, finished: Bool, error: NSError?) {
+        print("\(uploadProgressAmount) - \(finished)");
     }
 
 }
 
 extension CDWheelConnectionViewController: CDWheelConnectionDelegate {
-    func wheelConnection(wheelConnection: CDWheelConnection, didChangeState wheelState: CDWheelState) {
+    func wheelConnection(_ wheelConnection: CDWheelConnection, didChangeState wheelState: CDWheelState) {
         _updatePlayButton();
     }
     
-    func wheelConnection(wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?) {
+    func wheelConnection(_ wheelConnection: CDWheelConnection, didChangePatternItem patternItem: CDPatternItemHeader?, patternItemFilename: String?) {
         _updateCurrentPatternItem()
     }
     
-    func wheelConnection(wheelConnection: CDWheelConnection, didChangeSequences customSequences: [String]) {
+    func wheelConnection(_ wheelConnection: CDWheelConnection, didChangeSequences customSequences: [String]) {
         _pushSequencesToChildren()
     }
     
-    func wheelConnection(wheelConnection: CDWheelConnection, uploadProgressAmount: Float, finished: Bool, error: NSError?) {
+    func wheelConnection(_ wheelConnection: CDWheelConnection, uploadProgressAmount: Float, finished: Bool, error: NSError?) {
         _updateUploadProgressAmount(uploadProgressAmount, finished: finished, error: error)
     }
     

@@ -13,7 +13,7 @@ class CDPatternSplitView: NSSplitView {
     override var dividerColor: NSColor {
         get {
             // TODO: better colors management..
-            return NSColor(SRGBRed: 29.0/255.0, green: 29.0/255.0, blue: 29.0/255.0, alpha: 1.0)
+            return NSColor(srgbRed: 29.0/255.0, green: 29.0/255.0, blue: 29.0/255.0, alpha: 1.0)
         }
     }
     override var dividerThickness: CGFloat {

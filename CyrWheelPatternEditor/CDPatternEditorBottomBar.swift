@@ -15,16 +15,16 @@ class CDPatternEditorBottomBar: CDPatternSequencePresenterViewController {
         self.view.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         
     }
-    @IBAction func btnExportClicked(sender: AnyObject) {
+    @IBAction func btnExportClicked(_ sender: AnyObject) {
         let sp = NSSavePanel()
         sp.allowedFileTypes = ["pat"]
         sp.allowsOtherFileTypes = false
         sp.title = "Export the pattern sequence";
         let window = self.view.window!
-        sp.beginSheetModalForWindow(window) { (result) -> Void in
+        sp.beginSheetModal(for: window) { (result) -> Void in
             if result == NSModalResponseOK {
                 do {
-                    try self.patternSequence.exportToURL(sp.URL!)
+                    try self.patternSequence.export(to: sp.url!)
                 } catch let error as NSError {
                     window.presentError(error)
                 }
@@ -35,34 +35,35 @@ class CDPatternEditorBottomBar: CDPatternSequencePresenterViewController {
     
     // We use the document to do the heavy lifting of adding/removing items.
     
-    private func _getDocument() -> CDDocument {
+    fileprivate func _getDocument() -> CDDocument {
         // This is a rather ugly way to get to the document..
         return self.parentWindowController!.document as! CDDocument
     }
     
-    private func _addItem() {
+    fileprivate func _addItem() {
         let doc = _getDocument()
         doc.addNewPatternItem()
     }
     
-    private func _removeSelectedItem() {
+    fileprivate func _removeSelectedItem() {
         // Find the selection
         if var selectionManager = self.patternSequenceProvider {
             // Try to maintain a selection
             let priorSelection = selectionManager.patternSelectionIndexes;
-            _getDocument().removePatternItemsAtIndexes(priorSelection)
+            _getDocument().removePatternItems(at: priorSelection as IndexSet)
             
             if priorSelection.count > 0 && selectionManager.patternSelectionIndexes.count == 0 {
-                var firstIndex = priorSelection.firstIndex
-                firstIndex--
-                if firstIndex >= 0 && firstIndex < self.patternSequence.children.count {
-                    selectionManager.patternSelectionIndexes = NSIndexSet(index: firstIndex)
+                if let first = priorSelection.first {
+                    var firstIndex = first - 1
+                    if firstIndex >= 0 && firstIndex < self.patternSequence.children!.count {
+                        selectionManager.patternSelectionIndexes = IndexSet(integer: firstIndex)
+                    }
                 }
             }
         }
     }
     
-    @IBAction func btnAddRemoveClicked(sender: NSSegmentedControl) {
+    @IBAction func btnAddRemoveClicked(_ sender: NSSegmentedControl) {
         if sender.selectedSegment == 0 {
             self._addItem()
         }  else {

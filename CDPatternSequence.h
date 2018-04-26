@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) NSString *name; // The base part of the filename; it is only set when I'm using the simulator portion to display what we are running, and isn't stored in the model
 
-@property (null_unspecified, nonatomic, retain) NSOrderedSet<CDPatternItem *> *children; // Unfortunately maybe nullable
+@property (nullable, retain) NSOrderedSet<CDPatternItem *> *children; // Unfortunately maybe nullable // nonatomic, but stupid
 @property (nonatomic) BOOL ignoreSingleClickButtonForTimedPatterns;
 @end
 
