@@ -57,7 +57,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setCurrentSequenceName:(NSString *)name; // Call after setBaseURL is called
 - (void)setCyrWheelView:(nullable CDCyrWheelView *)view;
 
-
 @end
 
 extern NSString * const CDPatternRunnerPlayheadTimePositionKey;

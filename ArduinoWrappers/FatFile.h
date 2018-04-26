@@ -119,6 +119,7 @@ public:
     uint32_t fileSize() const {
         return (uint32_t)_data.length;
     }
+    
 };
 
 class SdFile: public FatFile {

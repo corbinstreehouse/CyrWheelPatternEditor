@@ -328,7 +328,8 @@ class CDPatternImagesOutlineViewController: NSViewController, NSOutlineViewDataS
     }
     
     func _acceptableTypesFromPasteboard(pasteboard: NSPasteboard) -> [NSURL] {
-        let options = [NSPasteboardURLReadingFileURLsOnlyKey: true, NSPasteboardURLReadingContentsConformToTypesKey: "com.microsoft.bmp" ]
+//        let options: [NSString: AnyObject] = [NSString(string: NSPasteboardURLReadingFileURLsOnlyKey): true, NSString(string: NSPasteboardURLReadingContentsConformToTypesKey): NSString(string: "com.microsoft.bmp") ]
+        let options: [String: AnyObject] = [NSPasteboardURLReadingFileURLsOnlyKey: true, NSPasteboardURLReadingContentsConformToTypesKey: ["com.microsoft.bmp"] ]
 
         // syntax HAS to be This stupidness
         let aClass : AnyClass = NSURL.self
