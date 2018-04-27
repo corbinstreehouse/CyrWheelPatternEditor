@@ -59,23 +59,24 @@ extension Data {
     
     func attemptToReadStringAtOffset(_ offset: inout Int, string: inout String?) -> Bool {
         var dataAvailable = self.count - offset
-        if dataAvailable >= MemoryLayout<UInt32>.size {
+        let size = MemoryLayout<UInt32>.size
+        if dataAvailable >= size {
             // we can read the size, so read it
             let stringLength = Int(readUInt32AtOffset(offset))
-            dataAvailable -= MemoryLayout<UInt32>.size
+            dataAvailable -= size
             if stringLength == 0 {
-                offset += MemoryLayout<UInt32>.size
+                offset += size
                 string = nil
                 return true;
             } else if stringLength > 1024 { // harcoded max length, ugly!
                 NSLog("ERROR reading string (bad length: %d", stringLength)
                 // Error condition.... how to represent this??
-                offset += MemoryLayout<UInt32>.size
+                offset += size
                 string = nil
                 return true
             } else if dataAvailable >= stringLength {
                 // We can read the string (might be 0)
-                offset += MemoryLayout<UInt32>.size
+                offset += size
                 string = readStringOfLength(stringLength, offset: offset)
                 offset += stringLength
                 return true;
@@ -86,30 +87,26 @@ extension Data {
     
 }
 
-extension NSMutableData {
+extension Data {
     
-    func writeUInt32(_ i: UInt32) {
-        var rawValue: UInt32 = i;
-        self.append(&rawValue, length: MemoryLayout.size(ofValue: rawValue))
+    mutating func writeUInt32(_ i: UInt32) {
+        var rawValue: UInt32 = i
+        let buffer = UnsafeBufferPointer(start: &rawValue, count: 1)
+        self.append(buffer)
     }
     
-    func writeString(_ string: String) {
+    mutating func writeString(_ string: String) {
         // Includes NULL term in size (for better or worse)
-        let filenameUTF8 = string.utf8CString
-        var sizeValue: UInt32 = UInt32(filenameUTF8.count)
-        self.append(&sizeValue, length: MemoryLayout.size(ofValue: sizeValue))
-        
-        let filenameLength = filenameUTF8.count; // null terminator
-        string.withCString { (p: UnsafePointer<Int8>) in
-            // filename, including null terminator
-            self.append(p, length: filenameLength)
-        }
+        var sizeValue: UInt32 = UInt32(string.utf8CString.count)
+        self.append(UnsafeBufferPointer(start: &sizeValue, count: 1))
+        self.append(string.data(using: .utf8)!)
+        self.append(0) // null terminator
     }
 }
 
 // State machine to parse the data, with a timeout.
 class CDDataReader {
-    fileprivate var _data: NSMutableData!
+    fileprivate var _data: Data!
     fileprivate var _offset: Int = 0;
     fileprivate var _completionHandler: (_ dataReader: CDDataReader, _ unusedData: Data?)-> Void
     fileprivate var _timeoutHandler: (_ dataReader: CDDataReader)->Void
@@ -124,7 +121,7 @@ class CDDataReader {
     internal func addData(_ data: Data) {
         _timeoutTimerMaker += 1
         if (_data == nil) {
-            _data = NSData(data: data) as Data as Data as! NSMutableData
+            _data = Data(data)
         } else {
             _data.append(data)
         }
@@ -138,7 +135,7 @@ class CDDataReader {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(delay) / Double(NSEC_PER_SEC), execute: { () -> Void in
             if localTimer == self._timeoutTimerMaker {
                 if !self._completed {
-                    DLog("Timeout for UART data recieve: %@", self._data)
+                    DLog("Timeout for UART data recieve: %@", self._data.debugDescription)
                     self._timeoutHandler(self);
                 }
             } else {
@@ -148,7 +145,7 @@ class CDDataReader {
     }
  
     fileprivate func _parseData() {
-        parseData(_data as Data)
+        parseData(_data)
         if (!_completed) {
             _startProcessDataResetTimer()
         }
@@ -156,10 +153,10 @@ class CDDataReader {
     
     internal func completedParsingDataAtOffset(_ offset: Int) {
         _completed = true
-        if _data.length > offset {
+        if _data.count > offset {
             // we have more UART data to process; trim down and process
-            let subData = _data.subdata(with: NSRange(location: offset, length: _data.length-offset))
-            DLog(" -- more data: %@", subData as CVarArg)
+            let subData = _data.subdata(in: offset ..< _data.count)
+            DLog(" -- more data: %@", subData.debugDescription)
             _completionHandler(self, subData)
         } else {
             // Done!
@@ -428,7 +425,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     let _dataChunkSize = 20 // I think this is a limit of the peripheral
     fileprivate var _dataToSend: Data? = nil;
     fileprivate var _dataOffset: Int = 0;
-    fileprivate var _nextDataToSend: NSMutableData?
+    fileprivate var _nextDataToSend: Data?
     fileprivate var _writeCounter = 0; // for debugging mainly
 
     // Send the UART data, chunking as necessary, and requesting a response after the last chunk is sent... (maybe?)
@@ -450,7 +447,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 // queue the data up...or we drop it?
                 // I could just append into _dataToSend; that should work..
                 if _nextDataToSend == nil {
-                    _nextDataToSend = NSMutableData()
+                    _nextDataToSend = Data()
                 }
                 _nextDataToSend!.append(data)
             }
@@ -464,7 +461,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         // If we have more queued data, start it
         if let nextData = _nextDataToSend {
             _nextDataToSend = nil // drop it
-            _startSendingUARTData(nextData as Data)
+            _startSendingUARTData(nextData)
         }
     }
     
@@ -491,7 +488,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
                 let subData: Data = data.subdata(in: _dataOffset ..< _dataOffset + amountToSend) // Swift 3
                 _dataOffset += subData.count
                 // CBCharacteristicWriteType.WithResponse vs without
-                peripheral.writeValue(subData, for: transmitChar, type: CBCharacteristicWriteType.withoutResponse)
+                peripheral.writeValue(subData, for: transmitChar, type: CBCharacteristicWriteType.withResponse) // withResponse???
     //            DLog("write: %d, %d, _dataOffset %d, total: %d", _writeCounter++, amountToSend, _dataOffset, data.length);
                 _sendMoreUARTDataIfNeededAfterDelay();
                 _didSendUARTDataWithLength(amountToSend)
@@ -511,92 +508,87 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         // Write the command as an 8-bit value..
         var uartCommand: Int8 = uartCommand.rawValue
         // the uartCommand, followed by the value..
-        let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: MemoryLayout.size(ofValue: uartCommand))
-        
+        var data = Data()
+        data.append(UnsafeBufferPointer(start: &uartCommand, count: 1))
+
         if var rawValue: Int16 = rawValueC {
-            data.append(&rawValue, length: MemoryLayout.size(ofValue: rawValue))
+            data.append(UnsafeBufferPointer(start: &rawValue, count: 1))
         }
         
         // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
-        _startSendingUARTData(data as Data)
+        _startSendingUARTData(data)
     }
 
-    fileprivate func _writeWheelUARTCommand(_ uartCommand: CDWheelUARTCommand, with32BitValue rawValueC: UInt32) {
+    fileprivate func _writeWheelUARTCommand(_ uartCommandC: CDWheelUARTCommand, with32BitValue rawValueC: UInt32) {
         DLog("_writeWheelUARTCommand32")
         // Write the command as an 8-bit value..
-        var uartCommand: Int8 = uartCommand.rawValue
+        var uartCommand: Int8 = uartCommandC.rawValue
         // the uartCommand, followed by the value..
-        let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: MemoryLayout.size(ofValue: uartCommand))
+        var data = Data()
+        data.append(UnsafeBufferPointer(start: &uartCommand, count: 1))
         
-        if var rawValue: UInt32 = rawValueC {
-            data.append(&rawValue, length: MemoryLayout.size(ofValue: rawValue))
-        }
+        var rawValue: UInt32 = rawValueC
+        data.append(UnsafeBufferPointer(start: &rawValue, count: 1))
         
         // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
-        _startSendingUARTData(data as Data)
+        _startSendingUARTData(data)
     }
     
     internal func setDynamicPatternType(_ patternType: LEDPatternType, color: CRGB, duration: UInt32) {
         // Write the command as an 8-bit value..
         var uartCommand: Int8 = CDWheelUARTCommandPlayProgrammedPattern.rawValue
         // the uartCommand, followed by the value..
-        let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: MemoryLayout.size(ofValue: uartCommand))
+        var data = Data()
+        data.append(UnsafeBufferPointer(start: &uartCommand, count: 1))
 
         // pattern type
         var rawPatternValue: Int32 = patternType.rawValue
-        data.append(&rawPatternValue, length: MemoryLayout.size(ofValue: rawPatternValue))
+        data.append(UnsafeBufferPointer(start: &rawPatternValue, count: 1))
 
         // duration
         var rawDuration: UInt32 = duration;
-        data.append(&rawDuration, length: MemoryLayout.size(ofValue: rawDuration))
+        data.append(UnsafeBufferPointer(start: &rawDuration, count: 1))
         
         // color
         var rawColor: CRGB = color
-        data.append(&rawColor, length: MemoryLayout.size(ofValue: rawColor))
+        let colorPointer = UnsafeBufferPointer(start: &rawColor, count: 1)
+        data.append(colorPointer)
         
         // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
-        _startSendingUARTData(data as Data)
+        _startSendingUARTData(data)
     }
     
     internal func setDynamicImagePattern(_ filename: String, duration: UInt32, bitmapOptions: LEDBitmapPatternOptions) {
         // Write the command as an 8-bit value..
         var uartCommand: Int8 = CDWheelUARTCommandPlayImagePattern.rawValue
         // the uartCommand, followed by the value..
-        let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: MemoryLayout.size(ofValue: uartCommand))
-        
+        var data = Data()
+        data.append(UnsafeBufferPointer(start: &uartCommand, count: 1))
+
         // duration
         data.writeUInt32(duration)
         
         // LEDBitmapPatternOptions
         var rawOptions: LEDBitmapPatternOptions = bitmapOptions
         assert(MemoryLayout.size(ofValue: rawOptions) == 4)
-        data.append(&rawOptions, length: MemoryLayout.size(ofValue: rawOptions))
+        data.append(UnsafeBufferPointer(start: &rawOptions, count: 1))
 
         data.writeString(filename)
         
         // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
-        _startSendingUARTData(data as Data)
+        _startSendingUARTData(data)
     }
     
     internal func playPatternSequence(_ filename: String) {
         // Write the command as an 8-bit value..
         var uartCommand: Int8 = CDWheelUARTCommandPlaySequence.rawValue
         // the uartCommand, followed by the value..
-        let data: NSMutableData = NSMutableData(bytes: &uartCommand, length: MemoryLayout.size(ofValue: uartCommand))
-        
-        // Includes NULL term in size (for better or worse)
-        let filenameUTF8 = filename.utf8CString
-        var sizeValue: UInt32 = UInt32(filenameUTF8.count)
-        data.append(&sizeValue, length: MemoryLayout.size(ofValue: sizeValue))
-        
-        let filenameLength = filenameUTF8.count; // null terminator
-        filename.withCString { (p: UnsafePointer<Int8>) in
-            // filename, including null terminator
-            data.append(p, length: filenameLength)
-        }
+        var data = Data()
+        data.append(UnsafeBufferPointer(start: &uartCommand, count: 1))
+        data.writeString(filename)
         
         // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
-        _startSendingUARTData(data as Data)
+        _startSendingUARTData(data)
     }
     
     internal var commandEnabled: Bool = false;
@@ -614,7 +606,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         // TODO: rework this to have long filenames
         
         let possibleBaseFilename = url.deletingPathExtension().lastPathComponent
-        var baseFilename: String = possibleBaseFilename != nil ? possibleBaseFilename : "Untitled"
+        var baseFilename: String = possibleBaseFilename != "" ? possibleBaseFilename : "Untitled"
 
         // We are limited to 8.3 filenames.. I should make the names prettier...
         if baseFilename.characters.count > 8 {
@@ -627,7 +619,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         
         // Make sure the name is 8.3 syntax and unique
         let possiblePathExtension = url.pathExtension;
-        var pathExtension: String = possiblePathExtension != nil ? possiblePathExtension : gPatternFilenameExtension
+        var pathExtension: String = possiblePathExtension != "" ? possiblePathExtension : gPatternFilenameExtension
         // Just kill long extensions. wrong extensions won't work either..but oh well
         if pathExtension.characters.count > 3 {
             pathExtension = gPatternFilenameExtension
@@ -656,7 +648,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
 //            return
 //        }
 //        
-//        let dataToUpload: NSMutableData = NSMutableData()
+//        var dataToUpload: Data = Data()
 //        
 //        // Format of the data: 
 //        // filename<null terminator>
@@ -741,6 +733,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
          */
         // Swift 3.0?
         var value: LEDBitmapPatternOptions = valueX
+        // raw value?
         withUnsafePointer(to: &value) { (arg: UnsafePointer<LEDBitmapPatternOptions>) in
             arg.withMemoryRebound(to: UInt32.self, capacity: 1, { p in
                 let value: UInt32 = p.pointee
@@ -992,7 +985,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         
         if let data = _nextDataToSend {
             // none of _nextDataToSend will be sent yet..
-            totalDataLengthToWrite += data.length
+            totalDataLengthToWrite += data.count
         }
 
         _uploadData = UploadData(filename: filename, dataLength: totalDataLengthToWrite, uploadHandler: uploadHandler)
@@ -1001,17 +994,16 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         DLog("uploading file...")
         // Write the command as an 8-bit value..
         var uartCommand: Int8 = CDWheelUARTCommandUploadFile.rawValue
+        var dataToSend: Data = Data()
+        
         // the uartCommand, followed by the value..
-        let dataToSend: NSMutableData = NSMutableData(bytes: &uartCommand, length: MemoryLayout.size(ofValue: uartCommand))
-        
+        dataToSend.append(UnsafeBufferPointer(start: &uartCommand, count: 1))
         dataToSend.writeString(filename)
-        
         dataToSend.writeUInt32(dataLength)
-        
         dataToSend.append(dataToWrite);
         
         // No response might be faster...but we could ignore *MORE* writes until we get a response to avoid flooding it
-        _startSendingUARTData(dataToSend as Data)
+        _startSendingUARTData(dataToSend)
     }
 
 //    internal func writeNewSequenceFileWithData(dataToWrite: NSData, filename: String, uploadHandler: CDWheelConnectionUploadHandler) {
@@ -1047,9 +1039,10 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     
     func removeFile(_ filename: String) {
         var uartCommand: Int8 = CDWheelUARTCommandDeletePatternSequence.rawValue
-        let dataToSend: NSMutableData = NSMutableData(bytes: &uartCommand, length: MemoryLayout.size(ofValue: uartCommand))
-        dataToSend.writeString(filename);
-        _startSendingUARTData(dataToSend as Data)
+        var data = Data()
+        data.append(UnsafeBufferPointer(start: &uartCommand, count: 1))
+        data.writeString(filename)
+        _startSendingUARTData(data)
         // Remove it..
         if let index = self.customSequences.index(of: filename) {
             self.customSequences.remove(at: index)
@@ -1084,7 +1077,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     
     // Data receiving
-//    private var _dataToReceive: NSMutableData? = nil;
+//    private var _dataToReceive: Data? = nil;
 //    private var _dataRecieveCommand: CDWheelUARTRecieveCommand = CDWheelUARTRecieveCommandInvalid
 
     fileprivate var _dataReader: CDDataReader?
@@ -1135,7 +1128,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         switch (dataRecieveCommand) {
         case CDWheelUARTRecieveCommandInvalid:
             // Done.. error state... droppingt the data..
-            print("Invalid command, data: %@", data);
+            print("Invalid command, data: \(data)")
         case CDWheelUARTRecieveCommandCurrentPatternInfo:
             _dataReader = CDGetCurrentPatternInfoDataReader(completionHandler: _didCompleteReadOfPatternInfo, timeoutHandler: _didFailDataReader);
             _dataReader!.addData(data)
@@ -1151,7 +1144,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
             break;
         default:
             // An invalid value; we drop the data
-            print("Invalid UART data: %@", data);
+            print("Invalid UART data: \(data)")
             break
         }
     }
@@ -1162,7 +1155,7 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
     }
     
     fileprivate func _recieveIncomingUARTData(_ data: Data) {
-        DLog("_recieveIncomingUARTData: %@", data as CVarArg)
+        DLog("_recieveIncomingUARTData: \(data)")
         // Feed the existing, or create a new one!
         if let dataReader = _dataReader {
             dataReader.addData(data)
@@ -1180,14 +1173,12 @@ class CDWheelConnection: NSObject, CBPeripheralDelegate {
         }
     }
     
-//    var customSequenceFilenames: [String] = []
-//    
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if error != nil {
             // TODO: present the error...make sure they aren't piling up
             // not sure why _uartRecieveCharacteristic kicks this off
             if characteristic != _uartRecieveCharacteristic {
-                debugPrint("didUpdateValueForCharacteristic error:\(error)!")
+                debugPrint("didUpdateValueForCharacteristic error:\(error!)!")
             }
             return;
         }
