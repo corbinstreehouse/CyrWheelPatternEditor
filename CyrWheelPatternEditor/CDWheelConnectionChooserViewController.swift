@@ -16,6 +16,7 @@ class CDWheelConnectionChooserViewController: NSViewController, NSTableViewDeleg
         self.view.wantsLayer = true
         _spinnerView.layerContentsRedrawPolicy = NSViewLayerContentsRedrawPolicy.never
         _spinnerView.layerContentsPlacement = NSViewLayerContentsPlacement.scaleProportionallyToFit
+        _spinnerView.wantsLayer = true
         
         // All this to get a spinning layer!
         let parentLayer = _spinnerView.layer!
@@ -43,7 +44,7 @@ class CDWheelConnectionChooserViewController: NSViewController, NSTableViewDeleg
         let animation = CABasicAnimation(keyPath: "transform.rotation")
         animation.duration = 2.0
         animation.fromValue = NSNumber(value: 0.0 as Double)
-        animation.toValue = NSNumber(value: -1*2.0*M_PI as Double)
+        animation.toValue = NSNumber(value: -1*2.0*Double.pi)
         animation.isCumulative = true
         animation.repeatCount = Float.infinity
         spinnerLayer.add(animation, forKey: "rotationAnimation")
